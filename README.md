@@ -29,9 +29,9 @@ Canvas generator
 drawBinary(binaryString, context, options);
 ````
 Where
-* __binaryString__ is the string that the barcode encoders generates
-* __context__ is a Html5Canvas context
-* __options__ is further options, put in a JSON object
+*  __binaryString__ is the string that the barcode encoders generates
+*  __context__ is a Html5Canvas context
+*  __options__ is further options, put in a JSON object
 
 ####The default options:
 ````javascript
