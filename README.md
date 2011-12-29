@@ -24,13 +24,15 @@ barcode.encoded(); //Result: 1010111011000100101001....
 
 Canvas generator
 ----
-####A Html5Canvas generator is included to draw the barcodes.
+####A Html5Canvas barcode generator is included to draw the barcodes.
 ````javascript
 drawBinary(binaryString, context, options);
 ````
 Where
 **binaryString** is the string that the barcode encoders generates
+
 **context** is a Html5Canvas context
+
 **options** is further options, put in a JSON object
 
 ####The default options:
