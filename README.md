@@ -8,7 +8,7 @@ JsBarcode is a simple way to create different types of 1d barcodes.
 
 #### All different types of barcodes has an own class which can be used for 2 things:
 *  Validating the input to see if it can be encoded
-*  Encode the input to binary
+*  Encode to barcode format (binary output)
 
 #### To validate:
 ````javascript
@@ -29,9 +29,9 @@ Canvas generator
 drawBinary(binaryString, context, options);
 ````
 Where
-*  __binaryString__ is the string that the barcode encoders generates
-*  __context__ is a Html5Canvas context
-*  __options__ is further options, put in a JSON object
+*  binaryString is the string that the barcode encoders generates
+*  context is a Html5Canvas context
+*  options is further options, put in a JSON object
 
 ####The default options:
 ````javascript
