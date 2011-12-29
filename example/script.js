@@ -24,14 +24,14 @@ function newUPC(){
 	ctx.clearRect(0,0,1000,100);
 	
 	var ean = new EAN(text);
-	var code128 = new Code128(text);
+	var code128 = new CODE128(text);
 	
 	if(ean.valid()){
-		drawBinary(ean.encoded(), ctx, 100, 2);
+		drawBinary(ean.encoded(), ctx);
 		info.innerHTML = "Using EAN13";
 	}
 	else if(code128.valid()){
-		drawBinary(code128.encoded(), ctx, 100, 2);
+		drawBinary(code128.encoded(), ctx, {width:1,height:20});
 		info.innerHTML = "Using Code128";
 	}
 	else{
