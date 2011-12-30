@@ -4,8 +4,9 @@ JsBarcode is a simple way to create different types of 1d barcodes.
 The plugin uses Html5Canvas to generate draw the barcodes
 
 #### This is the list of supported barcodes:
-*  EAN (13)
 *  CODE128 (B)
+*  EAN (13)
+*  UPC-A
 
 Use
 ----
