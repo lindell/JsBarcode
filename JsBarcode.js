@@ -29,6 +29,10 @@
 		canvas.width = binary.length*options.width+2*options.quite;
 		canvas.height = options.height;
 		
+		//Paint the canvas white
+		ctx.fillStyle = "#fff";
+		ctx.fillRect(0,0,canvas.width,canvas.height);
+		
 		//NOT A GOOD WAY OF DOING IT, NEED TO BE FIXED
 		drawBinary(binary,ctx,options.width,options.height,options.quite);
 		
