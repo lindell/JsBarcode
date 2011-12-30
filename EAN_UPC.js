@@ -1,7 +1,7 @@
 function EAN(EANnumber){
 
 	this.EANnumber = EANnumber+"";
-	
+
 	this.valid = function(){
 		return valid(this.EANnumber);
 	};
@@ -148,4 +148,19 @@ function EAN(EANnumber){
 			return number[12] == checksum(number);
 		}
 	}
+}
+
+
+function UPC(UPCnumber){
+	
+	this.ean = new EAN("0"+UPCnumber);
+	
+	this.valid = function(){
+		return this.ean.valid();
+	}
+	
+	this.encoded = function(){
+		return this.ean.encoded();
+	}
+	
 }

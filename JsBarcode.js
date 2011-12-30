@@ -71,7 +71,7 @@
 		
 	$.fn.JsBarcode.supportedBarcodes = {
 		"CODE128":	CODE128,
-		"EAN":		EAN
-	
+		"EAN":		EAN,
+		"UPC":		UPC
 	};
 })(jQuery);
