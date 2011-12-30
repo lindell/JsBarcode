@@ -3,12 +3,12 @@ function EAN(EANnumber){
 	this.EANnumber = EANnumber+"";
 	
 	this.valid = function(){
-		return valid(EANnumber);
+		return valid(this.EANnumber);
 	};
 	
 	this.encoded = function (){
-		if(valid(EANnumber)){
-			return createUPC(EANnumber);
+		if(valid(this.EANnumber)){
+			return createUPC(this.EANnumber);
 		}
 		return "";
 	}
@@ -71,8 +71,6 @@ function EAN(EANnumber){
 	var endBin = "101";
 	//The middle bits
 	var middleBin = "01010";
-	//White space added in the begining and end to make sure the code can be read
-	var quiteBin = "000000";
 	
 	//Regexp to test if the EAN code is correct formated
 	var regexp = /^[0-9]{13}$/;
@@ -92,8 +90,6 @@ function EAN(EANnumber){
 		//Get the number to be encoded on the right side of the EAN code
 		var rightSide = number.substr(7,6);
 		
-		//Add a quite zone
-		result += quiteBin;
 		
 		//Add the start bits
 		result += startBin;
@@ -109,9 +105,6 @@ function EAN(EANnumber){
 		
 		//Add the end bits
 		result += endBin;
-		
-		//Add a quite zone
-		result += quiteBin;
 		
 		return result;
 	}

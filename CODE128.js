@@ -1,4 +1,4 @@
-function Code128(string){
+function CODE128(string){
 
 	this.string128 = string;
 
@@ -126,8 +126,6 @@ function Code128(string){
 	var startBin = "11010010000";
 	//The end bits
 	var endBin = "1100011101011";
-	//White space added in the begining and end to make sure the code can be read
-	var quiteBin = "000000";
 
 	var regexp = /^[!-~ ]+$/;
 
@@ -141,9 +139,6 @@ function Code128(string){
 	function calulateCode128(string){
 		var result = "";
 		
-		//Add a quite zone
-		result += quiteBin;
-		
 		//Add the start bits
 		result += startBin;
 		
@@ -155,9 +150,6 @@ function Code128(string){
 			
 		//Add the end bits
 		result += endBin;
-		
-		//Add a quite zone
-		result += quiteBin;
 		
 		return result;
 	}
