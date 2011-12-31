@@ -1,6 +1,7 @@
 (function($){
 	$.fn.JsBarcode = function(content,options) {
 	
+		//Merge the user options with the default
 		options = $.extend({}, $.fn.JsBarcode.defaults, options);
 
 		//Create the canvas where the barcode will be drawn on
@@ -16,16 +17,21 @@
 			return this;
 		}
 		
-		var encryptor = new $.fn.JsBarcode.supportedBarcodes[options.format](content);
+		//Create the encoder object
+		var encoder = new $.fn.JsBarcode.supportedBarcodes[options.format](content);
 		
 		//Abort if the barcode format does not support the content
-		if(!encryptor.valid()){
+		if(!encoder.valid()){
 			return this;
 		}
 		
-		var binary = encryptor.encoded();
+		//Encode the content
+		var binary = encoder.encoded();
+		
+		//Get the canvas context
 		var ctx    = canvas.getContext("2d");
 		
+		//Set the width and height of the barcode
 		canvas.width = binary.length*options.width+2*options.quite;
 		canvas.height = options.height;
 		
@@ -33,33 +39,26 @@
 		ctx.fillStyle = "#fff";
 		ctx.fillRect(0,0,canvas.width,canvas.height);
 		
-		//NOT A GOOD WAY OF DOING IT, NEED TO BE FIXED
-		drawBinary(binary,ctx,options.width,options.height,options.quite);
+		//Creates the barcode out of the encoded binary
+		for(var i=0;i<binary.length;i++){
 		
+			var x = i*options.width+options.quite;
+			
+			if(binary[i] == "1"){
+				ctx.fillStyle = "#000";
+			}
+			else{
+				ctx.fillStyle = "#fff";
+			}
+			
+			ctx.fillRect(x,0,options.width,options.height);
+		}
 		
+		//Grab the dataUri from the canvas
 		uri = canvas.toDataURL('image/png');
 		
+		//Put the data uri into the image
 		return $(this).attr("src",uri);
-
-		function drawBinary(binaryString, context, width, height, quietZone){
-			
-			for(var i=0;i<binaryString.length;i++){
-			
-				var x = i*width+quietZone;
-				
-				if(binaryString[i] == "1"){
-					context.fillStyle = "#000";
-				}
-				else if(binaryString[i] == "0"){
-					context.fillStyle = "#fff";
-				}
-				else{
-					console.log("Not a binary number!");
-				}
-				
-				context.fillRect(x,0,width,height);
-			}
-		}
 	};
 	
 	$.fn.JsBarcode.defaults = {
