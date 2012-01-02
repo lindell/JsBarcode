@@ -4,15 +4,17 @@ function CODE128(string){
 
 	this.valid = valid;
 
+	//The public encoding function
 	this.encoded = function(){
 		if(valid(string)){
-			return calulateCode128(string);
+			return calculateCode128(string);
 		}
 		else{
 			return "";
 		}
 	}
 
+	//Data for each character, the last characters will not be encoded but are used for error correction
 	var code128b = [
 	[" ","11011001100",0],
 	["!","11001101100",1],
@@ -127,8 +129,10 @@ function CODE128(string){
 	//The end bits
 	var endBin = "1100011101011";
 
+	//This regexp is used for validation
 	var regexp = /^[!-~ ]+$/;
 
+	//Use the regexp variable for validation
 	function valid(){
 		if(string.search(regexp)==-1){
 			return false;
@@ -136,7 +140,8 @@ function CODE128(string){
 		return true;
 	}
 
-	function calulateCode128(string){
+	//The encoder function that return a complete binary string. Data need to be validated before sent to this function
+	function calculateCode128(string){
 		var result = "";
 		
 		//Add the start bits
@@ -154,6 +159,7 @@ function CODE128(string){
 		return result;
 	}
 
+	//Encode the characters
 	function encode(string){
 		var result = "";
 		for(var i=0;i<string.length;i++){
@@ -163,7 +169,7 @@ function CODE128(string){
 	}
 
 
-
+	//Calculate the checksum
 	function checksum(string){
 		var sum = 0;
 		for(var i=0;i<string.length;i++){
@@ -172,6 +178,7 @@ function CODE128(string){
 		return (sum+104) % 103;
 	}
 
+	//Get the encoded data by the id of the character
 	function encodingById(id){
 		for(var i=0;i<code128b.length;i++){
 			if(code128b[i][2]==id){
@@ -181,6 +188,7 @@ function CODE128(string){
 		return "";
 	}
 
+	//Get the id (weight) of a character
 	function weightByCharacter(character){
 		for(var i=0;i<code128b.length;i++){
 			if(code128b[i][0]==character){
@@ -190,7 +198,7 @@ function CODE128(string){
 		return 0;
 	}
 
-
+	//Get the encoded data of a character
 	function encodingByChar(character){
 		for(var i=0;i<code128b.length;i++){
 			if(code128b[i][0]==character){
