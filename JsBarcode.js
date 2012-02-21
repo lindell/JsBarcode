@@ -12,13 +12,7 @@
 			return this;
 		}
 		
-		//Abort if the barcode format is not supported
-		if($.fn.JsBarcode.supportedBarcodes[options.format]==undefined){
-			return this;
-		}
-		
-		//Create the encoder object
-		var encoder = new $.fn.JsBarcode.supportedBarcodes[options.format](content);
+		var encoder = new CODE128(content);
 		
 		//Abort if the barcode format does not support the content
 		if(!encoder.valid()){
@@ -59,6 +53,7 @@
 		
 		//Put the data uri into the image
 		return $(this).attr("src",uri);
+
 	};
 	
 	$.fn.JsBarcode.defaults = {
@@ -67,11 +62,5 @@
 		quite: 10,
 		format:	"CODE128"
 	};
-		
-	$.fn.JsBarcode.supportedBarcodes = {
-		"CODE128":	CODE128,
-		"EAN":		EAN,
-		"UPC":		UPC,
-		"UPC-A":	UPC
-	};
+
 })(jQuery);
