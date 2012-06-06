@@ -74,3 +74,17 @@ setInterval(function(){
 ````
 #### Will create a barcode clock:
 [Click here to see it](http://fleo.se/barcode/example/barcodeClock.html)
+
+
+
+Minify the latest code
+----
+Use the [closure compiler](http://closure-compiler.appspot.com/home) with this input
+````
+// ==ClosureCompiler==
+// @output_file_name JsBarcode.all.min.js
+// @code_url https://raw.github.com/lindell/JsBarcode/master/CODE128.js
+// @code_url https://raw.github.com/lindell/JsBarcode/master/EAN_UPC.js
+// @code_url https://raw.github.com/lindell/JsBarcode/master/JsBarcode.js
+// ==/ClosureCompiler==
+````
