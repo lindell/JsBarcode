@@ -12,7 +12,7 @@
 			return this;
 		}
 		
-		var encoder = new CODE128(content);
+		var encoder = new window[options.format](content);
 		
 		//Abort if the barcode format does not support the content
 		if(!encoder.valid()){
