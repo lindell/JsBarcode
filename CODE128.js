@@ -111,17 +111,19 @@ function CODE128(string){
 	["|","10101111000",92],
 	["}","10100011110",93],
 	["~","10001011110",94],
-	["DEL","10111101000",95],
-	["FNC3","10111100010",96],
-	["FNC2","11110101000",97],
-	["SHIFT","11110100010",98],
-	["Code C","10111011110",99],
-	["FNC4","10111101110",100],
-	["Code A","11101011110",101],
-	["FNC1","11110101110",102],
-	["START A","11010000100",103],
-	["START B","11010010000",104],
-	["START C","11010011100",105]];
+	[String.fromCharCode(127),"10111101000",95],
+	[String.fromCharCode(128),"10111100010",96],
+	[String.fromCharCode(129),"11110101000",97],
+	[String.fromCharCode(130),"11110100010",98],
+	[String.fromCharCode(131),"10111011110",99],
+	[String.fromCharCode(132),"10111101110",100],
+	[String.fromCharCode(133),"11101011110",101],
+	[String.fromCharCode(134),"11110101110",102]
+	//The start bits should not be used
+	/*,
+	[String.fromCharCode(135),"11010000100",103],
+	[String.fromCharCode(136),"11010010000",104],
+	[String.fromCharCode(137),"11010011100",105]*/];
 
 
 	//The start bits
