@@ -8,6 +8,7 @@ The plugin uses Html5Canvas to generate draw the barcodes
 *  EAN (13)
 *  UPC-A
 *  CODE39
+*  ITF14
 
 Use
 ----
