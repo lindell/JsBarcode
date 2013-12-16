@@ -36,7 +36,7 @@
             var x = canvas.width / 2,
                 y = options.height;
 
-            ctx.font = "12px arial";
+            ctx.font = options.fontSize + "px arial";
             ctx.textBaseline = "bottom";
             ctx.textAlign = 'center';
             ctx.textBaseline = 'top';
@@ -45,7 +45,7 @@
 
         //Set the width and height of the barcode
         canvas.width = binary.length*options.width+2*options.quite;
-        canvas.height = options.height+30;
+        canvas.height = options.height + (options.displayValue ? options.fontSize : 0);
 
         //Paint the canvas white
         ctx.fillStyle = "#fff";
@@ -81,6 +81,7 @@
 
     $.fn.JsBarcode.defaults = {
         displayValue: true,
+        fontSize: 12,
         width:  2,
         height: 100,
         quite: 10,
