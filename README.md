@@ -23,6 +23,7 @@ $(object).JsBarcode(string,options);
 ####The default options:
 ````javascript
 {
+	displayValue: true,
 	width:	2,
 	height:	100,
 	quite: 10,
@@ -45,7 +46,7 @@ $("#barcode").JsBarcode("Hi!");
 ````
 
 #### Will generate this image:
-![Result](http://fleo.se/barcode/img/hi.png)
+![Result](http://i.imgur.com/eSKThTK.png)
   
   
   
@@ -54,7 +55,7 @@ $("#barcode").JsBarcode("Hi!");
 $("#barcode").JsBarcode("Javascript is fun!",{width:1,height:25});
 ````
 #### Will generate this image:
-![Result](http://fleo.se/barcode/img/javascript.png)
+![Result](http://i.imgur.com/sD9Ougw.png)
   
   
   
@@ -63,7 +64,7 @@ $("#barcode").JsBarcode("Javascript is fun!",{width:1,height:25});
 $("#barcode").JsBarcode("9780199532179",{format:"EAN"});
 ````
 #### Will generate this image:
-![Result](http://fleo.se/barcode/img/ean.png)
+![Result](http://i.imgur.com/ntpr27d.png)
   
   
   
