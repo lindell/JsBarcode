@@ -46,6 +46,8 @@ function CODE39(string){
 ,[42,"%","101000100010001"]
 ,[43,"*","100010111011101"]];
 
+	this.valid = valid;
+
 	//The public encoding function
 	this.encoded = function(){
 		if(valid(string)){
