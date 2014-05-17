@@ -29,23 +29,20 @@
 		canvas.width = binary.length*options.width+2*options.quite;
 		canvas.height = options.height;
 		
-		//Paint the canvas white
-		ctx.fillStyle = "#fff";
-		ctx.fillRect(0,0,canvas.width,canvas.height);
+		//Paint the canvas
+		ctx.clearRect(0,0,canvas.width,canvas.height);
+		if(options.backgroundColor){
+			ctx.fillStyle = options.backgroundColor;
+			ctx.fillRect(0,0,canvas.width,canvas.height);
+		}
 		
 		//Creates the barcode out of the encoded binary
+		ctx.fillStyle = options.lineColor;
 		for(var i=0;i<binary.length;i++){
-		
 			var x = i*options.width+options.quite;
-			
 			if(binary[i] == "1"){
-				ctx.fillStyle = "#000";
-			}
-			else{
-				ctx.fillStyle = "#fff";
-			}
-			
-			ctx.fillRect(x,0,options.width,options.height);
+				ctx.fillRect(x,0,options.width,options.height);
+			}			
 		}
 		
 		//Grab the dataUri from the canvas
@@ -60,7 +57,9 @@
 		width:	2,
 		height:	100,
 		quite: 10,
-		format:	"CODE128"
+		format:	"CODE128",
+		backgroundColor:"#fff",
+		lineColor:"#000"
 	};
 
 })(jQuery);
