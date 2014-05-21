@@ -1,14 +1,14 @@
-function Inter25(Inter25number){
+function ITF(ITFNumber){
 
-	this.Inter25number = Inter25number+"";
+	this.ITFNumber = ITFNumber+"";
 
 	this.valid = function(){
-		return valid(this.Inter25number);
+		return valid(this.ITFNumber);
 	};
 	
 	this.encoded = function (){
-		if(valid(this.Inter25number)){
-			return encode(this.Inter25number);
+		if(valid(this.ITFNumber)){
+			return encode(this.ITFNumber);
 		}
 		return "";
 	}
