@@ -89,7 +89,10 @@ Use the [closure compiler](http://closure-compiler.appspot.com/home) with this i
 // ==ClosureCompiler==
 // @output_file_name JsBarcode.all.min.js
 // @code_url https://raw.github.com/lindell/JsBarcode/master/CODE128.js
+// @code_url https://raw.github.com/lindell/JsBarcode/master/CODE39.js
 // @code_url https://raw.github.com/lindell/JsBarcode/master/EAN_UPC.js
+// @code_url https://raw.github.com/lindell/JsBarcode/master/ITF.js
+// @code_url https://raw.github.com/lindell/JsBarcode/master/ITF14.js
 // @code_url https://raw.github.com/lindell/JsBarcode/master/JsBarcode.js
 // ==/ClosureCompiler==
 ````
