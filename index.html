@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Jsbarcode by lindell</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Jsbarcode</h1>
+        <p>Create different type of barcodes with jQuery</p>
+
+        <p class="view"><a href="https://github.com/lindell/JsBarcode">View the Project on GitHub <small>lindell/JsBarcode</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/lindell/JsBarcode/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/lindell/JsBarcode/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/lindell/JsBarcode">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h2>
+<a name="introduction" class="anchor" href="#introduction"><span class="octicon octicon-link"></span></a>Introduction</h2>
+
+<p>JsBarcode is a simple way to create different types of 1d barcodes.<br>
+The plugin uses Html5Canvas to generate draw the barcodes</p>
+
+<h4>
+<a name="this-is-the-list-of-supported-barcodes" class="anchor" href="#this-is-the-list-of-supported-barcodes"><span class="octicon octicon-link"></span></a>This is the list of supported barcodes:</h4>
+
+<ul>
+<li> CODE128 (B)</li>
+<li> EAN (13)</li>
+<li> UPC-A</li>
+<li> CODE39</li>
+<li> ITF (Interleaved 2 of 5)</li>
+<li> ITF14</li>
+</ul><h2>
+<a name="use" class="anchor" href="#use"><span class="octicon octicon-link"></span></a>Use</h2>
+
+<h4>
+<a name="a-html5canvas-barcode-generator-is-included-to-draw-the-barcodes" class="anchor" href="#a-html5canvas-barcode-generator-is-included-to-draw-the-barcodes"><span class="octicon octicon-link"></span></a>A Html5Canvas barcode generator is included to draw the barcodes.</h4>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">$</span><span class="p">(</span><span class="nx">object</span><span class="p">).</span><span class="nx">JsBarcode</span><span class="p">(</span><span class="nx">string</span><span class="p">,</span><span class="nx">options</span><span class="p">);</span>
+</pre></div>
+
+<h4>
+<a name="where" class="anchor" href="#where"><span class="octicon octicon-link"></span></a>Where:</h4>
+
+<ul>
+<li> string is the sring to be encoded to the barcode</li>
+<li> options is additional options put i an object (look below)</li>
+</ul><h4>
+<a name="the-default-options" class="anchor" href="#the-default-options"><span class="octicon octicon-link"></span></a>The default options:</h4>
+
+<div class="highlight highlight-javascript"><pre><span class="p">{</span>
+    <span class="nx">width</span><span class="o">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="nx">height</span><span class="o">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="nx">quite</span><span class="o">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="nx">format</span><span class="o">:</span> <span class="s2">"CODE128"</span><span class="p">,</span>
+    <span class="nx">backgroundColor</span><span class="o">:</span><span class="s2">"#fff"</span><span class="p">,</span>
+    <span class="nx">lineColor</span><span class="o">:</span><span class="s2">"#000"</span>
+<span class="p">}</span>
+</pre></div>
+
+<h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<h4>
+<a name="first-we-need-an-image" class="anchor" href="#first-we-need-an-image"><span class="octicon octicon-link"></span></a>First we need an image</h4>
+
+<div class="highlight highlight-html"><pre><span class="nt">&lt;img</span> <span class="na">id=</span><span class="s">"barcode"</span><span class="nt">&gt;</span>
+</pre></div>
+
+<h4>
+<a name="this-code" class="anchor" href="#this-code"><span class="octicon octicon-link"></span></a>This code:</h4>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">$</span><span class="p">(</span><span class="s2">"#barcode"</span><span class="p">).</span><span class="nx">JsBarcode</span><span class="p">(</span><span class="s2">"Hi!"</span><span class="p">);</span>
+</pre></div>
+
+<h4>
+<a name="will-generate-this-image" class="anchor" href="#will-generate-this-image"><span class="octicon octicon-link"></span></a>Will generate this image:</h4>
+
+<p><img src="http://fleo.se/barcode/img/hi.png" alt="Result"></p>
+
+<h4>
+<a name="this-code-1" class="anchor" href="#this-code-1"><span class="octicon octicon-link"></span></a>This code:</h4>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">$</span><span class="p">(</span><span class="s2">"#barcode"</span><span class="p">).</span><span class="nx">JsBarcode</span><span class="p">(</span><span class="s2">"Javascript is fun!"</span><span class="p">,{</span><span class="nx">width</span><span class="o">:</span><span class="mi">1</span><span class="p">,</span><span class="nx">height</span><span class="o">:</span><span class="mi">25</span><span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="will-generate-this-image-1" class="anchor" href="#will-generate-this-image-1"><span class="octicon octicon-link"></span></a>Will generate this image:</h4>
+
+<p><img src="http://fleo.se/barcode/img/javascript.png" alt="Result"></p>
+
+<h4>
+<a name="this-code-2" class="anchor" href="#this-code-2"><span class="octicon octicon-link"></span></a>This code:</h4>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">$</span><span class="p">(</span><span class="s2">"#barcode"</span><span class="p">).</span><span class="nx">JsBarcode</span><span class="p">(</span><span class="s2">"9780199532179"</span><span class="p">,{</span><span class="nx">format</span><span class="o">:</span><span class="s2">"EAN"</span><span class="p">});</span>
+</pre></div>
+
+<h4>
+<a name="will-generate-this-image-2" class="anchor" href="#will-generate-this-image-2"><span class="octicon octicon-link"></span></a>Will generate this image:</h4>
+
+<p><img src="http://fleo.se/barcode/img/ean.png" alt="Result"></p>
+
+<h4>
+<a name="this-code-3" class="anchor" href="#this-code-3"><span class="octicon octicon-link"></span></a>This code:</h4>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">setInterval</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="kd">var</span> <span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">"#barcode"</span><span class="p">).</span><span class="nx">JsBarcode</span><span class="p">(</span><span class="nx">date</span><span class="p">.</span><span class="nx">getHours</span><span class="p">()</span><span class="o">+</span><span class="s2">":"</span><span class="o">+</span><span class="nx">date</span><span class="p">.</span><span class="nx">getMinutes</span><span class="p">()</span><span class="o">+</span><span class="s2">":"</span><span class="o">+</span><span class="nx">date</span><span class="p">.</span><span class="nx">getSeconds</span><span class="p">());</span>
+<span class="p">},</span><span class="mi">1000</span><span class="p">);</span>
+</pre></div>
+
+<h4>
+<a name="will-create-a-barcode-clock" class="anchor" href="#will-create-a-barcode-clock"><span class="octicon octicon-link"></span></a>Will create a barcode clock:</h4>
+
+<p><a href="http://fleo.se/barcode/example/barcodeClock.html">Click here to see it</a></p>
+
+<h2>
+<a name="minify-the-latest-code" class="anchor" href="#minify-the-latest-code"><span class="octicon octicon-link"></span></a>Minify the latest code</h2>
+
+<p>Use the <a href="http://closure-compiler.appspot.com/home">closure compiler</a> with this input</p>
+
+<pre><code>// ==ClosureCompiler==
+// @output_file_name JsBarcode.all.min.js
+// @code_url https://raw.github.com/lindell/JsBarcode/master/CODE128.js
+// @code_url https://raw.github.com/lindell/JsBarcode/master/CODE39.js
+// @code_url https://raw.github.com/lindell/JsBarcode/master/EAN_UPC.js
+// @code_url https://raw.github.com/lindell/JsBarcode/master/ITF.js
+// @code_url https://raw.github.com/lindell/JsBarcode/master/ITF14.js
+// @code_url https://raw.github.com/lindell/JsBarcode/master/JsBarcode.js
+// ==/ClosureCompiler==
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/lindell">lindell</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
