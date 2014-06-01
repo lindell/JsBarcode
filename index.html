@@ -15,15 +15,16 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Jsbarcode</h1>
+        <h1>Jsbarcode<img id="logo" alt="JsBarcode"></h1>
+		
         <p>Create different type of barcodes with jQuery</p>
 
         <p class="view"><a href="https://github.com/lindell/JsBarcode">View the Project on GitHub <small>lindell/JsBarcode</small></a></p>
 
 
         <ul>
-          <li><a href="https://github.com/lindell/JsBarcode/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/lindell/JsBarcode/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/lindell/JsBarcode/zipball/master">Download <strong>The library</strong></a></li>
+          <li><a href="https://github.com/lindell/JsBarcode/zipball/master">Download <strong>Entire ZIP</strong></a></li>
           <li><a href="https://github.com/lindell/JsBarcode">View On <strong>GitHub</strong></a></li>
         </ul>
       </header>
@@ -150,6 +151,13 @@ The plugin uses Html5Canvas to generate draw the barcodes</p>
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
+	<script src="javascripts/jquery-1.11.1.min.js"></script>
+	<script src="javascripts/JsBarcode.all.min.js"></script>
+	<script>
+		setInterval(function(){
+			$("#logo").JsBarcode(Math.floor(Math.random()*1000)+"",{width:1,height:"25"});
+		},250);
+	</script>
     
   </body>
 </html>
