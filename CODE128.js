@@ -1,6 +1,6 @@
 function CODE128(string){
 
-	this.string128 = string;
+	this.string128 = string+"";
 
 	this.valid = valid;
 
