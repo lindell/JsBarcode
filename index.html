@@ -154,9 +154,10 @@ The plugin uses Html5Canvas to generate draw the barcodes</p>
 	<script src="javascripts/jquery-1.11.1.min.js"></script>
 	<script src="javascripts/JsBarcode.all.min.js"></script>
 	<script>
-		setInterval(function(){
-			$("#logo").JsBarcode(Math.floor(Math.random()*1000)+"",{width:1,height:"25"});
-		},250);
+		(function repeat(){
+			$("#logo").JsBarcode(Math.floor(Math.pow(10,Math.random()*7))+"",{width:1,height:"25"});
+			setTimeout(repeat,250);
+		})();
 	</script>
     
   </body>
