@@ -1,0 +1,21 @@
+{
+  "name": "JsBarcode",
+  "version": "1.1.1",
+  "description": "JsBarcode is a simple way to create different types of 1d barcodes",
+  "main": "JsBarcode.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lindell/JsBarcode.git"
+  },
+  "author": "Johan Lindell <lindell92@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lindell/JsBarcode/issues"
+  },
+  "homepage": "https://github.com/lindell/JsBarcode",
+  "devDependencies": {
+    "gulp": "^3.7.0",
+    "gulp-concat": "^2.2.0",
+    "gulp-uglify": "^0.3.0"
+  }
+}
