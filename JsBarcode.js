@@ -76,7 +76,7 @@
 	};
 	
 	//Extend jQuery
-	if (jQuery) {
+	if (window.jQuery) {
 		jQuery.fn.JsBarcode = function(content, options) {
 			JsBarcode(this, content, options);
 		};
