@@ -102,3 +102,11 @@ Use the [closure compiler](http://closure-compiler.appspot.com/home) with this i
 // @code_url https://raw.github.com/lindell/JsBarcode/master/JsBarcode.js
 // ==/ClosureCompiler==
 ````
+
+Or using [gulpjs](http://gulpjs.com/)
+````bash
+npm install
+gulp
+````
+JsBarcode.all.min.js file will be at ./build folder
+
