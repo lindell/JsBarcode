@@ -33,12 +33,6 @@
 		//Get the canvas context
 		var ctx	= canvas.getContext("2d");
 		
-		//Set responsive width if totalWidth is provided
-		if (options.totalWidth != null && typeof options.totalWidth === "number") {
-			options.width = Math.floor(options.totalWidth / binary.length);
-			options.quite += (options.totalWidth - options.width * binary.length) / 2;
-		}
-		
 		//Set the width and height of the barcode
 		canvas.width = binary.length*options.width+2*options.quite;
 		canvas.height = options.height;
@@ -76,7 +70,6 @@
 		width:	2,
 		height:	100,
 		quite: 10,
-		totalWidth: null,
 		format:	"CODE128",
 		backgroundColor:"#fff",
 		lineColor:"#000"
