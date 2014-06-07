@@ -7,14 +7,21 @@
 	<script src="../EAN_UPC.js"></script>
 	<script src="../CODE128.js"></script>
 	<script src="../JsBarcode.js"></script>
-	
-	<script>
-		$(document).ready(function(){
-			$("#barcode").JsBarcode("Javascript is fun!",{width:1,height:25});
-		});
-	</script>
 </head>
 <body>
-	<img id="barcode"/>
+	<img id="barcodeB"/>
+	<img id="barcodeC"/>
+	
+	<script>
+        $("#barcodeB").JsBarcode("Javascript is fun!", {
+            width: 1, 
+            height: 25
+        });
+        JsBarcode(document.querySelector("#barcodeC"), "47 94 40 52 02 00 36 08 20 04 88 31 50 00 00 00 08 68 51 62 59 61 98 97 10 06 12", {
+            width: 1, 
+            height: 25, 
+            format: "CODE128C"
+        });
+	</script>
 </body>
 </html>
