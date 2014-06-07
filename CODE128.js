@@ -1,8 +1,8 @@
 function CODE128(string, code){
-    code = code || "B";
+	code = code || "B";
 
 	this.string128 = string+"";
-    
+	
 	this.valid = valid;
 
 	//The public encoding function
@@ -120,7 +120,7 @@ function CODE128(string, code){
 	[String.fromCharCode(132),"10111101110",100],
 	[String.fromCharCode(133),"11101011110",101],
 	[String.fromCharCode(134),"11110101110",102],
-    //Start codes
+	//Start codes
 	[String.fromCharCode(135),"11010000100",103],
 	[String.fromCharCode(136),"11010010000",104],
 	[String.fromCharCode(137),"11010011100",105]];
@@ -140,34 +140,34 @@ function CODE128(string, code){
 	}
 
 	//The encoder function that return a complete binary string. Data need to be validated before sent to this function
-    //This is general calculate function, which is called by code specific calculate functions
-    function calculateCode128(string, encodeFn, startCode, checksumFn){
-        var result = "";
+	//This is general calculate function, which is called by code specific calculate functions
+	function calculateCode128(string, encodeFn, startCode, checksumFn){
+		var result = "";
 
-        //Add the start bits
-        result += encodingById(startCode);
+		//Add the start bits
+		result += encodingById(startCode);
 
-        //Add the encoded bits
-        result += encodeFn(string);
+		//Add the encoded bits
+		result += encodeFn(string);
 
-        //Add the checksum
-        result += encodingById(checksumFn(string, startCode));
+		//Add the checksum
+		result += encodingById(checksumFn(string, startCode));
 
-        //Add the end bits
-        result += endBin;
-        
-        return result;
-    }
-    
-    //Code specific calculate functions
+		//Add the end bits
+		result += endBin;
+		
+		return result;
+	}
+	
+	//Code specific calculate functions
 	var calculate = {
-        code128B: function(string){
-            return calculateCode128(string, encodeB, 104, checksumB);
-        },
-        code128C: function(string){
-            string = string.replace(/ /g, "");
-            return calculateCode128(string, encodeC, 105, checksumC);
-        }
+		code128B: function(string){
+			return calculateCode128(string, encodeB, 104, checksumB);
+		},
+		code128C: function(string){
+			string = string.replace(/ /g, "");
+			return calculateCode128(string, encodeC, 105, checksumC);
+		}
 	}
 
 	//Encode the characters (128 B)
@@ -178,7 +178,7 @@ function CODE128(string, code){
 		}
 		return result;
 	}
-    
+	
 	//Encode the characters (128 C)
 	function encodeC(string){
 		var result = "";
@@ -196,14 +196,14 @@ function CODE128(string, code){
 		}
 		return (sum+startCode) % 103;
 	}
-    
+	
 	//Calculate the checksum (128 C)
 	function checksumC(string, startCode){
 		var sum = 0;
-        var w = 1;
+		var w = 1;
 		for(var i=0;i<string.length;i+=2){
 			sum += parseInt(string.substr(i, 2))*(w);
-            w++;
+			w++;
 		}
 		return (sum+startCode) % 103;
 	}
@@ -240,8 +240,8 @@ function CODE128(string, code){
 }
 
 function CODE128B(string) {
-    return new CODE128(string, "B");
+	return new CODE128(string, "B");
 }
 function CODE128C(string) {
-    return new CODE128(string, "C");
+	return new CODE128(string, "C");
 };

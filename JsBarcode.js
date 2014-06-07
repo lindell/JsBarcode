@@ -1,16 +1,16 @@
 (function($){
-    
+	
 	JsBarcode = function(image, content, options) {
-        
-        var merge = function(m1, m2) {
-            for (var k in m2) {
-                m1[k] = m2[k];
-            }
-            return m1;
-        };
+		
+		var merge = function(m1, m2) {
+			for (var k in m2) {
+				m1[k] = m2[k];
+			}
+			return m1;
+		};
 	
 		//Merge the user options with the default
-        options = merge(JsBarcode.defaults, options);
+		options = merge(JsBarcode.defaults, options);
 
 		//Create the canvas where the barcode will be drawn on
 		var canvas = document.createElement('canvas');
@@ -19,7 +19,7 @@
 		if (!canvas.getContext) {
 			return image;
 		}
-        
+		
 		var encoder = new window[options.format](content);
 		
 		//Abort if the barcode format does not support the content
@@ -31,7 +31,7 @@
 		var binary = encoder.encoded();
 		
 		//Get the canvas context
-		var ctx    = canvas.getContext("2d");
+		var ctx	= canvas.getContext("2d");
 		
 		//Set the width and height of the barcode
 		canvas.width = binary.length*options.width+2*options.quite;
@@ -57,12 +57,12 @@
 		uri = canvas.toDataURL('image/png');
 		
 		//Put the data uri into the image
-        if (image.attr) { //If element has attr function (jQuery element)
-            return image.attr("src", uri);
-        }
+		if (image.attr) { //If element has attr function (jQuery element)
+			return image.attr("src", uri);
+		}
 		else { //DOM element
-            image.setAttribute("src", uri);
-        }
+			image.setAttribute("src", uri);
+		}
 
 	};
 	
@@ -74,15 +74,15 @@
 		backgroundColor:"#fff",
 		lineColor:"#000"
 	};
-    
-    //Extend jQuery
-    if ($) {
-        $.fn.JsBarcode = function(content, options) {
-            JsBarcode(this, content, options);
-        };
-    }
-    
-    //Add as global object
-    window["JsBarcode"] = JsBarcode;
+	
+	//Extend jQuery
+	if ($) {
+		$.fn.JsBarcode = function(content, options) {
+			JsBarcode(this, content, options);
+		};
+	}
+	
+	//Add as global object
+	window["JsBarcode"] = JsBarcode;
 
 })(jQuery);
