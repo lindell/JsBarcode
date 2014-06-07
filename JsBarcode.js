@@ -1,4 +1,4 @@
-(function($){
+(function(){
 	
 	JsBarcode = function(image, content, options) {
 		
@@ -76,8 +76,8 @@
 	};
 	
 	//Extend jQuery
-	if ($) {
-		$.fn.JsBarcode = function(content, options) {
+	if (jQuery) {
+		jQuery.fn.JsBarcode = function(content, options) {
 			JsBarcode(this, content, options);
 		};
 	}
@@ -85,4 +85,4 @@
 	//Add as global object
 	window["JsBarcode"] = JsBarcode;
 
-})(jQuery);
+})();
