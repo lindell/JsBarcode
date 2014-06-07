@@ -4,7 +4,7 @@ JsBarcode is a simple way to create different types of 1d barcodes.
 The plugin uses Html5Canvas to generate draw the barcodes
 
 #### This is the list of supported barcodes:
-*  CODE128 (B)
+*  CODE128 (B or C)
 *  EAN (13)
 *  UPC-A
 *  CODE39
@@ -13,11 +13,17 @@ The plugin uses Html5Canvas to generate draw the barcodes
 
 Use
 ----
-####A Html5Canvas barcode generator is included to draw the barcodes.
+####There are two ways of using the library:
+With jQuery:
 ````javascript
 $(object).JsBarcode(string,options);
 ````
-####Where:
+Or pure JavaScript:
+````javascript
+JsBarcode(object, string, options);
+````
+
+####The parameters:
 *  string is the sring to be encoded to the barcode
 *  options is additional options put i an object (look below)
 
