@@ -3,10 +3,14 @@
 	JsBarcode = function(image, content, options) {
 		
 		var merge = function(m1, m2) {
+		    var newMerge = {};
+		    for (var k in m1) {
+		        newMerge[k] = m1[k];
+		    }
 			for (var k in m2) {
-				m1[k] = m2[k];
+				newMerge[k] = m2[k];
 			}
-			return m1;
+			return newMerge;
 		};
 	
 		//Merge the user options with the default
@@ -30,12 +34,37 @@
 		//Encode the content
 		var binary = encoder.encoded();
 		
+		var _drawBarcodeText = function (text) {
+                    var x, y;
+
+                    y = options.height;
+
+                    ctx.font = options.fontSize + "px "+options.font;
+                    ctx.textBaseline = "bottom";
+                    ctx.textBaseline = 'top';
+
+                    if(options.textAlign == "left"){
+                        x = options.quite;
+                        ctx.textAlign = 'left';
+                    }
+                    else if(options.textAlign == "right"){
+                        x = canvas.width - options.quite;
+                        ctx.textAlign = 'right';
+                    }
+                    else{ //All other center
+                        x = canvas.width / 2;
+                        ctx.textAlign = 'center';
+                    }
+
+                    ctx.fillText(text, x, y);
+                }
+		
 		//Get the canvas context
 		var ctx	= canvas.getContext("2d");
 		
 		//Set the width and height of the barcode
 		canvas.width = binary.length*options.width+2*options.quite;
-		canvas.height = options.height;
+		canvas.height = options.height + (options.displayValue ? options.fontSize : 0);
 		
 		//Paint the canvas
 		ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -52,6 +81,10 @@
 				ctx.fillRect(x,0,options.width,options.height);
 			}			
 		}
+		
+		if(options.displayValue){
+            _drawBarcodeText(content);
+        }
 		
 		//Grab the dataUri from the canvas
 		uri = canvas.toDataURL('image/png');
@@ -71,18 +104,15 @@
 		height:	100,
 		quite: 10,
 		format:	"CODE128",
-		backgroundColor:"#fff",
-		lineColor:"#000"
+		displayValue: false,
+		font:"Monospaced",
+		textAlign:"center",
+        fontSize: 12,
 	};
-	
-	//Extend jQuery
-	if (window.jQuery) {
-		jQuery.fn.JsBarcode = function(content, options) {
-			JsBarcode(this, content, options);
-		};
-	}
-	
-	//Add as global object
-	window["JsBarcode"] = JsBarcode;
 
-})();
+	$.fn.JsBarcode = function(content, options){
+	    JsBarcode(this, content, options);
+	    return this;
+	};
+
+})(jQuery);
