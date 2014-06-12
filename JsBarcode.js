@@ -3,10 +3,10 @@
 	JsBarcode = function(image, content, options) {
 		
 		var merge = function(m1, m2) {
-		    var newMerge = {};
-		    for (var k in m1) {
-		        newMerge[k] = m1[k];
-		    }
+			var newMerge = {};
+			for (var k in m1) {
+				newMerge[k] = m1[k];
+			}
 			for (var k in m2) {
 				newMerge[k] = m2[k];
 			}
@@ -35,29 +35,29 @@
 		var binary = encoder.encoded();
 		
 		var _drawBarcodeText = function (text) {
-                    var x, y;
+					var x, y;
 
-                    y = options.height;
+					y = options.height;
 
-                    ctx.font = options.fontSize + "px "+options.font;
-                    ctx.textBaseline = "bottom";
-                    ctx.textBaseline = 'top';
+					ctx.font = options.fontSize + "px "+options.font;
+					ctx.textBaseline = "bottom";
+					ctx.textBaseline = 'top';
 
-                    if(options.textAlign == "left"){
-                        x = options.quite;
-                        ctx.textAlign = 'left';
-                    }
-                    else if(options.textAlign == "right"){
-                        x = canvas.width - options.quite;
-                        ctx.textAlign = 'right';
-                    }
-                    else{ //All other center
-                        x = canvas.width / 2;
-                        ctx.textAlign = 'center';
-                    }
+					if(options.textAlign == "left"){
+						x = options.quite;
+						ctx.textAlign = 'left';
+					}
+					else if(options.textAlign == "right"){
+						x = canvas.width - options.quite;
+						ctx.textAlign = 'right';
+					}
+					else{ //All other center
+						x = canvas.width / 2;
+						ctx.textAlign = 'center';
+					}
 
-                    ctx.fillText(text, x, y);
-                }
+					ctx.fillText(text, x, y);
+				}
 		
 		//Get the canvas context
 		var ctx	= canvas.getContext("2d");
@@ -83,8 +83,8 @@
 		}
 		
 		if(options.displayValue){
-            _drawBarcodeText(content);
-        }
+			_drawBarcodeText(content);
+		}
 		
 		//Grab the dataUri from the canvas
 		uri = canvas.toDataURL('image/png');
@@ -107,12 +107,12 @@
 		displayValue: false,
 		font:"Monospaced",
 		textAlign:"center",
-        fontSize: 12
+		fontSize: 12
 	};
 
 	$.fn.JsBarcode = function(content, options){
-	    JsBarcode(this, content, options);
-	    return this;
+		JsBarcode(this, content, options);
+		return this;
 	};
 
 })(jQuery);
