@@ -43,8 +43,7 @@ function CODE39(string){
 ,[39,"$","100010001000101"]
 ,[40,"/","100010001010001"]
 ,[41,"+","100010100010001"]
-,[42,"%","101000100010001"]
-,[43,"*","100010111011101"]];
+,[42,"%","101000100010001"]];
 
 	this.valid = valid;
 
@@ -59,7 +58,7 @@ function CODE39(string){
 	}
 
 	//This regexp is used for validation
-	var regexp = /^[0-9A-Z\-\.\ \$\/\+\%\*]+$/;
+	var regexp = /^[0-9A-Z\-\.\ \$\/\+\%]+$/;
 
 	//Use the regexp variable for validation
 	function valid(){
@@ -72,9 +71,11 @@ function CODE39(string){
 	//Encode the characters
 	function encode(string){
 		var result = "";
+		result += "1000101110111010";
 		for(var i=0;i<string.length;i++){
 			result+=encodingByChar(string[i])+"0";
 		}
+		result += "1000101110111010";
 		return result;
 	}
 	
