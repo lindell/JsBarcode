@@ -30,15 +30,17 @@ JsBarcode(object, string, options);
 ####The default options:
 ````javascript
 {
-    width:	2,
-    height:	100,
-    quite: 10,
-    format:	"CODE128",
-    displayValue: false,
-    font:"Monospaced",
-    textAlign:"center",
-    fontSize: 12,
-	}
+	width:	2,
+	height:	100,
+	quite: 10,
+	format:	"CODE128",
+	displayValue: false,
+	font:"Monospaced",
+	textAlign:"center",
+	fontSize: 12,
+	backgroundColor:"",
+	lineColor:"#000"
+}
 ````
 
 

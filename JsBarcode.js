@@ -107,7 +107,9 @@
 		displayValue: false,
 		font:"Monospaced",
 		textAlign:"center",
-		fontSize: 12
+		fontSize: 12,
+		backgroundColor:"",
+		lineColor:"#000"
 	};
 
 	$.fn.JsBarcode = function(content, options){
