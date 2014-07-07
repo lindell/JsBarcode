@@ -58,7 +58,7 @@ $("#barcode").JsBarcode("Hi!");
 ````
 
 #### Will generate this image:
-![Result](http://fleo.se/barcode/img/hi.png)
+![Result](http://lindell.github.io/JsBarcode/README_images/hi.png)
   
   
   
@@ -67,16 +67,16 @@ $("#barcode").JsBarcode("Hi!");
 $("#barcode").JsBarcode("Javascript is fun!",{width:1,height:25});
 ````
 #### Will generate this image:
-![Result](http://fleo.se/barcode/img/javascript.png)
+![Result](http://lindell.github.io/JsBarcode/README_images/javascript_is_fun.png)
   
   
   
 #### This code:
 ````javascript
-$("#barcode").JsBarcode("9780199532179",{format:"EAN"});
+$("#barcode").JsBarcode("9780199532179",{format:"EAN",displayValue:true,fontSize:20});
 ````
 #### Will generate this image:
-![Result](http://fleo.se/barcode/img/ean.png)
+![Result](http://lindell.github.io/JsBarcode/README_images/ean.png)
   
   
   
