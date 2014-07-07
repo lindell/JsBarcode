@@ -9,18 +9,43 @@
 	<script src="../JsBarcode.js"></script>
 </head>
 <body>
-	<img id="barcodeB"/><br/>
-	<img id="barcodeC"/>
+	<div>
+		<img id="barcode1"/>
+		<script>$("#barcode1").JsBarcode("Hi!");</script>
+	</div>
 	
-	<script>
-		$("#barcodeB").JsBarcode("Javascript is fun!", {
-			width: 1, 
-			height: 25
-		});
-		JsBarcode(document.querySelector("#barcodeC"), "Javascript is fun!", {
-			width: 1, 
-			height: 25
-		});
-	</script>
+	
+	<div>
+		<img id="barcode2"/>
+		<script>$("#barcode2").JsBarcode("Javascript is fun!",{width:1,height:25});</script>
+	</div>
+	
+	<div>
+		<img id="barcode3"/>
+		<script>$("#barcode3").JsBarcode("9780199532179",{format:"EAN",displayValue:true,fontSize:20});</script>
+	</div>
+	
+	<div>
+		<img id="barcode4"/>
+		<script>
+			var repeat4 = function(){
+				var date = new Date();
+				$("#barcode4").JsBarcode(date.getHours()+":"+date.getMinutes()+":"+date.getSeconds());
+			};
+			setInterval(repeat4,1000);
+			repeat4();
+		</script>
+	</div>
+	
+	<div>
+		<img id="barcode5"/>
+		<script>
+			var repeat5 = function(){
+				$("#barcode5").JsBarcode(Math.floor(1000000+Math.random()*9000000)+"",{displayValue:true,fontSize:20});
+			};
+			setInterval(repeat5,500);
+			repeat5();
+		</script>
+	</div>
 </body>
 </html>
