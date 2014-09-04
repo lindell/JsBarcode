@@ -11,6 +11,14 @@ The plugin uses Html5Canvas to generate draw the barcodes
 *  ITF (Interleaved 2 of 5)
 *  ITF14
 
+Bower
+----
+As well as downloading the files and including them regularly,
+you can use [Bower](http://bower.io) to install and manage the library
+````
+bower install jsbarcode --save
+````
+
 Use
 ----
 ####There are two ways of using the library:
@@ -59,27 +67,27 @@ $("#barcode").JsBarcode("Hi!");
 
 #### Will generate this image:
 ![Result](http://lindell.github.io/JsBarcode/README_images/hi.png)
-  
-  
-  
+
+
+
 #### This code:
 ````javascript
 $("#barcode").JsBarcode("Javascript is fun!",{width:1,height:25});
 ````
 #### Will generate this image:
 ![Result](http://lindell.github.io/JsBarcode/README_images/javascript_is_fun.png)
-  
-  
-  
+
+
+
 #### This code:
 ````javascript
 $("#barcode").JsBarcode("9780199532179",{format:"EAN",displayValue:true,fontSize:20});
 ````
 #### Will generate this image:
 ![Result](http://lindell.github.io/JsBarcode/README_images/ean.png)
-  
-  
-  
+
+
+
 #### This code:
 ````javascript
 setInterval(function(){
