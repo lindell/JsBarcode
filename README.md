@@ -10,6 +10,7 @@ The plugin uses Html5Canvas to generate draw the barcodes
 *  CODE39
 *  ITF (Interleaved 2 of 5)
 *  ITF14
+*  Pharmacode
 
 Bower
 ----
