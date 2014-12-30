@@ -17,8 +17,23 @@
 		options = merge(JsBarcode.defaults, options);
 
 		//Create the canvas where the barcode will be drawn on
-		var canvas = document.createElement('canvas');
-		
+		// Check if the given image is already a canvas
+		var canvas = image;
+
+		// check if it is a jQuery selection
+		if (image instanceof jQuery) {
+			// get the DOM element of the selection
+			canvas = image.get(0);
+			// check if DOM element is a canvas, otherwise it will be probably an image so create a canvas
+			if (!(canvas instanceof HTMLCanvasElement)) {
+				canvas = document.createElement('canvas');
+			}
+		} else if (!(image instanceof HTMLCanvasElement)) {
+			// there is no jQuery selection so just check if DOM element is a canvas, otherwise it will be probably
+			// an image so create a canvas
+			canvas = document.createElement('canvas');
+		}
+
 		//Abort if the browser does not support HTML5canvas
 		if (!canvas.getContext) {
 			return image;
@@ -88,12 +103,16 @@
 		
 		//Grab the dataUri from the canvas
 		uri = canvas.toDataURL('image/png');
-		
-		//Put the data uri into the image
-		if (image.attr) { //If element has attr function (jQuery element)
-			return image.attr("src", uri);
-		}
-		else { //DOM element
+
+		// check if given image is a jQuery selection
+		if (image instanceof jQuery) {
+			// check if the given image was a canvas, if not set the source attribute of the image
+			if (!(image.get(0) instanceof HTMLCanvasElement)) {
+				//Put the data uri into the image
+				return image.attr("src", uri);
+			}
+		} else if (!(image instanceof HTMLCanvasElement)) {
+			// There is no jQuery selection so just check if the given image was a canvas, if not set the source attr
 			image.setAttribute("src", uri);
 		}
 
