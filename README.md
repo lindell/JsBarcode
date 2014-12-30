@@ -56,7 +56,7 @@ JsBarcode(object, string, options);
 Examples
 ----
 
-####First we need an image (or an canvas - it works both ways!)
+####First we need an image (or a canvas - it works both ways!)
 ````html
 <img id="barcode">
 ````
