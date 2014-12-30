@@ -20,17 +20,14 @@
 		// Check if the given image is already a canvas
 		var canvas = image;
 
-		// check if it is a jQuery selection
-		if (image instanceof jQuery) {
-			// get the DOM element of the selection
+		// check if it is a jQuery object
+		if (canvas instanceof jQuery) {
+			// get the DOM element of the object
 			canvas = image.get(0);
-			// check if DOM element is a canvas, otherwise it will be probably an image so create a canvas
-			if (!(canvas instanceof HTMLCanvasElement)) {
-				canvas = document.createElement('canvas');
-			}
-		} else if (!(image instanceof HTMLCanvasElement)) {
-			// there is no jQuery selection so just check if DOM element is a canvas, otherwise it will be probably
-			// an image so create a canvas
+		}
+
+		// check if DOM element is a canvas, otherwise it will be probably an image so create a canvas
+		if (!(canvas instanceof HTMLCanvasElement)) {
 			canvas = document.createElement('canvas');
 		}
 
@@ -104,15 +101,15 @@
 		//Grab the dataUri from the canvas
 		uri = canvas.toDataURL('image/png');
 
-		// check if given image is a jQuery selection
+		// check if given image is a jQuery object
 		if (image instanceof jQuery) {
-			// check if the given image was a canvas, if not set the source attribute of the image
+			// check if DOM element of jQuery selection is not a canvas, so assume that it is an image
 			if (!(image.get(0) instanceof HTMLCanvasElement)) {
-				//Put the data uri into the image
-				return image.attr("src", uri);
+				 //Put the data uri into the image
+			 	return image.attr("src", uri);
 			}
 		} else if (!(image instanceof HTMLCanvasElement)) {
-			// There is no jQuery selection so just check if the given image was a canvas, if not set the source attr
+			// There is no jQuery object so just check if the given image was a canvas, if not set the source attr
 			image.setAttribute("src", uri);
 		}
 
