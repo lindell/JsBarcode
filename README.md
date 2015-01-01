@@ -73,7 +73,7 @@ Examples
 ````
 or
 ````html
-<canvas id="barcode"></canvas
+<canvas id="barcode"></canvas>
 ````
 
 #### This code:
