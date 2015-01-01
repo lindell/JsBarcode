@@ -1,4 +1,4 @@
-(function(){
+(function($){
 	
 	JsBarcode = function(image, content, options) {
 		
