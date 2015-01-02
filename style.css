@@ -1,0 +1,84 @@
+        body{
+            background:#ddd;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        #main{
+            width:800px;
+            display: table;
+            margin: 0 auto;
+            background:#fff;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            box-shadow:0 1px 2px hsla(0, 0%, 0%, 0.3);
+            margin-top:100px;
+        }
+
+        #innermain{
+            margin:40px;
+            text-align: center;
+        }
+
+        #userInput{
+            background: white;
+            border: 1px solid #DDD;
+            border-radius: 5px;
+            box-shadow: 0 0 5px #DDD inset;
+            padding:0px 10px;
+            color: #666;
+            outline: none;
+            font-size:25px;
+            height:50px;
+            width: 275px;
+        }
+
+        #barcodeType{
+            background: white;
+            border: 1px solid #DDD;
+            border-radius: 5px;
+            padding:0px 10px;
+            box-shadow: 0 0 5px #DDD inset;
+            color: #666;
+            font-size:25px;
+            outline: none;
+            height:50px;
+        }
+
+        #barcode{
+            margin:30px 0px;
+        }
+
+        #inputs{
+            display:inline-block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #title{
+            display:inline-block;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+            line-height: 90%;
+            margin-bottom:50px;
+        }
+
+        #title a:link{
+            text-decoration: none;
+            color: #000;
+        }
+
+        #title a:visited {
+            text-decoration: none;
+            color: #000;
+        }
+
+        #title a:hover {
+            text-decoration: underline;
+            color: #000;
+        }
+
+        #title a:active {
+            text-decoration: underline;
+            color: #000;
+        }
