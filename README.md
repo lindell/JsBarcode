@@ -1,3 +1,7 @@
+Demo
+----
+[Barcode Generator](http://lindell.github.io/JsBarcode/)
+
 Introduction
 ----
 JsBarcode is a simple way to create different types of 1d barcodes.  
@@ -127,6 +131,7 @@ Use the [closure compiler](http://closure-compiler.appspot.com/home) with this i
 // @code_url https://raw.github.com/lindell/JsBarcode/master/EAN_UPC.js
 // @code_url https://raw.github.com/lindell/JsBarcode/master/ITF.js
 // @code_url https://raw.github.com/lindell/JsBarcode/master/ITF14.js
+// @code_url https://raw.github.com/lindell/JsBarcode/master/pharmacode.js
 // @code_url https://raw.github.com/lindell/JsBarcode/master/JsBarcode.js
 // ==/ClosureCompiler==
 ````
