@@ -45,7 +45,8 @@
         }
 
         #barcode{
-            margin:30px 0px;
+            margin-top:10px;
+            margin-bottom:30px;
         }
 
         #inputs{
@@ -81,4 +82,10 @@
         #title a:active {
             text-decoration: underline;
             color: #000;
+        }
+
+        #invalid{
+            opacity: 0;
+            color:#DE0000;
+            margin-top:10px;
         }

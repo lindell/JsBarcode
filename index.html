@@ -15,8 +15,17 @@
     });
 
     var newBarcode = function() {
-        $("#barcode").JsBarcode($("#userInput").val(),{"format":$("#barcodeType").val(),"backgroundColor":"#fff"});
+        $("#barcode").JsBarcode($("#userInput").val(),{"format":$("#barcodeType").val(),"backgroundColor":"#fff"},
+            function(valid){
+                if(valid){
+                    $("#invalid").stop().fadeTo(300,0);
+                }
+                else{
+                    $("#invalid").stop().fadeTo(300,1);
+                }
+            });
     };
+
     </script>
 </head>
 <body>
@@ -39,6 +48,7 @@
                 </select>
             </div>
             <br/>
+            <div id="invalid">Not valid data for this barcode type!</div>
             <img id="barcode"/>
             <br/>
             <iframe src="http://ghbtns.com/github-btn.html?user=lindell&repo=jsbarcode&type=watch&count=true&size=large"
