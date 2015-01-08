@@ -1,6 +1,6 @@
 (function($){
 	
-	JsBarcode = function(image, content, options) {
+	JsBarcode = function(image, content, options, validFunction) {
 		
 		var merge = function(m1, m2) {
 			var newMerge = {};
@@ -11,6 +11,13 @@
 				newMerge[k] = m2[k];
 			}
 			return newMerge;
+		};
+
+        //This tries to call the valid function only if it's specified. Otherwise nothing happens
+		var validFunctionIfExist = function(valid){
+		    if(validFunction){
+		        validFunction(valid);
+		    }
 		};
 	
 		//Merge the user options with the default
@@ -40,6 +47,7 @@
 		
 		//Abort if the barcode format does not support the content
 		if(!encoder.valid()){
+		    validFunctionIfExist(false);
 			return this;
 		}
 		
@@ -106,12 +114,15 @@
 			// check if DOM element of jQuery selection is not a canvas, so assume that it is an image
 			if (!(image.get(0) instanceof HTMLCanvasElement)) {
 				 //Put the data uri into the image
-			 	return image.attr("src", uri);
+			 	image.attr("src", uri);
 			}
 		} else if (!(image instanceof HTMLCanvasElement)) {
 			// There is no jQuery object so just check if the given image was a canvas, if not set the source attr
 			image.setAttribute("src", uri);
 		}
+
+
+		validFunctionIfExist(true);
 
 	};
 	
@@ -128,8 +139,8 @@
 		lineColor:"#000"
 	};
 
-	$.fn.JsBarcode = function(content, options){
-		JsBarcode(this, content, options);
+	$.fn.JsBarcode = function(content, options,validFunction){
+		JsBarcode(this, content, options,validFunction);
 		return this;
 	};
 
