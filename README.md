@@ -24,6 +24,17 @@ you can use [Bower](http://bower.io) to install and manage the library
 bower install jsbarcode --save
 ````
 
+Setup
+----
+1. Include the JsBarcode plugin in the document.
+````
+<script src="JsBarcode.js"></script>
+````
+2. Include the CODE128.js if you want to generate a CODE 128 barcode.
+````
+<script src="CODE128.js"></script>
+````
+
 Use
 ----
 ####There are two ways of using the library:
