@@ -13,7 +13,7 @@
 			return newMerge;
 		};
 
-        //This tries to call the valid function only if it's specified. Otherwise nothing happens
+		//This tries to call the valid function only if it's specified. Otherwise nothing happens
 		var validFunctionIfExist = function(valid){
 		    if(validFunction){
 		        validFunction(valid);
@@ -28,7 +28,7 @@
 		var canvas = image;
 
 		// check if it is a jQuery object
-		if (canvas instanceof jQuery) {
+		if (window.jQuery && canvas instanceof jQuery) {
 			// get the DOM element of the object
 			canvas = image.get(0);
 		}
@@ -110,7 +110,7 @@
 		uri = canvas.toDataURL('image/png');
 
 		// check if given image is a jQuery object
-		if (image instanceof jQuery) {
+		if (window.jQuery && image instanceof jQuery) {
 			// check if DOM element of jQuery selection is not a canvas, so assume that it is an image
 			if (!(image.get(0) instanceof HTMLCanvasElement)) {
 				 //Put the data uri into the image
@@ -139,9 +139,11 @@
 		lineColor:"#000"
 	};
 
-	$.fn.JsBarcode = function(content, options,validFunction){
-		JsBarcode(this, content, options,validFunction);
-		return this;
-	};
+	if (window.jQuery) {
+		$.fn.JsBarcode = function(content, options,validFunction){
+			JsBarcode(this, content, options,validFunction);
+			return this;
+		};
+	}
 
-})(jQuery);
+})(window.jQuery);
