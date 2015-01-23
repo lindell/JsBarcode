@@ -26,13 +26,19 @@ bower install jsbarcode --save
 
 Setup
 ----
-1. Include the JsBarcode plugin in the document.
+* Include the JsBarcode plugin in the document.
 ````
 <script src="JsBarcode.js"></script>
 ````
-2. Include the CODE128.js if you want to generate a CODE 128 barcode.
+* Include the CODE128.js if you want to generate a CODE 128 barcode.
 ````
 <script src="CODE128.js"></script>
+````
+----
+OR you can include the [comined script](https://github.com/lindell/JsBarcode/releases) with everything you need.
+
+````
+<script src="JsBarcode.all.min.js"></script>
 ````
 
 Use
