@@ -35,7 +35,7 @@ Setup
 <script src="CODE128.js"></script>
 ````
 ----
-OR you can include the [comined script](https://github.com/lindell/JsBarcode/releases) with everything you need.
+OR you can include the [combined script](https://github.com/lindell/JsBarcode/releases) with everything you need.
 
 ````
 <script src="JsBarcode.all.min.js"></script>
