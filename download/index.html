@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Barcode generator</title>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script>
+            var version = "1.3";
+            var JsBarcode_url = "https://raw.githubusercontent.com/lindell/JsBarcode/" +version+ "/JsBarcode.js";
+            var barcodes_url = {
+                "CODE128"   : "https://raw.githubusercontent.com/lindell/JsBarcode/" +version+ "/CODE128.js",
+                "EAN_UPC"   : "https://raw.githubusercontent.com/lindell/JsBarcode/" +version+ "/EAN_UPC.js",
+                "CODE39"    : "https://raw.githubusercontent.com/lindell/JsBarcode/" +version+ "/CODE39.js",
+                "ITF"       : "https://raw.githubusercontent.com/lindell/JsBarcode/" +version+ "/ITF.js",
+                "ITF14"     : "https://raw.githubusercontent.com/lindell/JsBarcode/" +version+ "/ITF14.js",
+                "pharmacode": "https://raw.githubusercontent.com/lindell/JsBarcode/" +version+ "/pharmacode.js"
+            };
+
+            $(document).ready(function(){
+
+                $("#compile-btn").click(compile);
+
+            });
+
+            var compile = function(){
+                jQuery.ajaxSettings.traditional = true;
+
+                var compiles = [JsBarcode_url];
+
+                $(".compile-checkbox:checked").each(function () {
+                    compiles.push( barcodes_url[$(this).attr("value")] );
+                });
+
+                var compileData = { output_format:"json"
+                                    ,output_info:["warnings","errors","statistics"]
+                                    ,compilation_level:"SIMPLE_OPTIMIZATIONS"
+                                    ,warning_level:"default"
+                                    ,output_file_name:"JsBarcode.all.min.js"
+                                    ,code_url: compiles
+                                    ,js_code:"" };
+
+                $.post( "http://closure-compiler.appspot.com/compile", compileData).done(function(data){
+                    console.log(JSON.parse(data.responseText));
+                }).always(function(data) {
+                    var data = JSON.parse(data.responseText);
+
+                    if(!data["serverErrors"]){
+                        $("#download-link").attr("href", "http://closure-compiler.appspot.com" + data.outputFilePath);
+
+                        var size = data.statistics.compressedSize;
+                        var sizeKb = Math.floor(size/1024*10)/10;
+
+                        $("#statistics").text(sizeKb+"kB");
+                    }
+
+                    console.log(data);
+                });
+            };
+        </script>
+    </head>
+    <body>
+        <div>
+            <input type="checkbox" name="dummyjsbarcode" checked disabled>JsBarcode<br>
+            <input type="checkbox" class="compile-checkbox" name="barcodes" value="CODE128">CODE128<br>
+            <input type="checkbox" class="compile-checkbox" name="barcodes" value="EAN_UPC">EAN/UPC<br>
+            <input type="checkbox" class="compile-checkbox" name="barcodes" value="CODE39">CODE39<br>
+            <input type="checkbox" class="compile-checkbox" name="barcodes" value="ITF">ITF<br>
+            <input type="checkbox" class="compile-checkbox" name="barcodes" value="ITF14">ITF14<br>
+            <input type="checkbox" class="compile-checkbox" name="barcodes" value="pharmacode">Pharmacode<br>
+        </div>
+        <a href="#" id="compile-btn">Compile</a>
+        <a id="download-link" download="JsBarcode.js" href="#">Download</a>
+        <span id="statistics"></span>
+    </body>
+</html>
