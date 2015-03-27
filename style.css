@@ -1,135 +1,135 @@
-        body{
-            background:#ddd;
-            font-family: 'Open Sans', sans-serif;
-        }
+body{
+    background:#ddd;
+    font-family: 'Open Sans', sans-serif;
+}
 
-        #main{
-            width:800px;
-            display: table;
-            margin: 0 auto;
-            background:#fff;
-            -moz-border-radius: 5px;
-            border-radius: 5px;
-            box-shadow:0 1px 2px hsla(0, 0%, 0%, 0.3);
-            margin-top:100px;
-        }
+#main{
+    width:800px;
+    display: table;
+    margin: 0 auto;
+    background:#fff;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    box-shadow:0 1px 2px hsla(0, 0%, 0%, 0.3);
+    margin-top:100px;
+}
 
-        .innermain{
-            margin-left:auto;
-            margin-right:auto;
-            margin-top:0px;
-            margin-bottom:10px;
-            text-align: center;
-        }
+.innermain{
+    margin-left:auto;
+    margin-right:auto;
+    margin-top:0px;
+    margin-bottom:10px;
+    text-align: center;
+}
 
-        .inner-top{
-            width:500px;
-            margin-top:50px;
-        }
+.inner-top{
+    width:500px;
+    margin-top:50px;
+}
 
-        #userInput{
+#userInput{
 
-        }
+}
 
-        #barcodeType{
-            width:100%;
-        }
+#barcodeType{
+    width:100%;
+}
 
-        #barcode{
-            margin-top:10px;
-            margin-bottom:30px;
-        }
+#barcode{
+    margin-top:10px;
+    margin-bottom:30px;
+}
 
-        #inputs{
+#inputs{
 
-        }
+}
 
-        #title{
-            display:inline-block;
-            margin-left: auto;
-            margin-right: auto;
-            text-align: left;
-            line-height: 90%;
-            margin-bottom:50px;
-        }
+#title{
+    display:inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    line-height: 90%;
+    margin-bottom:50px;
+}
 
-        #title a:link{
-            text-decoration: none;
-            color: #000;
-        }
+#title a:link{
+    text-decoration: none;
+    color: #000;
+}
 
-        #title a:visited {
-            text-decoration: none;
-            color: #000;
-        }
+#title a:visited {
+    text-decoration: none;
+    color: #000;
+}
 
-        #title a:hover {
-            text-decoration: underline;
-            color: #000;
-        }
+#title a:hover {
+    text-decoration: underline;
+    color: #000;
+}
 
-        #title a:active {
-            text-decoration: underline;
-            color: #000;
-        }
+#title a:active {
+    text-decoration: underline;
+    color: #000;
+}
 
-        #invalid{
-            opacity: 0;
-            color:#DE0000;
-            margin-top:10px;
-        }
+#invalid{
+    opacity: 0;
+    color:#DE0000;
+    margin-top:10px;
+}
 
-        #options-button{
-            width:100%;
-        }
+#options-button{
+    width:100%;
+}
 
-        .box{
-            margin-left:0px;
-            margin-right:0px;
-            padding-left:0px;
-            padding-right:0px;
-        }
+.box{
+    margin-left:0px;
+    margin-right:0px;
+    padding-left:0px;
+    padding-right:0px;
+}
 
-        #userInputGroup{
-            width:100%;
-        }
+#userInputGroup{
+    width:100%;
+}
 
-        #options{
-            width:70%;
-            float:left;
-        }
+#options{
+    width:70%;
+    float:left;
+}
 
-        #options-display{
+#options-display{
 
-        }
+}
 
-        #options-names{
-            float:left;
-        }
+#options-names{
+    float:left;
+}
 
-        #options-names span{
-            display:block;
-            height:20px;
-            margin-bottom:20px;
-            font-size:20px;
-            margin-top:-10px;
-            text-align:right;
-            margin-right:5px;
-        }
+#options-names span{
+    display:block;
+    height:20px;
+    margin-bottom:20px;
+    font-size:20px;
+    margin-top:-10px;
+    text-align:right;
+    margin-right:5px;
+}
 
-        #checkbox-options{
-            font-size:16px;
-            clear:both;
-        }
+#checkbox-options{
+    font-size:16px;
+    clear:both;
+}
 
-        #checkbox-options input{
-            margin-left:20px;
-        }
+#checkbox-options input{
+    margin-left:20px;
+}
 
-        #options-display span{
-            display:block;
-            height:20px;
-            margin-bottom:20px;
-            font-size:20px;
-            margin-top:-10px;
-        }
+#options-display span{
+    display:block;
+    height:20px;
+    margin-bottom:20px;
+    font-size:20px;
+    margin-top:-10px;
+}

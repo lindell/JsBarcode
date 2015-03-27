@@ -104,20 +104,20 @@
 
             </div>
             <br/>
-            <div id="options-names">
-                <span>Bar Width </span>
-                <span>Height </span>
-                <span>Font Size </span>
+            <div class="row">
+                <div class="col-md-3">Bar Width</div>
+                <div class="col-md-8"><input id="bar-width" type="range" min="1" max="5" step="1" value="2"/></div>
+                <div class="mod-md-1"><span id="bar-width-display"></span></div>
             </div>
-            <div id="options">
-                <input id="bar-width" type="range" min="1" max="5" step="1" value="2"/>
-                <input id="bar-height" type="range" min="10" max="200" step="5" value="100"/>
-                <input id="bar-fontSize" type="range" min="8" max="36" step="1" value="16"/>
+            <div class="row">
+                <div class="col-md-3">Height</div>
+                <div class="col-md-8"><input id="bar-height" type="range" min="10" max="200" step="5" value="100"/></div>
+                <div class="mod-md-1"><span id="bar-height-display"></span></div>
             </div>
-            <div id="options-display">
-                <span id="bar-width-display"></span>
-                <span id="bar-height-display"></span>
-                <span id="bar-fontSize-display"></span>
+            <div class="row">
+                <div class="col-md-3">Font Size</div>
+                <div class="col-md-8"><input id="bar-fontSize" type="range" min="8" max="36" step="1" value="16"/></div>
+                <div class="mod-md-1"><span id="bar-fontSize-display"></span></div>
             </div>
             <div id="checkbox-options">
                 <label><input type="radio" name="display-value" value="true" checked> Show Text</label>
