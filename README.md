@@ -65,7 +65,7 @@ JsBarcode(object, string, options);
 	quite: 10,
 	format:	"CODE128",
 	displayValue: false,
-	font:"Monospaced",
+	font:"monospace",
 	textAlign:"center",
 	fontSize: 12,
 	backgroundColor:"",
