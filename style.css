@@ -14,34 +14,25 @@
             margin-top:100px;
         }
 
-        #innermain{
-            margin:40px;
+        .innermain{
+            margin-left:auto;
+            margin-right:auto;
+            margin-top:0px;
+            margin-bottom:10px;
             text-align: center;
         }
 
+        .inner-top{
+            width:500px;
+            margin-top:50px;
+        }
+
         #userInput{
-            background: white;
-            border: 1px solid #DDD;
-            border-radius: 5px;
-            box-shadow: 0 0 5px #DDD inset;
-            padding:0px 10px;
-            color: #666;
-            outline: none;
-            font-size:25px;
-            height:50px;
-            width: 275px;
+
         }
 
         #barcodeType{
-            background: white;
-            border: 1px solid #DDD;
-            border-radius: 5px;
-            padding:0px 10px;
-            box-shadow: 0 0 5px #DDD inset;
-            color: #666;
-            font-size:25px;
-            outline: none;
-            height:50px;
+            width:100%;
         }
 
         #barcode{
@@ -50,9 +41,7 @@
         }
 
         #inputs{
-            display:inline-block;
-            margin-left: auto;
-            margin-right: auto;
+
         }
 
         #title{
@@ -88,4 +77,59 @@
             opacity: 0;
             color:#DE0000;
             margin-top:10px;
+        }
+
+        #options-button{
+            width:100%;
+        }
+
+        .box{
+            margin-left:0px;
+            margin-right:0px;
+            padding-left:0px;
+            padding-right:0px;
+        }
+
+        #userInputGroup{
+            width:100%;
+        }
+
+        #options{
+            width:70%;
+            float:left;
+        }
+
+        #options-display{
+
+        }
+
+        #options-names{
+            float:left;
+        }
+
+        #options-names span{
+            display:block;
+            height:20px;
+            margin-bottom:20px;
+            font-size:20px;
+            margin-top:-10px;
+            text-align:right;
+            margin-right:5px;
+        }
+
+        #checkbox-options{
+            font-size:16px;
+            clear:both;
+        }
+
+        #checkbox-options input{
+            margin-left:20px;
+        }
+
+        #options-display span{
+            display:block;
+            height:20px;
+            margin-bottom:20px;
+            font-size:20px;
+            margin-top:-10px;
         }

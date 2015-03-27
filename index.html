@@ -3,19 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <title>Barcode generator</title>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type='text/css' href="rangeslider.css">
+    <script src="javascripts/rangeslider.min.js"></script>
+
     <link rel="stylesheet" type='text/css' href="style.css">
+
     <script src="javascripts/JsBarcode.all.min.js"></script>
     <script>
     $(document).ready(function(){
         $("#userInput").on('input',newBarcode);
         $("#barcodeType").change(newBarcode);
+        //$("#bar-width").on('input', newBarcode);
+        $("input:radio[name=display-value]").click(newBarcode);
         newBarcode();
+
+        $('input[type="range"]').rangeslider({
+            polyfill: false,
+
+            // Default CSS classes
+            rangeClass: 'rangeslider',
+            fillClass: 'rangeslider__fill',
+            handleClass: 'rangeslider__handle',
+
+            // Callback function
+            onInit: function() {console.log("test");},
+
+            // Callback function
+            onSlide: function(position, value) {newBarcode();},
+
+            // Callback function
+            onSlideEnd: function(position, value) {newBarcode();}
+        });
     });
 
     var newBarcode = function() {
-        $("#barcode").JsBarcode($("#userInput").val(),{"format":$("#barcodeType").val(),"backgroundColor":"#fff"},
+        //Convert to boolean
+        var displayValue = ($("input:radio[name=display-value]:checked").val() === "true");
+        console.log($("#bar-height").val());
+        $("#barcode").JsBarcode(
+            $("#userInput").val(),{
+                "format":$("#barcodeType").val(),
+                "backgroundColor":"#fff",
+                "fontSize":parseInt($("#bar-fontSize").val()),
+                "height":parseInt($("#bar-height").val()),
+                "width":$("#bar-width").val(),
+                "displayValue":displayValue
+            },
             function(valid){
                 if(valid){
                     $("#invalid").stop().fadeTo(300,0);
@@ -24,35 +64,69 @@
                     $("#invalid").stop().fadeTo(300,1);
                 }
             });
+
+        $("#bar-width-display").text($("#bar-width").val());
+        $("#bar-height-display").text($("#bar-height").val());
+        $("#bar-fontSize-display").text($("#bar-fontSize").val());
     };
 
     </script>
 </head>
 <body>
     <div id="main">
-        <div id="innermain">
+        <div class="innermain inner-top">
             <div id="title">
                 <h1>Barcode Generator</h1>Powered by <a href="https://github.com/lindell/JsBarcode">JsBarcode</a>
             </div>
             <br/>
-            <div id="inputs">
-                <input id="userInput" value="JsBarcode" class="defaultText" autofocus/>
-                <select id="barcodeType">
-                    <option value="CODE128">CODE128</option>
-                    <option value="EAN">EAN</option>
-                    <option value="UPC">UPC</option>
-                    <option value="CODE39">CODE39</option>
-                    <option value="ITF14">ITF14</option>
-                    <option value="ITF">ITF</option>
-                    <option value="pharmacode">Pharmacode</option>
-                </select>
+            <div id="inputs" class="form-inline">
+                <div class="row">
+                    <div class="col-md-9 box">
+                        <div class="input-group margin-bottom-sm" id="userInputGroup">
+                            <span class="input-group-addon"><i class="fa fa-barcode fa-fw"></i></span>
+                            <input class="form-control" id="userInput" type="text" value="JsBarcode" placeholder="Barcode" autofocus>
+                        </div>
+                    </div>
+                    <div class="col-md-3 box">
+                        <select class="form-control" id="barcodeType">
+                            <option value="CODE128">CODE128</option>
+                            <option value="EAN">EAN</option>
+                            <option value="UPC">UPC</option>
+                            <option value="CODE39">CODE39</option>
+                            <option value="ITF14">ITF14</option>
+                            <option value="ITF">ITF</option>
+                            <option value="pharmacode">Pharmacode</option>
+                        </select>
+                    </div>
+                </div>
+
+
+
             </div>
             <br/>
+            <div id="options-names">
+                <span>Bar Width </span>
+                <span>Height </span>
+                <span>Font Size </span>
+            </div>
+            <div id="options">
+                <input id="bar-width" type="range" min="1" max="5" step="1" value="2"/>
+                <input id="bar-height" type="range" min="10" max="200" step="5" value="100"/>
+                <input id="bar-fontSize" type="range" min="8" max="36" step="1" value="16"/>
+            </div>
+            <div id="options-display">
+                <span id="bar-width-display"></span>
+                <span id="bar-height-display"></span>
+                <span id="bar-fontSize-display"></span>
+            </div>
+            <div id="checkbox-options">
+                <label><input type="radio" name="display-value" value="true" checked> Show Text</label>
+                <label><input type="radio" name="display-value" value="false"> Hide Text</label>
+            </div>
+        </div>
+        <div class="innermain">
             <div id="invalid">Not valid data for this barcode type!</div>
             <img id="barcode"/>
-            <br/>
-            <iframe src="http://ghbtns.com/github-btn.html?user=lindell&repo=jsbarcode&type=watch&count=true&size=large"
-                    allowtransparency="true" frameborder="0" scrolling="0" width="150" height="30"></iframe>
         </div>
     </div>
 </body>
