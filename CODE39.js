@@ -58,7 +58,7 @@ function CODE39(string){
 	}
 
 	//This regexp is used for validation
-	var regexp = /^[0-9A-Z\-\.\ \$\/\+\%]+$/;
+	var regexp = /^[0-9a-zA-Z\-\.\ \$\/\+\%]+$/;
 
 	//Use the regexp variable for validation
 	function valid(){
@@ -70,6 +70,8 @@ function CODE39(string){
 
 	//Encode the characters
 	function encode(string){
+	    string = string.toUpperCase();
+
 		var result = "";
 		result += "1000101110111010";
 		for(var i=0;i<string.length;i++){
