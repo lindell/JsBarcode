@@ -77,9 +77,9 @@ function ITF14(ITF14number){
 	function checksum(numberString){
 		var result = 0;
 		
-		for(var i=0;i<13;i++){result+=parseInt(numberString[i])}
+		for(var i=0;i<13;i++){result+=parseInt(numberString[i])*(3-(i%2)*2)}
 
-		return result % 10;
+		return 10 - (result % 10);
 	}
 
 	function valid(number){
