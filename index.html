@@ -17,6 +17,16 @@
 
     <script src="javascripts/JsBarcode.all.min.js"></script>
     <script>
+    var defaultValues = {
+        CODE128 : "JsBarcode",
+        EAN : "1234567890128",
+        UPC : "123456789999",
+        CODE39 : "JSBARCODE",
+        ITF14 : "10012345000017",
+        ITF : "123456",
+        pharmacode : "1234"
+    };
+
     $(document).ready(function(){
         $("#userInput").on('input',newBarcode);
         $("#barcodeType").change(newBarcode);
