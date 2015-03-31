@@ -29,7 +29,10 @@
 
     $(document).ready(function(){
         $("#userInput").on('input',newBarcode);
-        $("#barcodeType").change(newBarcode);
+        $("#barcodeType").change(function(){
+            $("#userInput").val( defaultValues[$(this).val()] );
+            newBarcode();
+        });
         $("input:radio[name=display-value]").click(newBarcode);
         newBarcode();
 
