@@ -3,76 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <title>Barcode generator</title>
+
     <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script src="javascripts/JsBarcode.all.min.js"></script>
+    <script src="javascripts/rangeslider.min.js"></script>
+    <script src="javascripts/script.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type='text/css' href="rangeslider.css">
-    <script src="javascripts/rangeslider.min.js"></script>
-
     <link rel="stylesheet" type='text/css' href="style.css">
-
-    <script src="javascripts/JsBarcode.all.min.js"></script>
-    <script>
-    var defaultValues = {
-        CODE128 : "JsBarcode",
-        EAN : "1234567890128",
-        UPC : "123456789999",
-        CODE39 : "JSBARCODE",
-        ITF14 : "10012345000017",
-        ITF : "123456",
-        pharmacode : "1234"
-    };
-
-    $(document).ready(function(){
-        $("#userInput").on('input',newBarcode);
-        $("#barcodeType").change(function(){
-            $("#userInput").val( defaultValues[$(this).val()] );
-            newBarcode();
-        });
-        $("input:radio[name=display-value]").click(newBarcode);
-        newBarcode();
-
-        $('input[type="range"]').rangeslider({
-            polyfill: false,
-            rangeClass: 'rangeslider',
-            fillClass: 'rangeslider__fill',
-            handleClass: 'rangeslider__handle',
-            onSlide: newBarcode,
-            onSlideEnd: newBarcode
-        });
-    });
-
-    var newBarcode = function() {
-        //Convert to boolean
-        var displayValue = ($("input:radio[name=display-value]:checked").val() === "true");
-        $("#barcode").JsBarcode(
-            $("#userInput").val(),{
-                "format":$("#barcodeType").val(),
-                "backgroundColor":"#fff",
-                "fontSize":parseInt($("#bar-fontSize").val()),
-                "height":parseInt($("#bar-height").val()),
-                "width":$("#bar-width").val(),
-                "displayValue":displayValue
-            },
-            function(valid){
-                if(valid){
-                    $("#invalid").stop().fadeTo(300,0);
-                }
-                else{
-                    $("#invalid").stop().fadeTo(300,1);
-                }
-            });
-
-        $("#bar-width-display").text($("#bar-width").val());
-        $("#bar-height-display").text($("#bar-height").val());
-        $("#bar-fontSize-display").text($("#bar-fontSize").val());
-    };
-
-    </script>
 </head>
 <body>
     <div id="main">
@@ -101,9 +44,6 @@
                         </select>
                     </div>
                 </div>
-
-
-
             </div>
             <br/>
             <div class="row">
