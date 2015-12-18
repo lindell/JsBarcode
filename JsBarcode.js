@@ -59,7 +59,7 @@
 
 					y = options.height;
 
-					ctx.font = options.fontSize + "px "+options.font;
+					ctx.font = options.fontOptions + " " + options.fontSize + "px "+options.font;
 					ctx.textBaseline = "bottom";
 					ctx.textBaseline = 'top';
 
@@ -134,6 +134,7 @@
 		quite: 10,
 		format:	"CODE128",
 		displayValue: false,
+		fontOptions: "",
 		font:"monospace",
 		textAlign:"center",
 		fontSize: 12,
