@@ -1,6 +1,11 @@
 (function($){
 	
 	JsBarcode = function(image, content, options, validFunction) {
+
+		//Check if the image parameter should be
+		if(typeof image === "string"){
+			image = document.querySelector(image);
+		}
 		
 		var merge = function(m1, m2) {
 			var newMerge = {};
