@@ -73,7 +73,8 @@ function EAN(EANnumber){
 	var middleBin = "01010";
 	
 	//Regexp to test if the EAN code is correct formated
-	var regexp = /^[0-9]{13}$/;
+	var fullEanRegexp = /^[0-9]{13}$/;
+	var needLastDigitRegexp = /^[0-9]{12}$/;
 
 	//Create the binary representation of the EAN code
 	//number needs to be a string
@@ -141,11 +142,14 @@ function EAN(EANnumber){
 	}
 
 	function valid(number){
-		if(number.search(regexp)==-1){
-			return false;
+		if(number.search(needLastDigitRegexp)!=-1){
+			return true;
+		}
+		if(number.search(fullEanRegexp)!=-1){
+			return number[12] == checksum(number);
 		}
 		else{
-			return number[12] == checksum(number);
+			return false;
 		}
 	}
 }
