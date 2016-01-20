@@ -46,15 +46,13 @@ function CODE39(string){
 ,[41,"+","100010100010001"]
 ,[42,"%","101000100010001"]];
 
-	this.valid = valid;
-
 	this.getText = function(){
 		return this.string;
 	};
 
 	//The public encoding function
 	this.encoded = function(){
-		if(valid(this.string)){
+		if(this.valid(this.string)){
 			return encode(this.string);
 		}
 		else{
@@ -66,7 +64,7 @@ function CODE39(string){
 	var regexp = /^[0-9a-zA-Z\-\.\ \$\/\+\%]+$/;
 
 	//Use the regexp variable for validation
-	function valid(){
+	this.valid = function(){
 		if(this.string.search(regexp)==-1){
 			return false;
 		}
