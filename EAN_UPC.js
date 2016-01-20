@@ -1,17 +1,177 @@
 function EAN(EANnumber){
-
 	this.EANnumber = EANnumber+"";
+
+	//Regexp to test if the EAN code is correct formated
+	var fullEanRegexp = /^[0-9]{13}$/;
+	var needLastDigitRegexp = /^[0-9]{12}$/;
+
+	//Add checksum if it does not exist
+	if(this.EANnumber.search(needLastDigitRegexp)!=-1){
+		this.EANnumber += checksum(this.EANnumber);
+	}
 
 	this.valid = function(){
 		return valid(this.EANnumber);
 	};
-	
+
 	this.encoded = function (){
 		if(valid(this.EANnumber)){
-			return createUPC(this.EANnumber);
+			return createEAN13(this.EANnumber);
 		}
 		return "";
 	}
+
+	//Create the binary representation of the EAN code
+	//number needs to be a string
+	function createEAN13(number){
+		var encoder = new EANencoder();
+
+		//Create the return variable
+		var result = "";
+
+		var structure = encoder.getEANstructure(number);
+
+		//Get the number to be encoded on the left side of the EAN code
+		var leftSide = number.substr(1,7);
+
+		//Get the number to be encoded on the right side of the EAN code
+		var rightSide = number.substr(7,6);
+
+		//Add the start bits
+		result += encoder.startBin;
+
+		//Add the left side
+		result += encoder.encode(leftSide, structure);
+
+		//Add the middle bits
+		result += encoder.middleBin;
+
+		//Add the right side
+		result += encoder.encode(rightSide,"RRRRRR");
+
+		//Add the end bits
+		result += encoder.endBin;
+
+		return result;
+	}
+
+	//Calulate the checksum digit
+	function checksum(number){
+		var result = 0;
+
+		for(var i=0;i<12;i+=2){result+=parseInt(number[i])}
+		for(var i=1;i<12;i+=2){result+=parseInt(number[i])*3}
+
+		return (10 - (result % 10)) % 10;
+	}
+
+	function valid(number){
+		if(number.search(fullEanRegexp)!=-1){
+			return number[12] == checksum(number);
+		}
+		else{
+			return false;
+		}
+	}
+}
+
+function EAN8(EAN8number){
+	this.EAN8number = EAN8number+"";
+
+	//Regexp to test if the EAN code is correct formated
+	var fullEanRegexp = /^[0-9]{8}$/;
+	var needLastDigitRegexp = /^[0-9]{7}$/;
+
+	//Add checksum if it does not exist
+	if(this.EAN8number.search(needLastDigitRegexp)!=-1){
+		this.EAN8number += checksum(this.EAN8number);
+	}
+
+	this.valid = function(){
+		return valid(this.EAN8number);
+	};
+
+	this.encoded = function (){
+		if(valid(this.EAN8number)){
+			return createEAN8(this.EAN8number);
+		}
+		return "";
+	}
+
+	function valid(number){
+		if(number.search(fullEanRegexp)!=-1){
+			return number[7] == checksum(number);
+		}
+		else{
+			return false;
+		}
+	}
+
+	//Calulate the checksum digit
+	function checksum(number){
+		var result = 0;
+
+		for(var i=0;i<7;i+=2){result+=parseInt(number[i])*3}
+		for(var i=1;i<7;i+=2){result+=parseInt(number[i])}
+
+		return (10 - (result % 10)) % 10;
+	}
+
+	function createEAN8(number){
+		var encoder = new EANencoder();
+
+		//Create the return variable
+		var result = "";
+
+		//Get the number to be encoded on the left side of the EAN code
+		var leftSide = number.substr(0,4);
+
+		//Get the number to be encoded on the right side of the EAN code
+		var rightSide = number.substr(4,4);
+
+		//Add the start bits
+		result += encoder.startBin;
+
+		//Add the left side
+		result += encoder.encode(leftSide, "LLLL");
+
+		//Add the middle bits
+		result += encoder.middleBin;
+
+		//Add the right side
+		result += encoder.encode(rightSide,"RRRR");
+
+		//Add the end bits
+		result += encoder.endBin;
+
+		return result;
+	}
+}
+
+
+function UPC(UPCnumber){
+	this.ean = new EAN("0"+UPCnumber);
+
+	this.valid = function(){
+		return this.ean.valid();
+	}
+
+	this.encoded = function(){
+		return this.ean.encoded();
+	}
+
+}
+
+//
+// Help class that does all the encoding
+//
+function EANencoder(){
+	//The start bits
+	this.startBin = "101";
+	//The end bits
+	this.endBin = "101";
+	//The middle bits
+	this.middleBin = "01010";
 
 	//The L (left) type of encoding
 	var Lbinary = {
@@ -24,7 +184,7 @@ function EAN(EANnumber){
 	6: "0101111",
 	7: "0111011",
 	8: "0110111",
-	9: "0001011"}
+	9: "0001011"};
 
 	//The G type of encoding
 	var Gbinary = {
@@ -37,7 +197,7 @@ function EAN(EANnumber){
 	6: "0000101",
 	7: "0010001",
 	8: "0001001",
-	9: "0010111"}
+	9: "0010111"};
 
 	//The R (right) type of encoding
 	var Rbinary = {
@@ -50,10 +210,10 @@ function EAN(EANnumber){
 	6: "1010000",
 	7: "1000100",
 	8: "1001000",
-	9: "1110100"}
+	9: "1110100"};
 
 	//The left side structure in EAN-13
-	var EANstruct = {
+	var EANstructure = {
 	0: "LLLLLL",
 	1: "LLGLGG",
 	2: "LLGGLG",
@@ -65,106 +225,28 @@ function EAN(EANnumber){
 	8: "LGLGGL",
 	9: "LGGLGL"}
 
-	//The start bits
-	var startBin = "101";
-	//The end bits
-	var endBin = "101";
-	//The middle bits
-	var middleBin = "01010";
-	
-	//Regexp to test if the EAN code is correct formated
-	var fullEanRegexp = /^[0-9]{13}$/;
-	var needLastDigitRegexp = /^[0-9]{12}$/;
+	this.getEANstructure = function(number){
+		return EANstructure[number[0]];
+	};
 
-	//Create the binary representation of the EAN code
-	//number needs to be a string
-	function createUPC(number){
-		//Create the return variable
-		var result = "";
-
-		//Get the first digit (for later determination of the encoding type)
-		var firstDigit = number[0];
-		
-		//Get the number to be encoded on the left side of the EAN code
-		var leftSide = number.substr(1,7);
-		
-		//Get the number to be encoded on the right side of the EAN code
-		var rightSide = number.substr(7,6);
-		
-		
-		//Add the start bits
-		result += startBin;
-		
-		//Add the left side
-		result += encode(leftSide,EANstruct[firstDigit]);
-		
-		//Add the middle bits
-		result += middleBin;
-		
-		//Add the right side
-		result += encode(rightSide,"RRRRRR");
-		
-		//Add the end bits
-		result += endBin;
-		
-		return result;
-	}
-
-	//Convert a numberarray to the representing 
-	function encode(number,struct){	
+	//Convert a numberarray to the representing
+	this.encode = function(number,structure){
 		//Create the variable that should be returned at the end of the function
 		var result = "";
-		
+
 		//Loop all the numbers
 		for(var i = 0;i<number.length;i++){
 			//Using the L, G or R encoding and add it to the returning variable
-			if(struct[i]=="L"){
+			if(structure[i]=="L"){
 				result += Lbinary[number[i]];
 			}
-			else if(struct[i]=="G"){
+			else if(structure[i]=="G"){
 				result += Gbinary[number[i]];
 			}
-			else if(struct[i]=="R"){
+			else if(structure[i]=="R"){
 				result += Rbinary[number[i]];
 			}
 		}
 		return result;
-	}
-
-	//Calulate the checksum digit
-	function checksum(number){
-		var result = 0;
-		
-		for(var i=0;i<12;i+=2){result+=parseInt(number[i])}
-		for(var i=1;i<12;i+=2){result+=parseInt(number[i])*3}
-
-		return (10 - (result % 10)) % 10;
-	}
-
-	function valid(number){
-		if(number.search(needLastDigitRegexp)!=-1){
-			return true;
-		}
-		if(number.search(fullEanRegexp)!=-1){
-			return number[12] == checksum(number);
-		}
-		else{
-			return false;
-		}
-	}
-}
-
-
-function UPC(UPCnumber){
-	
-	this.ean = new EAN("0"+UPCnumber);
-	
-	this.valid = function(){
-		return this.ean.valid();
-	}
-	
-	this.encoded = function(){
-		return this.ean.encoded();
-	}
-	
+	};
 }
