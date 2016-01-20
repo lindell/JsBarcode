@@ -33,7 +33,7 @@
 		var canvas = image;
 
 		// check if it is a jQuery object
-		if (window.jQuery && canvas instanceof jQuery) {
+		if ($ && canvas instanceof $) {
 			// get the DOM element of the object
 			canvas = image.get(0);
 		}
@@ -117,7 +117,7 @@
 		uri = canvas.toDataURL('image/png');
 
 		// check if given image is a jQuery object
-		if (window.jQuery && image instanceof jQuery) {
+		if ($ && image instanceof $) {
 			// check if DOM element of jQuery selection is not a canvas, so assume that it is an image
 			if (!(image.get(0) instanceof HTMLCanvasElement)) {
 				 //Put the data uri into the image
@@ -147,11 +147,11 @@
 		lineColor:"#000"
 	};
 
-	if (window.jQuery) {
+	if ($) {
 		$.fn.JsBarcode = function(content, options,validFunction){
 			JsBarcode(this, content, options,validFunction);
 			return this;
 		};
 	}
 
-})(window.jQuery);
+})(jQuery);
