@@ -1,12 +1,12 @@
 (function($){
-	
+
 	JsBarcode = function(image, content, options, validFunction) {
 
 		//Check if the image parameter should be
 		if(typeof image === "string"){
 			image = document.querySelector(image);
 		}
-		
+
 		var merge = function(m1, m2) {
 			var newMerge = {};
 			for (var k in m1) {
@@ -24,7 +24,7 @@
 		        validFunction(valid);
 		    }
 		};
-	
+
 		//Merge the user options with the default
 		options = merge(JsBarcode.defaults, options);
 
@@ -47,18 +47,19 @@
 		if (!canvas.getContext) {
 			return image;
 		}
-		
+
 		var encoder = new window[options.format](content);
-		
+
 		//Abort if the barcode format does not support the content
 		if(!encoder.valid()){
 		    validFunctionIfExist(false);
+			throw new Error('The data is not valid for the type of barcode.');
 			return this;
 		}
-		
+
 		//Encode the content
 		var binary = encoder.encoded();
-		
+
 		var _drawBarcodeText = function (text) {
 					var x, y;
 
@@ -83,36 +84,36 @@
 
 					ctx.fillText(text, x, y);
 				}
-		
+
 		//Get the canvas context
 		var ctx	= canvas.getContext("2d");
-		
+
 		//Set the width and height of the barcode
 		canvas.width = binary.length*options.width+2*options.quite;
         //Set extra height if the value is displayed under the barcode. Multiplication with 1.3 t0 ensure that some
         //characters are not cut in half
 		canvas.height = options.height + (options.displayValue ? options.fontSize * 1.3 : 0);
-		
+
 		//Paint the canvas
 		ctx.clearRect(0,0,canvas.width,canvas.height);
 		if(options.backgroundColor){
 			ctx.fillStyle = options.backgroundColor;
 			ctx.fillRect(0,0,canvas.width,canvas.height);
 		}
-		
+
 		//Creates the barcode out of the encoded binary
 		ctx.fillStyle = options.lineColor;
 		for(var i=0;i<binary.length;i++){
 			var x = i*options.width+options.quite;
 			if(binary[i] == "1"){
 				ctx.fillRect(x,0,options.width,options.height);
-			}			
+			}
 		}
-		
+
 		if(options.displayValue){
-			_drawBarcodeText(content);
+			_drawBarcodeText(encoder.getText());
 		}
-		
+
 		//Grab the dataUri from the canvas
 		uri = canvas.toDataURL('image/png');
 
@@ -132,7 +133,7 @@
 		validFunctionIfExist(true);
 
 	};
-	
+
 	JsBarcode.defaults = {
 		width:	2,
 		height:	100,

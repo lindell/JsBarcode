@@ -10,6 +10,10 @@ function EAN(EANnumber){
 		this.EANnumber += checksum(this.EANnumber);
 	}
 
+	this.getText = function(){
+		return this.EANnumber;
+	};
+
 	this.valid = function(){
 		return valid(this.EANnumber);
 	};
