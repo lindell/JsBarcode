@@ -2,10 +2,14 @@ function ITF14(ITF14number){
 
 	this.ITF14number = ITF14number+"";
 
+	this.getText = function(){
+		return this.ITF14number;
+	};
+
 	this.valid = function(){
 		return valid(this.ITF14number);
 	};
-	
+
 	this.encoded = function (){
 		if(valid(this.ITF14number)){
 			return encode(this.ITF14number);
@@ -30,41 +34,41 @@ function ITF14(ITF14number){
 	var startBin = "1010";
 	//The end bits
 	var endBin = "11101";
-	
+
 	//Regexp for a valid ITF14 code
 	var regexp = /^[0-9]{13,14}$/;
 
-	//Convert a numberarray to the representing 
-	function encode(number){	
+	//Convert a numberarray to the representing
+	function encode(number){
 		//Create the variable that should be returned at the end of the function
 		var result = "";
-		
+
 		//If checksum is not already calculated, do it
 		if(number.length == 13){
 			number += checksum(number);
 		}
-		
+
 		//Always add the same start bits
-		result += startBin;	
-		
+		result += startBin;
+
 		//Calculate all the digit pairs
 		for(var i=0;i<14;i+=2){
 			result += calculatePair(number.substr(i,2));
 		}
-		
+
 		//Always add the same end bits
 		result += endBin;
-		
+
 		return result;
 	}
-	
+
 	//Calculate the data of a number pair
 	function calculatePair(twoNumbers){
 		var result = "";
-		
+
 		var number1Struct = digitStructure[twoNumbers[0]];
 		var number2Struct = digitStructure[twoNumbers[1]];
-		
+
 		//Take every second bit and add to the result
 		for(var i=0;i<5;i++){
 			result += (number1Struct[i]=="1") ? "111" : "1";
@@ -76,7 +80,7 @@ function ITF14(ITF14number){
 	//Calulate the checksum digit
 	function checksum(numberString){
 		var result = 0;
-		
+
 		for(var i=0;i<13;i++){result+=parseInt(numberString[i])*(3-(i%2)*2)}
 
 		return 10 - (result % 10);

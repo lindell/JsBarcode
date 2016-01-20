@@ -1,4 +1,5 @@
 function CODE39(string){
+	this.string = string.toUpperCase();
 
 	var code39 = [
  [0,"0","101000111011101"]
@@ -47,10 +48,14 @@ function CODE39(string){
 
 	this.valid = valid;
 
+	this.getText = function(){
+		return this.string;
+	};
+
 	//The public encoding function
 	this.encoded = function(){
-		if(valid(string)){
-			return encode(string);
+		if(valid(this.string)){
+			return encode(this.string);
 		}
 		else{
 			return "";
@@ -62,7 +67,7 @@ function CODE39(string){
 
 	//Use the regexp variable for validation
 	function valid(){
-		if(string.search(regexp)==-1){
+		if(this.string.search(regexp)==-1){
 			return false;
 		}
 		return true;
@@ -70,8 +75,6 @@ function CODE39(string){
 
 	//Encode the characters
 	function encode(string){
-	    string = string.toUpperCase();
-
 		var result = "";
 		result += "1000101110111010";
 		for(var i=0;i<string.length;i++){
@@ -80,7 +83,7 @@ function CODE39(string){
 		result += "1000101110111010";
 		return result;
 	}
-	
+
 	//Get the encoded data of a character
 	function encodingByChar(character){
 		for(var i=0;i<code39.length;i++){

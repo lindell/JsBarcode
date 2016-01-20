@@ -2,8 +2,12 @@ function CODE128(string, code){
 	code = code || "B";
 
 	this.string128 = string+"";
-	
+
 	this.valid = valid;
+
+	this.getText = function(){
+		this.string128;
+	};
 
 	//The public encoding function
 	this.encoded = function(){
@@ -155,10 +159,10 @@ function CODE128(string, code){
 
 		//Add the end bits
 		result += endBin;
-		
+
 		return result;
 	}
-	
+
 	//Code specific calculate functions
 	var calculate = {
 		code128B: function(string){
@@ -178,7 +182,7 @@ function CODE128(string, code){
 		}
 		return result;
 	}
-	
+
 	//Encode the characters (128 C)
 	function encodeC(string){
 		var result = "";
@@ -196,7 +200,7 @@ function CODE128(string, code){
 		}
 		return (sum+startCode) % 103;
 	}
-	
+
 	//Calculate the checksum (128 C)
 	function checksumC(string, startCode){
 		var sum = 0;
