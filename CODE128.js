@@ -6,7 +6,7 @@ function CODE128(string, code){
 	this.valid = valid;
 
 	this.getText = function(){
-		this.string128;
+		return this.string128;
 	};
 
 	//The public encoding function
