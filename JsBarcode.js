@@ -54,7 +54,6 @@
 		if(!encoder.valid()){
 		    validFunctionIfExist(false);
 			throw new Error('The data is not valid for the type of barcode.');
-			return this;
 		}
 
 		//Encode the content
