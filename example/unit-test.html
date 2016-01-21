@@ -114,5 +114,23 @@
     <img id="barcode10"/>
     <script>$("#barcode10").JsBarcode("12345",{format:"pharmacode", width:1, displayValue: true});</script>
   </div>
+
+  <div class="testbox">
+    <b>Format:</b> CODE128<br>
+    <b>Input:</b> Using querySelect<br>
+    <b>Extra:</b>
+    <br><br>
+    <img id="barcode11"/>
+    <script>JsBarcode("#barcode11","A little test!",{format:"CODE128", width:1, displayValue: true});</script>
+  </div>
+
+  <div class="testbox">
+    <b>Format:</b> CODE128<br>
+    <b>Input:</b> Using element<br>
+    <b>Extra:</b>
+    <br><br>
+    <img id="barcode12"/>
+    <script>JsBarcode(document.getElementById("barcode12"),"A little test!",{format:"CODE128", width:1, displayValue: true});</script>
+  </div>
 </body>
 </html>
