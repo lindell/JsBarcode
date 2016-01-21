@@ -91,6 +91,10 @@ function EAN8(EAN8number){
 		this.EAN8number += checksum(this.EAN8number);
 	}
 
+	this.getText = function(){
+		return this.EAN8number;
+	}
+
 	this.valid = function(){
 		return valid(this.EAN8number);
 	};
@@ -155,6 +159,10 @@ function EAN8(EAN8number){
 
 function UPC(UPCnumber){
 	this.ean = new EAN("0"+UPCnumber);
+
+	this.getText = function(){
+		return this.ean.getText().substring(1);
+	}
 
 	this.valid = function(){
 		return this.ean.valid();
