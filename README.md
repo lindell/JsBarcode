@@ -16,7 +16,49 @@ The plugin uses Html5Canvas to generate draw the barcodes
 *  ITF14
 *  Pharmacode
 
-Bower
+Examples:
+----
+
+#### First create an image (or canvas)
+````html
+<img id="barcode">
+````
+
+#### Code:
+````javascript
+$("#barcode").JsBarcode("9780199532179",{format:"EAN", displayValue:true, fontSize:20});
+````
+##### Result:
+![Result](http://lindell.github.io/JsBarcode/README_images/ean.png)
+
+
+
+#### Code:
+````javascript
+$("#barcode").JsBarcode("Hi!");
+````
+
+##### Result:
+![Result](http://lindell.github.io/JsBarcode/README_images/hi.png)
+
+
+
+#### Code (without jQuery):
+````javascript
+JsBarcode("#barcode","JsBarcode is easy!",{width:1,height:25});
+````
+##### Result:
+![Result](http://lindell.github.io/JsBarcode/README_images/javascript_is_fun.png)
+
+Setup:
+----
+Download and include the [comined script](https://github.com/lindell/JsBarcode/releases) that contain everything you need.
+
+````
+<script src="JsBarcode.all.min.js"></script>
+````
+
+Bower:
 ----
 As well as downloading the files and including them regularly,
 you can use [Bower](http://bower.io) to install and manage the library
@@ -24,26 +66,9 @@ you can use [Bower](http://bower.io) to install and manage the library
 bower install jsbarcode --save
 ````
 
-Setup
-----
-* Include the JsBarcode plugin in the document.
-````
-<script src="JsBarcode.js"></script>
-````
-* Include the CODE128.js if you want to generate a CODE 128 barcode.
-````
-<script src="CODE128.js"></script>
-````
-----
-OR you can include the [comined script](https://github.com/lindell/JsBarcode/releases) with everything you need.
-
-````
-<script src="JsBarcode.all.min.js"></script>
-````
-
 Use
 ----
-####There are two ways of using the library:
+#### There are two ways of using the library:
 With jQuery:
 ````javascript
 $(object).JsBarcode(string,options);
@@ -53,11 +78,11 @@ Or pure JavaScript:
 JsBarcode(object, string, options);
 ````
 
-####The parameters:
+#### The parameters:
 *  string is the sring to be encoded to the barcode
 *  options is additional options put i an object (look below)
 
-####The default options:
+#### The default options:
 ````javascript
 {
 	width:	2,
@@ -75,55 +100,7 @@ JsBarcode(object, string, options);
 ````
 
 
-Examples
-----
 
-####First we need an image (or a canvas - it works both ways!)
-````html
-<img id="barcode">
-````
-or
-````html
-<canvas id="barcode"></canvas>
-````
-
-#### This code:
-````javascript
-$("#barcode").JsBarcode("Hi!");
-````
-
-#### Will generate this image:
-![Result](http://lindell.github.io/JsBarcode/README_images/hi.png)
-
-
-
-#### This code:
-````javascript
-$("#barcode").JsBarcode("Javascript is fun!",{width:1,height:25});
-````
-#### Will generate this image:
-![Result](http://lindell.github.io/JsBarcode/README_images/javascript_is_fun.png)
-
-
-
-#### This code:
-````javascript
-$("#barcode").JsBarcode("9780199532179",{format:"EAN",displayValue:true,fontSize:20});
-````
-#### Will generate this image:
-![Result](http://lindell.github.io/JsBarcode/README_images/ean.png)
-
-
-
-#### This code:
-````javascript
-setInterval(function(){
-	var date = new Date();
-	$("#barcode").JsBarcode(date.getHours()+":"+date.getMinutes()+":"+date.getSeconds());
-},1000);
-````
-#### Will create a barcode clock:
-[Click here to see it](http://fleo.se/barcode/example/barcodeClock.html)
 
 
 
