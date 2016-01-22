@@ -132,5 +132,14 @@
     <img id="barcode12"/>
     <script>JsBarcode(document.getElementById("barcode12"),"A little test!",{format:"CODE128", width:1, displayValue: true});</script>
   </div>
+
+	<div class="testbox">
+		<b>Format:</b> CODE128<br>
+		<b>Input:</b> A little test!<br>
+		<b>Extra:</b>
+		<br><br>
+		<img id="barcode13"/>
+		<script>$("#barcode13").JsBarcode("13 37 4 20",{format:"CODE128C", width:1, displayValue: true});</script>
+	</div>
 </body>
 </html>
