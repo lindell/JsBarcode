@@ -1,5 +1,6 @@
 var defaultValues = {
     CODE128 : "JsBarcode",
+    CODE128C : "13 37 4 20",
     EAN : "1234567890128",
     EAN8 : "12345670",
     UPC : "123456789999",
