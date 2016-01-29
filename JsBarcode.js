@@ -62,7 +62,8 @@
 		var _drawBarcodeText = function (text) {
 					var x, y;
 
-					y = options.height;
+					// allow definition of some spare space above the text as textGutter
+					y = options.height + textGutter;
 
 					ctx.font = options.fontOptions + " " + options.fontSize + "px "+options.font;
 					ctx.textBaseline = "bottom";
@@ -143,6 +144,7 @@
 		font:"monospace",
 		textAlign:"center",
 		fontSize: 12,
+		textGutter: 0,
 		backgroundColor:"",
 		lineColor:"#000"
 	};

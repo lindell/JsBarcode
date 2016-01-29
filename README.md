@@ -94,6 +94,7 @@ JsBarcode(object, string, options);
 	font:"monospace",
 	textAlign:"center",
 	fontSize: 12,
+	textGutter: 0,
 	backgroundColor:"",
 	lineColor:"#000"
 }
