@@ -93,6 +93,7 @@ JsBarcode(object, string, options);
 	fontOptions: "",
 	font:"monospace",
 	textAlign:"center",
+	textPadding:0,
 	fontSize: 12,
 	backgroundColor:"",
 	lineColor:"#000"

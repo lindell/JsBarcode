@@ -62,7 +62,7 @@
 		var _drawBarcodeText = function (text) {
 					var x, y;
 
-					y = options.height;
+					y = options.height + options.textPadding;
 
 					ctx.font = options.fontOptions + " " + options.fontSize + "px "+options.font;
 					ctx.textBaseline = "bottom";
@@ -91,7 +91,7 @@
 		canvas.width = binary.length*options.width+2*options.quite;
         //Set extra height if the value is displayed under the barcode. Multiplication with 1.3 t0 ensure that some
         //characters are not cut in half
-		canvas.height = options.height + (options.displayValue ? options.fontSize * 1.3 : 0);
+		canvas.height = options.height + (options.displayValue ? options.fontSize * 1.3 : 0) + options.textPadding;
 
 		//Paint the canvas
 		ctx.clearRect(0,0,canvas.width,canvas.height);
@@ -142,6 +142,7 @@
 		fontOptions: "",
 		font:"monospace",
 		textAlign:"center",
+		textPadding:0,
 		fontSize: 12,
 		backgroundColor:"",
 		lineColor:"#000"
