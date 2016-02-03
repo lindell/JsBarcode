@@ -1,0 +1,27 @@
+{
+  "name": "jsbarcode",
+  "version": "1.1.0",
+  "description": "JsBarcode is a simple way to create different types of 1d barcodes.",
+  "main": "JsBarcode.js",
+  "directories": {
+    "example": "example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chefsplate/JsBarcode.git"
+  },
+  "keywords": [
+    "barcode",
+    "canvas",
+    "canvas",
+    "code128",
+    "upc-a",
+    "itf"
+  ],
+  "author": "Johan Lindell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chefsplate/JsBarcode/issues"
+  },
+  "homepage": "https://github.com/chefsplate/JsBarcode#readme"
+}
