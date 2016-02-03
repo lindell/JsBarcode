@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chefsplate/JsBarcode.git"
+    "url": "git+https://github.com/lindell/JsBarcode.git"
   },
   "keywords": [
     "barcode",
@@ -21,7 +21,7 @@
   "author": "Johan Lindell",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/chefsplate/JsBarcode/issues"
+    "url": "https://github.com/lindell/JsBarcode/issues"
   },
-  "homepage": "https://github.com/chefsplate/JsBarcode#readme"
+  "homepage": "https://github.com/lindell/JsBarcode#readme"
 }
