@@ -42,9 +42,9 @@
 			canvas = document.createElement('canvas');
 		}
 
-		//Abort if the browser does not support HTML5canvas
+		//Abort if the browser does not support HTML5 canvas
 		if (!canvas.getContext) {
-			return image;
+			throw new Error('The browser does not support canvas.');
 		}
 
 		var encoder = new (JsBarcode.getModule(options.format))(content);
@@ -138,7 +138,6 @@
 
 
 		validFunctionIfExist(true);
-
 	};
 
 	JsBarcode._cache = {};
@@ -199,8 +198,8 @@
 	};
 
 	if ($) {
-		$.fn.JsBarcode = function(content, options,validFunction){
-			JsBarcode(this, content, options,validFunction);
+		$.fn.JsBarcode = function(content, options, validFunction){
+			JsBarcode(this, content, options, validFunction);
 			return this;
 		};
 	}
