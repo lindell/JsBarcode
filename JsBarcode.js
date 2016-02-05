@@ -55,8 +55,17 @@
 			throw new Error('The data is not valid for the type of barcode.');
 		}
 
-		//Encode the content
-		var binary = encoder.encoded();
+		var binary;
+		var cachedBinary = JsBarcode.getCache(options.format, content);
+		if(cachedBinary){
+			binary = cachedBinary;
+		}
+		else{
+			//Encode the content
+			binary = encoder.encoded();
+			//Cache the encoding if it will be used again later
+			JsBarcode.cache(options.format, content, binary);
+		}
 
 		var _drawBarcodeText = function (text) {
 			var x, y;
@@ -132,7 +141,8 @@
 
 	};
 
-	JsBarcode.barcodes = {};
+	JsBarcode._cache = {};
+	JsBarcode._barcodes = {};
 	JsBarcode.bind = function(name, module){
 		//Bind all names in an array to the module
 		if(Array.isArray(name)){
@@ -142,19 +152,36 @@
 		}
 		else{
 			//Bind just one name
-			JsBarcode.barcodes[name] = module;
+			JsBarcode._barcodes[name] = module;
 		}
 	};
 
 	JsBarcode.getModule = function(name){
-		var encoder = JsBarcode.barcodes[name];
+		var encoder = JsBarcode._barcodes[name];
 		if(encoder){
-			return JsBarcode.barcodes[name];
+			return JsBarcode._barcodes[name];
 		}
 		else{
 			throw new Error('Module ' + name + ' does not exist or is not loaded.');
 		}
 	};
+
+	JsBarcode.cache = function(format, input, output){
+		if(!JsBarcode._cache[format]){
+			JsBarcode._cache[format] = {};
+		}
+		JsBarcode._cache[format][input] = output;
+	};
+
+	JsBarcode.getCache = function(format, input){
+		if(JsBarcode._cache[format]){
+			if(JsBarcode._cache[format][input]){
+				return JsBarcode._cache[format][input];
+			}
+		}
+		return "";
+	};
+
 
 	JsBarcode.defaults = {
 		width:	2,
