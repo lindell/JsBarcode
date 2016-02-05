@@ -19,10 +19,7 @@ function EAN(EANnumber){
 	};
 
 	this.encoded = function (){
-		if(valid(this.EANnumber)){
-			return createEAN13(this.EANnumber);
-		}
-		return "";
+		return createEAN13(this.EANnumber);
 	}
 
 	//Create the binary representation of the EAN code

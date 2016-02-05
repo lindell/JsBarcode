@@ -50,15 +50,15 @@ function CODE39(string){
 		return this.string;
 	};
 
-	//The public encoding function
 	this.encoded = function(){
-		if(this.valid(this.string)){
-			return encode(this.string);
-		}
-		else{
-			return "";
-		}
-	}
+			var result = "";
+			result += "1000101110111010";
+			for(var i=0;i<this.string.length;i++){
+				result+=encodingByChar(this.string[i])+"0";
+			}
+			result += "1000101110111010";
+			return result;
+		};
 
 	//This regexp is used for validation
 	var regexp = /^[0-9a-zA-Z\-\.\ \$\/\+\%]+$/;
@@ -69,17 +69,6 @@ function CODE39(string){
 			return false;
 		}
 		return true;
-	}
-
-	//Encode the characters
-	function encode(string){
-		var result = "";
-		result += "1000101110111010";
-		for(var i=0;i<string.length;i++){
-			result+=encodingByChar(string[i])+"0";
-		}
-		result += "1000101110111010";
-		return result;
 	}
 
 	//Get the encoded data of a character

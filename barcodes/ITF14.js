@@ -1,5 +1,4 @@
 function ITF14(ITF14number){
-
 	this.ITF14number = ITF14number+"";
 
 	this.getText = function(){
@@ -10,12 +9,28 @@ function ITF14(ITF14number){
 		return valid(this.ITF14number);
 	};
 
-	this.encoded = function (){
-		if(valid(this.ITF14number)){
-			return encode(this.ITF14number);
+	this.encoded = function(){
+		//Create the variable that should be returned at the end of the function
+		var result = "";
+
+		//If checksum is not already calculated, do it
+		if(this.ITF14number.length == 13){
+			number += checksum(number);
 		}
-		return "";
-	}
+
+		//Always add the same start bits
+		result += startBin;
+
+		//Calculate all the digit pairs
+		for(var i=0;i<14;i+=2){
+			result += calculatePair(this.ITF14number.substr(i,2));
+		}
+
+		//Always add the same end bits
+		result += endBin;
+
+		return result;
+	};
 
 	//The structure for the all digits, 1 is wide and 0 is narrow
 	var digitStructure = {
@@ -37,30 +52,6 @@ function ITF14(ITF14number){
 
 	//Regexp for a valid ITF14 code
 	var regexp = /^[0-9]{13,14}$/;
-
-	//Convert a numberarray to the representing
-	function encode(number){
-		//Create the variable that should be returned at the end of the function
-		var result = "";
-
-		//If checksum is not already calculated, do it
-		if(number.length == 13){
-			number += checksum(number);
-		}
-
-		//Always add the same start bits
-		result += startBin;
-
-		//Calculate all the digit pairs
-		for(var i=0;i<14;i+=2){
-			result += calculatePair(number.substr(i,2));
-		}
-
-		//Always add the same end bits
-		result += endBin;
-
-		return result;
-	}
 
 	//Calculate the data of a number pair
 	function calculatePair(twoNumbers){

@@ -25,10 +25,7 @@ function pharmacode(number){
     };
 
     this.encoded = function(){
-        if(this.valid(this.number)){
-            return recursiveEncoding(this.number.toString(2),true).substr(2);
-        }
-        return "";
+      return recursiveEncoding(this.number.toString(2),true).substr(2);
     };
 
     this.valid = function(){

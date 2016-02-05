@@ -11,12 +11,7 @@ function CODE128(string, code){
 
 	//The public encoding function
 	this.encoded = function(){
-		if(valid(string)){
 			return calculate["code128" + code](string);
-		}
-		else{
-			return "";
-		}
 	}
 
 	//Data for each character, the last characters will not be encoded but are used for error correction
