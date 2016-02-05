@@ -250,5 +250,5 @@ function CODE128C(string) {
 	return new CODE128(string, "C");
 };
 
-JsBarcode.bind(["CODE128","CODE128B"], CODE128B);
-JsBarcode.bind("CODE128C", CODE128C);
+JsBarcode.register(["CODE128","CODE128B"], CODE128B);
+JsBarcode.register("CODE128C", CODE128C);

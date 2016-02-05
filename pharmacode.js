@@ -52,4 +52,4 @@ function pharmacode(number){
         return new Array( num + 1 ).join( this );
     }
 };
-JsBarcode.bind("pharmacode", pharmacode);
+JsBarcode.register("pharmacode", pharmacode);

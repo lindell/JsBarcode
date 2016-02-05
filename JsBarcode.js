@@ -143,15 +143,15 @@
 
 	JsBarcode._cache = {};
 	JsBarcode._barcodes = {};
-	JsBarcode.bind = function(name, module){
-		//Bind all names in an array to the module
+	JsBarcode.register = function(name, module){
+		//register all names in an array to the module
 		if(Array.isArray(name)){
 			for(var i in name){
-				JsBarcode.bind(name[i], module);
+				JsBarcode.register(name[i], module);
 			}
 		}
 		else{
-			//Bind just one name
+			//register just one name
 			JsBarcode._barcodes[name] = module;
 		}
 	};

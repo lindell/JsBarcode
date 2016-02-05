@@ -1,9 +1,11 @@
 function GenericBarcode(string){
+	this.string = string;
+	//this.string = parseInt(string);
+	//this.string = string.toUpperCase();
+
   //Return the text the way it is encoded
 	this.getText = function(){
-    //return parseInt(string);
-    //return string.toUpperCase();
-		return string;
+		return this.string;
 	};
 
   //Return the corresponding binary numbers for the data provided
@@ -13,9 +15,9 @@ function GenericBarcode(string){
 
 	//Resturn true/false if the string provided is valid for this encoder
 	this.valid = function(){
-    //return false
 		return true;
+		//return false
 	}
 }
 
-JsBarcode.bind(["GenericBarcode","generic_barcode","GenBarcode"], GenericBarcode);
+JsBarcode.register(["GenericBarcode","generic_barcode","GenBarcode"], GenericBarcode);

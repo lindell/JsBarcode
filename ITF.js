@@ -76,4 +76,4 @@ function ITF(ITFNumber){
 		return number.search(regexp)!==-1;
 	}
 }
-JsBarcode.bind("ITF", ITF);
+JsBarcode.register("ITF", ITF);

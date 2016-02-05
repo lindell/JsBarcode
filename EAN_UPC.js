@@ -263,6 +263,6 @@ function EANencoder(){
 	};
 }
 
-JsBarcode.bind(["EAN","EAN13","EAN-13"], EAN);
-JsBarcode.bind(["EAN8","EAN-8"], EAN8);
-JsBarcode.bind(["UPC","UPC-A"], UPC);
+JsBarcode.register(["EAN","EAN13","EAN-13"], EAN);
+JsBarcode.register(["EAN8","EAN-8"], EAN8);
+JsBarcode.register(["UPC","UPC-A"], UPC);
