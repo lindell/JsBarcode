@@ -1,7 +1,6 @@
 (function($){
 
 	JsBarcode = function(image, content, options, validFunction) {
-
 		//Check if the image parameter should be
 		if(typeof image === "string"){
 			image = document.querySelector(image);
@@ -20,9 +19,9 @@
 
 		//This tries to call the valid function only if it's specified. Otherwise nothing happens
 		var validFunctionIfExist = function(valid){
-		    if(validFunction){
-		        validFunction(valid);
-		    }
+		  if(validFunction){
+		    validFunction(valid);
+		  }
 		};
 
 		//Merge the user options with the default
@@ -48,11 +47,11 @@
 			return image;
 		}
 
-		var encoder = new window[options.format](content);
+		var encoder = new (JsBarcode.getModule(options.format))(content);
 
 		//Abort if the barcode format does not support the content
 		if(!encoder.valid()){
-		    validFunctionIfExist(false);
+		  validFunctionIfExist(false);
 			throw new Error('The data is not valid for the type of barcode.');
 		}
 
@@ -60,37 +59,37 @@
 		var binary = encoder.encoded();
 
 		var _drawBarcodeText = function (text) {
-					var x, y;
+			var x, y;
 
-					y = options.height + options.textPadding;
+			y = options.height + options.textPadding;
 
-					ctx.font = options.fontOptions + " " + options.fontSize + "px "+options.font;
-					ctx.textBaseline = "bottom";
-					ctx.textBaseline = 'top';
+			ctx.font = options.fontOptions + " " + options.fontSize + "px "+options.font;
+			ctx.textBaseline = "bottom";
+			ctx.textBaseline = 'top';
 
-					if(options.textAlign == "left"){
-						x = options.quite;
-						ctx.textAlign = 'left';
-					}
-					else if(options.textAlign == "right"){
-						x = canvas.width - options.quite;
-						ctx.textAlign = 'right';
-					}
-					else{ //All other center
-						x = canvas.width / 2;
-						ctx.textAlign = 'center';
-					}
+			if(options.textAlign == "left"){
+				x = options.quite;
+				ctx.textAlign = 'left';
+			}
+			else if(options.textAlign == "right"){
+				x = canvas.width - options.quite;
+				ctx.textAlign = 'right';
+			}
+			else{ //All other center
+				x = canvas.width / 2;
+				ctx.textAlign = 'center';
+			}
 
-					ctx.fillText(text, x, y);
-				}
+			ctx.fillText(text, x, y);
+		};
 
 		//Get the canvas context
 		var ctx	= canvas.getContext("2d");
 
 		//Set the width and height of the barcode
 		canvas.width = binary.length*options.width+2*options.quite;
-        //Set extra height if the value is displayed under the barcode. Multiplication with 1.3 t0 ensure that some
-        //characters are not cut in half
+    //Set extra height if the value is displayed under the barcode. Multiplication with 1.3 t0 ensure that some
+    //characters are not cut in half
 		canvas.height = options.height + (options.displayValue ? options.fontSize * 1.3 : 0) + options.textPadding;
 
 		//Paint the canvas
@@ -120,7 +119,7 @@
 		if ($ && image instanceof $) {
 			// check if DOM element of jQuery selection is not a canvas, so assume that it is an image
 			if (!(image.get(0) instanceof HTMLCanvasElement)) {
-				 //Put the data uri into the image
+				//Put the data uri into the image
 			 	image.attr("src", uri);
 			}
 		} else if (!(image instanceof HTMLCanvasElement)) {
@@ -131,6 +130,30 @@
 
 		validFunctionIfExist(true);
 
+	};
+
+	JsBarcode.barcodes = {};
+	JsBarcode.bind = function(name, module){
+		//Bind all names in an array to the module
+		if(Array.isArray(name)){
+			for(var i in name){
+				JsBarcode.bind(name[i], module);
+			}
+		}
+		else{
+			//Bind just one name
+			JsBarcode.barcodes[name] = module;
+		}
+	};
+
+	JsBarcode.getModule = function(name){
+		var encoder = JsBarcode.barcodes[name];
+		if(encoder){
+			return JsBarcode.barcodes[name];
+		}
+		else{
+			throw new Error('Module ' + name + ' does not exist or is not loaded.');
+		}
 	};
 
 	JsBarcode.defaults = {

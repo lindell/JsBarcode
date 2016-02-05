@@ -92,3 +92,4 @@ function CODE39(string){
 		return "";
 	}
 }
+JsBarcode.bind("CODE39", CODE39);

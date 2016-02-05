@@ -262,3 +262,7 @@ function EANencoder(){
 		return result;
 	};
 }
+
+JsBarcode.bind(["EAN","EAN13","EAN-13"], EAN);
+JsBarcode.bind(["EAN8","EAN-8"], EAN8);
+JsBarcode.bind(["UPC","UPC-A"], UPC);

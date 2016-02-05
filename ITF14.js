@@ -97,3 +97,4 @@ function ITF14(ITF14number){
 		return true;
 	}
 }
+JsBarcode.bind("ITF14", ITF14);
