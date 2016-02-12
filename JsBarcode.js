@@ -1,6 +1,6 @@
 (function($){
 
-	JsBarcode = function(image, content, options, validFunction) {
+	var JsBarcode = function(image, content, options, validFunction) {
 		//Check if the image parameter should be
 		if(typeof image === "string"){
 			image = document.querySelector(image);
@@ -38,7 +38,7 @@
 		}
 
 		// check if DOM element is a canvas, otherwise it will be probably an image so create a canvas
-		if (!(canvas instanceof HTMLCanvasElement)) {
+		if (typeof HTMLCanvasElement != 'undefined' && !(canvas instanceof HTMLCanvasElement)) {
 			canvas = document.createElement('canvas');
 		}
 
@@ -131,7 +131,7 @@
 				//Put the data uri into the image
 			 	image.attr("src", uri);
 			}
-		} else if (!(image instanceof HTMLCanvasElement)) {
+		} else if (typeof HTMLCanvasElement != 'undefined' && !(image instanceof HTMLCanvasElement)) {
 			// There is no jQuery object so just check if the given image was a canvas, if not set the source attr
 			image.setAttribute("src", uri);
 		}
@@ -181,6 +181,26 @@
 		return "";
 	};
 
+	// Detect the code is running under nodejs
+	JsBarcode._isNode = false;
+	if (typeof module !== 'undefined' && module.exports) {
+		module.exports = JsBarcode;	// Export to nodejs
+		JsBarcode._isNode = true;
+
+		//Register all modules in ./barcodes
+		var path = require("path");
+		var dir = path.join(__dirname, "barcodes");
+		var files = require("fs").readdirSync(dir);
+		for(var i in files){
+			var barcode = require(path.join(dir, files[i]));
+			barcode.register(JsBarcode);
+		}
+	}
+
+	//Regsiter JsBarcode for the browser
+	if(typeof window !== 'undefined'){
+		window.JsBarcode = JsBarcode;
+	}
 
 	JsBarcode.defaults = {
 		width:	2,

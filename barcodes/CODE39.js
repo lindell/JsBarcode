@@ -81,4 +81,11 @@ function CODE39(string){
 		return "";
 	}
 }
-JsBarcode.register("CODE39", CODE39);
+
+
+//Required to register for both browser and nodejs
+function register(core){
+	core.register("CODE39", CODE39);
+}
+try{register(JsBarcode)} catch(e){}
+try{module.exports.register = register} catch(e){}

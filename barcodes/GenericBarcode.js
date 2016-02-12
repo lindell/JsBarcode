@@ -1,23 +1,25 @@
 function GenericBarcode(string){
 	this.string = string;
-	//this.string = parseInt(string);
-	//this.string = string.toUpperCase();
-
-  //Return the text the way it is encoded
-	this.getText = function(){
-		return this.string;
-	};
-
-  //Return the corresponding binary numbers for the data provided
-	this.encoded = function(){
-    return "10101010101010101010101010101010101010101";
-	}
-
-	//Resturn true/false if the string provided is valid for this encoder
-	this.valid = function(){
-		return true;
-		//return false
-	}
 }
 
-JsBarcode.register(["GenericBarcode","generic_barcode","GenBarcode"], GenericBarcode);
+//Return the text the way it is encoded
+GenericBarcode.prototype.getText = function(){
+	return this.string;
+};
+
+//Return the corresponding binary numbers for the data provided
+GenericBarcode.prototype.encoded = function(){
+	return "10101010101010101010101010101010101010101";
+};
+
+//Resturn true/false if the string provided is valid for this encoder
+GenericBarcode.prototype.valid = function(){
+	return true;
+};
+
+//Required to register for both browser and nodejs
+function register(core){
+	core.register(["GenericBarcode","generic_barcode","GenBarcode"],GenericBarcode);
+}
+try{register(JsBarcode)} catch(e){}
+try{module.exports.register = register} catch(e){}

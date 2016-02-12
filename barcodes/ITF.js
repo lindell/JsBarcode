@@ -68,4 +68,10 @@ function ITF(ITFNumber){
 		return number.search(regexp)!==-1;
 	}
 }
-JsBarcode.register("ITF", ITF);
+
+//Required to register for both browser and nodejs
+function register(core){
+	core.register("ITF", ITF);
+}
+try{register(JsBarcode)} catch(e){}
+try{module.exports.register = register} catch(e){}

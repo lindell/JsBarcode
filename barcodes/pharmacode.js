@@ -49,4 +49,10 @@ function pharmacode(number){
         return new Array( num + 1 ).join( this );
     }
 };
-JsBarcode.register("pharmacode", pharmacode);
+
+//Required to register for both browser and nodejs
+function register(core){
+  core.register("pharmacode", pharmacode);
+}
+try{register(JsBarcode)} catch(e){}
+try{module.exports.register = register} catch(e){}
