@@ -4,7 +4,8 @@
   "description": "JsBarcode is a simple way to create different types of 1d barcodes.",
   "main": "JsBarcode.js",
   "directories": {
-    "example": "example"
+    "example": "example",
+    "test": "test"
   },
   "scripts": {
     "test": "node_modules/mocha/bin/mocha -R spec"
@@ -26,8 +27,15 @@
   "bugs": {
     "url": "https://github.com/lindell/JsBarcode/issues"
   },
+  "bin": {
+    "JsBarcode": "cli.js"
+  },
   "homepage": "https://github.com/lindell/JsBarcode#readme",
   "devDependencies": {
     "mocha": "1.21.0 - 2.4.5"
+  },
+  "dependencies": {
+    "canvas": ">=1.0.0",
+    "commander": ">=2.8.0"
   }
 }
