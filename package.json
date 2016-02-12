@@ -28,6 +28,6 @@
   },
   "homepage": "https://github.com/lindell/JsBarcode#readme",
   "devDependencies": {
-    "mocha": "^2.4.5"
+    "mocha": "1.21.0 - 2.4.5"
   }
 }
