@@ -262,7 +262,7 @@ function EANencoder(){
 
 
 //Required to register for both browser and nodejs
-function register(core){
+var register = function(core){
 	core.register(["EAN","EAN13","EAN-13"], EAN);
 	core.register(["EAN8","EAN-8"], EAN8);
 	core.register(["UPC","UPC-A"], UPC);

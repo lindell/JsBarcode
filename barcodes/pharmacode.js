@@ -51,7 +51,7 @@ function pharmacode(number){
 };
 
 //Required to register for both browser and nodejs
-function register(core){
+var register = function(core){
   core.register("pharmacode", pharmacode);
 }
 try{register(JsBarcode)} catch(e){}

@@ -18,7 +18,7 @@ GenericBarcode.prototype.valid = function(){
 };
 
 //Required to register for both browser and nodejs
-function register(core){
+var register = function(core){
 	core.register(["GenericBarcode","generic_barcode","GenBarcode"],GenericBarcode);
 }
 try{register(JsBarcode)} catch(e){}

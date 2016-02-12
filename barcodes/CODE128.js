@@ -246,7 +246,7 @@ function CODE128C(string) {
 };
 
 //Required to register for both browser and nodejs
-function register(core){
+var register = function(core){
 	core.register(["CODE128","CODE128B"], CODE128B);
 	core.register("CODE128C", CODE128C);
 }
