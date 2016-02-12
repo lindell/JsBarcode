@@ -12,7 +12,9 @@
 				newMerge[k] = m1[k];
 			}
 			for (var k in m2) {
-				newMerge[k] = m2[k];
+				if(typeof m2[k] !== "undefined"){
+					newMerge[k] = m2[k];
+				}
 			}
 			return newMerge;
 		};
