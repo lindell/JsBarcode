@@ -1,9 +1,15 @@
 language: node_js
 sudo: required
-before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get update
+install:
+  - sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++-4.8
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
+  - npm install
 node_js:
   - "4.1"
   - "4.0"
   - "0.12"
-  - "0.6"
+  - "0.10"
   - "iojs"
