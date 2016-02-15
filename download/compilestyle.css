@@ -1,0 +1,54 @@
+#main{
+  width: 0px;
+}
+
+#title{
+  margin-bottom: 0px;
+}
+
+.inner-top{
+  margin-top:20px;
+}
+
+.undertitle{
+  margin-left: 10px;
+}
+
+#barcodeboxes{
+  margin-top: 20px;
+  margin-left: 7px;
+  font-size: 12pt;
+}
+
+#barcodeboxes label{
+  font-weight: normal;
+  margin-bottom: 13px;
+}
+
+input[type=checkbox] {
+  transform: scale(1.5);
+  -webkit-transform: scale(1.5);
+  padding:10px;
+  margin-right: 3px;
+}
+
+#loadingicon{
+  display: none;
+}
+
+
+/* Spin animation*/
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
