@@ -6,7 +6,7 @@ var barcode_urls = {
   "ITF":        "/barcodes/ITF.js",
   "ITF14":      "/barcodes/ITF14.js",
   "pharmacode": "/barcodes/pharmacode.js",
-  "JsBarcode":  "/barcodes/JsBarcode.js"
+  "JsBarcode":  "/JsBarcode.js"
 };
 
 $(document).ready(function(){
