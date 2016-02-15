@@ -1,5 +1,6 @@
 var assert = require('assert');
 var JsBarcode = require('../JsBarcode.js');
+var Canvas = require("canvas");
 
 var CODE39, CODE128, EAN, UPC, EAN8, ITF14, ITF, Pharmacode;
 describe('Encoders', function() {
@@ -12,6 +13,29 @@ describe('Encoders', function() {
     ITF14 = JsBarcode.getModule("ITF14");
     ITF = JsBarcode.getModule("ITF");
     Pharmacode = JsBarcode.getModule("pharmacode");
+  });
+});
+
+describe('node-canvas generation', function() {
+  it('should generate normal canvas', function () {
+    var canvas = new Canvas();
+    JsBarcode(canvas, "Hello");
+  });
+
+  it('checking width', function () {
+    var canvas1 = new Canvas();
+    var canvas2 = new Canvas();
+
+    JsBarcode(canvas1, "Hello", {format: "CODE128"});
+    JsBarcode(canvas2, "Hello", {format: "CODE39"});
+
+    assert.notEqual(canvas1.width, canvas2.width);
+  });
+
+  it('throws errors when suppose to', function () {
+    var canvas = new Canvas();
+    assert.throws(function(){JsBarcode(canvas, "Hello", {format: "EAN8"});});
+    assert.throws(function(){JsBarcode(canvas, "Hello", {format: "DOESNOTEXIST"});}, /Module DOESNOTEXIST does not exist/);
   });
 });
 
