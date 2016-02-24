@@ -77,12 +77,13 @@ Node.js:
 ----
 #### Install with npm:
 ````
-npm install JsBarcode
+npm install jsbarcode
+npm install canvas
 ````
 
 #### Use:
 ```` javascript
-var JsBarcode = require('JsBarcode');
+var JsBarcode = require('jsbarcode');
 var Canvas = require("canvas");
 
 var canvas = new Canvas();
