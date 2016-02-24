@@ -10,11 +10,22 @@ function ITF(ITFNumber){
 		return valid(this.ITFNumber);
 	};
 
-	this.encoded = function (){
-		if(valid(this.ITFNumber)){
-			return encode(this.ITFNumber);
+	this.encoded = function(){
+		//Create the variable that should be returned at the end of the function
+		var result = "";
+
+		//Always add the same start bits
+		result += startBin;
+
+		//Calculate all the digit pairs
+		for(var i=0;i<this.ITFNumber.length;i+=2){
+			result += calculatePair(this.ITFNumber.substr(i,2));
 		}
-		return "";
+
+		//Always add the same end bits
+		result += endBin;
+
+		return result;
 	}
 
 	//The structure for the all digits, 1 is wide and 0 is narrow
@@ -38,25 +49,6 @@ function ITF(ITFNumber){
 	//Regexp for a valid Inter25 code
 	var regexp = /^([0-9][0-9])+$/;
 
-	//Convert a numberarray to the representing
-	function encode(number){
-		//Create the variable that should be returned at the end of the function
-		var result = "";
-
-		//Always add the same start bits
-		result += startBin;
-
-		//Calculate all the digit pairs
-		for(var i=0;i<number.length;i+=2){
-			result += calculatePair(number.substr(i,2));
-		}
-
-		//Always add the same end bits
-		result += endBin;
-
-		return result;
-	}
-
 	//Calculate the data of a number pair
 	function calculatePair(twoNumbers){
 		var result = "";
@@ -76,3 +68,10 @@ function ITF(ITFNumber){
 		return number.search(regexp)!==-1;
 	}
 }
+
+//Required to register for both browser and nodejs
+var register = function(core){
+	core.register("ITF", ITF);
+};
+try{register(JsBarcode)} catch(e){}
+try{module.exports.register = register} catch(e){}

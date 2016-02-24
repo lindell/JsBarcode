@@ -1,11 +1,13 @@
+[![Build Status](https://secure.travis-ci.org/lindell/JsBarcode.png)](http://travis-ci.org/lindell/JsBarcode)
+
 Demo
 ----
 [Barcode Generator](http://lindell.github.io/JsBarcode/)
 
 Introduction
 ----
-JsBarcode is a simple way to create different types of 1d barcodes.  
-The plugin uses Html5Canvas to generate draw the barcodes
+JsBarcode is a simple way to create different types of 1d barcodes.
+It works both in the browser with or without jQuery and also in Node.js
 
 #### This is the list of supported barcodes:
 *  CODE128 (B or C)
@@ -16,7 +18,7 @@ The plugin uses Html5Canvas to generate draw the barcodes
 *  ITF14
 *  Pharmacode
 
-Examples:
+Examples for browsers:
 ----
 
 #### First create an image (or canvas)
@@ -50,9 +52,15 @@ JsBarcode("#barcode","JsBarcode is easy!",{width:1,height:25});
 ##### Result:
 ![Result](http://lindell.github.io/JsBarcode/README_images/javascript_is_fun.png)
 
-Setup:
+
+Setup for browsers:
 ----
-Download and include the [comined script](https://github.com/lindell/JsBarcode/releases) that contain everything you need.
+### Step 1:
+##### [Download the library from this page](http://lindell.me/JsBarcode/download/)
+
+### Step 2:
+Include the script in your code:
+
 
 ````
 <script src="JsBarcode.all.min.js"></script>
@@ -60,63 +68,47 @@ Download and include the [comined script](https://github.com/lindell/JsBarcode/r
 
 Bower:
 ----
-As well as downloading the files and including them regularly,
-you can use [Bower](http://bower.io) to install and manage the library
+You can also use [Bower](http://bower.io) to install and manage the library.
 ````
 bower install jsbarcode --save
 ````
 
-Use
+Node.js:
 ----
-#### There are two ways of using the library:
-With jQuery:
-````javascript
-$(object).JsBarcode(string,options);
+#### Install with npm:
 ````
-Or pure JavaScript:
-````javascript
-JsBarcode(object, string, options);
+npm install JsBarcode
 ````
 
-#### The parameters:
-*  string is the sring to be encoded to the barcode
-*  options is additional options put i an object (look below)
+#### Use:
+```` javascript
+var JsBarcode = require('JsBarcode');
+var Canvas = require("canvas");
 
-#### The default options:
+var canvas = new Canvas();
+JsBarcode(canvas, "Hello");
+
+// Do what you want with the canvas
+// See https://github.com/Automattic/node-canvas for more information
+````
+
+
+
+The default options:
+----
 ````javascript
 {
-	width:	2,
-	height:	100,
+	width: 2,
+	height: 100,
 	quite: 10,
-	format:	"CODE128",
+	format: "CODE128",
 	displayValue: false,
 	fontOptions: "",
-	font:"monospace",
-	textAlign:"center",
-	textPadding:0,
+	font: "monospace",
+	textAlign: "center",
+	textPadding: 0,
 	fontSize: 12,
-	backgroundColor:"",
-	lineColor:"#000"
+	backgroundColor: "",
+	lineColor: "#000"
 }
-````
-
-
-
-
-
-
-Minify the latest code
-----
-Use the [closure compiler](http://closure-compiler.appspot.com/home) with this input
-````
-// ==ClosureCompiler==
-// @output_file_name JsBarcode.all.min.js
-// @code_url https://raw.github.com/lindell/JsBarcode/master/CODE128.js
-// @code_url https://raw.github.com/lindell/JsBarcode/master/CODE39.js
-// @code_url https://raw.github.com/lindell/JsBarcode/master/EAN_UPC.js
-// @code_url https://raw.github.com/lindell/JsBarcode/master/ITF.js
-// @code_url https://raw.github.com/lindell/JsBarcode/master/ITF14.js
-// @code_url https://raw.github.com/lindell/JsBarcode/master/pharmacode.js
-// @code_url https://raw.github.com/lindell/JsBarcode/master/JsBarcode.js
-// ==/ClosureCompiler==
 ````

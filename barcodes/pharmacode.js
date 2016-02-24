@@ -25,10 +25,7 @@ function pharmacode(number){
     };
 
     this.encoded = function(){
-        if(this.valid(this.number)){
-            return recursiveEncoding(this.number.toString(2),true).substr(2);
-        }
-        return "";
+      return recursiveEncoding(this.number.toString(2),true).substr(2);
     };
 
     this.valid = function(){
@@ -52,3 +49,10 @@ function pharmacode(number){
         return new Array( num + 1 ).join( this );
     }
 };
+
+//Required to register for both browser and nodejs
+var register = function(core){
+  core.register("pharmacode", pharmacode);
+}
+try{register(JsBarcode)} catch(e){}
+try{module.exports.register = register} catch(e){}

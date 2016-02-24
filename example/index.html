@@ -4,27 +4,27 @@
 	<meta charset="UTF-8">
 	<title></title>
 	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-	<script src="../EAN_UPC.js"></script>
-	<script src="../CODE128.js"></script>
 	<script src="../JsBarcode.js"></script>
+	<script src="../barcodes/EAN_UPC.js"></script>
+	<script src="../barcodes/CODE128.js"></script>
 </head>
 <body>
 	<div>
 		<img id="barcode1"/>
 		<script>$("#barcode1").JsBarcode("Hi!");</script>
 	</div>
-	
-	
+
+
 	<div>
 		<img id="barcode2"/>
 		<script>$("#barcode2").JsBarcode("Javascript is fun!",{width:1,height:25});</script>
 	</div>
-	
+
 	<div>
 		<img id="barcode3"/>
 		<script>$("#barcode3").JsBarcode("9780199532179",{format:"EAN",displayValue:true,fontSize:20});</script>
 	</div>
-	
+
 	<div>
 		<img id="barcode4"/>
 		<script>
@@ -36,7 +36,7 @@
 			repeat4();
 		</script>
 	</div>
-	
+
 	<div>
 		<img id="barcode5"/>
 		<script>
