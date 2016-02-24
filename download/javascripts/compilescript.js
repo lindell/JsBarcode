@@ -1,4 +1,5 @@
-var baseUrl = "https://raw.githubusercontent.com/lindell/JsBarcode/2.0-beta";
+var baseUrl = "https://raw.githubusercontent.com/lindell/JsBarcode/";
+var tagName = "";
 var barcode_urls = {
   "CODE128":    "/barcodes/CODE128.js",
   "CODE39":     "/barcodes/CODE39.js",
@@ -10,15 +11,27 @@ var barcode_urls = {
 };
 
 $(document).ready(function(){
+  //Get the tag of the latest release on github
+  setLoading();
+  $.ajax({
+      url: "//api.github.com/repos/lindell/JsBarcode/releases",
+      method: "GET",
+      dataType: "json",
+      success : function(data){
+        tagName = data[0]["tag_name"];
+        setDownload();
+      },
+      error : error
+  });
+
+  //Start the compilation
   $("#download_btn").click(function(){
     setLoading();
 
     var urls = [];
     var customName = "";
     $('#barcodeboxes input:checked').each(function() {
-        console.log($(this).val());
-        console.log(barcode_urls[$(this).val()]);
-        urls.push(baseUrl + barcode_urls[$(this).val()]);
+        urls.push(baseUrl + tagName + barcode_urls[$(this).val()]);
         customName = $(this).val() + (customName ? "." : "") + customName;
     });
 
@@ -64,11 +77,13 @@ $(document).ready(function(){
 function setLoading(){
   $("#downloadicon").css({display: "none"});
   $("#loadingicon").css({display: "inline-block"});
+  $("#download_btn").prop("disabled", true);
 }
 
 function setDownload(){
   $("#downloadicon").css({display: "inline-block"});
   $("#loadingicon").css({display: "none"});
+  $("#download_btn").prop("disabled", false);
 }
 
 function error(){
