@@ -32,10 +32,46 @@ describe('node-canvas generation', function() {
     assert.notEqual(canvas1.width, canvas2.width);
   });
 
-  it('throws errors when suppose to', function () {
+  it('should throws errors when suppose to', function () {
     var canvas = new Canvas();
     assert.throws(function(){JsBarcode(canvas, "Hello", {format: "EAN8"});});
     assert.throws(function(){JsBarcode(canvas, "Hello", {format: "DOESNOTEXIST"});}, /Module DOESNOTEXIST does not exist/);
+  });
+
+  it('should create output with same input', function () {
+    var canvas1 = new Canvas();
+    var canvas2 = new Canvas();
+
+    JsBarcode(canvas1, "Hello", {format: "CODE128"});
+    JsBarcode(canvas2, "Hello", {format: "CODE128"});
+
+    assert.equal(canvas1.toDataURL(), canvas2.toDataURL());
+  });
+});
+
+describe('Text printing', function() {
+  it('should produce different output when displaying value', function () {
+    var canvas1 = new Canvas();
+    var canvas2 = new Canvas();
+
+    JsBarcode(canvas1, "Hello", {format: "CODE128", displayValue: true});
+    JsBarcode(canvas2, "Hello", {format: "CODE128"});
+
+    assert.notEqual(canvas1.toDataURL(), canvas2.toDataURL());
+  });
+
+  it('should produce different output when having different textAlign', function () {
+    var canvas1 = new Canvas();
+    var canvas2 = new Canvas();
+    var canvas3 = new Canvas();
+
+    JsBarcode(canvas1, "Hello", {format: "CODE128", displayValue: true, textAlign: "center"});
+    JsBarcode(canvas2, "Hello", {format: "CODE128", displayValue: true, textAlign: "left"});
+    JsBarcode(canvas3, "Hello", {format: "CODE128", displayValue: true, textAlign: "right"});
+
+    assert.notEqual(canvas1.toDataURL(), canvas2.toDataURL());
+    assert.notEqual(canvas2.toDataURL(), canvas3.toDataURL());
+    assert.notEqual(canvas1.toDataURL(), canvas3.toDataURL());
   });
 });
 
