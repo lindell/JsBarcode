@@ -206,6 +206,11 @@
 		}
 	}
 
+	//Regsiter JsBarcode for the browser
+	if(typeof window !== 'undefined'){
+		window.JsBarcode = JsBarcode;
+	}
+
 	// Register JsBarcode as an jQuery plugin if jQuery exist
 	if ($) {
 		$.fn.JsBarcode = function(content, options, validFunction){
