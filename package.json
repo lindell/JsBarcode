@@ -8,7 +8,9 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha -R spec"
+    "test": "node_modules/mocha/bin/mocha -R spec",
+    "coveralls": "NODE_ENV=test YOURPACKAGE_COVERAGE=1 ./node_modules/.bin/mocha --require blanket --reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js",
+    "blanketjs": "./node_modules/.bin/mocha test/test.js -r blanket -R html-cov"
   },
   "repository": {
     "type": "git",
@@ -32,7 +34,16 @@
   },
   "homepage": "https://github.com/lindell/JsBarcode#readme",
   "devDependencies": {
-    "mocha": "1.21.0 - 2.4.5"
+    "blanket": "^1.2.2",
+    "coveralls": "^2.11.6",
+    "mocha": "1.21.0 - 2.4.5",
+    "mocha-lcov-reporter": "^1.2.0"
+  },
+  "config": {
+    "blanket": {
+      "pattern": ["JsBarcode.js","barcodes"],
+      "data-cover-never": ["GenericBarcode","node_modules"]
+    }
   },
   "dependencies": {
     "canvas": ">=1.0.0",
