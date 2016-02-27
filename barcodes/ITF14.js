@@ -16,7 +16,7 @@ ITF14.prototype.encoded = function(){
 
 	//If checksum is not already calculated, do it
 	if(this.string.length == 13){
-		number += checksum(number);
+		this.string += checksum(this.string);
 	}
 
 	//Always add the same start bits
