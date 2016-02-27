@@ -97,10 +97,7 @@ function EAN8(EAN8number){
 	};
 
 	this.encoded = function (){
-		if(valid(this.EAN8number)){
-			return createEAN8(this.EAN8number);
-		}
-		return "";
+		return createEAN8(this.EAN8number);
 	}
 
 	function valid(number){
