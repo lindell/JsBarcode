@@ -10,7 +10,7 @@
   "scripts": {
     "test": "node_modules/mocha/bin/mocha -R spec",
     "coveralls": "NODE_ENV=test YOURPACKAGE_COVERAGE=1 ./node_modules/.bin/mocha --require blanket --reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js",
-    "blanketjs": "./node_modules/.bin/mocha test/test.js -r blanket -R html-cov"
+    "coverage": "./node_modules/.bin/mocha -r blanket -R html-cov > test/coverage.html"
   },
   "repository": {
     "type": "git",

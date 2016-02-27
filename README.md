@@ -1,5 +1,5 @@
 [![Build Status](https://secure.travis-ci.org/lindell/JsBarcode.png)](http://travis-ci.org/lindell/JsBarcode)
-[![Coverage Status](https://coveralls.io/repos/github/lindell/JsBarcode/badge.svg?branch=coveralls)](https://coveralls.io/github/lindell/JsBarcode?branch=coveralls)
+[![Coverage Status](https://coveralls.io/repos/github/lindell/JsBarcode/badge.svg?branch=master)](https://coveralls.io/github/lindell/JsBarcode?branch=master)
 
 Demo
 ----

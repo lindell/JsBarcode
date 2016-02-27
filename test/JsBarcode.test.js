@@ -48,6 +48,18 @@ describe('node-canvas generation', function() {
 
     assert.equal(canvas1.toDataURL(), canvas2.toDataURL());
   });
+
+  it('should set background color', function () {
+    var canvas = new Canvas();
+    var ctx = canvas.getContext("2d");
+    JsBarcode(canvas, "Hello", {format: "CODE128", backgroundColor: "#f00"});
+
+    var topLeft = ctx.getImageData(0,0,1,1);
+    console.log(topLeft);
+    assert.equal(topLeft.data[0], 255);
+    assert.equal(topLeft.data[1], 0);
+    assert.equal(topLeft.data[2], 0);
+  });
 });
 
 describe('Text printing', function() {
