@@ -7,6 +7,7 @@ describe('Encoders', function() {
   it('should be able to include all encoders', function () {
     CODE39 = JsBarcode.getModule("CODE39");
     CODE128 = JsBarcode.getModule("CODE128");
+    CODE128C = JsBarcode.getModule("CODE128C");
     EAN = JsBarcode.getModule("EAN");
     UPC = JsBarcode.getModule("UPC");
     EAN8 = JsBarcode.getModule("EAN8");
@@ -96,6 +97,11 @@ describe('CODE128', function() {
   it('should be able to encode normal text', function () {
     var enc = new CODE128("a@B=1");
     assert.equal(enc.encoded(), "110100100001001011000011000110110100010110001110011001010011100110110111001001100011101011");
+  });
+
+  it('should encode CODE128C', function () {
+    var enc = new CODE128C("12 34 56");;
+    assert.equal("11010011100101100111001000101100011100010110100011011101100011101011", enc.encoded());
   });
 
   it('should warn with invalid text', function () {
