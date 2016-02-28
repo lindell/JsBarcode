@@ -33,7 +33,7 @@ function checksum(number, skipLast){
   var loops = skipLast ? number.length - 1 : number.length;
   for(var i=0;i<loops;i++){
     var n = parseInt(number[i]);
-    if(i % 2 == 1){
+    if((i + loops) % 2 == 0){
       sum += n;
     }
     else{

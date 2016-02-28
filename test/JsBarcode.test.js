@@ -245,6 +245,10 @@ describe('MSI', function() {
     var enc = new MSI("17345");
     assert.equal(enc.valid(), true);
     assert.equal(enc.getText(), "173450");
+
+    var enc = new MSI("1234");
+    assert.equal(enc.valid(), true);
+    assert.equal(enc.getText(), "12344");
   });
 
   it('should warn with invalid text', function () {
