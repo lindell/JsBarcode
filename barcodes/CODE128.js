@@ -214,7 +214,6 @@ function CODE128(string, code){
 				return code128b[i][1];
 			}
 		}
-		return "";
 	}
 
 	//Get the id (weight) of a character
@@ -224,7 +223,6 @@ function CODE128(string, code){
 				return code128b[i][2];
 			}
 		}
-		return 0;
 	}
 
 	//Get the encoded data of a character
@@ -234,7 +232,6 @@ function CODE128(string, code){
 				return code128b[i][1];
 			}
 		}
-		return "";
 	}
 }
 
