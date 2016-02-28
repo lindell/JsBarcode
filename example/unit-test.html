@@ -10,6 +10,7 @@
 	<script src="../barcodes/EAN_UPC.js"></script>
 	<script src="../barcodes/ITF.js"></script>
 	<script src="../barcodes/ITF14.js"></script>
+	<script src="../barcodes/MSI.js"></script>
 	<script src="../barcodes/pharmacode.js"></script>
 	<script src="../barcodes/GenericBarcode.js"></script>
 
@@ -141,6 +142,15 @@
 		<br><br>
 		<img id="barcode13"/>
 		<script>$("#barcode13").JsBarcode("13 37 4 20",{format:"CODE128C", width:1, displayValue: true});</script>
+	</div>
+
+	<div class="testbox">
+		<b>Format:</b> MSI<br>
+		<b>Input:</b> 12345674<br>
+		<b>Extra:</b>
+		<br><br>
+		<img id="barcode14"/>
+		<script>$("#barcode14").JsBarcode("12345674",{format:"MSI", width:1, displayValue: true});</script>
 	</div>
 </body>
 </html>

@@ -13,6 +13,7 @@ describe('Encoders', function() {
     EAN8 = JsBarcode.getModule("EAN8");
     ITF14 = JsBarcode.getModule("ITF14");
     ITF = JsBarcode.getModule("ITF");
+    MSI = JsBarcode.getModule("MSI");
     Pharmacode = JsBarcode.getModule("pharmacode");
   });
 });
@@ -55,7 +56,6 @@ describe('node-canvas generation', function() {
     JsBarcode(canvas, "Hello", {format: "CODE128", backgroundColor: "#f00"});
 
     var topLeft = ctx.getImageData(0,0,1,1);
-    console.log(topLeft);
     assert.equal(topLeft.data[0], 255);
     assert.equal(topLeft.data[1], 0);
     assert.equal(topLeft.data[2], 0);
@@ -231,6 +231,27 @@ describe('ITF', function() {
     assert.equal(false, enc.valid());
 
     var enc = new ITF("1234AB");
+    assert.equal(false, enc.valid());
+  });
+});
+
+describe('MSI', function() {
+  it('should be able to encode normal text', function () {
+    var enc = new MSI("1234567");
+    assert.equal(enc.valid(), true);
+    assert.equal(enc.getText(), "12345674");
+    assert.equal(enc.encoded(), "1101001001001101001001101001001001101101001101001001001101001101001101101001001101101101001101001001001");
+
+    var enc = new MSI("17345");
+    assert.equal(enc.valid(), true);
+    assert.equal(enc.getText(), "173450");
+  });
+
+  it('should warn with invalid text', function () {
+    var enc = new MSI("12345ABC");
+    assert.equal(false, enc.valid());
+
+    var enc = new MSI("12345AB675");
     assert.equal(false, enc.valid());
   });
 });
