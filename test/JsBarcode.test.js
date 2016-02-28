@@ -195,6 +195,11 @@ describe('ITF-14', function() {
     assert.equal(enc.encoded(), "101010001110101110001010100010001110111011101011100010100011101110001010100011101010001000111010111000101110100011100010001010111011101");
   });
 
+  it('should return getText correct', function () {
+    var enc = new ITF14("9876543210921");
+    assert.equal(enc.getText(), "9876543210921");
+  });
+
   it('should warn with invalid text and not when valid', function () {
     var enc = new ITF14("987654321092");
     assert.equal(false, enc.valid());
@@ -216,6 +221,11 @@ describe('ITF', function() {
     assert.equal(enc.encoded(), "101011101000101011100011101110100010100011101000111000101011101");
   });
 
+  it('should return getText correct', function () {
+    var enc = new ITF("123456");
+    assert.equal(enc.getText(), "123456");
+  });
+
   it('should warn with invalid text', function () {
     var enc = new ITF("12345");
     assert.equal(false, enc.valid());
@@ -229,6 +239,11 @@ describe('Pharmacode', function() {
   it('should be able to encode normal text', function () {
     var enc = new Pharmacode("1234");
     assert.equal(enc.encoded(), "10010011100111001001110010010011100111");
+  });
+
+  it('should return getText correct', function () {
+    var enc = new Pharmacode("1234");
+    assert.equal(enc.getText(), "1234");
   });
 
   it('should warn with invalid text', function () {
