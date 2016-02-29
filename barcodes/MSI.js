@@ -24,31 +24,37 @@ prototype.valid = function(){
   return this.string.search(/^[0-9]+$/) != -1;
 };
 
-function MSImod10(string){
+function MSI(string){
+	this.string = ""+string;
+}
+
+MSI.prototype = Object.create(prototype);
+
+function MSI10(string){
 	this.string = ""+string;
   this.string += mod10(this.string);
 }
-MSImod10.prototype = Object.create(prototype);
+MSI10.prototype = Object.create(prototype);
 
-function MSImod11(string){
+function MSI11(string){
 	this.string = ""+string;
   this.string += mod11(this.string);
 }
-MSImod11.prototype = Object.create(prototype);
+MSI11.prototype = Object.create(prototype);
 
-function MSImod1010(string){
+function MSI1010(string){
 	this.string = ""+string;
   this.string += mod10(this.string);
   this.string += mod10(this.string);
 }
-MSImod1010.prototype = Object.create(prototype);
+MSI1010.prototype = Object.create(prototype);
 
-function MSImod1110(string){
+function MSI1110(string){
 	this.string = ""+string;
   this.string += mod11(this.string);
   this.string += mod10(this.string);
 }
-MSImod1110.prototype = Object.create(prototype);
+MSI1110.prototype = Object.create(prototype);
 
 function mod10(number){
   var sum = 0;
@@ -83,10 +89,11 @@ function addZeroes(number, n){
 
 //Required to register for both browser and nodejs
 var register = function(core){
-	core.register(["MSI", "MSI10"], MSImod10);
-  core.register(["MSI11"], MSImod11);
-  core.register(["MSI1010"], MSImod1010);
-  core.register(["MSI1110"], MSImod1110);
+	core.register("MSI", MSI);
+	core.register(["MSI10", "MSI-10"], MSI10);
+  core.register(["MSI11", "MSI-11"], MSI11);
+  core.register(["MSI1010", "MSI-1010"], MSI1010);
+  core.register(["MSI1110", "MSI-1110"], MSI1110);
 }
 try{register(JsBarcode)} catch(e){}
 try{module.exports.register = register} catch(e){}

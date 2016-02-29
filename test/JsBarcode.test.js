@@ -14,6 +14,7 @@ describe('Encoders', function() {
     ITF14 = JsBarcode.getModule("ITF14");
     ITF = JsBarcode.getModule("ITF");
     MSI = JsBarcode.getModule("MSI");
+    MSI10 = JsBarcode.getModule("MSI10");
     MSI11 = JsBarcode.getModule("MSI11");
     MSI1010 = JsBarcode.getModule("MSI1010");
     MSI1110 = JsBarcode.getModule("MSI1110");
@@ -260,16 +261,19 @@ describe('ITF', function() {
 
 describe('MSI', function() {
   it('should be able to encode normal text', function () {
-    var enc = new MSI("1234567");
+    var enc = new MSI10("1234567");
     assert.equal(enc.valid(), true);
     assert.equal(enc.getText(), "12345674");
     assert.equal(enc.encoded(), "1101001001001101001001101001001001101101001101001001001101001101001101101001001101101101001101001001001");
 
-    var enc = new MSI("17345");
+    var enc = new MSI("12345674");
+    assert.equal(enc.encoded(), "1101001001001101001001101001001001101101001101001001001101001101001101101001001101101101001101001001001");
+
+    var enc = new MSI10("17345");
     assert.equal(enc.valid(), true);
     assert.equal(enc.getText(), "173450");
 
-    var enc = new MSI("1234");
+    var enc = new MSI10("1234");
     assert.equal(enc.valid(), true);
     assert.equal(enc.getText(), "12344");
   });
