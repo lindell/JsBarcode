@@ -11,13 +11,21 @@ JsBarcode is a simple way to create different types of 1d barcodes.
 It works both in the browser with or without jQuery and also in Node.js
 
 #### This is the list of supported barcodes:
-*  CODE128 (B or C)
-*  EAN (13 and 8)
-*  UPC-A
-*  CODE39
-*  ITF (Interleaved 2 of 5)
-*  ITF14
-*  Pharmacode
+* CODE128
+ * CODE128 B
+ * CODE128 C
+* EAN 13
+* EAN 8
+* UPC-A
+* CODE39
+* ITF
+* ITF-14
+* MSI
+ * MSI10
+ * MSI11
+ * MSI1010
+ * MSI1110
+* Pharmacode
 
 Examples for browsers:
 ----

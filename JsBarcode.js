@@ -150,6 +150,9 @@
 
 	JsBarcode._barcodes = {};
 	JsBarcode.register = function(name, module){
+		// Make case insensitive
+		name = name.toLowerCase();
+		
 		// Register all names in an array to the module
 		if(Array.isArray(name)){
 			for(var i in name){
@@ -163,6 +166,9 @@
 	};
 
 	JsBarcode.getModule = function(name){
+		// Make case insensitive
+		name = name.toLowerCase();
+
 		var encoder = JsBarcode._barcodes[name];
 		if(encoder){
 			return JsBarcode._barcodes[name];
