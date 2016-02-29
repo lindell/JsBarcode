@@ -35,13 +35,6 @@ Examples for browsers:
 <img id="barcode">
 ````
 
-#### Code:
-````javascript
-$("#barcode").JsBarcode("9780199532179",{format:"EAN", displayValue:true, fontSize:20});
-````
-##### Result:
-![Result](http://lindell.github.io/JsBarcode/README_images/ean.png)
-
 
 
 #### Code:
@@ -51,6 +44,16 @@ $("#barcode").JsBarcode("Hi!");
 
 ##### Result:
 ![Result](http://lindell.github.io/JsBarcode/README_images/hi.png)
+
+
+
+#### Code:
+````javascript
+$("#barcode").JsBarcode("9780199532179",{format:"EAN", displayValue:true, fontSize:24, lineColor: "#0cc"});
+````
+##### Result:
+![Result](http://lindell.github.io/JsBarcode/README_images/ean.png)
+
 
 
 
