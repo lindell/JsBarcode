@@ -49,7 +49,12 @@ $("#barcode").JsBarcode("Hi!");
 
 #### Code:
 ````javascript
-$("#barcode").JsBarcode("9780199532179",{format:"EAN", displayValue:true, fontSize:24, lineColor: "#0cc"});
+$("#barcode").JsBarcode("9780199532179", {
+  format:"EAN",
+  displayValue:true,
+  fontSize:24,
+  lineColor: "#0cc"
+});
 ````
 ##### Result:
 ![Result](http://lindell.github.io/JsBarcode/README_images/ean.png)

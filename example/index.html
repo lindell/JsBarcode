@@ -14,7 +14,14 @@
 
 	<div>
 		<img id="barcode2"/>
-		<script>$("#barcode2").JsBarcode("Javascript is fun!",{width:1,height:25});</script>
+		<script>
+			$("#barcode2").JsBarcode("9780199532179", {
+			  format:"EAN",
+			  displayValue:true,
+			  fontSize:24,
+			  lineColor: "#0cc"
+			});
+		</script>
 	</div>
 
 	<div>
