@@ -1,14 +1,10 @@
-function MSI(string){
-	this.string = ""+string;
+var prototype = {};
 
-  this.string += checksum(this.string, false);
-}
-
-MSI.prototype.getText = function(){
+prototype.getText = function(){
 	return this.string;
 };
 
-MSI.prototype.encoded = function(){
+prototype.encoded = function(){
 	var ret = "110";
 
   for(var i=0;i<this.string.length;i++){
@@ -24,16 +20,41 @@ MSI.prototype.encoded = function(){
   return ret;
 };
 
-MSI.prototype.valid = function(){
+prototype.valid = function(){
   return this.string.search(/^[0-9]+$/) != -1;
 };
 
-function checksum(number, skipLast){
+function MSImod10(string){
+	this.string = ""+string;
+  this.string += mod10(this.string);
+}
+MSImod10.prototype = Object.create(prototype);
+
+function MSImod11(string){
+	this.string = ""+string;
+  this.string += mod11(this.string);
+}
+MSImod11.prototype = Object.create(prototype);
+
+function MSImod1010(string){
+	this.string = ""+string;
+  this.string += mod10(this.string);
+  this.string += mod10(this.string);
+}
+MSImod1010.prototype = Object.create(prototype);
+
+function MSImod1110(string){
+	this.string = ""+string;
+  this.string += mod11(this.string);
+  this.string += mod10(this.string);
+}
+MSImod1110.prototype = Object.create(prototype);
+
+function mod10(number){
   var sum = 0;
-  var loops = skipLast ? number.length - 1 : number.length;
-  for(var i=0;i<loops;i++){
+  for(var i=0;i<number.length;i++){
     var n = parseInt(number[i]);
-    if((i + loops) % 2 == 0){
+    if((i + number.length) % 2 == 0){
       sum += n;
     }
     else{
@@ -41,6 +62,16 @@ function checksum(number, skipLast){
     }
   }
   return (10-(sum%10))%10;
+}
+
+function mod11(number){
+  var sum = 0;
+  var weights = [2,3,4,5,6,7];
+  for(var i=0;i<number.length;i++){
+    var n = parseInt(number[number.length-1-i]);
+    sum += weights[i % weights.length] * n;
+  }
+  return (11-(sum%11))%11;
 }
 
 function addZeroes(number, n){
@@ -52,7 +83,10 @@ function addZeroes(number, n){
 
 //Required to register for both browser and nodejs
 var register = function(core){
-	core.register(["MSI","msi"], MSI);
+	core.register(["MSI", "MSI10"], MSImod10);
+  core.register(["MSI11"], MSImod11);
+  core.register(["MSI1010"], MSImod1010);
+  core.register(["MSI1110"], MSImod1110);
 }
 try{register(JsBarcode)} catch(e){}
 try{module.exports.register = register} catch(e){}

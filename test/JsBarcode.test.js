@@ -14,6 +14,9 @@ describe('Encoders', function() {
     ITF14 = JsBarcode.getModule("ITF14");
     ITF = JsBarcode.getModule("ITF");
     MSI = JsBarcode.getModule("MSI");
+    MSI11 = JsBarcode.getModule("MSI11");
+    MSI1010 = JsBarcode.getModule("MSI1010");
+    MSI1110 = JsBarcode.getModule("MSI1110");
     Pharmacode = JsBarcode.getModule("pharmacode");
   });
 });
@@ -269,6 +272,36 @@ describe('MSI', function() {
     var enc = new MSI("1234");
     assert.equal(enc.valid(), true);
     assert.equal(enc.getText(), "12344");
+  });
+
+  it('should encode MSI11', function () {
+    var enc = new MSI11("123456");
+    assert.equal("1234560", enc.getText());
+
+    var enc = new MSI11("12345678");
+    assert.equal("123456785", enc.getText());
+
+    var enc = new MSI11("1234567891011");
+    assert.equal("12345678910115", enc.getText());
+
+    var enc = new MSI11("1134567");
+    assert.equal("11345670", enc.getText());
+  });
+
+  it('should encode MSI1010', function () {
+    var enc = new MSI1010("1234567");
+    assert.equal("123456741", enc.getText());
+
+    var enc = new MSI1010("1337");
+    assert.equal("133751", enc.getText());
+  });
+
+  it('should encode MSI1110', function () {
+    var enc = new MSI1110("12345678");
+    assert.equal("1234567855", enc.getText());
+
+    var enc = new MSI1110("1337");
+    assert.equal("133744", enc.getText());
   });
 
   it('should warn with invalid text', function () {
