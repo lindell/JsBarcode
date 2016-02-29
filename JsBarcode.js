@@ -54,7 +54,10 @@
 		//Abort if the barcode format does not support the content
 		if(!encoder.valid()){
 		  validFunctionIfExist(false);
-			throw new Error('The data is not valid for the type of barcode.');
+			if(!validFunction){
+				throw new Error('The data is not valid for the type of barcode.');
+			}
+			return;
 		}
 
 		var binary;
