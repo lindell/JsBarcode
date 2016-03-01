@@ -6,6 +6,7 @@ var barcode_urls = {
   "EAN_UPC":    "/barcodes/EAN_UPC.js",
   "ITF":        "/barcodes/ITF.js",
   "ITF14":      "/barcodes/ITF14.js",
+  "MSI":        "/barcodes/MSI.js",
   "pharmacode": "/barcodes/pharmacode.js",
   "JsBarcode":  "/JsBarcode.js"
 };
