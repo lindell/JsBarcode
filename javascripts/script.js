@@ -7,6 +7,11 @@ var defaultValues = {
     CODE39 : "JSBARCODE",
     ITF14 : "10012345000017",
     ITF : "123456",
+    MSI : "123456",
+    MSI10 : "123456",
+    MSI11 : "123456",
+    MSI1010 : "123456",
+    MSI1110 : "123456",
     pharmacode : "1234"
 };
 
