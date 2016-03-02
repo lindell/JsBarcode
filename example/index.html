@@ -5,6 +5,12 @@
 	<title></title>
 	<script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
 	<script src="../JsBarcode.all.min.js"></script>
+	<script>
+		Number.prototype.zeroPadding = function(){
+			var ret = "" + this.valueOf();
+			return ret.length == 1 ? "0" + ret : ret;
+		};
+	</script>
 </head>
 <body>
 	<div>
@@ -34,7 +40,7 @@
 		<script>
 			var repeat4 = function(){
 				var date = new Date();
-				$("#barcode4").JsBarcode(date.getHours()+":"+date.getMinutes()+":"+date.getSeconds());
+				$("#barcode4").JsBarcode(date.getHours().zeroPadding()+":"+date.getMinutes().zeroPadding()+":"+date.getSeconds().zeroPadding(), {displayValue: true});
 			};
 			setInterval(repeat4,1000);
 			repeat4();
