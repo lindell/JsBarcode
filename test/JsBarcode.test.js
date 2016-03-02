@@ -2,7 +2,6 @@ var assert = require('assert');
 var JsBarcode = require('../JsBarcode.js');
 var Canvas = require("canvas");
 
-var CODE39, CODE128, EAN, UPC, EAN8, ITF14, ITF, Pharmacode;
 describe('Encoders', function() {
   it('should be able to include all encoders', function () {
     CODE39 = JsBarcode.getModule("CODE39");
@@ -102,8 +101,8 @@ describe('node-canvas generation', function() {
     var ctx1 = canvas1.getContext("2d");
     var ctx2 = canvas2.getContext("2d");
 
-    JsBarcode(canvas1, "HELLO", {format: "CODE39"});
-    JsBarcode(canvas2, "HELLO");
+    JsBarcode(canvas1, "HELL0", {format: "CODE39"});
+    JsBarcode(canvas2, "HELL0");
 
     assert.equal(canvas1.toDataURL(), canvas2.toDataURL());
   });
