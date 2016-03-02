@@ -49,7 +49,12 @@
 			throw new Error('The browser does not support canvas.');
 		}
 
-		var encoder = new (JsBarcode.getModule(options.format))(content);
+		if(options.format == "auto"){
+			var encoder = new (JsBarcode.autoSelectEncoder(content))(content);
+		}
+		else{
+			var encoder = new (JsBarcode.getModule(options.format))(content);
+		}
 
 		//Abort if the barcode format does not support the content
 		if(!encoder.valid()){
@@ -149,10 +154,23 @@
 	};
 
 	JsBarcode._barcodes = [];
-	JsBarcode.register = function(barcode_module, regex, priority){
-		JsBarcode._barcodes.push({
+	JsBarcode.register = function(module, regex, priority){
+		var position = 0;
+		if(typeof priority === "undefined"){
+			position = JsBarcode._barcodes.length - 1;
+		}
+		else{
+			for(var i=0;i<JsBarcode._barcodes.length;i++){
+				position = i;
+				if(!(priority < JsBarcode._barcodes[i].priority)){
+					break;
+				}
+			}
+		}
+
+		JsBarcode._barcodes.splice(position, 0, {
 			"regex": regex,
-			"barcode_module": barcode_module,
+			"module": module,
 			"priority": priority
 		});
 	};
@@ -160,10 +178,20 @@
 	JsBarcode.getModule = function(name){
 		for(var i in JsBarcode._barcodes){
 			if(name.search(JsBarcode._barcodes[i].regex) !== -1){
-				return JsBarcode._barcodes[i].barcode_module;
+				return JsBarcode._barcodes[i].module;
 			}
 		}
 		throw new Error('Module ' + name + ' does not exist or is not loaded.');
+	};
+
+	JsBarcode.autoSelectEncoder = function(content){
+		for(var i in JsBarcode._barcodes){
+			var barcode = new (JsBarcode._barcodes[i].module)(content);
+			if(barcode.valid(content)){
+				return JsBarcode._barcodes[i].module;
+			}
+		}
+		throw new Error("Can't automatically find a barcode format matching the string '" + content + "'");
 	};
 
 	// Defining the cache dictionary
@@ -221,7 +249,7 @@
 		width: 2,
 		height:	100,
 		quite: 10,
-		format:	"CODE128",
+		format:	"auto",
 		displayValue: false,
 		fontOptions: "",
 		font: "monospace",

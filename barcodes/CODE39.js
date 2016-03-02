@@ -60,12 +60,9 @@ function CODE39(string){
 			return result;
 		};
 
-	//This regexp is used for validation
-	var regexp = /^[0-9a-zA-Z\-\.\ \$\/\+\%]+$/;
-
 	//Use the regexp variable for validation
 	this.valid = function(){
-		if(this.string.search(regexp)==-1){
+		if(this.string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/)==-1){
 			return false;
 		}
 		return true;
@@ -85,7 +82,7 @@ function CODE39(string){
 
 //Required to register for both browser and nodejs
 var register = function(core){
-	core.register(CODE39, /^CODE.?39$/i);
+	core.register(CODE39, /^CODE.?39$/i, 3);
 }
 try{register(JsBarcode)} catch(e){}
 try{module.exports.register = register} catch(e){}

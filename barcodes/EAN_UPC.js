@@ -260,9 +260,9 @@ function EANencoder(){
 
 //Required to register for both browser and nodejs
 var register = function(core){
-	core.register(EAN, /^EAN(.?13)?$/i);
-	core.register(EAN8, /^EAN.?8$/i);
-	core.register(UPC, /^UPC(.?A)?$/i);
+	core.register(EAN, /^EAN(.?13)?$/i, 8);
+	core.register(EAN8, /^EAN.?8$/i, 8);
+	core.register(UPC, /^UPC(.?A)?$/i, 8);
 }
 try{register(JsBarcode)} catch(e){}
 try{module.exports.register = register} catch(e){}

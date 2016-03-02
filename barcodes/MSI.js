@@ -89,7 +89,7 @@ function addZeroes(number, n){
 
 //Required to register for both browser and nodejs
 var register = function(core){
-	core.register(MSI, /^MSI$/i);
+	core.register(MSI, /^MSI$/i, 4);
 	core.register(MSI10, /^MSI.?10$/i);
   core.register(MSI11, /^MSI.?11$/i);
   core.register(MSI1010, /^MSI.?1010$/i);
