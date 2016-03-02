@@ -19,6 +19,7 @@ describe('Encoders', function() {
     MSI1010 = JsBarcode.getModule("MSI1010");
     MSI1110 = JsBarcode.getModule("MSI1110");
     Pharmacode = JsBarcode.getModule("pharmacode");
+    GENERIC = JsBarcode.getModule("generic");
   });
 });
 
@@ -331,5 +332,13 @@ describe('Pharmacode', function() {
   it('should warn with invalid text', function () {
     var enc = new Pharmacode("12345678");
     assert.equal(false, enc.valid());
+  });
+});
+
+describe('Generic barcode', function() {
+  it('should not fail generic barcode', function () {
+    var enc = new GENERIC("1234");
+    assert.equal(enc.valid(), true);
+    assert.equal(enc.getText(), "1234");
   });
 });

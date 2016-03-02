@@ -89,11 +89,11 @@ function addZeroes(number, n){
 
 //Required to register for both browser and nodejs
 var register = function(core){
-	core.register("MSI", MSI);
-	core.register(["MSI10", "MSI-10"], MSI10);
-  core.register(["MSI11", "MSI-11"], MSI11);
-  core.register(["MSI1010", "MSI-1010"], MSI1010);
-  core.register(["MSI1110", "MSI-1110"], MSI1110);
+	core.register(MSI, /^MSI$/i);
+	core.register(MSI10, /^MSI.?10$/i);
+  core.register(MSI11, /^MSI.?11$/i);
+  core.register(MSI1010, /^MSI.?1010$/i);
+  core.register(MSI1110, /^MSI.?1110$/i);
 }
 try{register(JsBarcode)} catch(e){}
 try{module.exports.register = register} catch(e){}

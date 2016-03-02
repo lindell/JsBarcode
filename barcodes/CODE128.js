@@ -244,8 +244,8 @@ function CODE128C(string) {
 
 //Required to register for both browser and nodejs
 var register = function(core){
-	core.register(["CODE128","CODE128B","CODE128 B"], CODE128B);
-	core.register(["CODE128C", "CODE128 C"], CODE128C);
+	core.register(CODE128B, /^CODE128(.?B)?$/i);
+	core.register(CODE128C, /^CODE128(.?C)?$/i);
 }
 try{register(JsBarcode)} catch(e){}
 try{module.exports.register = register} catch(e){}

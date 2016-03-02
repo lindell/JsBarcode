@@ -148,34 +148,22 @@
 		validFunctionIfExist(true);
 	};
 
-	JsBarcode._barcodes = {};
-	JsBarcode.register = function(name, module){
-		// Register all names in an array to the module
-		if(Array.isArray(name)){
-			for(var i in name){
-				JsBarcode.register(name[i], module);
-			}
-		}
-		else{
-			// Make case insensitive
-			name = name.toLowerCase();
-
-			// Register just one name
-			JsBarcode._barcodes[name] = module;
-		}
+	JsBarcode._barcodes = [];
+	JsBarcode.register = function(barcode_module, regex, priority){
+		JsBarcode._barcodes.push({
+			"regex": regex,
+			"barcode_module": barcode_module,
+			"priority": priority
+		});
 	};
 
 	JsBarcode.getModule = function(name){
-		// Make case insensitive
-		name = name.toLowerCase();
-
-		var encoder = JsBarcode._barcodes[name];
-		if(typeof encoder !== "undefined"){
-			return JsBarcode._barcodes[name];
+		for(var i in JsBarcode._barcodes){
+			if(name.search(JsBarcode._barcodes[i].regex) !== -1){
+				return JsBarcode._barcodes[i].barcode_module;
+			}
 		}
-		else{
-			throw new Error('Module ' + name + ' does not exist or is not loaded.');
-		}
+		throw new Error('Module ' + name + ' does not exist or is not loaded.');
 	};
 
 	// Defining the cache dictionary
