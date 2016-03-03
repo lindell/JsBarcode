@@ -42,6 +42,8 @@ describe('node-canvas generation', function() {
     var canvas = new Canvas();
     assert.throws(function(){JsBarcode(canvas, "Hello", {format: "EAN8"});});
     assert.throws(function(){JsBarcode(canvas, "Hello", {format: "DOESNOTEXIST"});}, /Module DOESNOTEXIST does not exist/i);
+    assert.throws(function(){JsBarcode("Hello", "Hello", {format: "DOESNOTEXIST"});});
+    assert.throws(function(){JsBarcode(123, "Hello", {format: "DOESNOTEXIST"});});
   });
 
   it('should use the valid callback correct', function (done) {
