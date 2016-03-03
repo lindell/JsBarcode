@@ -1,10 +1,29 @@
-(function($){
+(function(){
 
-	var JsBarcode = function(image, content, options, validFunction) {
-		// Check if the image parameter should be
+	// Main function, calls drawCanvas(...) in the right way
+	var JsBarcode = function(image, content, options, validFunction){
+		// If the image is a string, query select call again
 		if(typeof image === "string"){
 			image = document.querySelector(image);
+			JsBarcode(image, content, options, validFunction);
 		}
+		// If image, draw on canvas and set the uri as src
+		else if(typeof HTMLCanvasElement !== 'undefined' && image instanceof HTMLImageElement){
+			canvas = document.createElement('canvas');
+			drawCanvas(canvas, content, options, validFunction);
+			image.setAttribute("src", canvas.toDataURL());
+		}
+		// If canvas, just draw
+		else if(image.getContext){
+			drawCanvas(image, content, options, validFunction);
+		}
+		else{
+			throw new Error("Not supported type to draw on.");
+		}
+	}
+
+	// The main function, handles everything with the modules and draws the image
+	var drawCanvas = function(canvas, content, options, validFunction) {
 
 		// This tries to call the valid function only if it's specified. Otherwise nothing happens
 		var validFunctionIfExist = function(valid){
@@ -15,21 +34,6 @@
 
 		// Merge the user options with the default
 		options = merge(JsBarcode.defaults, options);
-
-		// Create the canvas where the barcode will be drawn on
-		// Check if the given image is already a canvas
-		var canvas = image;
-
-		// Check if it is a jQuery object
-		if ($ && canvas instanceof $) {
-			// Get the DOM element of the object
-			canvas = image.get(0);
-		}
-
-		// Check if DOM element is a canvas, otherwise it will be probably an image so create a canvas
-		if (typeof HTMLCanvasElement != 'undefined' && !(canvas instanceof HTMLCanvasElement)) {
-			canvas = document.createElement('canvas');
-		}
 
 		//Abort if the browser does not support HTML5 canvas
 		if (!canvas.getContext) {
@@ -123,43 +127,29 @@
 			_drawBarcodeText(encoder.getText());
 		}
 
-		// Grab the dataUri from the canvas
-		uri = canvas.toDataURL('image/png');
-
-		// Check if given image is a jQuery object
-		if ($ && image instanceof $) {
-			// Check if DOM element of jQuery selection is not a canvas, so assume that it is an image
-			if (!(image.get(0) instanceof HTMLCanvasElement)) {
-				// Put the data uri into the image
-			 	image.attr("src", uri);
-			}
-		} else if (typeof HTMLCanvasElement != 'undefined' && !(image instanceof HTMLCanvasElement)) {
-			// There is no jQuery object so just check if the given image was a canvas, if not set the source attr
-			image.setAttribute("src", uri);
-		}
-
 		// Send a confirmation that the generation was successful to the valid function if it does exist
 		validFunctionIfExist(true);
 	};
 
-	JsBarcode._barcodes = [];
+	JsBarcode._modules = [];
 
 	// Add a new module sorted in the array
 	JsBarcode.register = function(module, regex, priority){
 		var position = 0;
 		if(typeof priority === "undefined"){
-			position = JsBarcode._barcodes.length - 1;
+			position = JsBarcode._modules.length - 1;
 		}
 		else{
-			for(var i=0;i<JsBarcode._barcodes.length;i++){
+			for(var i=0;i<JsBarcode._modules.length;i++){
 				position = i;
-				if(!(priority < JsBarcode._barcodes[i].priority)){
+				if(!(priority < JsBarcode._modules[i].priority)){
 					break;
 				}
 			}
 		}
 
-		JsBarcode._barcodes.splice(position, 0, {
+		// Add the module in position position
+		JsBarcode._modules.splice(position, 0, {
 			"regex": regex,
 			"module": module,
 			"priority": priority
@@ -168,9 +158,9 @@
 
 	// Get module by name
 	JsBarcode.getModule = function(name){
-		for(var i in JsBarcode._barcodes){
-			if(name.search(JsBarcode._barcodes[i].regex) !== -1){
-				return JsBarcode._barcodes[i].module;
+		for(var i in JsBarcode._modules){
+			if(name.search(JsBarcode._modules[i].regex) !== -1){
+				return JsBarcode._modules[i].module;
 			}
 		}
 		throw new Error('Module ' + name + ' does not exist or is not loaded.');
@@ -178,10 +168,10 @@
 
 	// If any format is valid with the content, return the format with highest priority
 	JsBarcode.autoSelectEncoder = function(content){
-		for(var i in JsBarcode._barcodes){
-			var barcode = new (JsBarcode._barcodes[i].module)(content);
+		for(var i in JsBarcode._modules){
+			var barcode = new (JsBarcode._modules[i].module)(content);
 			if(barcode.valid(content)){
-				return JsBarcode._barcodes[i].module;
+				return JsBarcode._modules[i].module;
 			}
 		}
 		throw new Error("Can't automatically find a barcode format matching the string '" + content + "'");
@@ -230,9 +220,9 @@
 	}
 
 	// Register JsBarcode as an jQuery plugin if jQuery exist
-	if ($) {
-		$.fn.JsBarcode = function(content, options, validFunction){
-			JsBarcode(this, content, options, validFunction);
+	if (typeof jQuery !== 'undefined') {
+		jQuery.fn.JsBarcode = function(content, options, validFunction){
+			JsBarcode(this.get(0), content, options, validFunction);
 			return this;
 		};
 	}
@@ -266,4 +256,4 @@
 		}
 		return newMerge;
 	};
-})(typeof jQuery != 'undefined' ? jQuery : null);
+})();
