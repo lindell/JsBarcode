@@ -117,9 +117,9 @@ The default options:
 ````javascript
 {
   width: 2,
-  height:	100,
+  height: 100,
   quite: 10,
-  format:	"auto",
+  format: "auto",
   displayValue: false,
   fontOptions: "",
   font: "monospace",

@@ -6,19 +6,6 @@
 			image = document.querySelector(image);
 		}
 
-		var merge = function(m1, m2) {
-			var newMerge = {};
-			for (var k in m1) {
-				newMerge[k] = m1[k];
-			}
-			for (var k in m2) {
-				if(typeof m2[k] !== "undefined"){
-					newMerge[k] = m2[k];
-				}
-			}
-			return newMerge;
-		};
-
 		// This tries to call the valid function only if it's specified. Otherwise nothing happens
 		var validFunctionIfExist = function(valid){
 		  if(validFunction){
@@ -49,9 +36,11 @@
 			throw new Error('The browser does not support canvas.');
 		}
 
+		// Automatically choose barcode if format set to "auto"...
 		if(options.format == "auto"){
 			var encoder = new (JsBarcode.autoSelectEncoder(content))(content);
 		}
+		// ...or else, get by name
 		else{
 			var encoder = new (JsBarcode.getModule(options.format))(content);
 		}
@@ -65,14 +54,14 @@
 			return;
 		}
 
-		var binary;
+		// Set the binary to a cached version if possible
 		var cachedBinary = JsBarcode.getCache(options.format, content);
 		if(cachedBinary){
-			binary = cachedBinary;
+			var binary = cachedBinary;
 		}
 		else{
 			// Encode the content
-			binary = encoder.encoded();
+			var binary = encoder.encoded();
 			// Cache the encoding if it will be used again later
 			JsBarcode.cache(options.format, content, binary);
 		}
@@ -154,6 +143,8 @@
 	};
 
 	JsBarcode._barcodes = [];
+
+	// Add a new module sorted in the array
 	JsBarcode.register = function(module, regex, priority){
 		var position = 0;
 		if(typeof priority === "undefined"){
@@ -175,6 +166,7 @@
 		});
 	};
 
+	// Get module by name
 	JsBarcode.getModule = function(name){
 		for(var i in JsBarcode._barcodes){
 			if(name.search(JsBarcode._barcodes[i].regex) !== -1){
@@ -184,6 +176,7 @@
 		throw new Error('Module ' + name + ' does not exist or is not loaded.');
 	};
 
+	// If any format is valid with the content, return the format with highest priority
 	JsBarcode.autoSelectEncoder = function(content){
 		for(var i in JsBarcode._barcodes){
 			var barcode = new (JsBarcode._barcodes[i].module)(content);
@@ -260,4 +253,17 @@
 		lineColor: "#000"
 	};
 
+	// Function to merge the default options with the default ones
+	var merge = function(m1, m2) {
+		var newMerge = {};
+		for (var k in m1) {
+			newMerge[k] = m1[k];
+		}
+		for (var k in m2) {
+			if(typeof m2[k] !== "undefined"){
+				newMerge[k] = m2[k];
+			}
+		}
+		return newMerge;
+	};
 })(typeof jQuery != 'undefined' ? jQuery : null);
