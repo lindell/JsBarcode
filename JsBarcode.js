@@ -77,7 +77,7 @@
 		}
 
 		// Get the canvas context
-		var ctx	= canvas.getContext("2d");
+		var ctx = canvas.getContext("2d");
 
 		// Set font
 		var font = options.fontOptions + " " + options.fontSize + "px "+options.font;
@@ -105,15 +105,15 @@
 
 		canvas.width = width + options.marginLeft + options.marginRight;
 
-    // Set extra height if the value is displayed under the barcode. Multiplication with 1.3 t0 ensure that some
-    //characters are not cut in half
+		// Set extra height if the value is displayed under the barcode. Multiplication with 1.3 t0 ensure that some
+		//characters are not cut in half
 		canvas.height = options.height
 			+ (options.displayValue ? options.fontSize : 0)
 			+ options.textMargin
 			+ options.marginTop
 			+ options.marginBottom;
 
-		//Paint the canvas
+		// Paint the canvas
 		ctx.clearRect(0,0,canvas.width,canvas.height);
 		if(options.background){
 			ctx.fillStyle = options.background;

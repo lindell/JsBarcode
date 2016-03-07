@@ -64,7 +64,7 @@ function ITF(ITFNumber){
 		return result;
 	}
 
-  function valid(number){
+	function valid(number){
 		return number.search(regexp)!==-1;
 	}
 }
