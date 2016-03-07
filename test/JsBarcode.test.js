@@ -76,10 +76,10 @@ describe('node-canvas generation', function() {
     assert.equal(canvas1.toDataURL(), canvas2.toDataURL());
   });
 
-  it('should set background color', function () {
+  it('should set background', function () {
     var canvas = new Canvas();
     var ctx = canvas.getContext("2d");
-    JsBarcode(canvas, "Hello", {format: "CODE128", backgroundColor: "#f00"});
+    JsBarcode(canvas, "Hello", {format: "CODE128", background: "#f00"});
 
     var topLeft = ctx.getImageData(0,0,1,1);
     assert.equal(topLeft.data[0], 255);
@@ -115,7 +115,7 @@ describe('Text printing', function() {
     var canvas1 = new Canvas();
     var canvas2 = new Canvas();
 
-    JsBarcode(canvas1, "Hello", {format: "CODE128", displayValue: true});
+    JsBarcode(canvas1, "Hello", {format: "CODE128", displayValue: false});
     JsBarcode(canvas2, "Hello", {format: "CODE128"});
 
     assert.notEqual(canvas1.toDataURL(), canvas2.toDataURL());
