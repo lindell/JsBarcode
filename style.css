@@ -15,6 +15,7 @@ body{
     border-radius: 5px;
     box-shadow:0 1px 2px hsla(0, 0%, 0%, 0.3);
     margin-top:50px;
+    margin-bottom:50px;
 }
 
 .innermain{
@@ -22,7 +23,7 @@ body{
     margin-right: auto;
     margin-bottom:10px;
     text-align: center;
-    width: 500px;
+    min-width: 500px;
 }
 
 #userInput{
@@ -41,6 +42,9 @@ body{
 #inputs{
 
 }
+
+
+
 
 #title{
     display:inline-block;
@@ -116,12 +120,13 @@ body{
     margin-right:5px;
 }
 
-#checkbox-options{
+.checkbox-options{
     font-size:16px;
     clear:both;
+    margin-top:10px;
 }
 
-#checkbox-options input{
+.checkbox-options input{
     margin-left:20px;
 }
 
@@ -137,4 +142,16 @@ body{
   text-align: center;
   margin-left: 25px;
   margin-right: 25px;
+}
+
+.description-text{
+  height:45px;
+}
+
+.description-text p{
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }

@@ -15,13 +15,31 @@ var defaultValues = {
     pharmacode : "1234"
 };
 
+var displayValue = true;
+var textAlign = "center";
+
 $(document).ready(function(){
     $("#userInput").on('input',newBarcode);
     $("#barcodeType").change(function(){
         $("#userInput").val( defaultValues[$(this).val()] );
         newBarcode();
     });
-    $("input:radio[name=display-value]").click(newBarcode);
+
+    $(".text-align").click(function(){
+      $(".text-align").removeClass("btn-primary");
+      $(this).addClass("btn-primary");
+      textAlign = $(this).val();
+      newBarcode();
+    });
+
+    $(".display-text").click(function(){
+      $(".display-text").removeClass("btn-primary");
+      $(this).addClass("btn-primary");
+      displayValue = $(this).val() == "true";
+      newBarcode();
+    });
+
+
     newBarcode();
 
     $('input[type="range"]').rangeslider({
@@ -32,19 +50,27 @@ $(document).ready(function(){
         onSlide: newBarcode,
         onSlideEnd: newBarcode
     });
+
+    $('input.color').colorPicker({
+      actionCallback: newBarcode
+    });
 });
 
 var newBarcode = function() {
     //Convert to boolean
-    var displayValue = ($("input:radio[name=display-value]:checked").val() === "true");
+    console.log(textAlign);
     $("#barcode").JsBarcode(
-        $("#userInput").val(),{
-            "format":$("#barcodeType").val(),
-            "backgroundColor":"#fff",
-            "fontSize":parseInt($("#bar-fontSize").val()),
-            "height":parseInt($("#bar-height").val()),
-            "width":$("#bar-width").val(),
-            "displayValue":displayValue
+        $("#userInput").val(),
+        {
+            "format": $("#barcodeType").val(),
+            "backgroundColor": $("#background-color").val(),
+            "lineColor": $("#line-color").val(),
+            "fontSize": parseInt($("#bar-fontSize").val()),
+            "height": parseInt($("#bar-height").val()),
+            "width": $("#bar-width").val(),
+            "quite": parseInt($("#bar-margin").val()),
+            "displayValue": displayValue,
+            "textAlign": textAlign
         },
         function(valid){
             if(valid){
@@ -58,4 +84,5 @@ var newBarcode = function() {
     $("#bar-width-display").text($("#bar-width").val());
     $("#bar-height-display").text($("#bar-height").val());
     $("#bar-fontSize-display").text($("#bar-fontSize").val());
+    $("#bar-margin-display").text($("#bar-margin").val());
 };
