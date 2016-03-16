@@ -1,50 +1,66 @@
 body{
     background:#ddd;
     font-family: 'Open Sans', sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    width:100%;
+}
+
+html{
+  margin: 0;
+  padding: 0;
+  width:100%;
 }
 
 #main{
-    display: table;
-    padding-left: 75px;
-    padding-right: 75px;
-    padding-top: 25px;
-    padding-bottom: 25px;
-    margin: 0 auto;
     background:#fff;
+    margin: 0 auto;
     -moz-border-radius: 5px;
     border-radius: 5px;
     box-shadow:0 1px 2px hsla(0, 0%, 0%, 0.3);
     margin-top:50px;
     margin-bottom:50px;
+    min-width:800px;
+    padding-bottom: 20px;
+    display: inline-block;
 }
 
-.innermain{
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom:10px;
-    text-align: center;
-    min-width: 500px;
+.container{
+  width: 750px;
+  text-align: left;
+}
+
+@media (max-width: 800px) {
+  #main{
+    margin-top:0;
+    margin-bottom:0;
+    margin-left:0;
+    margin-right:0;
+    padding-left: 10px;
+    padding-right: 10px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+    width: 100%;
+    min-width:0px;
+  }
+
+  .container{
+    width: 100%;
+  }
+
+  .github-banner{
+    display: none;
+  }
 }
 
 #userInput{
-
-}
-
-#barcodeType{
-    width:100%;
+  height:35px;
 }
 
 #barcode{
-    margin-top:10px;
-    margin-bottom:30px;
+    vertical-align: middle;
 }
-
-#inputs{
-
-}
-
-
-
 
 #title{
     display:inline-block;
@@ -52,7 +68,6 @@ body{
     margin-right: auto;
     text-align: left;
     line-height: 90%;
-    margin-bottom:50px;
 }
 
 #title a:link{
@@ -82,70 +97,17 @@ body{
     margin-top:10px;
 }
 
-#options-button{
-    width:100%;
-}
-
-.box{
-    margin-left:0px;
-    margin-right:0px;
-    padding-left:0px;
-    padding-right:0px;
-}
-
-#userInputGroup{
-    width:100%;
-}
-
-#options{
-    width:70%;
-    float:left;
-}
-
-#options-display{
-
-}
-
-#options-names{
-    float:left;
-}
-
-#options-names span{
-    display:block;
-    height:20px;
-    margin-bottom:20px;
-    font-size:20px;
-    margin-top:-10px;
-    text-align:right;
-    margin-right:5px;
-}
-
-.checkbox-options{
-    font-size:16px;
-    clear:both;
-    margin-top:10px;
-}
-
-.checkbox-options input{
-    margin-left:20px;
-}
-
-#options-display span{
-    display:block;
-    height:20px;
-    margin-bottom:20px;
-    font-size:20px;
-    margin-top:-10px;
-}
-
 .barcode-container{
+  height:200px;
+  line-height: 200px;
   text-align: center;
+  vertical-align: middle;
   margin-left: 25px;
   margin-right: 25px;
 }
 
 .description-text{
-  height:45px;
+  height:42px;
 }
 
 .description-text p{
@@ -154,4 +116,37 @@ body{
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+
+.value-text{
+  height:42px;
+  text-align: right;
+}
+
+.value-text p{
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.center-text{
+  text-align: center;
+}
+
+.search-bar{
+  margin-bottom: 20px;
+}
+
+.slider-container{
+  margin-top: 17px;
+}
+
+.input-container{
+  margin-top: 5px;
+}
+
+.barcode-select{
+  border-color: #ccc;
 }
