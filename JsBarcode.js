@@ -1,21 +1,21 @@
 (function(){
 
 	// Main function, calls drawCanvas(...) in the right way
-	var JsBarcode = function(image, content, options, validFunction){
+	var JsBarcode = function(image, content, options){
 		// If the image is a string, query select call again
 		if(typeof image === "string"){
 			image = document.querySelector(image);
-			JsBarcode(image, content, options, validFunction);
+			JsBarcode(image, content, options);
 		}
 		// If image, draw on canvas and set the uri as src
 		else if(typeof HTMLCanvasElement !== 'undefined' && image instanceof HTMLImageElement){
 			canvas = document.createElement('canvas');
-			drawCanvas(canvas, content, options, validFunction);
+			drawCanvas(canvas, content, options);
 			image.setAttribute("src", canvas.toDataURL());
 		}
 		// If canvas, just draw
 		else if(image.getContext){
-			drawCanvas(image, content, options, validFunction);
+			drawCanvas(image, content, options);
 		}
 		else{
 			throw new Error("Not supported type to draw on.");
@@ -23,15 +23,7 @@
 	}
 
 	// The main function, handles everything with the modules and draws the image
-	var drawCanvas = function(canvas, content, options, validFunction) {
-
-		// This tries to call the valid function only if it's specified. Otherwise nothing happens
-		var validFunctionIfExist = function(valid){
-		  if(validFunction){
-		    validFunction(valid);
-		  }
-		};
-
+	var drawCanvas = function(canvas, content, options) {
 		// Merge the user options with the default
 		options = merge(JsBarcode.defaults, options);
 
@@ -57,8 +49,8 @@
 
 		//Abort if the barcode format does not support the content
 		if(!encoder.valid()){
-		  validFunctionIfExist(false);
-			if(!validFunction){
+		  options.valid(false);
+			if(options.valid == JsBarcode.defaults.valid){
 				throw new Error('The data is not valid for the type of barcode.');
 			}
 			return;
@@ -158,7 +150,7 @@
 		}
 
 		// Send a confirmation that the generation was successful to the valid function if it does exist
-		validFunctionIfExist(true);
+		options.valid(true);
 	};
 
 	JsBarcode._modules = [];
@@ -274,7 +266,8 @@
 		marginTop: undefined,
 		marginBottom: undefined,
 		marginLeft: undefined,
-		marginRight: undefined
+		marginRight: undefined,
+		valid: function(valid){}
 	};
 
 	// Function to merge the default options with the default ones

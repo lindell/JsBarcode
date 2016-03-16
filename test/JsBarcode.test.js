@@ -49,9 +49,12 @@ describe('node-canvas generation', function() {
   it('should use the valid callback correct', function (done) {
     var canvas = new Canvas();
 
-    JsBarcode(canvas, "Hello", {format: "CODE128"}, function(valid){
-      if(valid){
-        done();
+    JsBarcode(canvas, "Hello", {
+      format: "CODE128",
+      valid: function(valid){
+        if(valid){
+          done();
+        }
       }
     });
   });
@@ -59,9 +62,12 @@ describe('node-canvas generation', function() {
   it('should use false valid callback correct', function (done) {
     var canvas = new Canvas();
 
-    JsBarcode(canvas, "Hello", {format: "pharmacode"}, function(valid){
-      if(!valid){
-        done();
+    JsBarcode(canvas, "Hello", {
+      format: "pharmacode",
+      valid: function(valid){
+        if(!valid){
+          done();
+        }
       }
     });
   });
