@@ -252,8 +252,8 @@
 	// All the default options. If one is not set.
 	JsBarcode.defaults = {
 		width: 2,
-		height:	100,
-		format:	"auto",
+		height: 100,
+		format: "auto",
 		displayValue: true,
 		fontOptions: "",
 		font: "monospace",
