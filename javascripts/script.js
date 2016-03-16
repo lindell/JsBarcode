@@ -78,25 +78,27 @@ var newBarcode = function() {
     $("#barcode").JsBarcode(
         $("#userInput").val(),
         {
-            "format": $("#barcodeType").val(),
-            "background": $("#background-color").val(),
-            "lineColor": $("#line-color").val(),
-            "fontSize": parseInt($("#bar-fontSize").val()),
-            "height": parseInt($("#bar-height").val()),
-            "width": $("#bar-width").val(),
-            "margin": parseInt($("#bar-margin").val()),
-            "textMargin": parseInt($("#bar-text-margin").val()),
-            "displayValue": displayValue,
-            "textAlign": textAlign,
-            "valid":
+          "format": $("#barcodeType").val(),
+          "background": $("#background-color").val(),
+          "lineColor": $("#line-color").val(),
+          "fontSize": parseInt($("#bar-fontSize").val()),
+          "height": parseInt($("#bar-height").val()),
+          "width": $("#bar-width").val(),
+          "margin": parseInt($("#bar-margin").val()),
+          "textMargin": parseInt($("#bar-text-margin").val()),
+          "displayValue": displayValue,
+          "textAlign": textAlign,
+          "valid":
             function(valid){
-                  if(valid){
-                      $("#invalid").stop().fadeTo(300,0);
-                  }
-                  else{
-                      $("#invalid").stop().fadeTo(300,1);
-                  }
+              if(valid){
+                $("#barcode").show();
+                $("#invalid").hide();
               }
+              else{
+                $("#barcode").hide();
+                $("#invalid").show();
+              }
+            }
         });
 
     $("#bar-width-display").text($("#bar-width").val());

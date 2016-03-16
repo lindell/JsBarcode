@@ -91,10 +91,11 @@ html{
 }
 
 #invalid{
-    opacity: 0;
+    display: none;
     color:#DE0000;
-    font-weight: 700;
     margin-top:10px;
+    font-size:14pt;
+    vertical-align: middle;
 }
 
 .barcode-container{
