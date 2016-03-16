@@ -117,16 +117,20 @@ The default options:
 ````javascript
 {
   width: 2,
-  height: 100,
-  quite: 10,
-  format: "auto",
-  displayValue: false,
+  height:	100,
+  format:	"auto",
+  displayValue: true,
   fontOptions: "",
   font: "monospace",
   textAlign: "center",
-  textPadding: 0,
-  fontSize: 12,
-  backgroundColor: "",
-  lineColor: "#000"
+  textMargin: 2,
+  fontSize: 14,
+  background: "#fff",
+  lineColor: "#000",
+  margin: 10,
+  marginTop: undefined,
+  marginBottom: undefined,
+  marginLeft: undefined,
+  marginRight: undefined
 }
 ````
