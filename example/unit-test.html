@@ -152,5 +152,31 @@
 		<img id="barcode14"/>
 		<script>$("#barcode14").JsBarcode("12345674",{format:"MSI", width:1, displayValue: true});</script>
 	</div>
+
+	<div class="testbox">
+		<b>Format:</b> MSI<br>
+		<b>Input:</b> 12345674<br>
+		<b>Extra:</b> Draw on canvas
+		<br><br>
+		<canvas id="barcode15"></canvas>
+		<script>$("#barcode15").JsBarcode("Very test, such customize", JsBarcode.defaults = {
+			width: 1,
+			height:	50,
+			format:	"CODE128",
+			displayValue: true,
+			fontOptions: "bold",
+			font: "cursive",
+			textAlign: "right",
+			textMargin: 20,
+			fontSize: 28,
+			background: "#f00",
+			lineColor: "#0ff",
+			margin: 10,
+			marginTop: 60,
+			marginBottom: 5,
+			marginLeft: 60,
+			marginRight: 30
+		});</script>
+	</div>
 </body>
 </html>

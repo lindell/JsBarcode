@@ -64,14 +64,14 @@ function ITF(ITFNumber){
 		return result;
 	}
 
-  function valid(number){
+	function valid(number){
 		return number.search(regexp)!==-1;
 	}
 }
 
 //Required to register for both browser and nodejs
 var register = function(core){
-	core.register("ITF", ITF);
+	core.register(ITF, /^ITF$/i, 4);
 };
 try{register(JsBarcode)} catch(e){}
 try{module.exports.register = register} catch(e){}

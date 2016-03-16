@@ -116,17 +116,17 @@ The default options:
 ----
 ````javascript
 {
-	width: 2,
-	height: 100,
-	quite: 10,
-	format: "CODE128",
-	displayValue: false,
-	fontOptions: "",
-	font: "monospace",
-	textAlign: "center",
-	textPadding: 0,
-	fontSize: 12,
-	backgroundColor: "",
-	lineColor: "#000"
+  width: 2,
+  height: 100,
+  quite: 10,
+  format: "auto",
+  displayValue: false,
+  fontOptions: "",
+  font: "monospace",
+  textAlign: "center",
+  textPadding: 0,
+  fontSize: 12,
+  backgroundColor: "",
+  lineColor: "#000"
 }
 ````

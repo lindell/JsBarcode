@@ -1,17 +1,17 @@
 function CODE128(string, code){
 	code = code || "B";
 
-	this.string128 = string+"";
+	this.string = string+"";
 
 	this.valid = valid;
 
 	this.getText = function(){
-		return this.string128;
+		return this.string;
 	};
 
 	//The public encoding function
 	this.encoded = function(){
-			return calculate["code128" + code](string);
+		return calculate["code128" + code](string);
 	}
 
 	//Data for each character, the last characters will not be encoded but are used for error correction
@@ -127,12 +127,9 @@ function CODE128(string, code){
 	//The end bits
 	var endBin = "1100011101011";
 
-	//This regexp is used for validation
-	var regexp = /^[!-~ ]+$/;
-
 	//Use the regexp variable for validation
 	function valid(){
-		if(string.search(regexp)==-1){
+		if(this.string.search(/^[!-~ ]+$/)==-1){
 			return false;
 		}
 		return true;
@@ -244,8 +241,8 @@ function CODE128C(string) {
 
 //Required to register for both browser and nodejs
 var register = function(core){
-	core.register(["CODE128","CODE128B","CODE128 B"], CODE128B);
-	core.register(["CODE128C", "CODE128 C"], CODE128C);
+	core.register(CODE128B, /^CODE128(.?B)?$/i, 2);
+	core.register(CODE128C, /^CODE128.?C$/i, 2);
 }
 try{register(JsBarcode)} catch(e){}
 try{module.exports.register = register} catch(e){}

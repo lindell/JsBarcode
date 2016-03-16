@@ -91,7 +91,7 @@ function valid(number){
 
 //Required to register for both browser and nodejs
 var register = function(core){
-	core.register(["ITF14","ITF-14"],ITF14);
+	core.register(ITF14, /^ITF.?14$/i, 5);
 }
 try{register(JsBarcode)} catch(e){}
 try{module.exports.register = register} catch(e){}
