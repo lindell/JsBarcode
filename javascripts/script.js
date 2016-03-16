@@ -87,15 +87,16 @@ var newBarcode = function() {
             "margin": parseInt($("#bar-margin").val()),
             "textMargin": parseInt($("#bar-text-margin").val()),
             "displayValue": displayValue,
-            "textAlign": textAlign
-        },
-        function(valid){
-            if(valid){
-                $("#invalid").stop().fadeTo(300,0);
-            }
-            else{
-                $("#invalid").stop().fadeTo(300,1);
-            }
+            "textAlign": textAlign,
+            "valid":
+            function(valid){
+                  if(valid){
+                      $("#invalid").stop().fadeTo(300,0);
+                  }
+                  else{
+                      $("#invalid").stop().fadeTo(300,1);
+                  }
+              }
         });
 
     $("#bar-width-display").text($("#bar-width").val());
