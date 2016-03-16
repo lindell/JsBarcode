@@ -117,8 +117,8 @@ The default options:
 ````javascript
 {
   width: 2,
-  height:	100,
-  format:	"auto",
+  height: 100,
+  format: "auto",
   displayValue: true,
   fontOptions: "",
   font: "monospace",
@@ -131,6 +131,7 @@ The default options:
   marginTop: undefined,
   marginBottom: undefined,
   marginLeft: undefined,
-  marginRight: undefined
+  marginRight: undefined,
+  valid: function(valid){}
 }
 ````

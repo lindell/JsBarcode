@@ -1,6 +1,6 @@
 {
   "name": "jsbarcode",
-  "version": "2.0.0",
+  "version": "2.3.1",
   "description": "JsBarcode is a simple way to create different types of 1d barcodes.",
   "main": "JsBarcode.js",
   "directories": {
@@ -19,10 +19,12 @@
   "keywords": [
     "barcode",
     "canvas",
-    "canvas",
     "code128",
-    "upc-a",
-    "itf"
+    "upc",
+    "ean",
+    "itf",
+    "msi",
+    "pharmacode"
   ],
   "author": "Johan Lindell",
   "license": "MIT",
