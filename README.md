@@ -39,6 +39,8 @@ Examples for browsers:
 
 #### Code:
 ````javascript
+JsBarcode("#barcode","Hi!");
+// or with jQuery
 $("#barcode").JsBarcode("Hi!");
 ````
 
@@ -62,12 +64,17 @@ $("#barcode").JsBarcode("9780199532179", {
 
 
 
-#### Code (without jQuery):
+#### Code:
 ````javascript
-JsBarcode("#barcode","JsBarcode is easy!",{width:1,height:25});
+JsBarcode("#barcode", "1234", {
+  format: "pharmacode"
+  width:4,
+  height:40,
+  displayValue: false
+});
 ````
 ##### Result:
-![Result](http://lindell.github.io/JsBarcode/README_images/javascript_is_fun.png)
+![Result](http://lindell.github.io/JsBarcode/README_images/pharmacode.png)
 
 
 Setup for browsers:
