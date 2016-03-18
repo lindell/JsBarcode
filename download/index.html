@@ -1,49 +1,53 @@
 <!DOCTYPE HTML>
 <html lang="en-US">
 <head>
-    <meta charset="UTF-8">
-    <title>Barcode generator</title>
+  <meta charset="UTF-8">
+  <title>Barcode generator</title>
 
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" type='text/css' href="../style.css">
-    <link rel="stylesheet" type='text/css' href="compilestyle.css">
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" type='text/css' href="../style.css">
+  <link rel="stylesheet" type='text/css' href="compilestyle.css">
 
-    <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-    <script src="javascripts/FileSaver.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-    <script src="javascripts/compilescript.js"></script>
+  <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+  <script src="javascripts/FileSaver.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  <script src="javascripts/compilescript.js"></script>
 </head>
 <body>
-    <div id="main">
-        <div class="innermain">
-            <div id="title">
-                <h1>Download <b>JsBarcode<b></h1>
-                <div class="undertitle">Customize your download</div>
-                <div id="barcodeboxes">
-                  <label><input type="checkbox" name="barcode" checked="checked" disabled="true" value="JsBarcode"> JsBarcode (CORE)</label><br>
-                  <label><input type="checkbox" name="barcode" checked="checked" value="CODE128"> CODE128</label><br>
-                  <label><input type="checkbox" name="barcode" checked="checked" value="CODE39"> CODE39</label><br>
-                  <label><input type="checkbox" name="barcode" checked="checked" value="EAN_UPC"> EAN/UPC</label><br>
-                  <label><input type="checkbox" name="barcode" checked="checked" value="ITF"> ITF</label><br>
-                  <label><input type="checkbox" name="barcode" checked="checked" value="ITF14"> ITF14</label><br>
-                  <label><input type="checkbox" name="barcode" checked="checked" value="MSI"> MSI</label><br>
-                  <label><input type="checkbox" name="barcode" checked="checked" value="pharmacode"> Pharmacode</label>
-                  <br><br>
-                </div>
-            </div>
-        </div>
-        <div class="innermain">
-          <button id="download_btn" class="btn btn-default btn-lg">
-            <span id="downloadicon" class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
-            <span id="loadingicon" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
-            Download
-          </button>
-        </div>
+  <div id="main">
+    <div class="innermain">
+      <h1>Download <b>JsBarcode</b></h1>
+      <div class="undertitle">Customize your download</div>
+      <div id="barcodeboxes">
+        <label><input type="checkbox" name="barcode" checked="checked" disabled="true" value="JsBarcode"> JsBarcode (CORE)</label><br>
+        <label><input type="checkbox" name="barcode" checked="checked" value="CODE128"> CODE128</label><br>
+        <label><input type="checkbox" name="barcode" checked="checked" value="CODE39"> CODE39</label><br>
+        <label><input type="checkbox" name="barcode" checked="checked" value="EAN_UPC"> EAN/UPC</label><br>
+        <label><input type="checkbox" name="barcode" checked="checked" value="ITF"> ITF</label><br>
+        <label><input type="checkbox" name="barcode" checked="checked" value="ITF14"> ITF14</label><br>
+        <label><input type="checkbox" name="barcode" checked="checked" value="MSI"> MSI</label><br>
+        <label><input type="checkbox" name="barcode" checked="checked" value="pharmacode"> Pharmacode</label>
+      </div>
     </div>
+    <div class="innermain center-text">
+      <button id="download_btn" class="btn btn-default btn-lg">
+        <span id="downloadicon" class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+        <span id="loadingicon" class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+        Download
+      </button>
+    </div>
+    <div class="innermain">
+      <br>
+      Include in HTML:
+      <div class="example">
+        &lt;<span class="red">script</span> <span class="orange">src</span>=<span class="green">&quot;<span id="file-name">JsBarcode.all.min.js</span>&quot;</span>&gt;&lt;/<span class="red">script</span>&gt;
+      </div>
+      <br>
+    </div>
+  </div>
 
-    <a href="https://github.com/lindell/JsBarcode"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
+  <a href="https://github.com/lindell/JsBarcode"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png"></a>
 </body>
 </html>

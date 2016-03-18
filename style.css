@@ -1,6 +1,5 @@
 body{
     background:#ddd;
-    font-family: 'Open Sans', sans-serif;
     text-align: center;
     margin: 0;
     padding: 0;
@@ -19,10 +18,11 @@ html{
     -moz-border-radius: 5px;
     border-radius: 5px;
     box-shadow:0 1px 2px hsla(0, 0%, 0%, 0.3);
-    margin-top:50px;
+    margin-top:25px;
     margin-bottom:50px;
     min-width:800px;
     padding-bottom: 20px;
+    padding-top: 10px;
     display: inline-block;
 }
 
@@ -96,6 +96,10 @@ html{
     margin-top:10px;
     font-size:14pt;
     vertical-align: middle;
+}
+
+#barcodeType{
+  height:35px;
 }
 
 .barcode-container{

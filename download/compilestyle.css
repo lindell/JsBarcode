@@ -1,5 +1,7 @@
 #main{
-  width: 0px;
+  display: inline-block;
+  min-width:0;
+  text-align: left;
 }
 
 #title{
@@ -7,7 +9,9 @@
 }
 
 .innermain{
-  margin-top:20px;
+  margin: 25px;
+  margin-top:5px;
+  margin-bottom:5px;
   width: 400px;
 }
 
@@ -35,6 +39,31 @@ input[type=checkbox] {
 
 #loadingicon{
   display: none;
+}
+
+.example{
+  background: #f1efee;
+  color: #68615e;
+  font-family: monospace;
+  text-align: left;
+  padding: 10px;
+  border-color: #ccc;
+  border-style: solid;
+  border-width: 1px;
+  -moz-border-radius: 3px;
+  border-radius: 5px;
+}
+
+.example .red{
+  color: #f22c40;
+}
+
+.example .green{
+  color: #7b9726;
+}
+
+.example .orange{
+  color: #df5320;
 }
 
 
