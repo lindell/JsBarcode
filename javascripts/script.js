@@ -59,13 +59,7 @@ $(document).ready(function(){
         onSlideEnd: newBarcode
     });
 
-    $('input.color').colorPicker({
-      actionCallback: newBarcode,
-      init: function(elm, colors) {
-        elm.style.backgroundColor = elm.value;
-        elm.style.color = colors.rgbaMixCustom.luminance > 0.22 ? '#222' : '#ddd';
-      }
-    });
+    $('.color').colorPicker({renderCallback: newBarcode});
 
     $(".dropdown-menu li a").click(function(){
       var selText = $(this).text();
