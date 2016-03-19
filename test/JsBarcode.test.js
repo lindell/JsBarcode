@@ -144,8 +144,8 @@ describe('Text printing', function() {
 
 describe('CODE39', function() {
   it('should be able to encode normal text', function () {
-    var enc = new CODE39("AB12*");
-    assert.equal(enc.encoded(), "1000101110111010111010100010111010111010001011101110100010101110101110001010111001000101110111010");
+    var enc = new CODE39("AB12");
+    assert.equal(enc.encoded(), "100010111011101011101010001011101011101000101110111010001010111010111000101011101000101110111010");
   });
 
   it('should warn with invalid text', function () {
