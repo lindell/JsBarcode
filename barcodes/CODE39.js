@@ -46,32 +46,32 @@ function CODE39(string){
 		"+": "100010100010001",
 		"%": "101000100010001",
 		"*": "1000101110111010"
-}
+	}
 
 	this.getText = function(){
 		return this.string;
 	};
 
 	this.encoded = function(){
-			var result = "";
-			result += encodings["*"];
-			for(var i=0; i<this.string.length; i++){
-				result += encodings[this.string[i]] + "0";
-			}
-			result += encodings["*"];
-			return result;
-		};
+		var result = "";
+		result += encodings["*"];
+		for(var i=0; i<this.string.length; i++){
+			result += encodings[this.string[i]] + "0";
+		}
+		result += encodings["*"];
+		return result;
+	};
 
 	//Use the regexp variable for validation
 	this.valid = function(){
 		return this.string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
-	}
+	};
 }
 
 
 //Required to register for both browser and nodejs
 var register = function(core){
 	core.register(CODE39, /^CODE.?39$/i, 3);
-}
+};
 try{register(JsBarcode)} catch(e){}
 try{module.exports.register = register} catch(e){}
