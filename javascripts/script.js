@@ -1,10 +1,10 @@
 var defaultValues = {
-    CODE128 : "JsBarcode",
-    CODE128C : "13 37 4 20",
+    CODE128 : "Example text",
+    CODE128C : "12 34 56 78",
     EAN : "1234567890128",
     EAN8 : "12345670",
     UPC : "123456789999",
-    CODE39 : "JSBARCODE",
+    CODE39 : "EXAMPLE TEXT",
     ITF14 : "10012345000017",
     ITF : "123456",
     MSI : "123456",
@@ -15,29 +15,26 @@ var defaultValues = {
     pharmacode : "1234"
 };
 
-var displayValue = true;
-var textAlign = "center";
-
 $(document).ready(function(){
     $("#userInput").on('input',newBarcode);
     $("#barcodeType").change(function(){
         $("#userInput").val( defaultValues[$(this).val()] );
+
         newBarcode();
     });
 
     $(".text-align").click(function(){
       $(".text-align").removeClass("btn-primary");
       $(this).addClass("btn-primary");
-      textAlign = $(this).val();
+
       newBarcode();
     });
 
     $(".display-text").click(function(){
       $(".display-text").removeClass("btn-primary");
       $(this).addClass("btn-primary");
-      displayValue = $(this).val() == "true";
 
-      if(displayValue){
+      if($(this).val() == "true"){
         $("#font-options").slideDown("fast");
       }
       else{
@@ -46,9 +43,6 @@ $(document).ready(function(){
 
       newBarcode();
     });
-
-
-    newBarcode();
 
     $('input[type="range"]').rangeslider({
         polyfill: false,
@@ -65,6 +59,8 @@ $(document).ready(function(){
       var selText = $(this).text();
       $(this).parents('.btn-group').find('.btn').html(selText + ' <span class="caret"></span>');
     });
+
+    newBarcode();
 });
 
 var newBarcode = function() {
@@ -80,8 +76,8 @@ var newBarcode = function() {
           "width": $("#bar-width").val(),
           "margin": parseInt($("#bar-margin").val()),
           "textMargin": parseInt($("#bar-text-margin").val()),
-          "displayValue": displayValue,
-          "textAlign": textAlign,
+          "displayValue": $(".display-text.btn-primary").val() == "true",
+          "textAlign": $(".text-align.btn-primary").val(),
           "valid":
             function(valid){
               if(valid){
