@@ -20,7 +20,7 @@ html{
     box-shadow:0 1px 2px hsla(0, 0%, 0%, 0.3);
     margin-top:25px;
     margin-bottom:50px;
-    min-width:800px;
+    min-width:768px;
     padding-bottom: 20px;
     padding-top: 10px;
     display: inline-block;
