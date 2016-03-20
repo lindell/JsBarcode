@@ -89,7 +89,7 @@
         </div>
         <!-- Line color -->
         <div class="row">
-          <div class="col-md-2 col-xs-12 col-md-offset-1 description-text"><p>Line color</p></div>
+          <div class="col-md-2 col-xs-12 col-md-offset-1 description-text"><p>Line Color</p></div>
           <div class="col-md-7 col-xs-11 input-container"><input id="line-color" class="form-control color" value="#000000"/></div>
           <div class="col-md-1 col-xs-1 value-text"></div>
         </div>
@@ -107,7 +107,7 @@
         <div id="font-options">
           <!-- Text align -->
           <div class="row checkbox-options">
-            <div class="col-md-2 col-md-offset-1 col-xs-12 col-xs-offset-0 description-text"><p>Text align</p></div>
+            <div class="col-md-2 col-md-offset-1 col-xs-12 col-xs-offset-0 description-text"><p>Text Align</p></div>
             <div class="col-md-7 center-text">
               <div class="btn-group btn-group-md" role="toolbar">
                 <button type="button" class="btn btn-default text-align" value="left">Left</button>
@@ -117,20 +117,31 @@
             </div>
             <div class="col-md-1"></div>
           </div>
-            <!-- Font -->
-            <div class="row">
-              <div class="col-md-2 col-md-offset-1 col-xs-12 col-xs-offset-0 description-text"><p>Font</p></div>
-              <div class="col-md-7 center-text">
-                <select class="form-control" id="font" style="font-family: monospace">
-                  <option value="monospace" style="font-family: monospace" selected="selected">Monospace</option>
-                  <option value="sans-serif" style="font-family: sans-serif">Sans-serif</option>
-                  <option value="serif" style="font-family: serif">Serif</option>
-                  <option value="fantasy" style="font-family: fantasy">Fantasy</option>
-                  <option value="cursive" style="font-family: cursive">Cursive</option>
-                </select>
-              </div>
-              <div class="col-md-1"></div>
+          <!-- Font -->
+          <div class="row">
+            <div class="col-md-2 col-md-offset-1 col-xs-12 col-xs-offset-0 description-text"><p>Font</p></div>
+            <div class="col-md-7 center-text">
+              <select class="form-control" id="font" style="font-family: monospace">
+                <option value="monospace" style="font-family: monospace" selected="selected">Monospace</option>
+                <option value="sans-serif" style="font-family: sans-serif">Sans-serif</option>
+                <option value="serif" style="font-family: serif">Serif</option>
+                <option value="fantasy" style="font-family: fantasy">Fantasy</option>
+                <option value="cursive" style="font-family: cursive">Cursive</option>
+              </select>
             </div>
+            <div class="col-md-1"></div>
+          </div>
+          <!-- Font styles -->
+          <div class="row checkbox-options">
+            <div class="col-md-2 col-md-offset-1 col-xs-12 col-xs-offset-0 description-text"><p>Font Options</p></div>
+            <div class="col-md-7 center-text">
+              <div class="btn-group btn-group-md" role="toolbar">
+                <button type="button" class="btn btn-default font-option" value="bold">Bold</button>
+                <button type="button" class="btn btn-default font-option" value="italic">Italic</button>
+              </div>
+            </div>
+            <div class="col-md-1"></div>
+          </div>
           <!-- Font size -->
           <div class="row">
             <div class="col-md-2 col-md-offset-1 col-xs-12 col-xs-offset-0 description-text"><p>Font Size</p></div>
@@ -139,7 +150,7 @@
           </div>
           <!-- Text margin -->
           <div class="row">
-            <div class="col-md-2 col-md-offset-1 col-xs-12 col-xs-offset-0 description-text"><p>Text margin</p></div>
+            <div class="col-md-2 col-md-offset-1 col-xs-12 col-xs-offset-0 description-text"><p>Text Margin</p></div>
             <div class="col-md-7 col-xs-11 slider-container"><input id="bar-text-margin" type="range" min="0" max="40" step="1" value="2"/></div>
             <div class="col-md-1 col-xs-1 col-xs-11 value-text"><p><span id="bar-text-margin-display"></span></p></div>
           </div>

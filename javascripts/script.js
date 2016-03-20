@@ -30,6 +30,17 @@ $(document).ready(function(){
       newBarcode();
     });
 
+    $(".font-option").click(function(){
+      if($(this).hasClass("btn-primary")){
+        $(this).removeClass("btn-primary");
+      }
+      else{
+        $(this).addClass("btn-primary");
+      }
+
+      newBarcode();
+    });
+
     $(".display-text").click(function(){
       $(".display-text").removeClass("btn-primary");
       $(this).addClass("btn-primary");
@@ -78,6 +89,7 @@ var newBarcode = function() {
           "textMargin": parseInt($("#bar-text-margin").val()),
           "displayValue": $(".display-text.btn-primary").val() == "true",
           "font": $("#font").val(),
+          "fontOptions": $(".font-option.btn-primary").map(function(){return this.value;}).get().join(" "),
           "textAlign": $(".text-align.btn-primary").val(),
           "valid":
             function(valid){
