@@ -63,31 +63,37 @@
             </div>
           </div>
         </div>
+        <!-- Bar width -->
         <div class="row">
           <div class="col-md-2 col-xs-12 col-md-offset-1 description-text"><p>Bar Width</p></div>
           <div class="col-md-7 col-xs-11 slider-container"><input id="bar-width" type="range" min="1" max="4" step="1" value="2"/></div>
           <div class="col-md-1 col-xs-1 value-text"><p><span id="bar-width-display"></span></p></div>
         </div>
+        <!-- Height -->
         <div class="row">
           <div class="col-md-2 col-xs-12 col-md-offset-1 description-text"><p>Height</p></div>
           <div class="col-md-7 col-xs-11 slider-container"><input id="bar-height" type="range" min="10" max="150" step="5" value="100"/></div>
           <div class="col-md-1 col-xs-1 value-text"><p><span id="bar-height-display"></span></p></div>
         </div>
+        <!-- Margin -->
         <div class="row">
           <div class="col-md-2 col-xs-12 col-md-offset-1 description-text"><p>Margin</p></div>
           <div class="col-md-7 col-xs-11 slider-container"><input id="bar-margin" type="range" min="0" max="25" step="1" value="10"/></div>
           <div class="col-md-1 col-xs-1 value-text"><p><span id="bar-margin-display"></span></p></div>
         </div>
+        <!-- Background (color) -->
         <div class="row">
           <div class="col-md-2 col-xs-12 col-md-offset-1 description-text"><p>Background</p></div>
           <div class="col-md-7 col-xs-11 input-container"><input id="background-color" class="form-control color" value="#FFFFFF"/></div>
           <div class="col-md-1 col-xs-1 value-text"></div>
         </div>
+        <!-- Line color -->
         <div class="row">
           <div class="col-md-2 col-xs-12 col-md-offset-1 description-text"><p>Line color</p></div>
           <div class="col-md-7 col-xs-11 input-container"><input id="line-color" class="form-control color" value="#000000"/></div>
           <div class="col-md-1 col-xs-1 value-text"></div>
         </div>
+        <!-- Show text -->
         <div class="row checkbox-options">
           <div class="col-md-2 col-md-offset-1 col-xs-12 col-xs-offset-0 description-text"><p>Show text</p></div>
           <div class="col-md-7 col-xs-12 center-text">
@@ -99,6 +105,7 @@
           <div class="col-md-1 col-xs-0"></div>
         </div>
         <div id="font-options">
+          <!-- Text align -->
           <div class="row checkbox-options">
             <div class="col-md-2 col-md-offset-1 col-xs-12 col-xs-offset-0 description-text"><p>Text align</p></div>
             <div class="col-md-7 center-text">
@@ -110,11 +117,27 @@
             </div>
             <div class="col-md-1"></div>
           </div>
+            <!-- Font -->
+            <div class="row">
+              <div class="col-md-2 col-md-offset-1 col-xs-12 col-xs-offset-0 description-text"><p>Font</p></div>
+              <div class="col-md-7 center-text">
+                <select class="form-control" id="font" style="font-family: monospace">
+                  <option value="monospace" style="font-family: monospace" selected="selected">Monospace</option>
+                  <option value="sans-serif" style="font-family: sans-serif">Sans-serif</option>
+                  <option value="serif" style="font-family: serif">Serif</option>
+                  <option value="fantasy" style="font-family: fantasy">Fantasy</option>
+                  <option value="cursive" style="font-family: cursive">Cursive</option>
+                </select>
+              </div>
+              <div class="col-md-1"></div>
+            </div>
+          <!-- Font size -->
           <div class="row">
             <div class="col-md-2 col-md-offset-1 col-xs-12 col-xs-offset-0 description-text"><p>Font Size</p></div>
             <div class="col-md-7 col-xs-11 slider-container"><input id="bar-fontSize" type="range" min="8" max="36" step="1" value="16"/></div>
             <div class="col-md-1 col-xs-1 value-text"><p><span id="bar-fontSize-display"></span></p></div>
           </div>
+          <!-- Text margin -->
           <div class="row">
             <div class="col-md-2 col-md-offset-1 col-xs-12 col-xs-offset-0 description-text"><p>Text margin</p></div>
             <div class="col-md-7 col-xs-11 slider-container"><input id="bar-text-margin" type="range" min="0" max="40" step="1" value="2"/></div>

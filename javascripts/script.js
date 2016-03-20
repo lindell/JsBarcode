@@ -44,6 +44,11 @@ $(document).ready(function(){
       newBarcode();
     });
 
+    $("#font").change(function(){
+      $(this).css({"font-family": $(this).val()});
+      newBarcode();
+    });
+
     $('input[type="range"]').rangeslider({
         polyfill: false,
         rangeClass: 'rangeslider',
@@ -54,11 +59,6 @@ $(document).ready(function(){
     });
 
     $('.color').colorPicker({renderCallback: newBarcode});
-
-    $(".dropdown-menu li a").click(function(){
-      var selText = $(this).text();
-      $(this).parents('.btn-group').find('.btn').html(selText + ' <span class="caret"></span>');
-    });
 
     newBarcode();
 });
@@ -77,6 +77,7 @@ var newBarcode = function() {
           "margin": parseInt($("#bar-margin").val()),
           "textMargin": parseInt($("#bar-text-margin").val()),
           "displayValue": $(".display-text.btn-primary").val() == "true",
+          "font": $("#font").val(),
           "textAlign": $(".text-align.btn-primary").val(),
           "valid":
             function(valid){
