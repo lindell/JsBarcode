@@ -3,7 +3,7 @@
 
 Introduction
 ----
-JsBarcode is a *1D barcode generator* written in JavaScript. It works in browsers and on the server (with *Node.js*). It has *no dependencies* in browsers but works with *jQuery* if you are into that.
+**JsBarcode** is a **barcode generator** written in JavaScript. It supports multiple barcode formats and works in browsers and on the server (with *Node.js*). It has *no dependencies* when it is used for the web but works with *jQuery* if you are into that.
 
 Demo
 ----
