@@ -1,16 +1,16 @@
 [![Build Status](https://secure.travis-ci.org/lindell/JsBarcode.png)](http://travis-ci.org/lindell/JsBarcode)
 [![Coverage Status](https://coveralls.io/repos/github/lindell/JsBarcode/badge.svg?branch=master)](https://coveralls.io/github/lindell/JsBarcode?branch=master)
 
-Demo
-----
-[Barcode Generator](http://lindell.github.io/JsBarcode/)
-
 Introduction
 ----
-JsBarcode is a simple way to create different types of 1d barcodes.
-It works both in the browser with or without jQuery and also in Node.js
+JsBarcode is a *1D barcode generator* written in JavaScript. It works in browsers and on the server (with *Node.js*). It has *no dependencies* in browsers but works with *jQuery* if you are into that.
 
-#### This is the list of supported barcodes:
+Demo
+----
+#### [Barcode Generator](http://lindell.github.io/JsBarcode/)
+
+Supported barcodes:
+----
 * CODE128
  * CODE128 B
  * CODE128 C
@@ -30,8 +30,10 @@ It works both in the browser with or without jQuery and also in Node.js
 Examples for browsers:
 ----
 
-#### First create an image (or canvas)
+#### First create an canvas (or image)
 ````html
+<canvas id="canvas"></canvas>
+<!-- or -->
 <img id="barcode">
 ````
 
