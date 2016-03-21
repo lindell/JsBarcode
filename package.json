@@ -1,6 +1,6 @@
 {
   "name": "jsbarcode",
-  "version": "2.3.1",
+  "version": "2.3.3",
   "description": "JsBarcode is a simple way to create different types of 1d barcodes.",
   "main": "JsBarcode.js",
   "directories": {
@@ -38,13 +38,21 @@
   "devDependencies": {
     "blanket": "^1.2.2",
     "coveralls": "^2.11.6",
+    "gulp-bump": "^2.0.1",
+    "gulp-git": "^1.7.0",
     "mocha": "1.21.0 - 2.4.5",
     "mocha-lcov-reporter": "^1.2.0"
   },
   "config": {
     "blanket": {
-      "pattern": ["JsBarcode.js","barcodes"],
-      "data-cover-never": ["GenericBarcode","node_modules"]
+      "pattern": [
+        "JsBarcode.js",
+        "barcodes"
+      ],
+      "data-cover-never": [
+        "GenericBarcode",
+        "node_modules"
+      ]
     }
   },
   "dependencies": {
