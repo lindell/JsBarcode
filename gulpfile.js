@@ -6,12 +6,16 @@ var bump = require('gulp-bump');
 var git = require('gulp-git');
 var runSequence = require('run-sequence');
 var publishRelease = require('publish-release');
+var header = require('gulp-header');
 
 gulp.task('compress', function() {
-  return gulp.src(['JsBarcode.js','barcodes/*.js'])
-  .pipe(concat("JsBarcode.all.min.js"))
-  .pipe(uglify())
-  .pipe(gulp.dest('./'));
+  var pkg = require('./package.json');
+
+  return gulp.src(['JsBarcode.js','barcodes/*.js', '!barcodes/GenericBarcode.js'])
+    .pipe(concat("JsBarcode.all.min.js"))
+    .pipe(uglify())
+    .pipe(header('/* JsBarcode v<%= pkg.version %> | github.com/lindell/JsBarcode */\n', {pkg: pkg}))
+    .pipe(gulp.dest('./'));
 });
 
 gulp.task('git-release', ['compress'], function(cb){
