@@ -81,10 +81,9 @@ var done = function (error) {
   else {
     console.log('Successful!');
   }
-  callback(error);
 };
 
-gulp.task('patch', function(callback){
+gulp.task('patch', function(){
   runSequence(
     'bump-patch',
     'git-release',
@@ -93,7 +92,7 @@ gulp.task('patch', function(callback){
   );
 });
 
-gulp.task('patch', function(callback){
+gulp.task('minor', function(){
   runSequence(
     'bump-minor',
     'git-release',
@@ -102,7 +101,7 @@ gulp.task('patch', function(callback){
   );
 });
 
-gulp.task('patch', function(callback){
+gulp.task('major', function(){
   runSequence(
     'bump-major',
     'git-release',
