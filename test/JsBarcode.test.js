@@ -351,6 +351,12 @@ describe('Pharmacode', function() {
   it('should be able to encode normal text', function () {
     var enc = new Pharmacode("1234");
     assert.equal(enc.encoded(), "10010011100111001001110010010011100111");
+
+    var enc = new Pharmacode("4567");
+    assert.equal(enc.encoded(), "10010010011100111001110010011100111001001001");
+
+    var enc = new Pharmacode("12");
+    assert.equal(enc.encoded(), "11100100111");
   });
 
   it('should return getText correct', function () {
