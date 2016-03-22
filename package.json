@@ -37,11 +37,14 @@
   "homepage": "https://github.com/lindell/JsBarcode#readme",
   "devDependencies": {
     "blanket": "^1.2.2",
+    "conventional-github-releaser": "^1.1.1",
     "coveralls": "^2.11.6",
     "gulp-bump": "^2.0.1",
+    "gulp-conventional-changelog": "^1.1.0",
     "gulp-git": "^1.7.0",
     "mocha": "1.21.0 - 2.4.5",
     "mocha-lcov-reporter": "^1.2.0",
+    "publish-release": "^1.2.0",
     "run-sequence": "^1.1.5"
   },
   "config": {
