@@ -28,7 +28,7 @@ function CODE128(string, code) {
 			938, 758, 782, 974, 400, 310, 118, 512, 506, 960, 954,
 			502, 518, 886, 966, /* Start codes */   668, 680, 692
 		];
-	var getCode128b = function(n) {
+	var getEncoding = function(n) {
 		return (code128b[n] ? (code128b[n] + 1000).toString(2) : '');
 	};
 	//The end bits
@@ -41,18 +41,47 @@ function CODE128(string, code) {
 
 	//The encoder function that return a complete binary string. Data need to be validated before sent to this function
 	//This is general calculate function, which is called by code specific calculate functions
-	function calculateCode128(string, encodeFn, startCode, checksumFn) {
+	function calculateCode128(string, encodeFn, startCode) {
 		var encodingResult = encodeFn(string, startCode);
 		return (
 			//Add the start bits
-			encodingById(startCode) +
+			getEncoding(startCode) +
 			//Add the encoded bits
 			encodingResult.result +
 			//Add the checksum
-			encodingById(encodingResult.checksum) +
+			getEncoding((encodingResult.checksum + startCode)%103) +
 			//Add the end bits
 			endBin
 		);
+	}
+
+	function nextBChar(string, depth){
+		if(string.length == 0){
+			return {"result": "", "checksum": 0};
+		}
+
+		var index = string.charCodeAt(0) - 32;
+		var enc = getEncoding(index);
+		var weight = index * depth;
+		console.log(string[0] + "# " + index + "*" + depth + "=" + weight);
+
+		var next = nextBChar(string.substring(1), depth + 1);
+
+		return {"result": enc + next.result, "checksum": weight + next.checksum}
+	}
+
+	function nextCChar(string, depth){
+		if(string.length == 0){
+			return {"result": "", "checksum": 0};
+		}
+
+		var index = parseInt(string.substr(0, 2));
+		var enc = getEncoding(index);
+		var weight = index * depth;
+
+		var next = nextCChar(string.substring(2), depth + 1);
+
+		return {"result": enc + next.result, "checksum": weight + next.checksum}
 	}
 
 	//Code specific calculate functions
@@ -68,34 +97,12 @@ function CODE128(string, code) {
 
 	//Encode the characters and calculate the checksum (128 B)
 	function encodeB(string, startCode) {
-		var result = "";
-		var sum = 0;
-
-		for (var i = 0, j = string.length; i < j; i++) {
-			result += encodingByChar(string[i]);
-			sum += weightByCharacter(string[i]) * (i + 1);
-		}
-		return {
-			result: result,
-			checksum: (sum + startCode) % 103
-		}
+		return nextBChar(string, 1);
 	}
 
 	//Encode the characters and calculate the checksum (128 C)
 	function encodeC(string, startCode) {
-		var result = "";
-		var sum = 0;
-		var w = 1;
-
-		for (var i = 0, j = string.length; i < j; i += 2) {
-			result += encodingById(parseInt(string.substr(i, 2)));
-			sum += parseInt(string.substr(i, 2)) * (w);
-			w++;
-		}
-		return {
-			result: result,
-			checksum: (sum + startCode) % 103
-		}
+		return nextCChar(string, 1);
 	}
 
 	//Get the encoded data by the id of the character
@@ -103,15 +110,6 @@ function CODE128(string, code) {
 		return getCode128b(id);
 	}
 
-	//Get the id (weight) of a character
-	function weightByCharacter(character) {
-		return character.charCodeAt(0) - 32;
-	}
-
-	//Get the encoded data of a character
-	function encodingByChar(character) {
-		return getCode128b(weightByCharacter(character));
-	}
 }
 
 function CODE128B(string) {
