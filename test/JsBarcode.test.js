@@ -5,6 +5,7 @@ var Canvas = require("canvas");
 describe('Encoders', function() {
   it('should be able to include all encoders', function () {
     CODE39 = JsBarcode.getModule("CODE39");
+    CODE128A = JsBarcode.getModule("CODE128A");
     CODE128 = JsBarcode.getModule("CODE128");
     CODE128C = JsBarcode.getModule("CODE128C");
     EAN = JsBarcode.getModule("EAN");
@@ -166,12 +167,17 @@ describe('CODE128', function() {
   });
 
   it('should encode CODE128C', function () {
-    var enc = new CODE128C("12 34 56");;
+    var enc = new CODE128C("123456");
     assert.equal("11010011100101100111001000101100011100010110100011011101100011101011", enc.encoded());
   });
 
+  it('should encode CODE128A', function () {
+    var enc = new CODE128A("ABC" + String.fromCharCode(25));
+    assert.equal("11010000100101000110001000101100010001000110110000100101100011101011", enc.encoded());
+  });
+
   it('should warn with invalid text', function () {
-    var enc = new CODE128("ABC" + String.fromCharCode(200));
+    var enc = new CODE128("ABC" + String.fromCharCode(500));
     assert.equal(false, enc.valid());
   });
 });

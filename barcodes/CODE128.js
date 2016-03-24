@@ -1,9 +1,8 @@
-function CODE128(string, code) {
-	code = code || "B";
-
-	this.string = string + "";
-
-	this.valid = valid;
+// This is the master class, it does require the start code to be
+//included in the string
+function CODE128(string) {
+	this.startCodeIndex = string[0].charCodeAt(0) - 105;
+	this.string = string.substring(1);
 
 	this.getText = function() {
 		return this.string;
@@ -12,23 +11,23 @@ function CODE128(string, code) {
 	//The public encoding function
 	this.encoded = function() {
 		var encodingResult;
-		var startCode;
-		if(code === "B"){
-			encodingResult = nextBChar(this.string, 1);
-			startCode = 104;
+		if(this.startCodeIndex === 103){
+			encodingResult = nextAChar(this.string, 1);
 		}
-		else if(code === "C"){
+		else if(this.startCodeIndex === 104){
+			encodingResult = nextBChar(this.string, 1);
+		}
+		else if(this.startCodeIndex === 105){
 			encodingResult = nextCChar(this.string, 1);
-			startCode = 105;
 		}
 
 		return (
 			//Add the start bits
-			getEncoding(startCode) +
+			getEncoding(this.startCodeIndex) +
 			//Add the encoded bits
 			encodingResult.result +
 			//Add the checksum
-			getEncoding((encodingResult.checksum + startCode) % 103) +
+			getEncoding((encodingResult.checksum + this.startCodeIndex) % 103) +
 			//Add the end bits
 			getEncoding(106)
 		);
@@ -53,9 +52,51 @@ function CODE128(string, code) {
 		return (code128b[n] ? (code128b[n] + 1000).toString(2) : '');
 	};
 
-	//Use the regexp variable for validation
-	function valid() {
-		return !(this.string.search(/^[!-~ ]+$/) === -1);
+	// Use the regexp variable for validation
+	this.valid = function() {
+		// ASCII value ranges 0-127, 200-211
+		return !(this.string.search(/^[\x00-\x7F\xC8-\xD3]+$/) === -1);
+	}
+
+	function nextAChar(string, depth){
+		if(string.length == 0){
+			return {"result": "", "checksum": 0};
+		}
+
+		var next, index;
+
+		var enc = getEncoding(index);
+		var weight = index * depth;
+
+		// Special characters
+		if(string[0].charCodeAt(0) >= 200){
+			index = string[0].charCodeAt(0) - 105;
+
+			// Swap to CODE128C
+			if(index === 99){
+				next = nextCChar(string.substring(1), depth + 1);
+			}
+			// Swap to CODE128B
+			else if(index === 100){
+				next = nextBChar(string.substring(1), depth + 1);
+			}
+			// Continue on CODE128A but encode a special character
+			else{
+				next = nextAChar(string.substring(1), depth + 1);
+			}
+		}
+		// Continue encoding of CODE128A
+		else{
+			var charCode = string.charCodeAt(0);
+			index = charCode < 32 ? charCode + 64 : charCode - 32;
+			next = nextBChar(string.substring(1), depth + 1);
+		}
+
+		// Get the correct binary encoding and calculate the weight
+		var enc = getEncoding(index);
+		var weight = index * depth;
+
+		return {"result": enc + next.result, "checksum": weight + next.checksum}
 	}
 
 	function nextBChar(string, depth){
@@ -63,13 +104,39 @@ function CODE128(string, code) {
 			return {"result": "", "checksum": 0};
 		}
 
-		var index = string.charCodeAt(0) - 32;
+		var next, index;
+
 		var enc = getEncoding(index);
 		var weight = index * depth;
 
-		var next = nextBChar(string.substring(1), depth + 1);
+		// Special characters
+		if(string[0].charCodeAt(0) >= 200){
+			index = string[0].charCodeAt(0) - 105;
 
-		return {"result": enc + next.result, "checksum": weight + next.checksum}
+			// Swap to CODE128C
+			if(index === 99){
+				next = nextCChar(string.substring(1), depth + 1);
+			}
+			// Swap to CODE128A
+			else if(index === 101){
+				next = nextAChar(string.substring(1), depth + 1);
+			}
+			// Continue on CODE128B but encode a special character
+			else{
+				next = nextCChar(string.substring(1), depth + 1);
+			}
+		}
+		// Continue encoding of CODE128B
+		else{
+			index = string.charCodeAt(0) - 32;
+			next = nextBChar(string.substring(1), depth + 1);
+		}
+
+		// Get the correct binary encoding and calculate the weight
+		var enc = getEncoding(index);
+		var weight = index * depth;
+
+		return {"result": enc + next.result, "checksum": weight + next.checksum};
 	}
 
 	function nextCChar(string, depth){
@@ -77,27 +144,53 @@ function CODE128(string, code) {
 			return {"result": "", "checksum": 0};
 		}
 
-		var index = parseInt(string.substr(0, 2));
+		var next, index;
+
+		// Special characters
+		if(string[0].charCodeAt(0) >= 200){
+			index = string[0].charCodeAt(0) - 105;
+
+			// Swap to CODE128B
+			if(index === 100){
+				next = nextBChar(string.substring(1), depth + 1);
+			}
+			// Swap to CODE128A
+			else if(index === 101){
+				next = nextAChar(string.substring(1), depth + 1);
+			}
+			else{
+				next = nextCChar(string.substring(1), depth + 1);
+			}
+		}
+		// Continue encoding of CODE128C
+		else{
+			index = parseInt(string.substr(0, 2));
+			next = nextCChar(string.substring(2), depth + 1);
+		}
+
+		// Get the correct binary encoding and calculate the weight
 		var enc = getEncoding(index);
 		var weight = index * depth;
 
-		var next = nextCChar(string.substring(2), depth + 1);
-
-		return {"result": enc + next.result, "checksum": weight + next.checksum}
+		return {"result": enc + next.result, "checksum": weight + next.checksum};
 	}
 }
 
 
+function CODE128A(string) {
+	return new CODE128(String.fromCharCode(208) + string);
+}
 function CODE128B(string) {
-	return new CODE128(string, "B");
+	return new CODE128(String.fromCharCode(209) + string);
 }
 function CODE128C(string) {
-	return new CODE128(string, "C");
-};
+	return new CODE128(String.fromCharCode(210) + string);
+}
 
 //Required to register for both browser and nodejs
 var register = function(core) {
-	core.register(CODE128B, /^CODE128(.?B)?$/i, 2);
+	core.register(CODE128A, /^CODE128.?A$/i, 2);
+	core.register(CODE128B, /^CODE128(.?B)?$/i, 3);
 	core.register(CODE128C, /^CODE128.?C$/i, 2);
 }
 try {register(JsBarcode)} catch(e) {}
