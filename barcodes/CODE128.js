@@ -104,7 +104,7 @@ function CODE128(string) {
 			// Remove first element
 			bytes.shift();
 
-			next = nextB(bytes, depth + 1);
+			next = nextA(bytes, depth + 1);
 		}
 
 		// Get the correct binary encoding and calculate the weight
@@ -138,7 +138,7 @@ function CODE128(string) {
 			}
 			// Continue on CODE128B but encode a special character
 			else{
-				next = nextC(bytes, depth + 1);
+				next = nextB(bytes, depth + 1);
 			}
 		}
 		// Continue encoding of CODE128B
