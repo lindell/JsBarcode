@@ -173,7 +173,7 @@ describe('CODE128', function() {
 
   it('should encode CODE128A', function () {
     var enc = new CODE128A("ABC" + String.fromCharCode(25));
-    assert.equal("11010000100101000110001000101100010001000110110000100101100011101011", enc.encoded());
+    assert.equal("1101000010010100011000100010110001000100011011011011110100011101101100011101011", enc.encoded());
   });
 
   it('should warn with invalid text', function () {
