@@ -1,10 +1,13 @@
 // This is the master class, it does require the start code to be
 //included in the string
 function CODE128(string) {
+	// Fill the bytes variable with the ascii codes of string
 	this.bytes = [];
 	for (var i = 0; i < string.length; ++i) {
 		this.bytes.push(string.charCodeAt(i));
 	}
+
+	// First element should be startcode, remove that
 	this.string = string.substring(1);
 
 	this.getText = function() {
@@ -15,26 +18,27 @@ function CODE128(string) {
 	this.encoded = function() {
 		var encodingResult;
 		var bytes = this.bytes;
-		// Remove first element and but i variable
-		var firstByte = bytes.shift() - 105;
+		// Remove the startcode from the bytes and set its index
+		var startIndex = bytes.shift() - 105;
 
-		if(firstByte === 103){
-			encodingResult = nextAChar(bytes, 1);
+		// Start encode with the right type
+		if(startIndex === 103){
+			encodingResult = nextA(bytes, 1);
 		}
-		else if(firstByte === 104){
-			encodingResult = nextBChar(bytes, 1);
+		else if(startIndex === 104){
+			encodingResult = nextB(bytes, 1);
 		}
-		else if(firstByte === 105){
-			encodingResult = nextCChar(bytes, 1);
+		else if(startIndex === 105){
+			encodingResult = nextC(bytes, 1);
 		}
 
 		return (
 			//Add the start bits
-			getEncoding(firstByte) +
+			getEncoding(startIndex) +
 			//Add the encoded bits
 			encodingResult.result +
 			//Add the checksum
-			getEncoding((encodingResult.checksum + firstByte) % 103) +
+			getEncoding((encodingResult.checksum + startIndex) % 103) +
 			//Add the end bits
 			getEncoding(106)
 		);
@@ -65,7 +69,7 @@ function CODE128(string) {
 		return !(this.string.search(/^[\x00-\x7F\xC8-\xD3]+$/) === -1);
 	}
 
-	function nextAChar(bytes, depth){
+	function nextA(bytes, depth){
 		if(bytes.length <= 0){
 			return {"result": "", "checksum": 0};
 		}
@@ -81,15 +85,15 @@ function CODE128(string) {
 
 			// Swap to CODE128C
 			if(index === 99){
-				next = nextCChar(bytes, depth + 1);
+				next = nextC(bytes, depth + 1);
 			}
 			// Swap to CODE128B
 			else if(index === 100){
-				next = nextBChar(bytes, depth + 1);
+				next = nextB(bytes, depth + 1);
 			}
 			// Continue on CODE128A but encode a special character
 			else{
-				next = nextAChar(bytes, depth + 1);
+				next = nextA(bytes, depth + 1);
 			}
 		}
 		// Continue encoding of CODE128A
@@ -100,7 +104,7 @@ function CODE128(string) {
 			// Remove first element
 			bytes.shift();
 
-			next = nextBChar(bytes, depth + 1);
+			next = nextB(bytes, depth + 1);
 		}
 
 		// Get the correct binary encoding and calculate the weight
@@ -110,7 +114,7 @@ function CODE128(string) {
 		return {"result": enc + next.result, "checksum": weight + next.checksum}
 	}
 
-	function nextBChar(bytes, depth){
+	function nextB(bytes, depth){
 		if(bytes.length <= 0){
 			return {"result": "", "checksum": 0};
 		}
@@ -126,22 +130,22 @@ function CODE128(string) {
 
 			// Swap to CODE128C
 			if(index === 99){
-				next = nextCChar(bytes, depth + 1);
+				next = nextC(bytes, depth + 1);
 			}
 			// Swap to CODE128A
 			else if(index === 101){
-				next = nextAChar(bytes, depth + 1);
+				next = nextA(bytes, depth + 1);
 			}
 			// Continue on CODE128B but encode a special character
 			else{
-				next = nextCChar(bytes, depth + 1);
+				next = nextC(bytes, depth + 1);
 			}
 		}
 		// Continue encoding of CODE128B
 		else {
 			index = bytes[0] - 32;
 			bytes.shift();
-			next = nextBChar(bytes, depth + 1);
+			next = nextB(bytes, depth + 1);
 		}
 
 		// Get the correct binary encoding and calculate the weight
@@ -151,7 +155,7 @@ function CODE128(string) {
 		return {"result": enc + next.result, "checksum": weight + next.checksum};
 	}
 
-	function nextCChar(bytes, depth){
+	function nextC(bytes, depth){
 		if(bytes.length <= 0){
 			return {"result": "", "checksum": 0};
 		}
@@ -167,15 +171,15 @@ function CODE128(string) {
 
 			// Swap to CODE128B
 			if(index === 100){
-				next = nextBChar(bytes, depth + 1);
+				next = nextB(bytes, depth + 1);
 			}
 			// Swap to CODE128A
 			else if(index === 101){
-				next = nextAChar(bytes, depth + 1);
+				next = nextA(bytes, depth + 1);
 			}
 			// Continue on CODE128C but encode a special character
 			else{
-				next = nextCChar(bytes, depth + 1);
+				next = nextC(bytes, depth + 1);
 			}
 		}
 		// Continue encoding of CODE128C
@@ -183,7 +187,7 @@ function CODE128(string) {
 			index = (bytes[0]-48) * 10 + bytes[1]-48;
 			bytes.shift();
 			bytes.shift();
-			next = nextCChar(bytes, depth + 1);
+			next = nextC(bytes, depth + 1);
 		}
 
 		// Get the correct binary encoding and calculate the weight
