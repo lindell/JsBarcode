@@ -11,7 +11,7 @@ function CODE128(string) {
 	this.string = string.substring(1);
 
 	this.getText = function() {
-		return this.string;
+		return this.string.replace(/[^\x20-\x7E]/g, "");
 	};
 
 	// The public encoding function
@@ -198,7 +198,96 @@ function CODE128(string) {
 	}
 }
 
+var aMatch = /^[\x00-\x5F]+/;
+var bMatch = /^[\x20-\x7F]+/;
+var cMatch = /^([0-9]{2})+/
 
+function autoStartCode(string){
+	var aRes = string.match(aMatch);
+	var bRes = string.match(bMatch);
+	var cRes = string.match(cMatch);
+
+	// Select CODE128C if the string start with enough digits
+	if(cRes && (cRes[0].length > 2 || string.length == 2)){
+		return String.fromCharCode(210) + autoNextCodeC(string);
+	}
+	// Select A/C depending on the longest match
+	else if(bRes && (!aRes || bRes[0].length > aRes[0].length)){
+		return String.fromCharCode(209) + autoNextCodeB(string);
+	}
+	else{
+		return String.fromCharCode(208) + autoNextCodeA(string);
+	}
+}
+
+function autoNextCodeA(string){
+	// Get any character that is in B but not C
+	var res = string.match(/^([^\x5f-\x7F]+?)([0-9]{4,}|[^\x00-\x5F]|$)/);
+
+	// Remove the part that should be encoded by A
+	string = string.substring(res[1].length);
+
+	// If end return the current string
+	if(string.length === 0){
+		return res[1];
+	}
+
+	// If four or more digits, switch to CODE128C
+	if(string.match(/^[0-9]{4,}/)){
+		return res[1] + String.fromCharCode(204) + autoNextCodeC(string);
+	}
+
+	// Else, switch to CODE128A
+	return res[1] + String.fromCharCode(205) + autoNextCodeB(string);
+}
+
+function autoNextCodeB(string){
+	// Get all characters of CODE128B until 4 digits or invalid digit or end
+	var res = string.match(/^([^\x00-\x1F]+?)([0-9]{4,}|[^\x20-\x7F]|$)/);
+
+	// Remove the part that should be encoded by B
+	string = string.substring(res[1].length);
+
+	// If end return the current string
+	if(string.length === 0){
+		return res[1];
+	}
+
+	// If four or more digits, switch to CODE128C
+	if(string.match(/^[0-9]{4,}/)){
+		return res[1] + String.fromCharCode(204) + autoNextCodeC(string);
+	}
+
+	// Else, switch to CODE128A
+	return res[1] + String.fromCharCode(206) + autoNextCodeA(string);
+}
+
+function autoNextCodeC(string){
+	// Get as many digits (pairs) that is possible
+	var cRes = string.match(cMatch);
+
+	// Remove the part that should be encoded by C
+	string = string.substring(cRes[0].length);
+
+	// If end return the current string
+	if(string.length === 0){
+		return cRes[0];
+	}
+
+	// Select A/B depending on the longest match
+	var aRes = string.match(aMatch);
+	var bRes = string.match(bMatch);
+	if(bRes && (!aRes || bRes[0].length > aRes[0].length)){
+		return cRes[0] + String.fromCharCode(205) + autoNextCodeB(string);
+	}
+	else{
+		return cRes[0] + String.fromCharCode(206) + autoNextCodeA(string);
+	}
+}
+
+function CODE128AUTO(string) {
+	return new CODE128(autoStartCode(string));
+}
 function CODE128A(string) {
 	return new CODE128(String.fromCharCode(208) + string);
 }
@@ -211,8 +300,9 @@ function CODE128C(string) {
 
 //Required to register for both browser and nodejs
 var register = function(core) {
+	core.register(CODE128AUTO, /^CODE128(.?AUTO)?$/);
 	core.register(CODE128A, /^CODE128.?A$/i, 2);
-	core.register(CODE128B, /^CODE128(.?B)?$/i, 3);
+	core.register(CODE128B, /^CODE128.?B$/i, 3);
 	core.register(CODE128C, /^CODE128.?C$/i, 2);
 }
 try {register(JsBarcode)} catch(e) {}
