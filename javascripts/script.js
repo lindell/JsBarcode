@@ -1,6 +1,8 @@
 var defaultValues = {
-    CODE128 : "Example text",
-    CODE128C : "12 34 56 78",
+    CODE128 : "Example 1234",
+    CODE128A : "EXAMPLE",
+    CODE128B : "Example text",
+    CODE128C : "12345678",
     EAN : "1234567890128",
     EAN8 : "12345670",
     UPC : "123456789999",
