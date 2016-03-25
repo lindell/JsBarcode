@@ -300,7 +300,7 @@ function CODE128C(string) {
 
 //Required to register for both browser and nodejs
 var register = function(core) {
-	core.register(CODE128AUTO, /^CODE128(.?AUTO)?$/);
+	core.register(CODE128AUTO, /^CODE128(.?AUTO)?$/, 10);
 	core.register(CODE128A, /^CODE128.?A$/i, 2);
 	core.register(CODE128B, /^CODE128.?B$/i, 3);
 	core.register(CODE128C, /^CODE128.?C$/i, 2);
