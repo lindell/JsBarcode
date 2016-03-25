@@ -12,8 +12,8 @@ Demo
 Supported barcodes:
 ----
 * CODE128
- * CODE128 B
- * CODE128 C
+ * CODE128 (automatic mode switching)
+ * CODE128 A/B/C (force mode)
 * EAN 13
 * EAN 8
 * UPC-A
