@@ -1,5 +1,5 @@
 var assert = require('assert');
-var JsBarcode = require('../JsBarcode.js');
+var JsBarcode = require('../../JsBarcode.js');
 var Canvas = require("canvas");
 
 describe('Encoders', function() {
