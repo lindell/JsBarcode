@@ -1,3 +1,6 @@
+// ASCII value ranges 0-127, 200-211
+var validCODE128 = /^[\x00-\x7F\xC8-\xD3]+$/;
+
 // This is the master class, it does require the start code to be
 //included in the string
 function CODE128(string) {
@@ -65,8 +68,7 @@ function CODE128(string) {
 
 	// Use the regexp variable for validation
 	this.valid = function() {
-		// ASCII value ranges 0-127, 200-211
-		return !(this.string.search(/^[\x00-\x7F\xC8-\xD3]+$/) === -1);
+		return !(this.string.search(validCODE128) === -1);
 	}
 
 	function nextA(bytes, depth){
@@ -198,95 +200,83 @@ function CODE128(string) {
 	}
 }
 
-var aMatch = /^[\x00-\x5F]+/;
-var bMatch = /^[\x20-\x7F]+/;
-var cMatch = /^([0-9]{2})+/
-
-function autoStartCode(string){
-	var aRes = string.match(aMatch);
-	var bRes = string.match(bMatch);
-	var cRes = string.match(cMatch);
+function autoSelectModes(string){
+	var aLength = string.match(/^[\x00-\x5F]*/)[0].length;
+	var bLength = string.match(/^[\x20-\x7F]*/)[0].length;
+	var cLength = string.match(/^([0-9]{2})*/)[0].length;
 
 	// Select CODE128C if the string start with enough digits
-	if(cRes && (cRes[0].length > 2 || string.length == 2)){
-		return String.fromCharCode(210) + autoNextCodeC(string);
+	if(cLength >= 2){
+		return String.fromCharCode(210) + autoSelectFromC(string);
 	}
 	// Select A/C depending on the longest match
-	else if(bRes && (!aRes || bRes[0].length > aRes[0].length)){
-		return String.fromCharCode(209) + autoNextCodeB(string);
+	else if(aLength > bLength){
+		return String.fromCharCode(208) + autoSelectFromA(string);
 	}
 	else{
-		return String.fromCharCode(208) + autoNextCodeA(string);
+		return String.fromCharCode(209) + autoSelectFromB(string);
 	}
 }
 
-function autoNextCodeA(string){
-	// Get any character that is in B but not C
-	var res = string.match(/^([^\x5f-\x7F]+?)([0-9]{4,}|[^\x00-\x5F]|$)/);
+function autoSelectFromA(string){
+	var untilC = string.match(/^([\x00-\x5F\xC8-\xCF]+?)(([0-9]{2}){2,})([^0-9]|$)/);
 
-	// Remove the part that should be encoded by A
-	string = string.substring(res[1].length);
-
-	// If end return the current string
-	if(string.length === 0){
-		return res[1];
+	if(untilC){
+		return untilC[1] + String.fromCharCode(204) + autoSelectFromC(string.substring(untilC[1].length));
 	}
 
-	// If four or more digits, switch to CODE128C
-	if(string.match(/^[0-9]{4,}/)){
-		return res[1] + String.fromCharCode(204) + autoNextCodeC(string);
+	var aChars = string.match(/^[\x00-\x5F\xC8-\xCF]+/);
+	if(aChars[0].length === string.length){
+		return string;
 	}
 
-	// Else, switch to CODE128A
-	return res[1] + String.fromCharCode(205) + autoNextCodeB(string);
+	return aChars[0] + String.fromCharCode(205) + autoSelectFromB(string.substring(aChars[0].length));
 }
 
-function autoNextCodeB(string){
-	// Get all characters of CODE128B until 4 digits or invalid digit or end
-	var res = string.match(/^([^\x00-\x1F]+?)([0-9]{4,}|[^\x20-\x7F]|$)/);
+function autoSelectFromB(string){
+	var untilC = string.match(/^([\x20-\x7F\xC8-\xCF]+?)(([0-9]{2}){2,})([^0-9]|$)/);
 
-	// Remove the part that should be encoded by B
-	string = string.substring(res[1].length);
-
-	// If end return the current string
-	if(string.length === 0){
-		return res[1];
+	if(untilC){
+		return untilC[1] + String.fromCharCode(204) + autoSelectFromC(string.substring(untilC[1].length));
 	}
 
-	// If four or more digits, switch to CODE128C
-	if(string.match(/^[0-9]{4,}/)){
-		return res[1] + String.fromCharCode(204) + autoNextCodeC(string);
+	var bChars = string.match(/^[\x20-\x7F\xC8-\xCF]+/);
+	if(bChars[0].length === string.length){
+		return string;
 	}
 
-	// Else, switch to CODE128A
-	return res[1] + String.fromCharCode(206) + autoNextCodeA(string);
+	return bChars[0] + String.fromCharCode(206) + autoSelectFromA(string.substring(bChars[0].length));
 }
 
-function autoNextCodeC(string){
-	// Get as many digits (pairs) that is possible
-	var cRes = string.match(cMatch);
 
-	// Remove the part that should be encoded by C
-	string = string.substring(cRes[0].length);
+function autoSelectFromC(string){
+	var cMatch = string.match(/^([0-9]{2})+/)[0];
+	var length = cMatch.length;
 
-	// If end return the current string
-	if(string.length === 0){
-		return cRes[0];
+	if(length === string.length){
+		return string;
 	}
+
+	string = string.substring(length);
 
 	// Select A/B depending on the longest match
-	var aRes = string.match(aMatch);
-	var bRes = string.match(bMatch);
-	if(bRes && (!aRes || bRes[0].length > aRes[0].length)){
-		return cRes[0] + String.fromCharCode(205) + autoNextCodeB(string);
+	var aLength = string.match(/^[\x00-\x5F\xC8-\xCF]*/)[0].length;
+	var bLength = string.match(/^[\x20-\x7F\xC8-\xCF]*/)[0].length;
+	if(aLength > bLength){
+		return cMatch + String.fromCharCode(206) + autoSelectFromA(string);
 	}
 	else{
-		return cRes[0] + String.fromCharCode(206) + autoNextCodeA(string);
+		return cMatch + String.fromCharCode(205) + autoSelectFromB(string);
 	}
 }
 
 function CODE128AUTO(string) {
-	return new CODE128(autoStartCode(string));
+	// Check the validity of the string, don't even bother auto it when
+	//it's not valid
+	if(string.search(validCODE128) !== -1){
+		return new CODE128(autoSelectModes(string));
+	}
+	return new CODE128(string);
 }
 function CODE128A(string) {
 	return new CODE128(String.fromCharCode(208) + string);

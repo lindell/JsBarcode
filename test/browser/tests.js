@@ -51,6 +51,9 @@ function newTest(parent, text, options){
   }
   catch(e){
     testbox.className = "errorbox";
+    testbox.onclick = function(){
+      throw e;
+    }
   }
 
   parent.appendChild(testbox);
