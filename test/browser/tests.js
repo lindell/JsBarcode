@@ -11,7 +11,7 @@ function createTests(parent){
   newTest(parent, "12345678", {format: "ITF", width: 1});
   newTest(parent, "98765432109213", {format: "ITF14", width: 1});
   newTest(parent, "12345", {format: "pharmacode", width: 1});
-  newTest(parent, "1337420", {format: "CODE128C", width: 1});
+  newTest(parent, "133742", {format: "CODE128C", width: 1});
   newTest(parent, "12345674", {format: "MSI", width: 1});
   newTest(parent, "Such customize!", {
     width: 1,

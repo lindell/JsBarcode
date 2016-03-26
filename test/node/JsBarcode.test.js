@@ -197,6 +197,32 @@ describe('CODE128', function() {
   it('should warn with invalid text', function () {
     var enc = new CODE128("ABC" + String.fromCharCode(500));
     assert.equal(false, enc.valid());
+
+    var enc = new CODE128A("Abc");
+    assert.equal(false, enc.valid());
+
+    var enc = new CODE128B("Abc\t123");
+    assert.equal(false, enc.valid());
+
+    var enc = new CODE128C("1234ab56");
+    assert.equal(false, enc.valid());
+
+    var enc = new CODE128C("12345");
+    assert.equal(false, enc.valid());
+  });
+
+  it('should pass valid text', function () {
+    var enc = new CODE128("ABC" + String.fromCharCode(207));
+    assert.equal(true, enc.valid());
+
+    var enc = new CODE128A("ABC\t\n123");
+    assert.equal(true, enc.valid());
+
+    var enc = new CODE128B("Abc123" + String.fromCharCode(202));
+    assert.equal(true, enc.valid());
+
+    var enc = new CODE128C("123456");
+    assert.equal(true, enc.valid());
   });
 });
 

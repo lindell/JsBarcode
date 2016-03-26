@@ -289,13 +289,25 @@ function CODE128AUTO(string) {
 	return new CODE128(string);
 }
 function CODE128A(string) {
-	return new CODE128(String.fromCharCode(208) + string);
+	var code128 = new CODE128(String.fromCharCode(208) + string);
+	code128.valid = function(){
+		return this.string.search(/^[\x00-\x5F\xC8-\xCF]+$/) !== -1;
+	}
+	return code128;
 }
 function CODE128B(string) {
-	return new CODE128(String.fromCharCode(209) + string);
+	var code128 = new CODE128(String.fromCharCode(209) + string);
+	code128.valid = function(){
+		return this.string.search(/^[\x20-\x7F\xC8-\xCF]+$/) !== -1;
+	}
+	return code128;
 }
 function CODE128C(string) {
-	return new CODE128(String.fromCharCode(210) + string);
+	var code128 = new CODE128(String.fromCharCode(210) + string);
+	code128.valid = function(str){
+		return this.string.search(/^(\xCF*[0-9]{2}\xCF*)+$/) !== -1;
+	}
+	return code128;
 }
 
 //Required to register for both browser and nodejs
