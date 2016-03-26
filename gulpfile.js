@@ -92,6 +92,7 @@ gulp.task('patch', function(){
     'bump-patch',
     'git-release',
     'github-release',
+    'npm',
     done
   );
 });
@@ -101,6 +102,7 @@ gulp.task('minor', function(){
     'bump-minor',
     'git-release',
     'github-release',
+    'npm',
     done
   );
 });
@@ -110,6 +112,7 @@ gulp.task('major', function(){
     'bump-major',
     'git-release',
     'github-release',
+    'npm',
     done
   );
 });
