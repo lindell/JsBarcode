@@ -14,7 +14,14 @@ function CODE128(string) {
 	this.string = string.substring(1);
 
 	this.getText = function() {
-		return this.string.replace(/[^\x20-\x7E]/g, "");
+		var string = this.string;
+		/*
+		string = string.replace(String.fromCharCode(201), "[FNC3]");
+		string = string.replace(String.fromCharCode(202), "[FNC2]");
+		string = string.replace(String.fromCharCode(207), "[FNC1]");
+		*/
+
+		return string.replace(/[^\x20-\x7E]/g, "");
 	};
 
 	// The public encoding function
@@ -201,9 +208,12 @@ function CODE128(string) {
 }
 
 function autoSelectModes(string){
-	var aLength = string.match(/^[\x00-\x5F]*/)[0].length;
-	var bLength = string.match(/^[\x20-\x7F]*/)[0].length;
-	var cLength = string.match(/^([0-9]{2})*/)[0].length;
+	// ASCII ranges 0-98 and 200-207 (FUNCs and SHIFTs)
+	var aLength = string.match(/^[\x00-\x5F\xC8-\xCF]*/)[0].length;
+	// ASCII ranges 32-127 and 200-207 (FUNCs and SHIFTs)
+	var bLength = string.match(/^[\x20-\x7F\xC8-\xCF]*/)[0].length;
+	// Number pairs or [FNC1]
+	var cLength = string.match(/^(\xCF*[0-9]{2}\xCF*)*/)[0].length;
 
 	// Select CODE128C if the string start with enough digits
 	if(cLength >= 2){
@@ -250,7 +260,7 @@ function autoSelectFromB(string){
 
 
 function autoSelectFromC(string){
-	var cMatch = string.match(/^([0-9]{2})+/)[0];
+	var cMatch = string.match(/^(\xCF*[0-9]{2}\xCF*)+/)[0];
 	var length = cMatch.length;
 
 	if(length === string.length){
@@ -262,7 +272,7 @@ function autoSelectFromC(string){
 	// Select A/B depending on the longest match
 	var aLength = string.match(/^[\x00-\x5F\xC8-\xCF]*/)[0].length;
 	var bLength = string.match(/^[\x20-\x7F\xC8-\xCF]*/)[0].length;
-	if(aLength > bLength){
+	if(aLength >= bLength){
 		return cMatch + String.fromCharCode(206) + autoSelectFromA(string);
 	}
 	else{
