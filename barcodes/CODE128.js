@@ -15,9 +15,11 @@ function CODE128(string) {
 
 	this.getText = function() {
 		var string = this.string;
+
 		/*
 		string = string.replace(String.fromCharCode(201), "[FNC3]");
 		string = string.replace(String.fromCharCode(202), "[FNC2]");
+		string = string.replace(String.fromCharCode(203), "[SHIFT]");
 		string = string.replace(String.fromCharCode(207), "[FNC1]");
 		*/
 
@@ -100,6 +102,12 @@ function CODE128(string) {
 			else if(index === 100){
 				next = nextB(bytes, depth + 1);
 			}
+			// Shift
+			else if(index === 98){
+				// Convert the next character so that is encoded correctly
+				bytes[0] = bytes[0] > 95 ? bytes[0] - 96 : bytes[0];
+				next = nextA(bytes, depth + 1);
+			}
 			// Continue on CODE128A but encode a special character
 			else{
 				next = nextA(bytes, depth + 1);
@@ -144,6 +152,12 @@ function CODE128(string) {
 			// Swap to CODE128A
 			else if(index === 101){
 				next = nextA(bytes, depth + 1);
+			}
+			// Shift
+			else if(index === 98){
+				// Convert the next character so that is encoded correctly
+				bytes[0] = bytes[0] < 32 ? bytes[0] + 96 : bytes[0];
+				next = nextB(bytes, depth + 1);
 			}
 			// Continue on CODE128B but encode a special character
 			else{
@@ -215,17 +229,24 @@ function autoSelectModes(string){
 	// Number pairs or [FNC1]
 	var cLength = string.match(/^(\xCF*[0-9]{2}\xCF*)*/)[0].length;
 
+	var newString;
 	// Select CODE128C if the string start with enough digits
 	if(cLength >= 2){
-		return String.fromCharCode(210) + autoSelectFromC(string);
+		newString = String.fromCharCode(210) + autoSelectFromC(string);
 	}
 	// Select A/C depending on the longest match
 	else if(aLength > bLength){
-		return String.fromCharCode(208) + autoSelectFromA(string);
+		newString = String.fromCharCode(208) + autoSelectFromA(string);
 	}
 	else{
-		return String.fromCharCode(209) + autoSelectFromB(string);
+		newString = String.fromCharCode(209) + autoSelectFromB(string);
 	}
+
+	newString = newString.replace(/[\xCD\xCE]([^])[\xCD\xCE]/, function(match, char){
+		return String.fromCharCode(203) + char;
+	});
+
+	return newString;
 }
 
 function autoSelectFromA(string){
