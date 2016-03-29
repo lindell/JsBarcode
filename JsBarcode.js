@@ -28,10 +28,14 @@
 		options = merge(JsBarcode.defaults, options);
 
 		// Fix the margins
-		options.marginTop = options.marginTop || options.margin;
-		options.marginBottom = options.marginBottom || options.margin;
-		options.marginRight = options.marginRight || options.margin;
-		options.marginLeft = options.marginLeft || options.margin;
+		options.marginTop = typeof options.marginTop === "undefined" ?
+			options.margin : options.marginTop;
+		options.marginBottom = typeof options.marginBottom === "undefined" ?
+			options.margin : options.marginBottom;
+		options.marginRight = typeof options.marginRight === "undefined" ?
+			options.margin : options.marginRight;
+		options.marginLeft = typeof options.marginLeft === "undefined" ?
+			options.margin : options.marginLeft;
 
 		//Abort if the browser does not support HTML5 canvas
 		if (!canvas.getContext) {
