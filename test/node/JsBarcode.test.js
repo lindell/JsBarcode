@@ -13,6 +13,7 @@ describe('Encoders', function() {
     UPC = JsBarcode.getModule("UPC");
     EAN8 = JsBarcode.getModule("EAN8");
     EAN5 = JsBarcode.getModule("EAN5");
+    EAN2 = JsBarcode.getModule("EAN2");
     ITF14 = JsBarcode.getModule("ITF14");
     ITF = JsBarcode.getModule("ITF");
     MSI = JsBarcode.getModule("MSI");
@@ -301,11 +302,11 @@ describe('EAN-5', function() {
   it('should be able to encode normal text', function () {
     var enc = new EAN5("54495");
     assert.equal(true, enc.valid());
-    assert.equal(enc.encoded(), "1010110001010100011010011101010001011010111001");
+    assert.equal(enc.encoded(), "10110110001010100011010011101010001011010111001");
 
     var enc = new EAN5("12345");
     assert.equal(true, enc.valid());
-    assert.equal(enc.encoded(), "1010110011010010011010100001010100011010110001");
+    assert.equal(enc.encoded(), "10110110011010010011010100001010100011010110001");
   });
 
   it('should warn with invalid text', function () {
@@ -313,6 +314,26 @@ describe('EAN-5', function() {
     assert.equal(false, enc.valid());
 
     var enc = new EAN5("123a5");
+    assert.equal(false, enc.valid());
+  });
+});
+
+describe('EAN-2', function() {
+  it('should be able to encode normal text', function () {
+    var enc = new EAN2("53");
+    assert.equal(true, enc.valid());
+    assert.equal(enc.encoded(), "10110110001010100001");
+
+    var enc = new EAN2("12");
+    assert.equal(true, enc.valid());
+    assert.equal(enc.encoded(), "10110011001010010011");
+  });
+
+  it('should warn with invalid text', function () {
+    var enc = new EAN2("1");
+    assert.equal(false, enc.valid());
+
+    var enc = new EAN2("a2");
     assert.equal(false, enc.valid());
   });
 });

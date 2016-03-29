@@ -200,13 +200,43 @@ function EAN5(EAN5number){
 		var encoder = new EANencoder();
 
 		//Create the return variable
-		var result = "";
-
-		//Add the start bits
-		result += encoder.startBin;
+		var result = "1011";
 
 		// Add the encodings
 		result += encoder.encode(number, EAN5structure[checksum(number)], "01");
+
+		return result;
+	}
+}
+
+function EAN2(EAN2number){
+	this.EAN2number = EAN2number+"";
+
+	//Regexp to test if the EAN code is correct formated
+	var fullEanRegexp = /^[0-9]{2}$/;
+
+	this.getText = function(){
+		return this.EAN2number;
+	}
+
+	this.valid = function(){
+		return this.EAN2number.search(fullEanRegexp)!==-1;
+	};
+
+	this.encoded = function (){
+		return createEAN2(this.EAN2number);
+	}
+
+	var EAN2structure = ["LL", "LG", "GL", "GG"]
+
+	function createEAN2(number){
+		var encoder = new EANencoder();
+
+		//Create the return variable
+		var result = "1011";
+
+		// Add the encodings
+		result += encoder.encode(number, EAN2structure[parseInt(number) % 4], "01");
 
 		return result;
 	}
@@ -316,6 +346,7 @@ var register = function(core){
 	core.register(EAN, /^EAN(.?13)?$/i, 8);
 	core.register(EAN8, /^EAN.?8$/i, 8);
 	core.register(EAN5, /^EAN.?5$/i, 5);
+	core.register(EAN2, /^EAN.?2$/i, 5);
 	core.register(UPC, /^UPC(.?A)?$/i, 8);
 }
 try{register(JsBarcode)} catch(e){}
