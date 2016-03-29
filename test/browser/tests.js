@@ -1,8 +1,10 @@
 function createTests(parent){
   newTest(parent, "This has a \nnewline", {width: 1});
+  newTest(parent, "\tHi\nHI", {width: 1});
   newTest(parent, "A little test!", {format: "CODE128", width: 1});
   newTest(parent, "A LITTLE TEST", {format: "CODE39", width: 1});
   newTest(parent, "A little test", {format: "CODE39", width: 1});
+  newTest(parent, "12345", {format: "EAN5", width: 1});
   newTest(parent, "123456789999", {format: "UPC", width: 1});
   newTest(parent, "5901234123457", {format: "EAN", width: 1});
   newTest(parent, "590123412345", {format: "EAN", width: 1});
