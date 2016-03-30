@@ -14,9 +14,12 @@ Supported barcodes:
 * CODE128
  * CODE128 (automatic mode switching)
  * CODE128 A/B/C (force mode)
-* EAN 13
-* EAN 8
-* UPC-A
+* EAN
+  * EAN-13
+  * EAN-8
+  * EAN-5
+  * EAN-2
+  * UPC (A)
 * CODE39
 * ITF
 * ITF-14
@@ -55,7 +58,6 @@ $("#barcode").JsBarcode("Hi!");
 ````javascript
 $("#barcode").JsBarcode("9780199532179", {
   format:"EAN",
-  displayValue:true,
   fontSize:24,
   lineColor: "#0cc"
 });
@@ -132,6 +134,7 @@ The default options:
   fontOptions: "",
   font: "monospace",
   textAlign: "center",
+  textPosition: "bottom",
   textMargin: 2,
   fontSize: 20,
   background: "#ffffff",
