@@ -1,13 +1,10 @@
-function ITF(ITFNumber){
-
-	this.ITFNumber = ITFNumber+"";
-
+function ITF(string){
 	this.getText = function(){
-		return this.ITFNumber;
+		return string;
 	};
 
 	this.valid = function(){
-		return valid(this.ITFNumber);
+		return valid(string);
 	};
 
 	this.encoded = function(){
@@ -18,8 +15,8 @@ function ITF(ITFNumber){
 		result += startBin;
 
 		//Calculate all the digit pairs
-		for(var i=0;i<this.ITFNumber.length;i+=2){
-			result += calculatePair(this.ITFNumber.substr(i,2));
+		for(var i=0;i<string.length;i+=2){
+			result += calculatePair(string.substr(i,2));
 		}
 
 		//Always add the same end bits

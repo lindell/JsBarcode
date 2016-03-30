@@ -24,6 +24,9 @@
 
 	// The main function, handles everything with the modules and draws the image
 	var drawCanvas = function(canvas, content, options) {
+		// Make sure content is a string
+		content = content + "";
+
 		// Merge the user options with the default
 		options = merge(JsBarcode.defaults, options);
 

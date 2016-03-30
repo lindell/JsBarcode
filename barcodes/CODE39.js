@@ -1,5 +1,5 @@
 function CODE39(string){
-	this.string = string.toUpperCase();
+	string = string.toUpperCase();
 
 	var encodings = {
 		"0": 20957, "1": 29783, "2": 23639, "3": 30485,
@@ -15,16 +15,15 @@ function CODE39(string){
 		"/": 17489, "+": 17681, "%": 20753, "*": 35770
 	};
 
-
 	this.getText = function(){
-		return this.string;
+		return string;
 	};
 
 	this.encoded = function(){
 		var result = "";
 		result += encodings["*"].toString(2);
-		for(var i=0; i<this.string.length; i++){
-			result += encodings[this.string[i]].toString(2) + "0";
+		for(var i=0; i<string.length; i++){
+			result += encodings[string[i]].toString(2) + "0";
 		}
 		result += encodings["*"].toString(2);
 
@@ -33,7 +32,7 @@ function CODE39(string){
 
 	//Use the regexp variable for validation
 	this.valid = function(){
-		return this.string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
+		return string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
 	};
 }
 

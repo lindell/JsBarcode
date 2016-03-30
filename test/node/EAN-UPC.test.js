@@ -13,6 +13,11 @@ describe('UPC', function() {
     assert.equal(enc.encoded(), "10100110010010011011110101000110110001010111101010100010010010001110100111010011101001110100101");
   });
 
+  it('should be able to encode a number', function () {
+    var enc = new UPC(123456789999);
+    assert.equal(enc.encoded(), "10100110010010011011110101000110110001010111101010100010010010001110100111010011101001110100101");
+  });
+
   it('should warn with invalid text', function () {
     var enc = new UPC("12345");
     assert.equal(false, enc.valid());

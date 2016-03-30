@@ -1,25 +1,23 @@
-function EAN(EANnumber){
-	this.EANnumber = EANnumber+"";
-
+function EAN(string){
 	//Regexp to test if the EAN code is correct formated
 	var fullEanRegexp = /^[0-9]{13}$/;
 	var needLastDigitRegexp = /^[0-9]{12}$/;
 
 	//Add checksum if it does not exist
-	if(this.EANnumber.search(needLastDigitRegexp)!=-1){
-		this.EANnumber += checksum(this.EANnumber);
+	if(string.search(needLastDigitRegexp)!=-1){
+		string += checksum(string);
 	}
 
 	this.getText = function(){
-		return this.EANnumber;
+		return string;
 	};
 
 	this.valid = function(){
-		return valid(this.EANnumber);
+		return valid(string);
 	};
 
 	this.encoded = function (){
-		return createEAN13(this.EANnumber);
+		return createEAN13(string);
 	}
 
 	var EAN13structure = [
@@ -89,29 +87,27 @@ function EAN(EANnumber){
 	}
 }
 
-function EAN8(EAN8number){
-	this.EAN8number = EAN8number+"";
-
+function EAN8(string){
 	//Regexp to test if the EAN code is correct formated
 	var fullEanRegexp = /^[0-9]{8}$/;
 	var needLastDigitRegexp = /^[0-9]{7}$/;
 
 	//Add checksum if it does not exist
-	if(this.EAN8number.search(needLastDigitRegexp)!=-1){
-		this.EAN8number += checksum(this.EAN8number);
+	if(string.search(needLastDigitRegexp)!=-1){
+		string += checksum(string);
 	}
 
 	this.getText = function(){
-		return this.EAN8number;
+		return string;
 	}
 
 	this.valid = function(){
-		return this.EAN8number.search(fullEanRegexp) !== -1
-			&& this.EAN8number[7] == checksum(this.EAN8number);
+		return string.search(fullEanRegexp) !== -1
+			&& string[7] == checksum(string);
 	};
 
 	this.encoded = function (){
-		return createEAN8(this.EAN8number);
+		return createEAN8(string);
 	}
 
 	//Calulate the checksum digit
@@ -155,22 +151,20 @@ function EAN8(EAN8number){
 	}
 }
 
-function EAN5(EAN5number){
-	this.EAN5number = EAN5number+"";
-
+function EAN5(string){
 	//Regexp to test if the EAN code is correct formated
 	var fullEanRegexp = /^[0-9]{5}$/;
 
 	this.getText = function(){
-		return this.EAN5number;
+		return string;
 	}
 
 	this.valid = function(){
-		return this.EAN5number.search(fullEanRegexp)!==-1;
+		return string.search(fullEanRegexp)!==-1;
 	};
 
 	this.encoded = function (){
-		return createEAN5(this.EAN5number);
+		return createEAN5(string);
 	}
 
 	//Calulate the checksum digit
@@ -209,22 +203,20 @@ function EAN5(EAN5number){
 	}
 }
 
-function EAN2(EAN2number){
-	this.EAN2number = EAN2number+"";
-
+function EAN2(string){
 	//Regexp to test if the EAN code is correct formated
 	var fullEanRegexp = /^[0-9]{2}$/;
 
 	this.getText = function(){
-		return this.EAN2number;
+		return string;
 	}
 
 	this.valid = function(){
-		return this.EAN2number.search(fullEanRegexp)!==-1;
+		return string.search(fullEanRegexp)!==-1;
 	};
 
 	this.encoded = function (){
-		return createEAN2(this.EAN2number);
+		return createEAN2(string);
 	}
 
 	var EAN2structure = ["LL", "LG", "GL", "GG"]
@@ -242,19 +234,19 @@ function EAN2(EAN2number){
 	}
 }
 
-function UPC(UPCnumber){
-	this.ean = new EAN("0"+UPCnumber);
+function UPC(string){
+	var ean = new EAN("0"+string);
 
 	this.getText = function(){
-		return this.ean.getText().substring(1);
+		return ean.getText().substring(1);
 	}
 
 	this.valid = function(){
-		return this.ean.valid();
+		return ean.valid();
 	}
 
 	this.encoded = function(){
-		return this.ean.encoded();
+		return ean.encoded();
 	}
 }
 
