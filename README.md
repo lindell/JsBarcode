@@ -90,7 +90,7 @@ Setup for browsers:
 Include the script in your code:
 
 
-````
+````html
 <script src="JsBarcode.all.min.js"></script>
 ````
 
