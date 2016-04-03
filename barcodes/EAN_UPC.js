@@ -71,8 +71,8 @@ function EAN(string){
 	function checksum(number){
 		var result = 0;
 
-		for(var i=0;i<12;i+=2){result+=parseInt(number[i])}
-		for(var i=1;i<12;i+=2){result+=parseInt(number[i])*3}
+		for(var i=0;i<12;i+=2){result+=parseInt(number[i],10)}
+		for(var i=1;i<12;i+=2){result+=parseInt(number[i],10)*3}
 
 		return (10 - (result % 10)) % 10;
 	}
@@ -114,8 +114,8 @@ function EAN8(string){
 	function checksum(number){
 		var result = 0;
 
-		for(var i=0;i<7;i+=2){result+=parseInt(number[i])*3}
-		for(var i=1;i<7;i+=2){result+=parseInt(number[i])}
+		for(var i=0;i<7;i+=2){result+=parseInt(number[i],10)*3}
+		for(var i=1;i<7;i+=2){result+=parseInt(number[i],10)}
 
 		return (10 - (result % 10)) % 10;
 	}
@@ -171,8 +171,8 @@ function EAN5(string){
 	function checksum(number){
 		var result = 0;
 
-		for(var i=0;i<5;i+=2){result+=parseInt(number[i])*3}
-		for(var i=1;i<5;i+=2){result+=parseInt(number[i])*9}
+		for(var i=0;i<5;i+=2){result+=parseInt(number[i],10)*3}
+		for(var i=1;i<5;i+=2){result+=parseInt(number[i],10)*9}
 
 		return result % 10;
 	}
@@ -228,7 +228,7 @@ function EAN2(string){
 		var result = "1011";
 
 		// Add the encodings
-		result += encoder.encode(number, EAN2structure[parseInt(number) % 4], "01");
+		result += encoder.encode(number, EAN2structure[parseInt(number,10) % 4], "01");
 
 		return result;
 	}

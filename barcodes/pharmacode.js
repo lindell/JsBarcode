@@ -1,6 +1,6 @@
 function pharmacode(number){
     //Ensure that the input is inturpreted as a number
-    this.number = parseInt(number);
+    this.number = parseInt(number,10);
 
     this.getText = function(){
       return this.number + "";

@@ -8,7 +8,7 @@ prototype.encoded = function(){
 	var ret = "110";
 
 	for(var i=0;i<this.string.length;i++){
-		var digit = parseInt(this.string[i]);
+		var digit = parseInt(this.string[i],10);
 		var bin = digit.toString(2);
 		bin = addZeroes(bin, 4-bin.length);
 		for(var b=0;b<bin.length;b++){
@@ -59,7 +59,7 @@ MSI1110.prototype = Object.create(prototype);
 function mod10(number){
 	var sum = 0;
 	for(var i=0;i<number.length;i++){
-		var n = parseInt(number[i]);
+		var n = parseInt(number[i],10);
 		if((i + number.length) % 2 == 0){
 			sum += n;
 		}
@@ -74,7 +74,7 @@ function mod11(number){
 	var sum = 0;
 	var weights = [2,3,4,5,6,7];
 	for(var i=0;i<number.length;i++){
-		var n = parseInt(number[number.length-1-i]);
+		var n = parseInt(number[number.length-1-i],10);
 		sum += weights[i % weights.length] * n;
 	}
 	return (11-(sum%11))%11;
