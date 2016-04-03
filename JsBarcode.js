@@ -24,14 +24,21 @@
 
 	// The main function, handles everything with the modules and draws the image
 	var drawCanvas = function(canvas, content, options) {
+		// Make sure content is a string
+		content = content + "";
+
 		// Merge the user options with the default
 		options = merge(JsBarcode.defaults, options);
 
 		// Fix the margins
-		options.marginTop = options.marginTop | options.margin;
-		options.marginBottom = options.marginBottom | options.margin;
-		options.marginRight = options.marginRight | options.margin;
-		options.marginLeft = options.marginLeft | options.margin;
+		options.marginTop = typeof options.marginTop === "undefined" ?
+			options.margin : options.marginTop;
+		options.marginBottom = typeof options.marginBottom === "undefined" ?
+			options.margin : options.marginBottom;
+		options.marginRight = typeof options.marginRight === "undefined" ?
+			options.margin : options.marginRight;
+		options.marginLeft = typeof options.marginLeft === "undefined" ?
+			options.margin : options.marginLeft;
 
 		//Abort if the browser does not support HTML5 canvas
 		if (!canvas.getContext) {
@@ -113,11 +120,20 @@
 		}
 
 		// Creates the barcode out of the encoded binary
+		var yFrom, yHeight;
+		if(options.textPosition == "top"){
+			yFrom = options.marginTop + options.fontSize + options.textMargin;
+		}
+		else{
+			yFrom = options.marginTop;
+		}
+		yHeight = options.height;
+
 		ctx.fillStyle = options.lineColor;
 		for(var i=0;i<binary.length;i++){
 			var x = i*options.width + options.marginLeft + barcodePadding;
 			if(binary[i] == "1"){
-				ctx.fillRect(x, options.marginTop, options.width, options.height);
+				ctx.fillRect(x, yFrom, options.width, options.height);
 			}
 		}
 
@@ -125,11 +141,16 @@
 		if(options.displayValue){
 			var x, y;
 
-			y = options.height + options.textMargin + options.marginTop;
+			if(options.textPosition == "top"){
+				y = options.marginTop + options.fontSize;
+				ctx.textBaseline = "bottom";
+			}
+			else{
+				y = options.height + options.textMargin + options.marginTop;
+				ctx.textBaseline = "top";
+			}
 
 			ctx.font = font;
-			ctx.textBaseline = "bottom";
-			ctx.textBaseline = 'top';
 
 			// Draw the text in the correct X depending on the textAlign option
 			if(options.textAlign == "left" || barcodePadding > 0){
@@ -258,6 +279,7 @@
 		fontOptions: "",
 		font: "monospace",
 		textAlign: "center",
+		textPosition: "bottom",
 		textMargin: 2,
 		fontSize: 20,
 		background: "#ffffff",
