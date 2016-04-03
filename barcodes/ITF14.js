@@ -73,7 +73,7 @@ function calculatePair(twoNumbers){
 function checksum(numberString){
 	var result = 0;
 
-	for(var i=0;i<13;i++){result+=parseInt(numberString[i])*(3-(i%2)*2)}
+	for(var i=0;i<13;i++){result+=parseInt(numberString[i],10)*(3-(i%2)*2)}
 
 	return 10 - (result % 10);
 }
