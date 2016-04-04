@@ -27,7 +27,7 @@ function CODE128(string) {
 	};
 
 	// The public encoding function
-	this.encoded = function() {
+	this.encode = function() {
 		var encodingResult;
 		var bytes = this.bytes;
 		// Remove the startcode from the bytes and set its index
@@ -44,7 +44,8 @@ function CODE128(string) {
 			encodingResult = nextC(bytes, 1);
 		}
 
-		return (
+		return {text: this.getText(),
+			data:
 			//Add the start bits
 			getEncoding(startIndex) +
 			//Add the encoded bits
@@ -53,7 +54,7 @@ function CODE128(string) {
 			getEncoding((encodingResult.checksum + startIndex) % 103) +
 			//Add the end bits
 			getEncoding(106)
-		);
+		};
 	}
 
 	//Data for each character, the last characters will not be encoded but are used for error correction

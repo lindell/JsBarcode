@@ -15,11 +15,7 @@ function CODE39(string){
 		"/": 17489, "+": 17681, "%": 20753, "*": 35770
 	};
 
-	this.getText = function(){
-		return string;
-	};
-
-	this.encoded = function(){
+	this.encode = function(){
 		var result = "";
 		result += encodings["*"].toString(2);
 		for(var i=0; i<string.length; i++){
@@ -27,7 +23,7 @@ function CODE39(string){
 		}
 		result += encodings["*"].toString(2);
 
-		return result;
+		return {data: result, text: string};
 	};
 
 	//Use the regexp variable for validation

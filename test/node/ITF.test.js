@@ -10,12 +10,12 @@ describe('ITF', function() {
 
   it('should be able to encode normal text', function () {
     var enc = new ITF("123456");
-    assert.equal(enc.encoded(), "101011101000101011100011101110100010100011101000111000101011101");
+    assert.equal(enc.encode().data, "101011101000101011100011101110100010100011101000111000101011101");
   });
 
   it('should return getText correct', function () {
     var enc = new ITF("123456");
-    assert.equal(enc.getText(), "123456");
+    assert.equal(enc.encode().text, "123456");
   });
 
   it('should warn with invalid text', function () {

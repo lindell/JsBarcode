@@ -2,10 +2,6 @@ function pharmacode(number){
     //Ensure that the input is inturpreted as a number
     this.number = parseInt(number);
 
-    this.getText = function(){
-      return this.number + "";
-    };
-
     function recursiveEncoding(code,state){
         //End condition
         if(code.length == 0) return "";
@@ -24,8 +20,11 @@ function pharmacode(number){
         return recursiveEncoding(code.substr(0,code.length - nZeros - 1),nextState) + generated;
     };
 
-    this.encoded = function(){
-      return recursiveEncoding(this.number.toString(2),true).substr(2);
+    this.encode = function(){
+      return {
+        data: recursiveEncoding(this.number.toString(2),true).substr(2),
+        text: this.number + ""
+      };
     };
 
     this.valid = function(){

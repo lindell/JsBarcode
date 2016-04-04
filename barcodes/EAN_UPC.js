@@ -1,4 +1,4 @@
-function EAN(string){
+function EAN(string, options){
 	//Regexp to test if the EAN code is correct formated
 	var fullEanRegexp = /^[0-9]{13}$/;
 	var needLastDigitRegexp = /^[0-9]{12}$/;
@@ -8,16 +8,15 @@ function EAN(string){
 		string += checksum(string);
 	}
 
-	this.getText = function(){
-		return string;
-	};
-
 	this.valid = function(){
 		return valid(string);
 	};
 
-	this.encoded = function (){
-		return createEAN13(string);
+	this.options = function(){
+		options.textMargin = 0;
+		if(options.fontSize > options.width * 11){
+			options.fontSize = options.width * 11;
+		}
 	}
 
 	var EAN13structure = [
@@ -33,36 +32,35 @@ function EAN(string){
 		"LGGLGL"
 	];
 
-	//Create the binary representation of the EAN code
-	//number needs to be a string
-	function createEAN13(number){
+	this.encode = function (){
 		var encoder = new EANencoder();
+		var result = [];
 
-		//Create the return variable
-		var result = "";
+		var structure = EAN13structure[string[0]];
 
-		var structure = EAN13structure[number[0]];
+		//Get the string to be encoded on the left side of the EAN code
+		var leftSide = string.substr(1,6);
 
-		//Get the number to be encoded on the left side of the EAN code
-		var leftSide = number.substr(1,7);
+		//Get the string to be encoded on the right side of the EAN code
+		var rightSide = string.substr(7,6);
 
-		//Get the number to be encoded on the right side of the EAN code
-		var rightSide = number.substr(7,6);
+		// Add the first digigt
+		result.push({data: "000000000000", text: string[0], options: {textAlign: "left"}});
 
-		//Add the start bits
-		result += encoder.startBin;
+		//Add the guard bars
+		result.push({data: [1.1, 0, 1.1]});
 
 		//Add the left side
-		result += encoder.encode(leftSide, structure);
+		result.push({data: encoder.encode(leftSide, structure), text: leftSide});
 
 		//Add the middle bits
-		result += encoder.middleBin;
+		result.push({data: [0, 1.1, 0, 1.1, 0]});
 
 		//Add the right side
-		result += encoder.encode(rightSide,"RRRRRR");
+		result.push({data: encoder.encode(rightSide,"RRRRRR"), text: rightSide});
 
 		//Add the end bits
-		result += encoder.endBin;
+		result.push({data: [1.1, 0, 1.1]});
 
 		return result;
 	}
@@ -106,8 +104,8 @@ function EAN8(string){
 			&& string[7] == checksum(string);
 	};
 
-	this.encoded = function (){
-		return createEAN8(string);
+	this.encode = function (){
+		return {data: createEAN8(string), text: string};
 	}
 
 	//Calulate the checksum digit
@@ -155,16 +153,12 @@ function EAN5(string){
 	//Regexp to test if the EAN code is correct formated
 	var fullEanRegexp = /^[0-9]{5}$/;
 
-	this.getText = function(){
-		return string;
-	}
-
 	this.valid = function(){
 		return string.search(fullEanRegexp)!==-1;
 	};
 
-	this.encoded = function (){
-		return createEAN5(string);
+	this.encode = function (){
+		return {data: createEAN5(string), text: string};
 	}
 
 	//Calulate the checksum digit
@@ -207,16 +201,12 @@ function EAN2(string){
 	//Regexp to test if the EAN code is correct formated
 	var fullEanRegexp = /^[0-9]{2}$/;
 
-	this.getText = function(){
-		return string;
-	}
-
 	this.valid = function(){
 		return string.search(fullEanRegexp)!==-1;
 	};
 
-	this.encoded = function (){
-		return createEAN2(string);
+	this.encode = function (){
+		return {data: createEAN2(string), text: string};
 	}
 
 	var EAN2structure = ["LL", "LG", "GL", "GG"]
@@ -234,20 +224,12 @@ function EAN2(string){
 	}
 }
 
-function UPC(string){
-	var ean = new EAN("0"+string);
+function UPC(string, options){
+	var ean = new EAN("0"+string, options);
 
-	this.getText = function(){
-		return ean.getText().substring(1);
-	}
-
-	this.valid = function(){
-		return ean.valid();
-	}
-
-	this.encoded = function(){
-		return ean.encoded();
-	}
+	this.valid = ean.valid;
+	this.encode = ean.encode;
+	this.options = ean.options;
 }
 
 //

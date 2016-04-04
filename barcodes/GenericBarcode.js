@@ -1,12 +1,7 @@
 function GenericBarcode(string){
-	//Return the text the way it is encoded
-	this.getText = function(){
-		return string;
-	};
-
 	//Return the corresponding binary numbers for the data provided
-	this.encoded = function(){
-		return "10101010101010101010101010101010101010101";
+	this.encode = function(){
+		return {data: "10101010101010101010101010101010101010101", text: string};
 	};
 
 	//Resturn true/false if the string provided is valid for this encoder

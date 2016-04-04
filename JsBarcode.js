@@ -45,13 +45,22 @@
 			throw new Error('The browser does not support canvas.');
 		}
 
+		// Get the canvas context
+		var ctx = canvas.getContext("2d");
+
+		ctx.save();
+
 		// Automatically choose barcode if format set to "auto"...
 		if(options.format == "auto"){
-			var encoder = new (JsBarcode.autoSelectEncoder(content))(content);
+			var encoder = new (JsBarcode.autoSelectEncoder(content))(content, options);
 		}
 		// ...or else, get by name
 		else{
-			var encoder = new (JsBarcode.getModule(options.format))(content);
+			var encoder = new (JsBarcode.getModule(options.format))(content, options);
+		}
+
+		if(encoder.options){
+			encoder.options(options);
 		}
 
 		//Abort if the barcode format does not support the content
@@ -64,45 +73,53 @@
 		}
 
 		// Set the binary to a cached version if possible
-		var cachedBinary = JsBarcode.getCache(options.format, content);
-		if(cachedBinary){
-			var binary = cachedBinary;
+		var cached = JsBarcode.getCache(options.format, content);
+		var encoded;
+		if(cached){
+			encoded = cached;
 		}
 		else{
-			// Encode the content
-			var binary = encoder.encoded();
+			encoded = encoder.encode();
 			// Cache the encoding if it will be used again later
-			JsBarcode.cache(options.format, content, binary);
+			JsBarcode.cache(options.format, content, encoded);
 		}
 
-		// Get the canvas context
-		var ctx = canvas.getContext("2d");
+		if(encoder.options){
+			options = merge(options, encoder.options(options));
+		}
+
+		var encodings = [];
+		function drawEncodings(encoded){
+			if(Array.isArray(encoded)){
+				for(var i in encoded){
+					drawEncodings(encoded[i]);
+				}
+			}
+			else{
+				encoded.text = encoded.text || "";
+				encoded.data = encoded.data || "";
+				encodings.push(encoded);
+			}
+		}
+		drawEncodings(encoded);
 
 		// Set font
 		var font = options.fontOptions + " " + options.fontSize + "px "+options.font;
 		ctx.font = font;
 
-		// Set the width and height of the barcode
-		var width = binary.length*options.width;
-		// Replace with width of the text if it is wider then the barcode
-		var textWidth = ctx.measureText(encoder.getText()).width;
-		if(options.displayValue && width < textWidth){
-			if(options.textAlign == "center"){
-				var barcodePadding = Math.floor((textWidth - width)/2);
-			}
-			else if(options.textAlign == "left"){
-				var barcodePadding = 0;
-			}
-			else if(options.textAlign == "right"){
-				var barcodePadding = Math.floor(textWidth - width);
-			}
+		// Calculate total width
+		var totalWidth = 0;
+		for(var i in encodings){
+			var textWidth = ctx.measureText(encodings[i].text).width;
+			var barcodeWidth = encodings[i].data.length * options.width;
 
-			width = textWidth;
+			encodings[i].width =  Math.ceil(Math.max(textWidth, barcodeWidth));
+
+			totalWidth += encodings[i].width;
 		}
-		// Make sure barcodePadding is not undefined
-		var barcodePadding = barcodePadding || 0;
 
-		canvas.width = width + options.marginLeft + options.marginRight;
+		// Set width
+		canvas.width = totalWidth + options.marginLeft + options.marginRight;
 
 		// Set extra height if the value is displayed under the barcode. Multiplication with 1.3 t0 ensure that some
 		//characters are not cut in half
@@ -119,57 +136,100 @@
 			ctx.fillRect(0,0,canvas.width, canvas.height);
 		}
 
-		// Creates the barcode out of the encoded binary
-		var yFrom, yHeight;
-		if(options.textPosition == "top"){
-			yFrom = options.marginTop + options.fontSize + options.textMargin;
-		}
-		else{
-			yFrom = options.marginTop;
-		}
-		yHeight = options.height;
+		ctx.translate(options.marginLeft, 0);
 
-		ctx.fillStyle = options.lineColor;
-		for(var i=0;i<binary.length;i++){
-			var x = i*options.width + options.marginLeft + barcodePadding;
-			if(binary[i] == "1"){
-				ctx.fillRect(x, yFrom, options.width, options.height);
-			}
-		}
+		for(var i in encodings){
+			var newOptions = merge(options, encodings[i].options);
 
-		// Draw the text if displayValue is set
-		if(options.displayValue){
-			var x, y;
+			binary = encodings[i].data;
+			text = encodings[i].text;
 
-			if(options.textPosition == "top"){
-				y = options.marginTop + options.fontSize;
-				ctx.textBaseline = "bottom";
-			}
-			else{
-				y = options.height + options.textMargin + options.marginTop;
-				ctx.textBaseline = "top";
-			}
-
+			// Set font
+			var font = newOptions.fontOptions + " " + newOptions.fontSize + "px "+newOptions.font;
 			ctx.font = font;
 
-			// Draw the text in the correct X depending on the textAlign option
-			if(options.textAlign == "left" || barcodePadding > 0){
-				x = options.marginLeft;
-				ctx.textAlign = 'left';
-			}
-			else if(options.textAlign == "right"){
-				x = canvas.width - options.marginRight;
-				ctx.textAlign = 'right';
-			}
-			//In all other cases, center the text
-			else{
-				x = canvas.width / 2;
-				ctx.textAlign = 'center';
+			// Set the width and height of the barcode
+			var width = binary.length*newOptions.width;
+			// Replace with width of the text if it is wider then the barcode
+			var textWidth = ctx.measureText(text).width;
+
+			var barcodePadding = 0;
+			if(newOptions.displayValue && width < textWidth){
+				if(newOptions.textAlign == "center"){
+					barcodePadding = Math.floor((textWidth - width)/2);
+				}
+				else if(newOptions.textAlign == "left"){
+					barcodePadding = 0;
+				}
+				else if(newOptions.textAlign == "right"){
+					barcodePadding = Math.floor(textWidth - width);
+				}
+
+				width = textWidth;
 			}
 
-			ctx.fillText(encoder.getText(), x, y);
+			// Creates the barcode out of the encoded binary
+			var yFrom, yHeight;
+			if(newOptions.textPosition == "top"){
+				yFrom = newOptions.marginTop + newOptions.fontSize + newOptions.textMargin;
+			}
+			else{
+				yFrom = newOptions.marginTop;
+			}
+			yHeight = newOptions.height;
+
+			ctx.fillStyle = newOptions.lineColor;
+
+			for(var b in binary){
+				var x = b*newOptions.width + barcodePadding;
+				if(binary[b] === "0" && binary[b] === 0){
+
+				}
+				else if(binary[b] === "1"){
+					ctx.fillRect(x, yFrom, newOptions.width, newOptions.height);
+				}
+				else if(binary[b]){
+					ctx.fillRect(x, yFrom, newOptions.width, newOptions.height * binary[b]);
+				}
+			}
+
+			// Draw the text if displayValue is set
+			if(newOptions.displayValue){
+				var x, y;
+
+				if(newOptions.textPosition == "top"){
+					y = newOptions.marginTop + newOptions.fontSize;
+					ctx.textBaseline = "bottom";
+				}
+				else{
+					y = newOptions.height + newOptions.textMargin + newOptions.marginTop;
+					ctx.textBaseline = "top";
+				}
+
+				ctx.font = font;
+
+				// Draw the text in the correct X depending on the textAlign option
+				if(newOptions.textAlign == "left" || barcodePadding > 0){
+					x = 0;
+					ctx.textAlign = 'left';
+				}
+				else if(newOptions.textAlign == "right"){
+					x = encodings[i].width-1;
+					ctx.textAlign = 'right';
+				}
+				//In all other cases, center the text
+				else{
+					x = encodings[i].width / 2;
+					ctx.textAlign = 'center';
+				}
+
+				ctx.fillText(text, x, y);
+			}
+
+			ctx.translate(encodings[i].width, 0);
 		}
 
+		ctx.restore();
 		// Send a confirmation that the generation was successful to the valid function if it does exist
 		options.valid(true);
 	};
@@ -293,14 +353,14 @@
 	};
 
 	// Function to merge the default options with the default ones
-	var merge = function(m1, m2) {
+	var merge = function(old, replaceObj) {
 		var newMerge = {};
-		for (var k in m1) {
-			newMerge[k] = m1[k];
+		for (var k in old) {
+			newMerge[k] = old[k];
 		}
-		for (var k in m2) {
-			if(typeof m2[k] !== "undefined"){
-				newMerge[k] = m2[k];
+		for (var k in replaceObj) {
+			if(typeof replaceObj[k] !== "undefined"){
+				newMerge[k] = replaceObj[k];
 			}
 		}
 		return newMerge;

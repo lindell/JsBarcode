@@ -10,7 +10,7 @@ describe('CODE39', function() {
 
   it('should be able to encode normal text', function () {
     var enc = new CODE39("AB12");
-    assert.equal(enc.encoded(), "100010111011101011101010001011101011101000101110111010001010111010111000101011101000101110111010");
+    assert.equal(enc.encode().data, "100010111011101011101010001011101011101000101110111010001010111010111000101011101000101110111010");
   });
 
   it('should warn with invalid text', function () {
@@ -20,6 +20,6 @@ describe('CODE39', function() {
 
   it('should make lowercase to uppercase', function () {
     var enc = new CODE39("abc123ABC");
-    assert.equal("ABC123ABC", enc.getText());
+    assert.equal("ABC123ABC", enc.encode().text);
   });
 });

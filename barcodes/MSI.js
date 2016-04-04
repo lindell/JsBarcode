@@ -1,10 +1,6 @@
 var prototype = {};
 
-prototype.getText = function(){
-	return this.string;
-};
-
-prototype.encoded = function(){
+prototype.encode = function(){
 	var ret = "110";
 
 	for(var i=0;i<this.string.length;i++){
@@ -17,7 +13,7 @@ prototype.encoded = function(){
 	}
 
 	ret += "1001";
-	return ret;
+	return {data: ret, text: this.string};
 };
 
 prototype.valid = function(){

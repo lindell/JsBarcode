@@ -128,3 +128,11 @@ describe('Text printing', function() {
     assert.notEqual(canvas1.toDataURL(), canvas3.toDataURL());
   });
 });
+
+describe('Generic barcode', function() {
+  it('should not fail generic barcode', function () {
+    var enc = new GENERIC("1234");
+    assert.equal(enc.valid(), true);
+    assert.equal(enc.encode().text, "1234");
+  });
+});

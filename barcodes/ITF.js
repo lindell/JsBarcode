@@ -1,13 +1,9 @@
 function ITF(string){
-	this.getText = function(){
-		return string;
-	};
-
 	this.valid = function(){
 		return valid(string);
 	};
 
-	this.encoded = function(){
+	this.encode = function(){
 		//Create the variable that should be returned at the end of the function
 		var result = "";
 
@@ -22,7 +18,7 @@ function ITF(string){
 		//Always add the same end bits
 		result += endBin;
 
-		return result;
+		return {data: result, text: string};
 	}
 
 	//The structure for the all digits, 1 is wide and 0 is narrow
