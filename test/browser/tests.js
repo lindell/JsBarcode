@@ -7,8 +7,9 @@ function createTests(parent){
   newTest(parent, "12345", {format: "EAN5", width: 1});
   newTest(parent, "52", {format: "EAN2", width: 1});
   newTest(parent, "123456789999", {format: "UPC", width: 1});
-  newTest(parent, "5901234123457", {format: "EAN", width: 1});
-  newTest(parent, "590123412345", {format: "EAN", width: 1});
+  newTest(parent, "5901234123457", {format: "EAN", fontSize: 20, textMargin: 0});
+  newTest(parent, "590123412345", {format: "EAN", width: 2, fontSize: 16});
+  newTest(parent, "590123412345", {format: "EAN", width: 3, fontSize: 35});
   newTest(parent, "96385074", {format: "EAN8", width: 1});
   newTest(parent, "9638507", {format: "EAN8", width: 1});
   newTest(parent, "12345678", {format: "ITF", width: 1});

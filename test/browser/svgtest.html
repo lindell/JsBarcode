@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Test minified version</title>
+  <script src="../../JsBarcode.js"></script>
+  <script src="../../barcodes/CODE39.js"></script>
+  <script src="../../barcodes/CODE128.js"></script>
+  <script src="../../barcodes/EAN_UPC.js"></script>
+  <script src="../../barcodes/ITF.js"></script>
+  <script src="../../barcodes/ITF14.js"></script>
+  <script src="../../barcodes/MSI.js"></script>
+  <script src="../../barcodes/pharmacode.js"></script>
+  <script src="../../barcodes/GenericBarcode.js"></script>
+</head>
+<body>
+  <svg width="300" height="200" id="barcode">
+  </svg>
+
+  <script>
+    JsBarcode("#barcode", "123456789123", {format: "ean"});
+  </script>
+</body>
+</html>

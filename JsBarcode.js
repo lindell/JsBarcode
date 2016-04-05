@@ -10,12 +10,15 @@
 		// If image, draw on canvas and set the uri as src
 		else if(typeof HTMLCanvasElement !== 'undefined' && image instanceof HTMLImageElement){
 			canvas = document.createElement('canvas');
-			drawCanvas(canvas, content, options);
+			draw(canvas, content, options, drawCanvas);
 			image.setAttribute("src", canvas.toDataURL());
+		}
+		else if(typeof SVGElement !== 'undefined' && image instanceof SVGElement){
+			draw(image, content, options, drawSVG);
 		}
 		// If canvas, just draw
 		else if(image.getContext){
-			drawCanvas(image, content, options);
+			draw(image, content, options, drawCanvas);
 		}
 		else{
 			throw new Error("Not supported type to draw on.");
@@ -23,7 +26,7 @@
 	}
 
 	// The main function, handles everything with the modules and draws the image
-	var drawCanvas = function(canvas, content, options) {
+	var draw = function(canvas, content, options, drawFunction) {
 		// Make sure content is a string
 		content = content + "";
 
@@ -39,16 +42,6 @@
 			options.margin : options.marginRight;
 		options.marginLeft = typeof options.marginLeft === "undefined" ?
 			options.margin : options.marginLeft;
-
-		//Abort if the browser does not support HTML5 canvas
-		if (!canvas.getContext) {
-			throw new Error('The browser does not support canvas.');
-		}
-
-		// Get the canvas context
-		var ctx = canvas.getContext("2d");
-
-		ctx.save();
 
 		// Automatically choose barcode if format set to "auto"...
 		if(options.format == "auto"){
@@ -89,10 +82,10 @@
 		}
 
 		var encodings = [];
-		function drawEncodings(encoded){
+		function linearizeEncodings(encoded){
 			if(Array.isArray(encoded)){
 				for(var i in encoded){
-					drawEncodings(encoded[i]);
+					linearizeEncodings(encoded[i]);
 				}
 			}
 			else{
@@ -101,7 +94,168 @@
 				encodings.push(encoded);
 			}
 		}
-		drawEncodings(encoded);
+		linearizeEncodings(encoded);
+
+		drawFunction(canvas, encodings, options);
+
+		// Send a confirmation that the generation was successful to the valid function if it does exist
+		options.valid(true);
+	};
+
+	function drawSVG(svg, encodings, options){
+		prepareSVG(svg, encodings, options);
+
+		var currentX = options.marginLeft;
+		for(var i in encodings){
+			var newOptions = merge(options, encodings[i].options);
+
+			var group = createGroup(currentX, options.marginTop, svg);
+
+			var text= encodings[i].text;
+			var binary = encodings[i].data;
+
+			var yFrom, yHeight;
+			if(newOptions.textPosition == "top"){
+				yFrom = newOptions.marginTop + newOptions.fontSize + newOptions.textMargin;
+			}
+			else{
+				yFrom = newOptions.marginTop;
+			}
+			yHeight = newOptions.height;
+
+			for(var b in binary){
+				var x = b*newOptions.width;
+				if(binary[b] == 0){
+
+				}
+				else if(binary[b] === "1"){
+					drawLine(x, yFrom, newOptions.width, newOptions.height, group);
+				}
+				else if(binary[b]){
+					drawLine(x, yFrom, newOptions.width, newOptions.height * binary[b], group);
+				}
+			}
+
+			// Draw the text if displayValue is set
+			if(newOptions.displayValue){
+				var x, y;
+				var textElem = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+
+				if(newOptions.textPosition == "top"){
+					y = newOptions.marginTop + newOptions.fontSize;
+					textElem.setAttribute("alignment-baseline", "baseline");
+				}
+				else{
+					y = newOptions.height + newOptions.textMargin + newOptions.marginTop;
+					textElem.setAttribute("alignment-baseline", "text-before-edge");
+				}
+
+				textElem.setAttribute("font-family", newOptions.font);
+				textElem.setAttribute("font-size", newOptions.fontSize);
+
+				// Draw the text in the correct X depending on the textAlign option
+				if(newOptions.textAlign == "left"){ // || barcodePadding > 0
+					x = 0;
+					textElem.setAttribute("text-anchor", "start");
+				}
+				else if(newOptions.textAlign == "right"){
+					x = encodings[i].width-1;
+					textElem.setAttribute("text-anchor", "end");
+				}
+				//In all other cases, center the text
+				else{
+					x = encodings[i].width / 2;
+					textElem.setAttribute("text-anchor", "middle");
+				}
+
+				textElem.setAttribute("x", x);
+				textElem.setAttribute("y", y);
+
+				textElem.appendChild(document.createTextNode(text));
+
+				group.appendChild(textElem);
+			}
+
+			currentX += encodings[i].width;
+		}
+	}
+
+	var prepareSVG = function(svg, encodings, options){
+		// Clear canvas
+		// TODO
+
+		// Calculate total width
+		var totalWidth = 0;
+		for(var i in encodings){
+			var textWidth = messureSVGtext(encodings[i].text, svg, options);
+			var barcodeWidth = encodings[i].data.length * options.width;
+
+			encodings[i].width =  Math.ceil(Math.max(textWidth, barcodeWidth));
+
+			totalWidth += encodings[i].width;
+		}
+
+		svg.setAttribute("width", totalWidth + options.marginLeft + options.marginRight);
+
+		svg.setAttribute("height", options.height
+			+ (options.displayValue ? options.fontSize : 0)
+			+ options.textMargin
+			+ options.marginTop
+			+ options.marginBottom);
+
+		// Paint the canvas
+		/*ctx.clearRect(0,0,canvas.width,canvas.height);
+		if(options.background){
+			ctx.fillStyle = options.background;
+			ctx.fillRect(0,0,canvas.width, canvas.height);
+		}*/
+	}
+
+	var messureSVGtext = function(text, svg, options){
+		// Create text element
+		var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+		text.style.fontFamily = options.font;
+		// TODO add all font options
+
+		var textNode = document.createTextNode(text);
+
+		text.appendChild(textNode);
+
+		return text.getComputedTextLength();
+	}
+
+	function createGroup(x, y, svg){
+		var group = document.createElementNS("http://www.w3.org/2000/svg", 'g');
+
+		group.setAttribute("transform", "translate(" + x +", " + y + ")");
+
+		svg.appendChild(group);
+
+		return group;
+	}
+
+	function drawLine(x, y, width, height, svg){
+		var line = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+
+		line.setAttribute("x", x);
+		line.setAttribute("y", y);
+		line.setAttribute("width", width);
+		line.setAttribute("height", height);
+		line.setAttribute("style", "fill:rgb(0,0,0)");
+
+		svg.appendChild(line);
+	}
+
+	function drawCanvas(canvas, encodings, options){
+		//Abort if the browser does not support HTML5 canvas
+		if (!canvas.getContext) {
+			throw new Error('The browser does not support canvas.');
+		}
+
+		// Get the canvas context
+		var ctx = canvas.getContext("2d");
+
+		ctx.save();
 
 		// Set font
 		var font = options.fontOptions + " " + options.fontSize + "px "+options.font;
@@ -118,11 +272,9 @@
 			totalWidth += encodings[i].width;
 		}
 
-		// Set width
 		canvas.width = totalWidth + options.marginLeft + options.marginRight;
 
-		// Set extra height if the value is displayed under the barcode. Multiplication with 1.3 t0 ensure that some
-		//characters are not cut in half
+
 		canvas.height = options.height
 			+ (options.displayValue ? options.fontSize : 0)
 			+ options.textMargin
@@ -230,8 +382,6 @@
 		}
 
 		ctx.restore();
-		// Send a confirmation that the generation was successful to the valid function if it does exist
-		options.valid(true);
 	};
 
 	JsBarcode._modules = [];
