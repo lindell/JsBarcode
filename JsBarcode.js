@@ -255,18 +255,17 @@
 		prepareCanvas(canvas, options, encodings);
 		for(var i in encodings){
 			var encodingOptions = merge(options, encodings[i].options);
-			var sizeOptions = calculateEncodingSizeCanvas(canvas, encodingOptions, encodings[i]);
 
-			drawCanvasBarcode(canvas, encodingOptions, encodings[i], sizeOptions);
-			drawCanvasText(canvas, encodingOptions, encodings[i], sizeOptions);
+			drawCanvasBarcode(canvas, encodingOptions, encodings[i]);
+			drawCanvasText(canvas, encodingOptions, encodings[i]);
 
-			moveDrawing(canvas, encodings[i]);
+			moveCanvasDrawing(canvas, encodings[i]);
 		}
 
 		restoreCanvas(canvas);
 	}
 
-	function moveDrawing(canvas, encoding){
+	function moveCanvasDrawing(canvas, encoding){
 		var ctx = canvas.getContext("2d");
 
 		ctx.translate(encoding.width, 0);
@@ -279,42 +278,11 @@
 		ctx.restore();
 	}
 
-	function calculateEncodingSizeCanvas(canvas, options, encoding){
-		// Get the canvas context
-		var ctx = canvas.getContext("2d");
-
-		// Set font
-		ctx.font = options.fontOptions + " " + options.fontSize + "px "+options.font;
-
-		// Set the width and height of the barcode
-		var width = encoding.data.length*options.width;
-		// Replace with width of the text if it is wider then the barcode
-		var textWidth = ctx.measureText(encoding.text).width;
-
-		var barcodePadding = 0;
-		if(options.displayValue && width < textWidth){
-			if(options.textAlign == "center"){
-				barcodePadding = Math.floor((textWidth - width)/2);
-			}
-			else if(options.textAlign == "left"){
-				barcodePadding = 0;
-			}
-			else if(options.textAlign == "right"){
-				barcodePadding = Math.floor(textWidth - width);
-			}
-
-			width = textWidth;
-		}
-
-		return {width: width, barcodePadding: barcodePadding};
-	}
-
 	function drawCanvasText(canvas, options, encoding, sizeOptions){
 		// Get the canvas context
 		var ctx = canvas.getContext("2d");
 
 		var font = options.fontOptions + " " + options.fontSize + "px "+options.font;
-		var barcodePadding = sizeOptions.barcodePadding;
 
 		// Draw the text if displayValue is set
 		if(options.displayValue){
@@ -332,7 +300,7 @@
 			ctx.font = font;
 
 			// Draw the text in the correct X depending on the textAlign option
-			if(options.textAlign == "left" || barcodePadding > 0){
+			if(options.textAlign == "left" || encoding.barcodePadding > 0){
 				x = 0;
 				ctx.textAlign = 'left';
 			}
@@ -367,6 +335,20 @@
 
 			encodings[i].width =  Math.ceil(Math.max(textWidth, barcodeWidth));
 
+			var barcodePadding = 0;
+			if(options.displayValue && barcodeWidth < textWidth){
+				if(options.textAlign == "center"){
+					barcodePadding = Math.floor((textWidth - barcodeWidth)/2);
+				}
+				else if(options.textAlign == "left"){
+					barcodePadding = 0;
+				}
+				else if(options.textAlign == "right"){
+					barcodePadding = Math.floor(textWidth - barcodeWidth);
+				}
+			}
+			encodings[i].barcodePadding = barcodePadding;
+
 			totalWidth += encodings[i].width;
 		}
 
@@ -395,7 +377,6 @@
 
 		var binary = encoding.data;
 		var text = encoding.text;
-		var barcodePadding = sizeOptions.barcodePadding;
 
 		// Creates the barcode out of the encoded binary
 		var yFrom, yHeight;
@@ -410,7 +391,7 @@
 		ctx.fillStyle = options.lineColor;
 
 		for(var b in binary){
-			var x = b*options.width + barcodePadding;
+			var x = b*options.width + encoding.barcodePadding;
 			if(binary[b] === "0" && binary[b] === 0){
 
 			}
