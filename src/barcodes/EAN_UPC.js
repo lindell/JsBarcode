@@ -92,7 +92,7 @@ function EAN8(string){
 	var needLastDigitRegexp = /^[0-9]{7}$/;
 
 	//Add checksum if it does not exist
-	if(string.search(needLastDigitRegexp)!=-1){
+	if(string.search(needLastDigitRegexp) !== -1){
 		string += checksum(string);
 	}
 
@@ -101,7 +101,7 @@ function EAN8(string){
 	};
 
 	this.valid = function(){
-		return string.search(fullEanRegexp) !== -1 && string[7] === checksum(string);
+		return string.search(fullEanRegexp) !== -1 && string[7] == checksum(string);
 	};
 
 	this.encode = function (){
