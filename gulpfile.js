@@ -31,6 +31,10 @@ gulp.task("webpack", function () {
     .pipe(gulp.dest("."));
 });
 
+gulp.task('watch', function() {
+  gulp.watch("src/**/*", ['compile']);
+});
+
 gulp.task('compress', function() {
   var pkg = require('./package.json');
 

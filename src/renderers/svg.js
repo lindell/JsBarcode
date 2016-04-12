@@ -26,10 +26,10 @@ function drawSvgBarcode(parent, options, encoding){
   // Creates the barcode out of the encoded binary
   var yFrom, yHeight;
   if(options.textPosition == "top"){
-    yFrom = options.marginTop + options.fontSize + options.textMargin;
+    yFrom = options.fontSize + options.textMargin;
   }
   else{
-    yFrom = options.marginTop;
+    yFrom = 0;
   }
   yHeight = options.height;
 
@@ -59,11 +59,11 @@ function drawSVGText(parent, options, encoding){
     var x, y;
 
     if(options.textPosition == "top"){
-      y = options.marginTop + options.fontSize;
+      y = options.fontSize;
       textElem.setAttribute("alignment-baseline", "baseline");
     }
     else{
-      y = options.height + options.textMargin + options.marginTop;
+      y = options.height + options.textMargin;
       textElem.setAttribute("alignment-baseline", "text-before-edge");
     }
 
