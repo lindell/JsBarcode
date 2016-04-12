@@ -3,94 +3,119 @@ export default drawSVG;
 import merge from "../help/merge.js";
 
 function drawSVG(svg, encodings, options){
-	prepareSVG(svg, encodings, options);
+  var currentX = options.marginLeft;
 
-	var currentX = options.marginLeft;
+	prepareSVG(svg, options, encodings);
 	for(var i in encodings){
-		var options = merge(options, encodings[i].options);
+		var encodingOptions = merge(options, encodings[i].options);
+    var group = createGroup(currentX, options.marginTop, svg);
 
-		var group = createGroup(currentX, options.marginTop, svg);
+		drawSvgBarcode(group, encodingOptions, encodings[i]);
+		drawSVGText(group, encodingOptions, encodings[i]);
 
-		var text= encodings[i].text;
-		var binary = encodings[i].data;
-
-		var yFrom, yHeight;
-		if(options.textPosition == "top"){
-			yFrom = options.marginTop + options.fontSize + options.textMargin;
-		}
-		else{
-			yFrom = options.marginTop;
-		}
-		yHeight = options.height;
-
-		for(var b in binary){
-			var x = b*options.width;
-			if(binary[b] == 0){
-
-			}
-			else if(binary[b] === "1"){
-				drawLine(x, yFrom, options.width, options.height, group);
-			}
-			else if(binary[b]){
-				drawLine(x, yFrom, options.width, options.height * binary[b], group);
-			}
-		}
-
-		// Draw the text if displayValue is set
-		if(options.displayValue){
-			var x, y;
-			var textElem = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-
-			if(options.textPosition == "top"){
-				y = options.marginTop + options.fontSize;
-				textElem.setAttribute("alignment-baseline", "baseline");
-			}
-			else{
-				y = options.height + options.textMargin + options.marginTop;
-				textElem.setAttribute("alignment-baseline", "text-before-edge");
-			}
-
-			textElem.setAttribute("font-family", options.font);
-			textElem.setAttribute("font-size", options.fontSize);
-
-			// Draw the text in the correct X depending on the textAlign option
-			if(options.textAlign == "left"){ // || barcodePadding > 0
-				x = 0;
-				textElem.setAttribute("text-anchor", "start");
-			}
-			else if(options.textAlign == "right"){
-				x = encodings[i].width-1;
-				textElem.setAttribute("text-anchor", "end");
-			}
-			//In all other cases, center the text
-			else{
-				x = encodings[i].width / 2;
-				textElem.setAttribute("text-anchor", "middle");
-			}
-
-			textElem.setAttribute("x", x);
-			textElem.setAttribute("y", y);
-
-			textElem.appendChild(document.createTextNode(text));
-
-			group.appendChild(textElem);
-		}
-
-		currentX += encodings[i].width;
+    currentX += encodings[i].width;
 	}
+
+	//restoreCanvas(canvas);
 }
 
-var prepareSVG = function(svg, encodings, options){
+function drawSvgBarcode(parent, options, encoding){
+  var binary = encoding.data;
+  var text = encoding.text;
+
+  // Creates the barcode out of the encoded binary
+  var yFrom, yHeight;
+  if(options.textPosition == "top"){
+    yFrom = options.marginTop + options.fontSize + options.textMargin;
+  }
+  else{
+    yFrom = options.marginTop;
+  }
+  yHeight = options.height;
+
+  // TODO fix line color here
+
+  for(var b in binary){
+    var x = b*options.width + encoding.barcodePadding;
+    if(binary[b] === "0" && binary[b] === 0){
+
+    }
+    else if(binary[b] === "1"){
+      drawLine(x, yFrom, options.width, options.height, parent);
+    }
+    else if(binary[b]){
+      drawLine(x, yFrom, options.width, options.height * binary[b], parent);
+    }
+  }
+}
+
+function drawSVGText(parent, options, encoding){
+  // TODO fix font options here
+
+  var textElem = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+
+  // Draw the text if displayValue is set
+  if(options.displayValue){
+    var x, y;
+
+    if(options.textPosition == "top"){
+      y = options.marginTop + options.fontSize;
+      textElem.setAttribute("alignment-baseline", "baseline");
+    }
+    else{
+      y = options.height + options.textMargin + options.marginTop;
+      textElem.setAttribute("alignment-baseline", "text-before-edge");
+    }
+
+    // Draw the text in the correct X depending on the textAlign option
+    if(options.textAlign == "left" || encoding.barcodePadding > 0){
+      x = 0;
+      textElem.setAttribute("text-anchor", "start");
+    }
+    else if(options.textAlign == "right"){
+      x = encoding.width-1;
+      textElem.setAttribute("text-anchor", "end");
+    }
+    //In all other cases, center the text
+    else{
+      x = encoding.width / 2;
+      textElem.setAttribute("text-anchor", "middle");
+    }
+
+    textElem.setAttribute("x", x);
+    textElem.setAttribute("y", y);
+
+    textElem.appendChild(document.createTextNode(encoding.text));
+
+    parent.appendChild(textElem);
+  }
+}
+
+
+var prepareSVG = function(svg, options, encodings){
 	// Clear SVG
 	// TODO
 
-	// Calculate total width
-	var totalWidth = 0;
+  var totalWidth = 0;
 	for(var i in encodings){
 		var textWidth = messureSVGtext(encodings[i].text, svg, options);
 		var barcodeWidth = encodings[i].data.length * options.width;
 
 		encodings[i].width =  Math.ceil(Math.max(textWidth, barcodeWidth));
+
+		var barcodePadding = 0;
+		if(options.displayValue && barcodeWidth < textWidth){
+			if(options.textAlign == "center"){
+				barcodePadding = Math.floor((textWidth - barcodeWidth)/2);
+			}
+			else if(options.textAlign == "left"){
+				barcodePadding = 0;
+			}
+			else if(options.textAlign == "right"){
+				barcodePadding = Math.floor(textWidth - barcodeWidth);
+			}
+		}
+		encodings[i].barcodePadding = barcodePadding;
 
 		totalWidth += encodings[i].width;
 	}
@@ -134,7 +159,7 @@ function createGroup(x, y, svg){
 	return group;
 }
 
-function drawLine(x, y, width, height, svg){
+function drawLine(x, y, width, height, parent){
 	var line = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
 
 	line.setAttribute("x", x);
@@ -143,5 +168,5 @@ function drawLine(x, y, width, height, svg){
 	line.setAttribute("height", height);
 	line.setAttribute("style", "fill:rgb(0,0,0)");
 
-	svg.appendChild(line);
+	parent.appendChild(line);
 }
