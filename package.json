@@ -44,6 +44,7 @@
     "blanket": "^1.2.2",
     "conventional-github-releaser": "^1.1.1",
     "coveralls": "^2.11.6",
+    "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
     "gulp-bump": "^2.0.1",
     "gulp-clean": "^0.3.2",
