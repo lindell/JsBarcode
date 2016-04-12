@@ -1,12 +1,12 @@
 // Import all the barcodes
-import barcodes from './barcodes.js'
+import barcodes from './barcodes.js';
 
 // Import the renderers
-import drawCanvas from './renderers/canvas.js'
-import drawSVG from './renderers/svg.js'
+import drawCanvas from './renderers/canvas.js';
+import drawSVG from './renderers/svg.js';
 
 // Help functions
-import merge from './help/merge.js'
+import merge from './help/merge.js';
 
 (function(){
 
@@ -33,7 +33,7 @@ import merge from './help/merge.js'
 		else{
 			throw new Error("Not supported type to draw on.");
 		}
-	}
+	};
 
 	// The main function, handles everything with the modules and draws the image
 	var draw = function(canvas, content, options, drawFunction) {
@@ -54,12 +54,13 @@ import merge from './help/merge.js'
 			options.margin : options.marginLeft;
 
 		// Automatically choose barcode if format set to "auto"...
-		if(options.format == "auto"){
-			var encoder = new (JsBarcode.autoSelectEncoder(content))(content, options);
+		var encoder;
+		if(options.format === "auto"){
+			encoder = new (JsBarcode.autoSelectEncoder(content))(content, options);
 		}
 		// ...or else, get by name
 		else{
-			var encoder = new (JsBarcode.getModule(options.format))(content, options);
+			encoder = new (JsBarcode.getModule(options.format))(content, options);
 		}
 
 		if(encoder.options){
@@ -124,7 +125,7 @@ import merge from './help/merge.js'
 		else{
 			for(var i=0;i<JsBarcode._modules.length;i++){
 				position = i + 1;
-				if(!(priority < JsBarcode._modules[i].priority)){
+				if(priority > JsBarcode._modules[i].priority){
 					break;
 				}
 			}

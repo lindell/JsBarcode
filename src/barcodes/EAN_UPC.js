@@ -17,7 +17,7 @@ function EAN(string, options){
 		if(options.fontSize > options.width * 11){
 			options.fontSize = options.width * 11;
 		}
-	}
+	};
 
 	var EAN13structure = [
 		"LLLLLL",
@@ -63,14 +63,15 @@ function EAN(string, options){
 		result.push({data: [1.1, 0, 1.1]});
 
 		return result;
-	}
+	};
 
 	//Calulate the checksum digit
 	function checksum(number){
 		var result = 0;
 
-		for(var i=0;i<12;i+=2){result+=parseInt(number[i])}
-		for(var i=1;i<12;i+=2){result+=parseInt(number[i])*3}
+		var i;
+		for(i=0;i<12;i+=2){result+=parseInt(number[i]);}
+		for(i=1;i<12;i+=2){result+=parseInt(number[i])*3;}
 
 		return (10 - (result % 10)) % 10;
 	}
@@ -97,23 +98,26 @@ function EAN8(string){
 
 	this.getText = function(){
 		return string;
-	}
+	};
 
 	this.valid = function(){
-		return string.search(fullEanRegexp) !== -1
-			&& string[7] == checksum(string);
+		return string.search(fullEanRegexp) !== -1 && string[7] === checksum(string);
 	};
 
 	this.encode = function (){
-		return {data: createEAN8(string), text: string};
-	}
+		return {
+			data: createEAN8(string),
+			text: string
+		};
+	};
 
 	//Calulate the checksum digit
 	function checksum(number){
 		var result = 0;
 
-		for(var i=0;i<7;i+=2){result+=parseInt(number[i])*3}
-		for(var i=1;i<7;i+=2){result+=parseInt(number[i])}
+		var i;
+		for(i=0;i<7;i+=2){result+=parseInt(number[i])*3;}
+		for(i=1;i<7;i+=2){result+=parseInt(number[i]);}
 
 		return (10 - (result % 10)) % 10;
 	}
@@ -159,14 +163,15 @@ function EAN5(string){
 
 	this.encode = function (){
 		return {data: createEAN5(string), text: string};
-	}
+	};
 
 	//Calulate the checksum digit
 	function checksum(number){
 		var result = 0;
 
-		for(var i=0;i<5;i+=2){result+=parseInt(number[i])*3}
-		for(var i=1;i<5;i+=2){result+=parseInt(number[i])*9}
+		var i;
+		for(i=0;i<5;i+=2){result+=parseInt(number[i])*3;}
+		for(i=1;i<5;i+=2){result+=parseInt(number[i])*9;}
 
 		return result % 10;
 	}
@@ -207,9 +212,9 @@ function EAN2(string){
 
 	this.encode = function (){
 		return {data: createEAN2(string), text: string};
-	}
+	};
 
-	var EAN2structure = ["LL", "LG", "GL", "GG"]
+	var EAN2structure = ["LL", "LG", "GL", "GG"];
 
 	function createEAN2(number){
 		var encoder = new EANencoder();
@@ -290,7 +295,7 @@ function EANencoder(){
 		//Create the variable that should be returned at the end of the function
 		var result = "";
 
-		var separator = typeof separator === "undefined" ? "" : separator;
+		separator = typeof separator === "undefined" ? "" : separator;
 
 		//Loop all the numbers
 		for(var i = 0;i<number.length;i++){
@@ -323,4 +328,4 @@ function register(core){
 	core.register(EAN2, /^EAN.?2$/i, 5);
 	core.register(UPC, /^UPC(.?A)?$/i, 8);
 }
-export default register
+export default register;

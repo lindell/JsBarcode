@@ -1,7 +1,7 @@
 function ITF14(string){
 	this.valid = function(){
-		return string.search(/^[0-9]{13,14}$/) !== -1
-			&& (string.length === 13 || string[13] == checksum(string));
+		return string.search(/^[0-9]{13,14}$/) !== -1 &&
+			(string.length === 13 || string[13] == checksum(string));
 	};
 
 	this.encode = function(){
@@ -29,16 +29,17 @@ function ITF14(string){
 
 	//The structure for the all digits, 1 is wide and 0 is narrow
 	var digitStructure = {
-	 "0":"00110"
-	,"1":"10001"
-	,"2":"01001"
-	,"3":"11000"
-	,"4":"00101"
-	,"5":"10100"
-	,"6":"01100"
-	,"7":"00011"
-	,"8":"10010"
-	,"9":"01010"}
+		 "0":"00110"
+		,"1":"10001"
+		,"2":"01001"
+		,"3":"11000"
+		,"4":"00101"
+		,"5":"10100"
+		,"6":"01100"
+		,"7":"00011"
+		,"8":"10010"
+		,"9":"01010"
+	};
 
 	//The start bits
 	var startBin = "1010";
@@ -64,7 +65,9 @@ function ITF14(string){
 	function checksum(numberString){
 		var result = 0;
 
-		for(var i=0;i<13;i++){result+=parseInt(numberString[i])*(3-(i%2)*2)}
+		for(var i=0;i<13;i++){
+			result += parseInt(numberString[i]) * (3 - (i % 2) * 2);
+		}
 
 		return 10 - (result % 10);
 	}
@@ -74,4 +77,4 @@ function ITF14(string){
 function register(core){
 	core.register(ITF14, /^ITF.?14$/i, 5);
 }
-export default register
+export default register;

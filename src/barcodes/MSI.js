@@ -8,7 +8,7 @@ prototype.encode = function(){
 		var bin = digit.toString(2);
 		bin = addZeroes(bin, 4-bin.length);
 		for(var b=0;b<bin.length;b++){
-			ret += bin[b]==0 ? "100" : "110";
+			ret += bin[b] == "0" ? "100" : "110";
 		}
 	}
 
@@ -56,11 +56,11 @@ function mod10(number){
 	var sum = 0;
 	for(var i=0;i<number.length;i++){
 		var n = parseInt(number[i]);
-		if((i + number.length) % 2 == 0){
+		if((i + number.length) % 2 === 0){
 			sum += n;
 		}
 		else{
-			sum += (n*2)%10 + Math.floor((n*2)/10)
+			sum += (n*2)%10 + Math.floor((n*2)/10);
 		}
 	}
 	return (10-(sum%10))%10;
@@ -91,4 +91,4 @@ function register(core){
 	core.register(MSI1010, /^MSI.?1010$/i);
 	core.register(MSI1110, /^MSI.?1110$/i);
 }
-export default register
+export default register;

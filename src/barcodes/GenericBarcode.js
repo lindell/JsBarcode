@@ -14,4 +14,4 @@ function GenericBarcode(string){
 function register(core){
 	core.register(GenericBarcode, /^GEN(ERIC(BARCODE)?)?$/i, 0);
 }
-export default register
+export default register;

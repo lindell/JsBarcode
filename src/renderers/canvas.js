@@ -111,11 +111,11 @@ function prepareCanvas(canvas, options, encodings){
 	canvas.width = totalWidth + options.marginLeft + options.marginRight;
 
 
-	canvas.height = options.height
-		+ (options.displayValue ? options.fontSize : 0)
-		+ options.textMargin
-		+ options.marginTop
-		+ options.marginBottom;
+	canvas.height = options.height +
+		(options.displayValue ? options.fontSize : 0) +
+		options.textMargin +
+		options.marginTop +
+		options.marginBottom;
 
 	// Paint the canvas
 	ctx.clearRect(0,0,canvas.width,canvas.height);

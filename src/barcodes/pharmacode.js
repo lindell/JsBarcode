@@ -4,12 +4,12 @@ function pharmacode(number){
 
     function recursiveEncoding(code,state){
         //End condition
-        if(code.length == 0) return "";
+        if(code.length === 0) return "";
 
         var generated;
         var nextState = false;
         var nZeros = zeros(code);
-        if(nZeros == 0){
+        if(nZeros === 0){
             generated = state ? "001" : "00111";
             nextState = state;
         }
@@ -18,7 +18,7 @@ function pharmacode(number){
             generated += "00111";
         }
         return recursiveEncoding(code.substr(0,code.length - nZeros - 1),nextState) + generated;
-    };
+    }
 
     this.encode = function(){
       return {
@@ -46,11 +46,11 @@ function pharmacode(number){
     String.prototype.repeat = function( num )
     {
         return new Array( num + 1 ).join( this );
-    }
-};
+    };
+}
 
 //Required to register for both browser and nodejs
 function register(core){
   core.register(pharmacode, /^pharmacode$/i, 2);
 }
-export default register
+export default register;

@@ -19,20 +19,21 @@ function ITF(string){
 		result += endBin;
 
 		return {data: result, text: string};
-	}
+	};
 
 	//The structure for the all digits, 1 is wide and 0 is narrow
 	var digitStructure = {
-	 "0":"00110"
-	,"1":"10001"
-	,"2":"01001"
-	,"3":"11000"
-	,"4":"00101"
-	,"5":"10100"
-	,"6":"01100"
-	,"7":"00011"
-	,"8":"10010"
-	,"9":"01010"}
+		 "0":"00110"
+		,"1":"10001"
+		,"2":"01001"
+		,"3":"11000"
+		,"4":"00101"
+		,"5":"10100"
+		,"6":"01100"
+		,"7":"00011"
+		,"8":"10010"
+		,"9":"01010"
+	};
 
 	//The start bits
 	var startBin = "1010";
@@ -65,5 +66,5 @@ function ITF(string){
 //Required to register for both browser and nodejs
 function register(core){
 	core.register(ITF, /^ITF$/i, 4);
-};
-export default register
+}
+export default register;

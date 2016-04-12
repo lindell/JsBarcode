@@ -36,5 +36,5 @@ function CODE39(string){
 //Required to register for both browser and nodejs
 function register(core){
 	core.register(CODE39, /^CODE.?39$/i, 3);
-};
+}
 export default register;

@@ -55,7 +55,7 @@ function CODE128(string) {
 			//Add the end bits
 			getEncoding(106)
 		};
-	}
+	};
 
 	//Data for each character, the last characters will not be encoded but are used for error correction
 	//Numbers encode to (n + 1000) -> binary; 740 -> (740 + 1000).toString(2) -> "11011001100"
@@ -78,8 +78,8 @@ function CODE128(string) {
 
 	// Use the regexp variable for validation
 	this.valid = function() {
-		return !(this.string.search(validCODE128) === -1);
-	}
+		return this.string.search(validCODE128) !== -1;
+	};
 
 	function nextA(bytes, depth){
 		if(bytes.length <= 0){
@@ -129,7 +129,10 @@ function CODE128(string) {
 		var enc = getEncoding(index);
 		var weight = index * depth;
 
-		return {"result": enc + next.result, "checksum": weight + next.checksum}
+		return {
+			"result": enc + next.result,
+			"checksum": weight + next.checksum
+		};
 	}
 
 	function nextB(bytes, depth){
@@ -314,21 +317,21 @@ function CODE128A(string) {
 	var code128 = new CODE128(String.fromCharCode(208) + string);
 	code128.valid = function(){
 		return this.string.search(/^[\x00-\x5F\xC8-\xCF]+$/) !== -1;
-	}
+	};
 	return code128;
 }
 function CODE128B(string) {
 	var code128 = new CODE128(String.fromCharCode(209) + string);
 	code128.valid = function(){
 		return this.string.search(/^[\x20-\x7F\xC8-\xCF]+$/) !== -1;
-	}
+	};
 	return code128;
 }
 function CODE128C(string) {
 	var code128 = new CODE128(String.fromCharCode(210) + string);
 	code128.valid = function(str){
 		return this.string.search(/^(\xCF*[0-9]{2}\xCF*)+$/) !== -1;
-	}
+	};
 	return code128;
 }
 
