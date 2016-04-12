@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
+var babel = require("gulp-babel");
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var bump = require('gulp-bump');
@@ -7,15 +8,36 @@ var git = require('gulp-git');
 var runSequence = require('run-sequence');
 var publishRelease = require('publish-release');
 var header = require('gulp-header');
+var clean = require('gulp-clean');
+var webpack = require('webpack-stream');
+
+gulp.task("clean", function(){
+  return gulp.src("bin/", {read: false})
+    .pipe(clean());
+});
+
+gulp.task("babel", function () {
+  return gulp.src("src/**/*")
+    .pipe(babel({
+			presets: ['es2015']
+		}))
+    .pipe(gulp.dest("bin/node/"));
+});
+
+gulp.task("webpack", function () {
+  return gulp.src('bin/node/JsBarcode.js')
+    .pipe(webpack())
+    .pipe(rename("bin/browser/JsBarcode.js"))
+    .pipe(gulp.dest("."));
+});
 
 gulp.task('compress', function() {
   var pkg = require('./package.json');
 
-  return gulp.src(['JsBarcode.js','barcodes/*.js', '!barcodes/GenericBarcode.js'])
-    .pipe(concat("JsBarcode.all.min.js"))
+  return gulp.src('bin/browser/JsBarcode.js')
     .pipe(uglify())
     .pipe(header('/* JsBarcode v<%= pkg.version %> | github.com/lindell/JsBarcode */\n', {pkg: pkg}))
-    .pipe(gulp.dest('./'));
+    .pipe(gulp.dest('bin/browser/JsBarcode.min.js'));
 });
 
 gulp.task('git-release', ['compress'], function(cb){
@@ -78,6 +100,11 @@ gulp.task('github-release', function(done) {
   }, done);
 });
 
+// Needed so that github can register the push before new release
+gulp.task('wait', function(done) {
+  setTimeout(done, 5000);
+});
+
 var done = function (error) {
   if (error) {
     console.log(error.message);
@@ -87,10 +114,20 @@ var done = function (error) {
   }
 };
 
+gulp.task('compile', function(){
+  runSequence(
+    'clean',
+    'babel',
+    'webpack',
+    done
+  );
+});
+
 gulp.task('patch', function(){
   runSequence(
     'bump-patch',
     'git-release',
+    'wait',
     'github-release',
     'npm',
     done
@@ -101,6 +138,7 @@ gulp.task('minor', function(){
   runSequence(
     'bump-minor',
     'git-release',
+    'wait',
     'github-release',
     'npm',
     done
@@ -111,6 +149,7 @@ gulp.task('major', function(){
   runSequence(
     'bump-major',
     'git-release',
+    'wait',
     'github-release',
     'npm',
     done

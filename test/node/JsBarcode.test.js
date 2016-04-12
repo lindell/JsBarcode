@@ -1,5 +1,5 @@
 var assert = require('assert');
-var JsBarcode = require('../../JsBarcode.js');
+var JsBarcode = require('../../bin/node/JsBarcode.all.min.js');
 var Canvas = require("canvas");
 
 describe('Encoders', function() {
@@ -78,28 +78,6 @@ describe('node-canvas generation', function() {
     assert.equal(topLeft.data[0], 255);
     assert.equal(topLeft.data[1], 0);
     assert.equal(topLeft.data[2], 0);
-  });
-
-  it('should automatically select barcodes', function () {
-    var canvas1 = new Canvas();
-    var canvas2 = new Canvas();
-    var ctx1 = canvas1.getContext("2d");
-    var ctx2 = canvas2.getContext("2d");
-
-    JsBarcode(canvas1, "5901234123457", {format: "EAN"});
-    JsBarcode(canvas2, "5901234123457");
-
-    assert.equal(canvas1.toDataURL(), canvas2.toDataURL());
-
-    var canvas1 = new Canvas();
-    var canvas2 = new Canvas();
-    var ctx1 = canvas1.getContext("2d");
-    var ctx2 = canvas2.getContext("2d");
-
-    JsBarcode(canvas1, "HELL0", {format: "CODE39"});
-    JsBarcode(canvas2, "HELL0");
-
-    assert.equal(canvas1.toDataURL(), canvas2.toDataURL());
   });
 });
 

@@ -11,8 +11,7 @@ function GenericBarcode(string){
 }
 
 //Required to register for both browser and nodejs
-var register = function(core){
+function register(core){
 	core.register(GenericBarcode, /^GEN(ERIC(BARCODE)?)?$/i, 0);
 }
-try{register(JsBarcode)} catch(e){}
-try{module.exports.register = register} catch(e){}
+export default register

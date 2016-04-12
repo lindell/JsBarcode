@@ -1,23 +1,17 @@
-function ITF14(string){
+function ITF(string){
 	this.valid = function(){
-		return string.search(/^[0-9]{13,14}$/) !== -1
-			&& (string.length === 13 || string[13] == checksum(string));
+		return valid(string);
 	};
 
 	this.encode = function(){
 		//Create the variable that should be returned at the end of the function
 		var result = "";
 
-		//If checksum is not already calculated, do it
-		if(string.length === 13){
-			string += checksum(string);
-		}
-
 		//Always add the same start bits
 		result += startBin;
 
 		//Calculate all the digit pairs
-		for(var i=0;i<14;i+=2){
+		for(var i=0;i<string.length;i+=2){
 			result += calculatePair(string.substr(i,2));
 		}
 
@@ -25,7 +19,7 @@ function ITF14(string){
 		result += endBin;
 
 		return {data: result, text: string};
-	};
+	}
 
 	//The structure for the all digits, 1 is wide and 0 is narrow
 	var digitStructure = {
@@ -45,6 +39,9 @@ function ITF14(string){
 	//The end bits
 	var endBin = "11101";
 
+	//Regexp for a valid Inter25 code
+	var regexp = /^([0-9][0-9])+$/;
+
 	//Calculate the data of a number pair
 	function calculatePair(twoNumbers){
 		var result = "";
@@ -60,19 +57,13 @@ function ITF14(string){
 		return result;
 	}
 
-	//Calulate the checksum digit
-	function checksum(numberString){
-		var result = 0;
-
-		for(var i=0;i<13;i++){result+=parseInt(numberString[i])*(3-(i%2)*2)}
-
-		return 10 - (result % 10);
+	function valid(number){
+		return number.search(regexp)!==-1;
 	}
 }
 
 //Required to register for both browser and nodejs
-var register = function(core){
-	core.register(ITF14, /^ITF.?14$/i, 5);
-}
-try{register(JsBarcode)} catch(e){}
-try{module.exports.register = register} catch(e){}
+function register(core){
+	core.register(ITF, /^ITF$/i, 4);
+};
+export default register

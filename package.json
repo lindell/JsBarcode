@@ -10,7 +10,8 @@
   "scripts": {
     "test": "node_modules/mocha/bin/mocha test/node/ -R spec",
     "coveralls": "NODE_ENV=test YOURPACKAGE_COVERAGE=1 ./node_modules/.bin/mocha test/node/ --require blanket --reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js",
-    "coverage": "./node_modules/.bin/mocha test/node/ -r blanket -R html-cov > test/coverage.html"
+    "coverage": "./node_modules/.bin/mocha test/node/ -r blanket -R html-cov > test/coverage.html",
+    "build": "gulp compile"
   },
   "repository": {
     "type": "git",
@@ -36,16 +37,26 @@
   },
   "homepage": "https://github.com/lindell/JsBarcode#readme",
   "devDependencies": {
+    "babel-cli": "^6.7.5",
+    "babel-core": "^6.7.6",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.6.0",
     "blanket": "^1.2.2",
     "conventional-github-releaser": "^1.1.1",
     "coveralls": "^2.11.6",
+    "gulp-babel": "^6.1.2",
     "gulp-bump": "^2.0.1",
+    "gulp-clean": "^0.3.2",
     "gulp-conventional-changelog": "^1.1.0",
     "gulp-git": "^1.7.0",
+    "gulp-header": "^1.7.1",
+    "gulp-rename": "^1.2.2",
     "mocha": "1.21.0 - 2.4.5",
     "mocha-lcov-reporter": "^1.2.0",
     "publish-release": "^1.2.0",
-    "run-sequence": "^1.1.5"
+    "run-sequence": "^1.1.5",
+    "webpack": "^1.12.15",
+    "webpack-stream": "^3.1.0"
   },
   "config": {
     "blanket": {
@@ -60,8 +71,8 @@
     }
   },
   "dependencies": {
-    "canvas": ">=1.0.0",
-    "commander": ">=2.8.0",
-    "gulp-header": "^1.7.1"
+    "canvas": "^1.0.0",
+    "canvas-browserify": ">=1.1.3",
+    "commander": ">=2.8.0"
   }
 }

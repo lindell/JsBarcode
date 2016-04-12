@@ -34,8 +34,7 @@ function CODE39(string){
 
 
 //Required to register for both browser and nodejs
-var register = function(core){
+function register(core){
 	core.register(CODE39, /^CODE.?39$/i, 3);
 };
-try{register(JsBarcode)} catch(e){}
-try{module.exports.register = register} catch(e){}
+export default register;

@@ -1,5 +1,5 @@
 var assert = require('assert');
-var JsBarcode = require('../../JsBarcode.js');
+var JsBarcode = require('../../bin/JsBarcode.all.min.js');
 var Canvas = require("canvas");
 
 
