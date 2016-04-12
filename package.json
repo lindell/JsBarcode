@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha test/node/ -R spec",
+    "test": "gulp compile && node_modules/mocha/bin/mocha test/node/ -R spec",
     "coveralls": "NODE_ENV=test YOURPACKAGE_COVERAGE=1 ./node_modules/.bin/mocha test/node/ --require blanket --reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js",
     "coverage": "./node_modules/.bin/mocha test/node/ -r blanket -R html-cov > test/coverage.html",
     "build": "gulp compile"
