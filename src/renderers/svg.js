@@ -50,13 +50,16 @@ function drawSvgBarcode(parent, options, encoding){
 }
 
 function drawSVGText(parent, options, encoding){
-  // TODO fix font options here
-
   var textElem = document.createElementNS("http://www.w3.org/2000/svg", 'text');
 
   // Draw the text if displayValue is set
   if(options.displayValue){
     var x, y;
+
+    textElem.setAttribute("style",
+      "font-family:" + options.font + ";" +
+      "font-size:" + options.fontSize
+    );
 
     if(options.textPosition == "top"){
       y = options.fontSize;
