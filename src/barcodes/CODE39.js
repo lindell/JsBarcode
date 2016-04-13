@@ -15,7 +15,7 @@ class CODE39 {
 			"-": 17783, ".": 29021, " ": 18269, "$": 17477,
 			"/": 17489, "+": 17681, "%": 20753, "*": 35770
 		};
-	};
+	}
 
 	encode(){
 		var result = "";
@@ -26,12 +26,12 @@ class CODE39 {
 		result += this.encodings["*"].toString(2);
 
 		return {data: result, text: this.string};
-	};
+	}
 
 	//Use the regexp variable for validation
 	valid(){
 		return this.string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
-	};
+	}
 }
 
 
