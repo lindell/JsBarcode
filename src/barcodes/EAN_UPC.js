@@ -66,7 +66,7 @@ class EAN13{
 		result.push({data: [1.1, 0, 1.1]});
 
 		return result;
-	};
+	}
 
 	//Calulate the checksum digit
 	checksum(number){
@@ -94,7 +94,7 @@ class EAN8{
 	valid(){
 		return this.string.search(/^[0-9]{8}$/) !== -1 &&
 			this.string[7] == this.checksum(this.string);
-	};
+	}
 
 	encode(){
 		var encoder = new EANencoder();
@@ -127,7 +127,7 @@ class EAN8{
 			data: result,
 			text: this.string
 		};
-	};
+	}
 
 	//Calulate the checksum digit
 	checksum(number){
@@ -161,7 +161,7 @@ class EAN5{
 
 	valid(){
 		return this.string.search(/^[0-9]{5}$/)!==-1;
-	};
+	}
 
 	encode(){
 		var encoder = new EANencoder();
@@ -173,7 +173,7 @@ class EAN5{
 			data: result,
 			text: this.string
 		};
-	};
+	}
 
 	checksum(){
 		var result = 0;
@@ -294,7 +294,7 @@ class EANencoder{
 			}
 		}
 		return result;
-	};
+	}
 }
 
 

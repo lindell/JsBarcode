@@ -28,7 +28,6 @@ class CODE39 {
 		return {data: result, text: this.string};
 	}
 
-	//Use the regexp variable for validation
 	valid(){
 		return this.string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
 	}

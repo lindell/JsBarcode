@@ -50,7 +50,7 @@ function zeroes(code){
         i--;
     }
     return zeroes;
-};
+}
 
 //Required to register for both browser and nodejs
 function register(core){

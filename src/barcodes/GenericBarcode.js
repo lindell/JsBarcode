@@ -9,12 +9,12 @@ class GenericBarcode{
 			data: "10101010101010101010101010101010101010101",
 			text: this.string
 		};
-	};
+	}
 
 	//Resturn true/false if the string provided is valid for this encoder
 	valid(){
 		return true;
-	};
+	}
 }
 
 //Required to register for both browser and nodejs

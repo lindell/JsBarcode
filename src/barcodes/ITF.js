@@ -36,7 +36,7 @@ class ITF{
 			data: result,
 			text: this.string
 		};
-	};
+	}
 
 	//Calculate the data of a number pair
 	calculatePair(numberPair){
