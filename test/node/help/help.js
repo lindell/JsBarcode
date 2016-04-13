@@ -34,8 +34,8 @@ function mergeToBin(encodeData){
 
 function toBin(res){
   var ret = "";
-  for(var i in res){
-    if(res[i] === "1" || res[i] > 0){
+  for(var i=0;i<res.length;i++){
+    if(res[i] > 0){
       ret += "1";
     }
     else{
