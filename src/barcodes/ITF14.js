@@ -1,72 +1,70 @@
-function ITF14(string){
-	this.valid = function(){
-		return string.search(/^[0-9]{13,14}$/) !== -1 &&
-			(string.length === 13 || string[13] == checksum(string));
-	};
+class ITF14{
+	constructor(string){
+		this.string = string;
 
-	this.encode = function(){
-		//Create the variable that should be returned at the end of the function
-		var result = "";
-
-		//If checksum is not already calculated, do it
-		if(string.length === 13){
-			string += checksum(string);
+		// Add checksum if it does not exist
+		if(string.search(/^[0-9]{13}$/) !== -1){
+			this.string += this.checksum(string);
 		}
 
-		//Always add the same start bits
-		result += startBin;
+		this.binaryRepresentation = {
+			 "0":"00110"
+			,"1":"10001"
+			,"2":"01001"
+			,"3":"11000"
+			,"4":"00101"
+			,"5":"10100"
+			,"6":"01100"
+			,"7":"00011"
+			,"8":"10010"
+			,"9":"01010"
+		};
+	}
+
+	valid(){
+		return this.string.search(/^[0-9]{14}$/) !== -1 &&
+			this.string[13] == this.checksum();
+	}
+
+	encode(){
+		var result = "1010";
 
 		//Calculate all the digit pairs
 		for(var i=0;i<14;i+=2){
-			result += calculatePair(string.substr(i,2));
+			result += this.calculatePair(this.string.substr(i,2));
 		}
 
 		//Always add the same end bits
-		result += endBin;
+		result += "11101";
 
-		return {data: result, text: string};
-	};
-
-	//The structure for the all digits, 1 is wide and 0 is narrow
-	var digitStructure = {
-		 "0":"00110"
-		,"1":"10001"
-		,"2":"01001"
-		,"3":"11000"
-		,"4":"00101"
-		,"5":"10100"
-		,"6":"01100"
-		,"7":"00011"
-		,"8":"10010"
-		,"9":"01010"
-	};
-
-	//The start bits
-	var startBin = "1010";
-	//The end bits
-	var endBin = "11101";
+		return {
+			data: result,
+			text: this.string
+		};
+	}
 
 	//Calculate the data of a number pair
-	function calculatePair(twoNumbers){
+	calculatePair(numberPair){
 		var result = "";
 
-		var number1Struct = digitStructure[twoNumbers[0]];
-		var number2Struct = digitStructure[twoNumbers[1]];
+		var number1Struct = this.binaryRepresentation[numberPair[0]];
+		var number2Struct = this.binaryRepresentation[numberPair[1]];
 
 		//Take every second bit and add to the result
 		for(var i=0;i<5;i++){
 			result += (number1Struct[i]=="1") ? "111" : "1";
 			result += (number2Struct[i]=="1") ? "000" : "0";
 		}
+
 		return result;
 	}
 
 	//Calulate the checksum digit
-	function checksum(numberString){
+	checksum(){
 		var result = 0;
 
 		for(var i=0;i<13;i++){
-			result += parseInt(numberString[i]) * (3 - (i % 2) * 2);
+				result += parseInt(this.string[i]) * (3 - (i % 2) * 2);
 		}
 
 		return 10 - (result % 10);
