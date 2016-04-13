@@ -1,56 +1,60 @@
 var prototype = {};
 
-prototype.encode = function(){
-	var ret = "110";
-
-	for(var i=0;i<this.string.length;i++){
-		var digit = parseInt(this.string[i]);
-		var bin = digit.toString(2);
-		bin = addZeroes(bin, 4-bin.length);
-		for(var b=0;b<bin.length;b++){
-			ret += bin[b] == "0" ? "100" : "110";
-		}
+class MSI{
+	constructor(string){
+		this.string = string;
 	}
 
-	ret += "1001";
-	return {data: ret, text: this.string};
-};
+	encode(){
+		var ret = "110";
 
-prototype.valid = function(){
-	return this.string.search(/^[0-9]+$/) != -1;
-};
+		for(var i=0;i<this.string.length;i++){
+			var digit = parseInt(this.string[i]);
+			var bin = digit.toString(2);
+			bin = addZeroes(bin, 4-bin.length);
+			for(var b=0;b<bin.length;b++){
+				ret += bin[b] == "0" ? "100" : "110";
+			}
+		}
 
-function MSI(string){
-	this.string = ""+string;
+		ret += "1001";
+		return {
+			data: ret,
+			text: this.string
+		};
+	}
+
+	valid(){
+		return this.string.search(/^[0-9]+$/) !== -1;
+	}
 }
 
-MSI.prototype = Object.create(prototype);
-
-function MSI10(string){
-	this.string = ""+string;
-	this.string += mod10(this.string);
+class MSI10 extends MSI{
+	constructor(string){
+		super(string);
+		this.string += mod10(this.string);
+	}
 }
-MSI10.prototype = Object.create(prototype);
-
-function MSI11(string){
-	this.string = "" + string;
-	this.string += mod11(this.string);
+class MSI11 extends MSI{
+	constructor(string){
+		super(string);
+		this.string += mod11(this.string);
+	}
 }
-MSI11.prototype = Object.create(prototype);
-
-function MSI1010(string){
-	this.string = "" + string;
-	this.string += mod10(this.string);
-	this.string += mod10(this.string);
+class MSI1010 extends MSI{
+	constructor(string){
+		super(string);
+		this.string += mod10(this.string);
+		this.string += mod10(this.string);
+	}
 }
-MSI1010.prototype = Object.create(prototype);
-
-function MSI1110(string){
-	this.string = "" + string;
-	this.string += mod11(this.string);
-	this.string += mod10(this.string);
+class MSI1110 extends MSI{
+	constructor(string){
+		super(string);
+		this.string += mod11(this.string);
+		this.string += mod10(this.string);
+	}
 }
-MSI1110.prototype = Object.create(prototype);
 
 function mod10(number){
 	var sum = 0;
