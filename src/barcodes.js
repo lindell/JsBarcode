@@ -1,6 +1,6 @@
 import CODE39 from './barcodes/CODE39.js';
 import CODE128 from './barcodes/CODE128.js';
-import EAN_UPC from './barcodes/EAN_UPC.js';
+import EAN_UPC from './barcodes/EAN_UPC/';
 import ITF14 from './barcodes/ITF14.js';
 import ITF from './barcodes/ITF.js';
 import MSI from './barcodes/MSI.js';
