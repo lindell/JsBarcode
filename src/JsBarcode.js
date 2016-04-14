@@ -42,11 +42,15 @@ for(var name in barcodes){
 
 function registerBarcode(barcodes, name){
 	api[name] = function(text, options){
+		var newOptions = merge(this._options, options);
 
 		var Encoder = barcodes[name];
-		var encoder = new Encoder(text, this._options);
+		var encoder = new Encoder(text, newOptions);
 
-		this.encodings.push(encoder.encode());
+		var encoded = encoder.encode();
+		encoded.options = newOptions;
+
+		this.encodings.push(encoded);
 
 		return this;
 	};

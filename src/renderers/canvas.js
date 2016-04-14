@@ -11,7 +11,7 @@ function drawCanvas(canvas, encodings, options){
 	prepareCanvas(canvas, options, encodings);
 	for(var i in encodings){
 		var encodingOptions = merge(options, encodings[i].options);
-		
+
 		drawCanvasBarcode(canvas, encodingOptions, encodings[i]);
 		drawCanvasText(canvas, encodingOptions, encodings[i]);
 
