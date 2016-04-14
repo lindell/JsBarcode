@@ -23,6 +23,8 @@ class EAN13{
 			"LGLGGL",
 			"LGGLGL"
 		];
+
+		this.guardHeight = options.height + options.fontSize/2 + options.textMargin;
 	}
 
 	valid(){
@@ -50,22 +52,28 @@ class EAN13{
 		var rightSide = this.string.substr(7,6);
 
 		// Add the first digigt
-		result.push({data: "000000000000", text: this.string[0], options: {textAlign: "left"}});
+		result.push({
+			data: "000000000000",
+			text: this.string[0], options: {textAlign: "left"}
+		});
 
 		//Add the guard bars
-		result.push({data: [1.1, 0, 1.1]});
+		result.push({data: "101", options: {height: this.guardHeight}});
 
 		//Add the left side
-		result.push({data: encoder.encode(leftSide, structure), text: leftSide});
+		result.push({
+			data: encoder.encode(leftSide, structure),
+			text: leftSide
+		});
 
 		//Add the middle bits
-		result.push({data: [0, 1.1, 0, 1.1, 0]});
+		result.push({data: "01010", options: {height: this.guardHeight}});
 
 		//Add the right side
 		result.push({data: encoder.encode(rightSide, "RRRRRR"), text: rightSide});
 
 		//Add the end bits
-		result.push({data: [1.1, 0, 1.1]});
+		result.push({data: "101", options: {height: this.guardHeight}});
 
 		return result;
 	}
@@ -218,13 +226,4 @@ class UPC extends EAN13{
 	}
 }
 
-
-//Required to register for both browser and nodejs
-function register(core){
-	core.register(EAN13, /^EAN(.?13)?$/i, 8);
-	core.register(EAN8, /^EAN.?8$/i, 8);
-	core.register(EAN5, /^EAN.?5$/i, 5);
-	core.register(EAN2, /^EAN.?2$/i, 5);
-	core.register(UPC, /^UPC(.?A)?$/i, 8);
-}
-export default register;
+export {EAN13, EAN8, EAN5, EAN2, UPC};

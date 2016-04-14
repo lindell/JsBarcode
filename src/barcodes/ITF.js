@@ -55,8 +55,4 @@ class ITF{
 	}
 }
 
-//Required to register for both browser and nodejs
-function register(core){
-	core.register(ITF, /^ITF$/i, 4);
-}
-export default register;
+export default ITF;

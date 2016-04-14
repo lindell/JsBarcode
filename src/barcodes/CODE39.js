@@ -33,9 +33,4 @@ class CODE39 {
 	}
 }
 
-
-//Required to register for both browser and nodejs
-function register(core){
-	core.register(CODE39, /^CODE.?39$/i, 3);
-}
-export default register;
+export default CODE39;

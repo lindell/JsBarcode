@@ -120,7 +120,6 @@ var done = function (error) {
 
 gulp.task('compile', function(){
   runSequence(
-    'clean',
     'babel',
     'webpack',
     done

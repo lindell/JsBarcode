@@ -11,7 +11,7 @@ function drawCanvas(canvas, encodings, options){
 	prepareCanvas(canvas, options, encodings);
 	for(var i in encodings){
 		var encodingOptions = merge(options, encodings[i].options);
-
+		
 		drawCanvasBarcode(canvas, encodingOptions, encodings[i]);
 		drawCanvasText(canvas, encodingOptions, encodings[i]);
 
@@ -34,7 +34,7 @@ function restoreCanvas(canvas){
 	ctx.restore();
 }
 
-function drawCanvasText(canvas, options, encoding, sizeOptions){
+function drawCanvasText(canvas, options, encoding){
 	// Get the canvas context
 	var ctx = canvas.getContext("2d");
 
@@ -89,7 +89,7 @@ function prepareCanvas(canvas, options, encodings){
 		var textWidth = ctx.measureText(encodings[i].text).width;
 		var barcodeWidth = encodings[i].data.length * options.width;
 
-		encodings[i].width =  Math.ceil(Math.max(textWidth, barcodeWidth));
+		encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
 
 		var barcodePadding = 0;
 		if(options.displayValue && barcodeWidth < textWidth){
@@ -127,7 +127,7 @@ function prepareCanvas(canvas, options, encodings){
 	ctx.translate(options.marginLeft, 0);
 }
 
-function drawCanvasBarcode(canvas, options, encoding, sizeOptions){
+function drawCanvasBarcode(canvas, options, encoding){
 	// Get the canvas context
 	var ctx = canvas.getContext("2d");
 

@@ -45,7 +45,7 @@ function restoreCanvas(canvas) {
 	ctx.restore();
 }
 
-function drawCanvasText(canvas, options, encoding, sizeOptions) {
+function drawCanvasText(canvas, options, encoding) {
 	// Get the canvas context
 	var ctx = canvas.getContext("2d");
 
@@ -129,7 +129,7 @@ function prepareCanvas(canvas, options, encodings) {
 	ctx.translate(options.marginLeft, 0);
 }
 
-function drawCanvasBarcode(canvas, options, encoding, sizeOptions) {
+function drawCanvasBarcode(canvas, options, encoding) {
 	// Get the canvas context
 	var ctx = canvas.getContext("2d");
 

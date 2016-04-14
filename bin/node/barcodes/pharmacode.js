@@ -1,59 +1,71 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
-function pharmacode(number) {
-    //Ensure that the input is inturpreted as a number
-    this.number = parseInt(number);
 
-    function recursiveEncoding(code, state) {
-        //End condition
-        if (code.length == 0) return "";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-        var generated;
-        var nextState = false;
-        var nZeros = zeros(code);
-        if (nZeros == 0) {
-            generated = state ? "001" : "00111";
-            nextState = state;
-        } else {
-            generated = "001".repeat(nZeros - (state ? 1 : 0));
-            generated += "00111";
-        }
-        return recursiveEncoding(code.substr(0, code.length - nZeros - 1), nextState) + generated;
-    };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-    this.encode = function () {
-        return {
-            data: recursiveEncoding(this.number.toString(2), true).substr(2),
-            text: this.number + ""
-        };
-    };
+var pharmacode = function () {
+  function pharmacode(string) {
+    _classCallCheck(this, pharmacode);
 
-    this.valid = function () {
-        return this.number >= 3 && this.number <= 131070;
-    };
+    this.number = parseInt(string);
+  }
 
-    //A help function to calculate the zeros at the end of a string (the code)
-    var zeros = function zeros(code) {
-        var i = code.length - 1;
-        var zeros = 0;
-        while (code[i] == "0" || i < 0) {
-            zeros++;
-            i--;
-        }
-        return zeros;
-    };
+  _createClass(pharmacode, [{
+    key: "encode",
+    value: function encode() {
+      return {
+        data: recursiveEncoding(this.number.toString(2), true).substr(2),
+        text: this.number + ""
+      };
+    }
+  }, {
+    key: "valid",
+    value: function valid() {
+      return this.number >= 3 && this.number <= 131070;
+    }
+  }]);
 
-    //http://stackoverflow.com/a/202627
-    String.prototype.repeat = function (num) {
-        return new Array(num + 1).join(this);
-    };
+  return pharmacode;
+}();
+
+function recursiveEncoding(code, state) {
+  // TODO explanation needed
+
+  //End condition
+  if (code.length === 0) return "";
+
+  var generated;
+  var nextState = false;
+  var nzeroes = zeroes(code);
+  if (nzeroes === 0) {
+    generated = state ? "001" : "00111";
+    nextState = state;
+  } else {
+    generated = "001".repeat(nzeroes - (state ? 1 : 0));
+    generated += "00111";
+  }
+  return recursiveEncoding(code.substr(0, code.length - nzeroes - 1), nextState) + generated;
+}
+
+//http://stackoverflow.com/a/202627
+String.prototype.repeat = function (num) {
+  return new Array(num + 1).join(this);
 };
 
-//Required to register for both browser and nodejs
-function register(core) {
-    core.register(pharmacode, /^pharmacode$/i, 2);
+//A help function to calculate the zeroes at the end of a string (the code)
+function zeroes(code) {
+  var i = code.length - 1;
+  var zeroes = 0;
+  while (code[i] == "0" || i < 0) {
+    zeroes++;
+    i--;
+  }
+  return zeroes;
 }
-exports.default = register;
+
+exports.default = pharmacode;

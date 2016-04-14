@@ -17,8 +17,4 @@ class GenericBarcode{
 	}
 }
 
-//Required to register for both browser and nodejs
-function register(core){
-	core.register(GenericBarcode, /^GEN(ERIC(BARCODE)?)?$/i, 0);
-}
-export default register;
+export default GenericBarcode;

@@ -2,6 +2,8 @@ export default drawSVG;
 
 import merge from "../help/merge.js";
 
+var svgns = "http://www.w3.org/2000/svg";
+
 function drawSVG(svg, encodings, options){
   var currentX = options.marginLeft;
 
@@ -50,7 +52,7 @@ function drawSvgBarcode(parent, options, encoding){
 }
 
 function drawSVGText(parent, options, encoding){
-  var textElem = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+  var textElem = document.createElementNS(svgns, 'text');
 
   // Draw the text if displayValue is set
   if(options.displayValue){
@@ -58,7 +60,7 @@ function drawSVGText(parent, options, encoding){
 
     textElem.setAttribute("style",
       "font-family:" + options.font + ";" +
-      "font-size:" + options.fontSize
+      "font-size:" + options.fontSize + "px;"
     );
 
     if(options.textPosition == "top"){
@@ -141,19 +143,25 @@ var prepareSVG = function(svg, options, encodings){
 
 var messureSVGtext = function(text, svg, options){
 	// Create text element
-	var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+	var text = document.createElementNS(svgns, 'text');
 	text.style.fontFamily = options.font;
-	// TODO add all font options
+
+  text.setAttribute("style",
+    "font-family:" + options.font + ";" +
+    "font-size:" + options.fontSize + "px;"
+  );
 
 	var textNode = document.createTextNode(text);
 
 	text.appendChild(textNode);
 
+  //svg.appendChild(text);
+
 	return text.getComputedTextLength();
 }
 
 function createGroup(x, y, svg){
-	var group = document.createElementNS("http://www.w3.org/2000/svg", 'g');
+	var group = document.createElementNS(svgns, 'g');
 
 	group.setAttribute("transform", "translate(" + x +", " + y + ")");
 
@@ -163,7 +171,7 @@ function createGroup(x, y, svg){
 }
 
 function drawLine(x, y, width, height, parent){
-	var line = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+	var line = document.createElementNS(svgns, 'rect');
 
 	line.setAttribute("x", x);
 	line.setAttribute("y", y);

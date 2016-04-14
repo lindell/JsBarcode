@@ -8,35 +8,33 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var GenericBarcode = function () {
-	function GenericBarcode(string) {
-		_classCallCheck(this, GenericBarcode);
+var blank = function () {
+	function blank(string) {
+		_classCallCheck(this, blank);
 
-		this.string = string;
+		this.size = parseInt(string, 10);
 	}
 
-	//Return the corresponding binary numbers for the data provided
-
-
-	_createClass(GenericBarcode, [{
+	_createClass(blank, [{
 		key: "encode",
 		value: function encode() {
+			var binary = "";
+			for (var i = 0; i < this.size; i++) {
+				binary += "0";
+			}
 			return {
-				data: "10101010101010101010101010101010101010101",
-				text: this.string
+				data: binary,
+				text: ""
 			};
 		}
-
-		//Resturn true/false if the string provided is valid for this encoder
-
 	}, {
 		key: "valid",
 		value: function valid() {
-			return true;
+			return this.size > 0;
 		}
 	}]);
 
-	return GenericBarcode;
+	return blank;
 }();
 
-exports.default = GenericBarcode;
+exports.blank = blank;

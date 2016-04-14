@@ -71,8 +71,4 @@ class ITF14{
 	}
 }
 
-//Required to register for both browser and nodejs
-function register(core){
-	core.register(ITF14, /^ITF.?14$/i, 5);
-}
-export default register;
+export default ITF14;

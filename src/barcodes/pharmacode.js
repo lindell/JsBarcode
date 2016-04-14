@@ -52,8 +52,4 @@ function zeroes(code){
     return zeroes;
 }
 
-//Required to register for both browser and nodejs
-function register(core){
-  core.register(pharmacode, /^pharmacode$/i, 2);
-}
-export default register;
+export default pharmacode;

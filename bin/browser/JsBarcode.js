@@ -50,233 +50,151 @@
 
 	var _barcodes2 = _interopRequireDefault(_barcodes);
 
-	var _canvas = __webpack_require__(10);
+	var _canvas = __webpack_require__(13);
 
 	var _canvas2 = _interopRequireDefault(_canvas);
 
-	var _svg = __webpack_require__(12);
+	var _svg = __webpack_require__(15);
 
 	var _svg2 = _interopRequireDefault(_svg);
 
-	var _merge = __webpack_require__(11);
+	var _merge = __webpack_require__(14);
 
 	var _merge2 = _interopRequireDefault(_merge);
 
+	var _linearizeEncodings = __webpack_require__(16);
+
+	var _linearizeEncodings2 = _interopRequireDefault(_linearizeEncodings);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// Import the renderers
+
+	var renderers = {
+		"canvas": _canvas2.default,
+		"svg": _svg2.default
+	};
+
+	// Help functions
 	// Import all the barcodes
 
 
-	(function () {
+	var api = {};
+	var JsBarcode = function JsBarcode(element) {
+		var newApi = {};
+		for (var key in api) {
+			newApi[key] = api[key];
+		}
 
-		// Main function, calls drawCanvas(...) in the right way
-		var JsBarcode = function JsBarcode(image, content, options) {
-			// If the image is a string, query select call again
-			if (typeof image === "string") {
-				image = document.querySelector(image);
-				JsBarcode(image, content, options);
-			}
-			// If image, draw on canvas and set the uri as src
-			else if (typeof HTMLCanvasElement !== 'undefined' && image instanceof HTMLImageElement) {
-					var canvas = document.createElement('canvas');
-					draw(canvas, content, options, _canvas2.default);
-					image.setAttribute("src", canvas.toDataURL());
-				} else if (typeof SVGElement !== 'undefined' && image instanceof SVGElement) {
-					draw(image, content, options, _svg2.default);
-				}
-				// If canvas, just draw
-				else if (image.getContext) {
-						draw(image, content, options, _canvas2.default);
-					} else {
-						throw new Error("Not supported type to draw on.");
-					}
+		newApi.drawProperties = getDrawProperies(element);
+
+		newApi.encodings = [];
+		newApi.draw = draw;
+		newApi._options = defaults;
+
+		return newApi;
+	};
+
+	api.options = function (options) {
+		this._options = (0, _merge2.default)(this._options, options);
+
+		return this;
+	};
+
+	// Register all barcodes
+	for (var name in _barcodes2.default) {
+		registerBarcode(_barcodes2.default, name);
+	}
+
+	function registerBarcode(barcodes, name) {
+		api[name] = function (text, options) {
+
+			var Encoder = barcodes[name];
+			var encoder = new Encoder(text, this._options);
+
+			this.encodings.push(encoder.encode());
+
+			return this;
 		};
+	}
 
-		// The main function, handles everything with the modules and draws the image
-		var draw = function draw(canvas, content, options, drawFunction) {
-			// Make sure content is a string
-			content = content + "";
+	function draw() {
+		var renderer = renderers[this.drawProperties.renderer];
 
-			// Merge the user options with the default
-			options = (0, _merge2.default)(JsBarcode.defaults, options);
+		var encodings = (0, _linearizeEncodings2.default)(this.encodings);
+		fixOptions(this._options);
 
-			// Fix the margins
-			options.marginTop = typeof options.marginTop === "undefined" ? options.margin : options.marginTop;
-			options.marginBottom = typeof options.marginBottom === "undefined" ? options.margin : options.marginBottom;
-			options.marginRight = typeof options.marginRight === "undefined" ? options.margin : options.marginRight;
-			options.marginLeft = typeof options.marginLeft === "undefined" ? options.margin : options.marginLeft;
+		renderer(this.drawProperties.element, encodings, this._options);
 
-			// Automatically choose barcode if format set to "auto"...
-			if (options.format == "auto") {
-				var encoder = new (JsBarcode.autoSelectEncoder(content))(content, options);
-			}
-			// ...or else, get by name
-			else {
-					var encoder = new (JsBarcode.getModule(options.format))(content, options);
-				}
+		return this;
+	}
 
-			if (encoder.options) {
-				encoder.options(options);
-			}
+	window.JsBarcode = JsBarcode;
+	module.exports = JsBarcode;
 
-			//Abort if the barcode format does not support the content
-			if (!encoder.valid()) {
-				options.valid(false);
-				if (options.valid == JsBarcode.defaults.valid) {
-					throw new Error('The data is not valid for the type of barcode.');
-				}
-				return;
-			}
-
-			// Set the binary to a cached version if possible
-			var cached = JsBarcode.getCache(options.format, content);
-			var encoded;
-			if (cached) {
-				encoded = cached;
-			} else {
-				encoded = encoder.encode();
-				// Cache the encoding if it will be used again later
-				JsBarcode.cache(options.format, content, encoded);
-			}
-
-			if (encoder.options) {
-				options = (0, _merge2.default)(options, encoder.options(options));
-			}
-
-			var encodings = [];
-			function linearizeEncodings(encoded) {
-				if (Array.isArray(encoded)) {
-					for (var i in encoded) {
-						linearizeEncodings(encoded[i]);
+	function getDrawProperies(element) {
+		// If the element is a string, query select call again
+		if (typeof element === "string") {
+			element = document.querySelector(element);
+			return getDrawProperies(element);
+		}
+		// If element, draw on canvas and set the uri as src
+		else if (typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLImageElement) {
+				var canvas = document.createElement('canvas');
+				return {
+					element: canvas,
+					renderer: "canvas",
+					afterDraw: function afterDraw() {
+						element.setAttribute("src", canvas.toDataURL());
 					}
+				};
+			} else if (typeof SVGElement !== 'undefined' && element instanceof SVGElement) {
+				return {
+					element: element,
+					renderer: "svg"
+				};
+			}
+			// If canvas, just draw
+			else if (element.getContext) {
+					return {
+						element: element,
+						renderer: "canvas"
+					};
 				} else {
-					encoded.text = encoded.text || "";
-					encoded.data = encoded.data || "";
-					encodings.push(encoded);
+					throw new Error("Not supported type to draw on.");
 				}
-			}
-			linearizeEncodings(encoded);
+	};
 
-			drawFunction(canvas, encodings, options);
+	function fixOptions(options) {
+		// Fix the margins
+		options.marginTop = typeof options.marginTop === "undefined" ? options.margin : options.marginTop;
+		options.marginBottom = typeof options.marginBottom === "undefined" ? options.margin : options.marginBottom;
+		options.marginRight = typeof options.marginRight === "undefined" ? options.margin : options.marginRight;
+		options.marginLeft = typeof options.marginLeft === "undefined" ? options.margin : options.marginLeft;
 
-			// Send a confirmation that the generation was successful to the valid function if it does exist
-			options.valid(true);
-		};
+		return options;
+	}
 
-		JsBarcode._modules = [];
-
-		// Add a new module sorted in the array
-		JsBarcode.register = function (module, regex, priority) {
-			var position = 0;
-			if (typeof priority === "undefined") {
-				position = JsBarcode._modules.length - 1;
-				priority = 0;
-			} else {
-				for (var i = 0; i < JsBarcode._modules.length; i++) {
-					position = i + 1;
-					if (!(priority < JsBarcode._modules[i].priority)) {
-						break;
-					}
-				}
-			}
-
-			// Add the module in position position
-			JsBarcode._modules.splice(position, 0, {
-				"regex": regex,
-				"module": module,
-				"priority": priority
-			});
-		};
-
-		// Get module by name
-		JsBarcode.getModule = function (name) {
-			for (var i in JsBarcode._modules) {
-				if (name.search(JsBarcode._modules[i].regex) !== -1) {
-					return JsBarcode._modules[i].module;
-				}
-			}
-			throw new Error('Module ' + name + ' does not exist or is not loaded.');
-		};
-
-		// If any format is valid with the content, return the format with highest priority
-		JsBarcode.autoSelectEncoder = function (content) {
-			for (var i in JsBarcode._modules) {
-				var barcode = new JsBarcode._modules[i].module(content);
-				if (barcode.valid(content)) {
-					return JsBarcode._modules[i].module;
-				}
-			}
-			throw new Error("Can't automatically find a barcode format matching the string '" + content + "'");
-		};
-
-		// Defining the cache dictionary
-		JsBarcode._cache = {};
-
-		// Cache a regerated barcode
-		JsBarcode.cache = function (format, input, output) {
-			if (!JsBarcode._cache[format]) {
-				JsBarcode._cache[format] = {};
-			}
-			JsBarcode._cache[format][input] = output;
-		};
-
-		// Get a chached barcode
-		JsBarcode.getCache = function (format, input) {
-			if (JsBarcode._cache[format]) {
-				if (JsBarcode._cache[format][input]) {
-					return JsBarcode._cache[format][input];
-				}
-			}
-			return "";
-		};
-
-		module.exports = JsBarcode; // Export to nodejs
-
-		// Register all barcodes
-		for (var i in _barcodes2.default) {
-			_barcodes2.default[i](JsBarcode);
-		}
-
-		//Regsiter JsBarcode for the browser
-		if (typeof window !== 'undefined') {
-			window.JsBarcode = JsBarcode;
-		}
-
-		// Register JsBarcode as an jQuery plugin if jQuery exist
-		if (typeof jQuery !== 'undefined') {
-			jQuery.fn.JsBarcode = function (content, options, validFunction) {
-				JsBarcode(this.get(0), content, options, validFunction);
-				return this;
-			};
-		}
-
-		// All the default options. If one is not set.
-		JsBarcode.defaults = {
-			width: 2,
-			height: 100,
-			format: "auto",
-			displayValue: true,
-			fontOptions: "",
-			font: "monospace",
-			textAlign: "center",
-			textPosition: "bottom",
-			textMargin: 2,
-			fontSize: 20,
-			background: "#ffffff",
-			lineColor: "#000000",
-			margin: 10,
-			marginTop: undefined,
-			marginBottom: undefined,
-			marginLeft: undefined,
-			marginRight: undefined,
-			valid: function valid(_valid) {}
-		};
-	})();
-
-	// Help functions
-
-
-	// Import the renderers
+	var defaults = {
+		width: 2,
+		height: 100,
+		format: "auto",
+		displayValue: true,
+		fontOptions: "",
+		font: "monospace",
+		textAlign: "center",
+		textPosition: "bottom",
+		textMargin: 2,
+		fontSize: 20,
+		background: "#ffffff",
+		lineColor: "#000000",
+		margin: 10,
+		marginTop: undefined,
+		marginBottom: undefined,
+		marginLeft: undefined,
+		marginRight: undefined,
+		valid: function valid(_valid) {}
+	};
 
 /***/ },
 /* 1 */
@@ -298,25 +216,23 @@
 
 	var _EAN_UPC = __webpack_require__(4);
 
-	var _EAN_UPC2 = _interopRequireDefault(_EAN_UPC);
-
-	var _ITF = __webpack_require__(5);
+	var _ITF = __webpack_require__(6);
 
 	var _ITF2 = _interopRequireDefault(_ITF);
 
-	var _ITF3 = __webpack_require__(6);
+	var _ITF3 = __webpack_require__(7);
 
 	var _ITF4 = _interopRequireDefault(_ITF3);
 
-	var _MSI = __webpack_require__(7);
+	var _MSI = __webpack_require__(8);
 
-	var _MSI2 = _interopRequireDefault(_MSI);
-
-	var _pharmacode = __webpack_require__(8);
+	var _pharmacode = __webpack_require__(10);
 
 	var _pharmacode2 = _interopRequireDefault(_pharmacode);
 
-	var _GenericBarcode = __webpack_require__(9);
+	var _blank = __webpack_require__(11);
+
+	var _GenericBarcode = __webpack_require__(12);
 
 	var _GenericBarcode2 = _interopRequireDefault(_GenericBarcode);
 
@@ -325,11 +241,12 @@
 	exports.default = {
 	  CODE39: _CODE2.default,
 	  CODE128: _CODE4.default,
-	  EAN_UPC: _EAN_UPC2.default,
+	  EAN13: _EAN_UPC.EAN13, EAN8: _EAN_UPC.EAN8, EAN5: _EAN_UPC.EAN5, EAN2: _EAN_UPC.EAN2, UPC: _EAN_UPC.UPC,
 	  ITF14: _ITF2.default,
 	  ITF: _ITF4.default,
-	  MSI: _MSI2.default,
+	  MSI: _MSI.MSI, MSI11: _MSI.MSI11, MSI1010: _MSI.MSI1010,
 	  pharmacode: _pharmacode2.default,
+	  blank: _blank.blank,
 	  GenericBarcode: _GenericBarcode2.default
 	};
 
@@ -342,45 +259,55 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	function CODE39(string) {
-		string = string.toUpperCase();
 
-		var encodings = {
-			"0": 20957, "1": 29783, "2": 23639, "3": 30485,
-			"4": 20951, "5": 29813, "6": 23669, "7": 20855,
-			"8": 29789, "9": 23645, "A": 29975, "B": 23831,
-			"C": 30533, "D": 22295, "E": 30149, "F": 24005,
-			"G": 21623, "H": 29981, "I": 23837, "J": 22301,
-			"K": 30023, "L": 23879, "M": 30545, "N": 22343,
-			"O": 30161, "P": 24017, "Q": 21959, "R": 30065,
-			"S": 23921, "T": 22385, "U": 29015, "V": 18263,
-			"W": 29141, "X": 17879, "Y": 29045, "Z": 18293,
-			"-": 17783, ".": 29021, " ": 18269, "$": 17477,
-			"/": 17489, "+": 17681, "%": 20753, "*": 35770
-		};
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-		this.encode = function () {
-			var result = "";
-			result += encodings["*"].toString(2);
-			for (var i = 0; i < string.length; i++) {
-				result += encodings[string[i]].toString(2) + "0";
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var CODE39 = function () {
+		function CODE39(string) {
+			_classCallCheck(this, CODE39);
+
+			this.string = string.toUpperCase();
+
+			this.encodings = {
+				"0": 20957, "1": 29783, "2": 23639, "3": 30485,
+				"4": 20951, "5": 29813, "6": 23669, "7": 20855,
+				"8": 29789, "9": 23645, "A": 29975, "B": 23831,
+				"C": 30533, "D": 22295, "E": 30149, "F": 24005,
+				"G": 21623, "H": 29981, "I": 23837, "J": 22301,
+				"K": 30023, "L": 23879, "M": 30545, "N": 22343,
+				"O": 30161, "P": 24017, "Q": 21959, "R": 30065,
+				"S": 23921, "T": 22385, "U": 29015, "V": 18263,
+				"W": 29141, "X": 17879, "Y": 29045, "Z": 18293,
+				"-": 17783, ".": 29021, " ": 18269, "$": 17477,
+				"/": 17489, "+": 17681, "%": 20753, "*": 35770
+			};
+		}
+
+		_createClass(CODE39, [{
+			key: "encode",
+			value: function encode() {
+				var result = "";
+				result += this.encodings["*"].toString(2);
+				for (var i = 0; i < this.string.length; i++) {
+					result += this.encodings[this.string[i]].toString(2) + "0";
+				}
+				result += this.encodings["*"].toString(2);
+
+				return { data: result, text: this.string };
 			}
-			result += encodings["*"].toString(2);
+		}, {
+			key: "valid",
+			value: function valid() {
+				return this.string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
+			}
+		}]);
 
-			return { data: result, text: string };
-		};
+		return CODE39;
+	}();
 
-		//Use the regexp variable for validation
-		this.valid = function () {
-			return string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
-		};
-	}
-
-	//Required to register for both browser and nodejs
-	function register(core) {
-		core.register(CODE39, /^CODE.?39$/i, 3);
-	};
-	exports.default = register;
+	exports.default = CODE39;
 
 /***/ },
 /* 3 */
@@ -391,216 +318,249 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 	// ASCII value ranges 0-127, 200-211
 	var validCODE128 = /^[\x00-\x7F\xC8-\xD3]+$/;
 
 	// This is the master class, it does require the start code to be
 	//included in the string
-	function CODE128(string) {
-		// Fill the bytes variable with the ascii codes of string
-		this.bytes = [];
-		for (var i = 0; i < string.length; ++i) {
-			this.bytes.push(string.charCodeAt(i));
+
+	var CODE128 = function () {
+		function CODE128(string) {
+			_classCallCheck(this, CODE128);
+
+			// Fill the bytes variable with the ascii codes of string
+			this.bytes = [];
+			for (var i = 0; i < string.length; ++i) {
+				this.bytes.push(string.charCodeAt(i));
+			}
+
+			// First element should be startcode, remove that
+			this.string = string.substring(1);
+
+			//Data for each character, the last characters will not be encoded but are used for error correction
+			//Numbers encode to (n + 1000) -> binary; 740 -> (740 + 1000).toString(2) -> "11011001100"
+			this.encodings = [// + 1000
+			740, 644, 638, 176, 164, 100, 224, 220, 124, 608, 604, 572, 436, 244, 230, 484, 260, 254, 650, 628, 614, 764, 652, 902, 868, 836, 830, 892, 844, 842, 752, 734, 590, 304, 112, 94, 416, 128, 122, 672, 576, 570, 464, 422, 134, 496, 478, 142, 910, 678, 582, 768, 762, 774, 880, 862, 814, 896, 890, 818, 914, 602, 930, 328, 292, 200, 158, 68, 62, 424, 412, 232, 218, 76, 74, 554, 616, 978, 556, 146, 340, 212, 182, 508, 268, 266, 956, 940, 938, 758, 782, 974, 400, 310, 118, 512, 506, 960, 954, 502, 518, 886, 966, /* Start codes */668, 680, 692, 5379];
 		}
 
-		// First element should be startcode, remove that
-		this.string = string.substring(1);
+		_createClass(CODE128, [{
+			key: "getText",
+			value: function getText() {
+				var string = this.string;
 
-		this.getText = function () {
-			var string = this.string;
+				/*
+	   string = string.replace(String.fromCharCode(201), "[FNC3]");
+	   string = string.replace(String.fromCharCode(202), "[FNC2]");
+	   string = string.replace(String.fromCharCode(203), "[SHIFT]");
+	   string = string.replace(String.fromCharCode(207), "[FNC1]");
+	   */
 
-			/*
-	  string = string.replace(String.fromCharCode(201), "[FNC3]");
-	  string = string.replace(String.fromCharCode(202), "[FNC2]");
-	  string = string.replace(String.fromCharCode(203), "[SHIFT]");
-	  string = string.replace(String.fromCharCode(207), "[FNC1]");
-	  */
-
-			return string.replace(/[^\x20-\x7E]/g, "");
-		};
-
-		// The public encoding function
-		this.encode = function () {
-			var encodingResult;
-			var bytes = this.bytes;
-			// Remove the startcode from the bytes and set its index
-			var startIndex = bytes.shift() - 105;
-
-			// Start encode with the right type
-			if (startIndex === 103) {
-				encodingResult = nextA(bytes, 1);
-			} else if (startIndex === 104) {
-				encodingResult = nextB(bytes, 1);
-			} else if (startIndex === 105) {
-				encodingResult = nextC(bytes, 1);
+				return string.replace(/[^\x20-\x7E]/g, "");
 			}
 
-			return { text: this.getText(),
-				data:
-				//Add the start bits
-				getEncoding(startIndex) +
-				//Add the encoded bits
-				encodingResult.result +
-				//Add the checksum
-				getEncoding((encodingResult.checksum + startIndex) % 103) +
-				//Add the end bits
-				getEncoding(106)
-			};
-		};
+			// The public encoding function
 
-		//Data for each character, the last characters will not be encoded but are used for error correction
-		//Numbers encode to (n + 1000) -> binary; 740 -> (740 + 1000).toString(2) -> "11011001100"
-		var code128b = [// + 1000
-		740, 644, 638, 176, 164, 100, 224, 220, 124, 608, 604, 572, 436, 244, 230, 484, 260, 254, 650, 628, 614, 764, 652, 902, 868, 836, 830, 892, 844, 842, 752, 734, 590, 304, 112, 94, 416, 128, 122, 672, 576, 570, 464, 422, 134, 496, 478, 142, 910, 678, 582, 768, 762, 774, 880, 862, 814, 896, 890, 818, 914, 602, 930, 328, 292, 200, 158, 68, 62, 424, 412, 232, 218, 76, 74, 554, 616, 978, 556, 146, 340, 212, 182, 508, 268, 266, 956, 940, 938, 758, 782, 974, 400, 310, 118, 512, 506, 960, 954, 502, 518, 886, 966, /* Start codes */668, 680, 692, 5379];
-		var getEncoding = function getEncoding(n) {
-			return code128b[n] ? (code128b[n] + 1000).toString(2) : '';
-		};
+		}, {
+			key: "encode",
+			value: function encode() {
+				var encodingResult;
+				var bytes = this.bytes;
+				// Remove the startcode from the bytes and set its index
+				var startIndex = bytes.shift() - 105;
 
-		// Use the regexp variable for validation
-		this.valid = function () {
-			return !(this.string.search(validCODE128) === -1);
-		};
-
-		function nextA(bytes, depth) {
-			if (bytes.length <= 0) {
-				return { "result": "", "checksum": 0 };
-			}
-
-			var next, index;
-
-			// Special characters
-			if (bytes[0] >= 200) {
-				index = bytes[0] - 105;
-
-				//Remove first element
-				bytes.shift();
-
-				// Swap to CODE128C
-				if (index === 99) {
-					next = nextC(bytes, depth + 1);
+				// Start encode with the right type
+				if (startIndex === 103) {
+					encodingResult = this.nextA(bytes, 1);
+				} else if (startIndex === 104) {
+					encodingResult = this.nextB(bytes, 1);
+				} else if (startIndex === 105) {
+					encodingResult = this.nextC(bytes, 1);
 				}
-				// Swap to CODE128B
-				else if (index === 100) {
-						next = nextB(bytes, depth + 1);
-					}
-					// Shift
-					else if (index === 98) {
-							// Convert the next character so that is encoded correctly
-							bytes[0] = bytes[0] > 95 ? bytes[0] - 96 : bytes[0];
-							next = nextA(bytes, depth + 1);
-						}
-						// Continue on CODE128A but encode a special character
-						else {
-								next = nextA(bytes, depth + 1);
-							}
+
+				return { text: this.getText(),
+					data:
+					//Add the start bits
+					this.getEncoding(startIndex) +
+					//Add the encoded bits
+					encodingResult.result +
+					//Add the checksum
+					this.getEncoding((encodingResult.checksum + startIndex) % 103) +
+					//Add the end bits
+					this.getEncoding(106)
+				};
 			}
-			// Continue encoding of CODE128A
-			else {
-					var charCode = bytes[0];
-					index = charCode < 32 ? charCode + 64 : charCode - 32;
+		}, {
+			key: "getEncoding",
+			value: function getEncoding(n) {
+				return this.encodings[n] ? (this.encodings[n] + 1000).toString(2) : '';
+			}
+
+			// Use the regexp variable for validation
+
+		}, {
+			key: "valid",
+			value: function valid() {
+				return this.string.search(validCODE128) !== -1;
+			}
+		}, {
+			key: "nextA",
+			value: function nextA(bytes, depth) {
+				if (bytes.length <= 0) {
+					return { "result": "", "checksum": 0 };
+				}
+
+				var next, index;
+
+				// Special characters
+				if (bytes[0] >= 200) {
+					index = bytes[0] - 105;
+
+					//Remove first element
+					bytes.shift();
+
+					// Swap to CODE128C
+					if (index === 99) {
+						next = this.nextC(bytes, depth + 1);
+					}
+					// Swap to CODE128B
+					else if (index === 100) {
+							next = this.nextB(bytes, depth + 1);
+						}
+						// Shift
+						else if (index === 98) {
+								// Convert the next character so that is encoded correctly
+								bytes[0] = bytes[0] > 95 ? bytes[0] - 96 : bytes[0];
+								next = this.nextA(bytes, depth + 1);
+							}
+							// Continue on CODE128A but encode a special character
+							else {
+									next = this.nextA(bytes, depth + 1);
+								}
+				}
+				// Continue encoding of CODE128A
+				else {
+						var charCode = bytes[0];
+						index = charCode < 32 ? charCode + 64 : charCode - 32;
+
+						// Remove first element
+						bytes.shift();
+
+						next = this.nextA(bytes, depth + 1);
+					}
+
+				// Get the correct binary encoding and calculate the weight
+				var enc = this.getEncoding(index);
+				var weight = index * depth;
+
+				return {
+					"result": enc + next.result,
+					"checksum": weight + next.checksum
+				};
+			}
+		}, {
+			key: "nextB",
+			value: function nextB(bytes, depth) {
+				if (bytes.length <= 0) {
+					return { "result": "", "checksum": 0 };
+				}
+
+				var next, index;
+
+				// Special characters
+				if (bytes[0] >= 200) {
+					index = bytes[0] - 105;
+
+					//Remove first element
+					bytes.shift();
+
+					// Swap to CODE128C
+					if (index === 99) {
+						next = this.nextC(bytes, depth + 1);
+					}
+					// Swap to CODE128A
+					else if (index === 101) {
+							next = this.nextA(bytes, depth + 1);
+						}
+						// Shift
+						else if (index === 98) {
+								// Convert the next character so that is encoded correctly
+								bytes[0] = bytes[0] < 32 ? bytes[0] + 96 : bytes[0];
+								next = this.nextB(bytes, depth + 1);
+							}
+							// Continue on CODE128B but encode a special character
+							else {
+									next = this.nextB(bytes, depth + 1);
+								}
+				}
+				// Continue encoding of CODE128B
+				else {
+						index = bytes[0] - 32;
+						bytes.shift();
+						next = this.nextB(bytes, depth + 1);
+					}
+
+				// Get the correct binary encoding and calculate the weight
+				var enc = this.getEncoding(index);
+				var weight = index * depth;
+
+				return { "result": enc + next.result, "checksum": weight + next.checksum };
+			}
+		}, {
+			key: "nextC",
+			value: function nextC(bytes, depth) {
+				if (bytes.length <= 0) {
+					return { "result": "", "checksum": 0 };
+				}
+
+				var next, index;
+
+				// Special characters
+				if (bytes[0] >= 200) {
+					index = bytes[0] - 105;
 
 					// Remove first element
 					bytes.shift();
 
-					next = nextA(bytes, depth + 1);
-				}
-
-			// Get the correct binary encoding and calculate the weight
-			var enc = getEncoding(index);
-			var weight = index * depth;
-
-			return { "result": enc + next.result, "checksum": weight + next.checksum };
-		}
-
-		function nextB(bytes, depth) {
-			if (bytes.length <= 0) {
-				return { "result": "", "checksum": 0 };
-			}
-
-			var next, index;
-
-			// Special characters
-			if (bytes[0] >= 200) {
-				index = bytes[0] - 105;
-
-				//Remove first element
-				bytes.shift();
-
-				// Swap to CODE128C
-				if (index === 99) {
-					next = nextC(bytes, depth + 1);
-				}
-				// Swap to CODE128A
-				else if (index === 101) {
-						next = nextA(bytes, depth + 1);
+					// Swap to CODE128B
+					if (index === 100) {
+						next = this.nextB(bytes, depth + 1);
 					}
-					// Shift
-					else if (index === 98) {
-							// Convert the next character so that is encoded correctly
-							bytes[0] = bytes[0] < 32 ? bytes[0] + 96 : bytes[0];
-							next = nextB(bytes, depth + 1);
+					// Swap to CODE128A
+					else if (index === 101) {
+							next = this.nextA(bytes, depth + 1);
 						}
-						// Continue on CODE128B but encode a special character
+						// Continue on CODE128C but encode a special character
 						else {
-								next = nextB(bytes, depth + 1);
+								next = this.nextC(bytes, depth + 1);
 							}
-			}
-			// Continue encoding of CODE128B
-			else {
-					index = bytes[0] - 32;
-					bytes.shift();
-					next = nextB(bytes, depth + 1);
 				}
-
-			// Get the correct binary encoding and calculate the weight
-			var enc = getEncoding(index);
-			var weight = index * depth;
-
-			return { "result": enc + next.result, "checksum": weight + next.checksum };
-		}
-
-		function nextC(bytes, depth) {
-			if (bytes.length <= 0) {
-				return { "result": "", "checksum": 0 };
-			}
-
-			var next, index;
-
-			// Special characters
-			if (bytes[0] >= 200) {
-				index = bytes[0] - 105;
-
-				// Remove first element
-				bytes.shift();
-
-				// Swap to CODE128B
-				if (index === 100) {
-					next = nextB(bytes, depth + 1);
-				}
-				// Swap to CODE128A
-				else if (index === 101) {
-						next = nextA(bytes, depth + 1);
+				// Continue encoding of CODE128C
+				else {
+						index = (bytes[0] - 48) * 10 + bytes[1] - 48;
+						bytes.shift();
+						bytes.shift();
+						next = this.nextC(bytes, depth + 1);
 					}
-					// Continue on CODE128C but encode a special character
-					else {
-							next = nextC(bytes, depth + 1);
-						}
+
+				// Get the correct binary encoding and calculate the weight
+				var enc = this.getEncoding(index);
+				var weight = index * depth;
+
+				return { "result": enc + next.result, "checksum": weight + next.checksum };
 			}
-			// Continue encoding of CODE128C
-			else {
-					index = (bytes[0] - 48) * 10 + bytes[1] - 48;
-					bytes.shift();
-					bytes.shift();
-					next = nextC(bytes, depth + 1);
-				}
+		}]);
 
-			// Get the correct binary encoding and calculate the weight
-			var enc = getEncoding(index);
-			var weight = index * depth;
-
-			return { "result": enc + next.result, "checksum": weight + next.checksum };
-		}
-	}
+		return CODE128;
+	}();
 
 	function autoSelectModes(string) {
 		// ASCII ranges 0-98 and 200-207 (FUNCs and SHIFTs)
@@ -679,332 +639,373 @@
 		}
 	}
 
-	function CODE128AUTO(string) {
-		// Check the validity of the string, don't even bother auto it when
-		//it's not valid
-		if (string.search(validCODE128) !== -1) {
-			return new CODE128(autoSelectModes(string));
-		}
-		return new CODE128(string);
-	}
-	function CODE128A(string) {
-		var code128 = new CODE128(String.fromCharCode(208) + string);
-		code128.valid = function () {
-			return this.string.search(/^[\x00-\x5F\xC8-\xCF]+$/) !== -1;
-		};
-		return code128;
-	}
-	function CODE128B(string) {
-		var code128 = new CODE128(String.fromCharCode(209) + string);
-		code128.valid = function () {
-			return this.string.search(/^[\x20-\x7F\xC8-\xCF]+$/) !== -1;
-		};
-		return code128;
-	}
-	function CODE128C(string) {
-		var code128 = new CODE128(String.fromCharCode(210) + string);
-		code128.valid = function (str) {
-			return this.string.search(/^(\xCF*[0-9]{2}\xCF*)+$/) !== -1;
-		};
-		return code128;
-	}
+	var CODE128AUTO = function (_CODE) {
+		_inherits(CODE128AUTO, _CODE);
 
-	//Required to register for both browser and nodejs
-	function register(core) {
-		core.register(CODE128AUTO, /^CODE128(.?AUTO)?$/, 10);
-		core.register(CODE128A, /^CODE128.?A$/i, 2);
-		core.register(CODE128B, /^CODE128.?B$/i, 3);
-		core.register(CODE128C, /^CODE128.?C$/i, 2);
-	}
-	exports.default = register;
+		function CODE128AUTO(string) {
+			_classCallCheck(this, CODE128AUTO);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CODE128AUTO).call(this, string));
+
+			if (string.search(validCODE128) !== -1) {
+				var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CODE128AUTO).call(this, autoSelectModes(string)));
+			} else {
+				var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CODE128AUTO).call(this, string));
+			}
+			return _possibleConstructorReturn(_this);
+		}
+
+		return CODE128AUTO;
+	}(CODE128);
+
+	var CODE128A = function (_CODE2) {
+		_inherits(CODE128A, _CODE2);
+
+		function CODE128A(string) {
+			_classCallCheck(this, CODE128A);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(CODE128A).call(this, String.fromCharCode(208) + string));
+		}
+
+		_createClass(CODE128A, [{
+			key: "valid",
+			value: function valid() {
+				return this.string.search(/^[\x00-\x5F\xC8-\xCF]+$/) !== -1;
+			}
+		}]);
+
+		return CODE128A;
+	}(CODE128);
+
+	var CODE128B = function (_CODE3) {
+		_inherits(CODE128B, _CODE3);
+
+		function CODE128B(string) {
+			_classCallCheck(this, CODE128B);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(CODE128B).call(this, String.fromCharCode(209) + string));
+		}
+
+		_createClass(CODE128B, [{
+			key: "valid",
+			value: function valid() {
+				return this.string.search(/^[\x20-\x7F\xC8-\xCF]+$/) !== -1;
+			}
+		}]);
+
+		return CODE128B;
+	}(CODE128);
+
+	var CODE128C = function (_CODE4) {
+		_inherits(CODE128C, _CODE4);
+
+		function CODE128C(string) {
+			_classCallCheck(this, CODE128C);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(CODE128C).call(this, String.fromCharCode(210) + string));
+		}
+
+		_createClass(CODE128C, [{
+			key: "valid",
+			value: function valid() {
+				return this.string.search(/^(\xCF*[0-9]{2}\xCF*)+$/) !== -1;
+			}
+		}]);
+
+		return CODE128C;
+	}(CODE128);
+
+	exports.CODE128 = CODE128;
+	exports.CODE128A = CODE128A;
+	exports.CODE128B = CODE128B;
+	exports.CODE128C = CODE128C;
 
 /***/ },
 /* 4 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	function EAN(string, options) {
-		//Regexp to test if the EAN code is correct formated
-		var fullEanRegexp = /^[0-9]{13}$/;
-		var needLastDigitRegexp = /^[0-9]{12}$/;
+	exports.UPC = exports.EAN2 = exports.EAN5 = exports.EAN8 = exports.EAN13 = undefined;
 
-		//Add checksum if it does not exist
-		if (string.search(needLastDigitRegexp) != -1) {
-			string += checksum(string);
-		}
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-		this.valid = function () {
-			return valid(string);
-		};
+	var _ean_encoder = __webpack_require__(5);
 
-		this.options = function () {
-			options.textMargin = 0;
-			if (options.fontSize > options.width * 11) {
-				options.fontSize = options.width * 11;
-			}
-		};
+	var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
-		var EAN13structure = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-		this.encode = function () {
-			var encoder = new EANencoder();
-			var result = [];
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-			var structure = EAN13structure[string[0]];
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-			//Get the string to be encoded on the left side of the EAN code
-			var leftSide = string.substr(1, 6);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-			//Get the string to be encoded on the right side of the EAN code
-			var rightSide = string.substr(7, 6);
+	var EAN13 = function () {
+		function EAN13(string, options) {
+			_classCallCheck(this, EAN13);
 
-			// Add the first digigt
-			result.push({ data: "000000000000", text: string[0], options: { textAlign: "left" } });
-
-			//Add the guard bars
-			result.push({ data: [1.1, 0, 1.1] });
-
-			//Add the left side
-			result.push({ data: encoder.encode(leftSide, structure), text: leftSide });
-
-			//Add the middle bits
-			result.push({ data: [0, 1.1, 0, 1.1, 0] });
-
-			//Add the right side
-			result.push({ data: encoder.encode(rightSide, "RRRRRR"), text: rightSide });
-
-			//Add the end bits
-			result.push({ data: [1.1, 0, 1.1] });
-
-			return result;
-		};
-
-		//Calulate the checksum digit
-		function checksum(number) {
-			var result = 0;
-
-			for (var i = 0; i < 12; i += 2) {
-				result += parseInt(number[i]);
-			}
-			for (var i = 1; i < 12; i += 2) {
-				result += parseInt(number[i]) * 3;
-			}
-
-			return (10 - result % 10) % 10;
-		}
-
-		function valid(number) {
-			if (number.search(fullEanRegexp) != -1) {
-				return number[12] == checksum(number);
+			//Add checksum if it does not exist
+			if (string.search(/^[0-9]{12}$/) != -1) {
+				this.string = string + this.checksum(string);
 			} else {
-				return false;
-			}
-		}
-	}
-
-	function EAN8(string) {
-		//Regexp to test if the EAN code is correct formated
-		var fullEanRegexp = /^[0-9]{8}$/;
-		var needLastDigitRegexp = /^[0-9]{7}$/;
-
-		//Add checksum if it does not exist
-		if (string.search(needLastDigitRegexp) != -1) {
-			string += checksum(string);
-		}
-
-		this.getText = function () {
-			return string;
-		};
-
-		this.valid = function () {
-			return string.search(fullEanRegexp) !== -1 && string[7] == checksum(string);
-		};
-
-		this.encode = function () {
-			return { data: createEAN8(string), text: string };
-		};
-
-		//Calulate the checksum digit
-		function checksum(number) {
-			var result = 0;
-
-			for (var i = 0; i < 7; i += 2) {
-				result += parseInt(number[i]) * 3;
-			}
-			for (var i = 1; i < 7; i += 2) {
-				result += parseInt(number[i]);
+				this.string = string;
 			}
 
-			return (10 - result % 10) % 10;
+			// Define the EAN-13 structure
+			this.structure = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
+
+			this.guardHeight = options.height + options.fontSize / 2 + options.textMargin;
 		}
 
-		function createEAN8(number) {
-			var encoder = new EANencoder();
-
-			//Create the return variable
-			var result = "";
-
-			//Get the number to be encoded on the left side of the EAN code
-			var leftSide = number.substr(0, 4);
-
-			//Get the number to be encoded on the right side of the EAN code
-			var rightSide = number.substr(4, 4);
-
-			//Add the start bits
-			result += encoder.startBin;
-
-			//Add the left side
-			result += encoder.encode(leftSide, "LLLL");
-
-			//Add the middle bits
-			result += encoder.middleBin;
-
-			//Add the right side
-			result += encoder.encode(rightSide, "RRRR");
-
-			//Add the end bits
-			result += encoder.endBin;
-
-			return result;
-		}
-	}
-
-	function EAN5(string) {
-		//Regexp to test if the EAN code is correct formated
-		var fullEanRegexp = /^[0-9]{5}$/;
-
-		this.valid = function () {
-			return string.search(fullEanRegexp) !== -1;
-		};
-
-		this.encode = function () {
-			return { data: createEAN5(string), text: string };
-		};
-
-		//Calulate the checksum digit
-		function checksum(number) {
-			var result = 0;
-
-			for (var i = 0; i < 5; i += 2) {
-				result += parseInt(number[i]) * 3;
+		_createClass(EAN13, [{
+			key: "valid",
+			value: function valid() {
+				return this.string.search(/^[0-9]{13}$/) !== -1 && this.string[12] == this.checksum(this.string);
 			}
-			for (var i = 1; i < 5; i += 2) {
-				result += parseInt(number[i]) * 9;
-			}
-
-			return result % 10;
-		}
-
-		var EAN5structure = ["GGLLL", "GLGLL", "GLLGL", "GLLLG", "LGGLL", "LLGGL", "LLLGG", "LGLGL", "LGLLG", "LLGLG"];
-
-		function createEAN5(number) {
-			var encoder = new EANencoder();
-
-			//Create the return variable
-			var result = "1011";
-
-			// Add the encodings
-			result += encoder.encode(number, EAN5structure[checksum(number)], "01");
-
-			return result;
-		}
-	}
-
-	function EAN2(string) {
-		//Regexp to test if the EAN code is correct formated
-		var fullEanRegexp = /^[0-9]{2}$/;
-
-		this.valid = function () {
-			return string.search(fullEanRegexp) !== -1;
-		};
-
-		this.encode = function () {
-			return { data: createEAN2(string), text: string };
-		};
-
-		var EAN2structure = ["LL", "LG", "GL", "GG"];
-
-		function createEAN2(number) {
-			var encoder = new EANencoder();
-
-			//Create the return variable
-			var result = "1011";
-
-			// Add the encodings
-			result += encoder.encode(number, EAN2structure[parseInt(number) % 4], "01");
-
-			return result;
-		}
-	}
-
-	function UPC(string, options) {
-		var ean = new EAN("0" + string, options);
-
-		this.valid = ean.valid;
-		this.encode = ean.encode;
-		this.options = ean.options;
-	}
-
-	//
-	// Help class that does all the encoding
-	//
-	function EANencoder() {
-		//The start bits
-		this.startBin = "101";
-		//The end bits
-		this.endBin = "101";
-		//The middle bits
-		this.middleBin = "01010";
-
-		//The L (left) type of encoding
-		var Lbinary = ["0001101", "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011"];
-
-		//The G type of encoding
-		var Gbinary = ["0100111", "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111"];
-
-		//The R (right) type of encoding
-		var Rbinary = ["1110010", "1100110", "1101100", "1000010", "1011100", "1001110", "1010000", "1000100", "1001000", "1110100"];
-
-		//Convert a numberarray to the representing
-		this.encode = function (number, structure, separator) {
-			//Create the variable that should be returned at the end of the function
-			var result = "";
-
-			var separator = typeof separator === "undefined" ? "" : separator;
-
-			//Loop all the numbers
-			for (var i = 0; i < number.length; i++) {
-				//Using the L, G or R encoding and add it to the returning variable
-				if (structure[i] == "L") {
-					result += Lbinary[number[i]];
-				} else if (structure[i] == "G") {
-					result += Gbinary[number[i]];
-				} else if (structure[i] == "R") {
-					result += Rbinary[number[i]];
-				}
-
-				// Add separator
-				if (i < number.length - 1) {
-					result += separator;
+		}, {
+			key: "options",
+			value: function options(_options) {
+				_options.textMargin = 0;
+				if (_options.fontSize > _options.width * 11) {
+					_options.fontSize = _options.width * 11;
 				}
 			}
-			return result;
-		};
-	}
+		}, {
+			key: "encode",
+			value: function encode() {
+				var encoder = new _ean_encoder2.default();
+				var result = [];
 
-	//Required to register for both browser and nodejs
-	function register(core) {
-		core.register(EAN, /^EAN(.?13)?$/i, 8);
-		core.register(EAN8, /^EAN.?8$/i, 8);
-		core.register(EAN5, /^EAN.?5$/i, 5);
-		core.register(EAN2, /^EAN.?2$/i, 5);
-		core.register(UPC, /^UPC(.?A)?$/i, 8);
-	}
-	exports.default = register;
+				var structure = this.structure[this.string[0]];
+
+				//Get the string to be encoded on the left side of the EAN code
+				var leftSide = this.string.substr(1, 6);
+
+				//Get the string to be encoded on the right side of the EAN code
+				var rightSide = this.string.substr(7, 6);
+
+				// Add the first digigt
+				result.push({
+					data: "000000000000",
+					text: this.string[0], options: { textAlign: "left" }
+				});
+
+				//Add the guard bars
+				result.push({ data: "101", options: { height: this.guardHeight } });
+
+				//Add the left side
+				result.push({
+					data: encoder.encode(leftSide, structure),
+					text: leftSide
+				});
+
+				//Add the middle bits
+				result.push({ data: "01010", options: { height: this.guardHeight } });
+
+				//Add the right side
+				result.push({ data: encoder.encode(rightSide, "RRRRRR"), text: rightSide });
+
+				//Add the end bits
+				result.push({ data: "101", options: { height: this.guardHeight } });
+
+				return result;
+			}
+
+			//Calulate the checksum digit
+
+		}, {
+			key: "checksum",
+			value: function checksum(number) {
+				var result = 0;
+
+				var i;
+				for (i = 0; i < 12; i += 2) {
+					result += parseInt(number[i]);
+				}
+				for (i = 1; i < 12; i += 2) {
+					result += parseInt(number[i]) * 3;
+				}
+
+				return (10 - result % 10) % 10;
+			}
+		}]);
+
+		return EAN13;
+	}();
+
+	var EAN8 = function () {
+		function EAN8(string) {
+			_classCallCheck(this, EAN8);
+
+			//Add checksum if it does not exist
+			if (string.search(/^[0-9]{7}$/) !== -1) {
+				this.string = string + this.checksum(string);
+			} else {
+				this.string = string;
+			}
+		}
+
+		_createClass(EAN8, [{
+			key: "valid",
+			value: function valid() {
+				return this.string.search(/^[0-9]{8}$/) !== -1 && this.string[7] == this.checksum(this.string);
+			}
+		}, {
+			key: "encode",
+			value: function encode() {
+				var encoder = new _ean_encoder2.default();
+
+				//Create the return variable
+				var result = "";
+
+				//Get the number to be encoded on the left side of the EAN code
+				var leftSide = this.string.substr(0, 4);
+
+				//Get the number to be encoded on the right side of the EAN code
+				var rightSide = this.string.substr(4, 4);
+
+				//Add the start bits
+				result += encoder.startBin;
+
+				//Add the left side
+				result += encoder.encode(leftSide, "LLLL");
+
+				//Add the middle bits
+				result += encoder.middleBin;
+
+				//Add the right side
+				result += encoder.encode(rightSide, "RRRR");
+
+				//Add the end bits
+				result += encoder.endBin;
+
+				return {
+					data: result,
+					text: this.string
+				};
+			}
+
+			//Calulate the checksum digit
+
+		}, {
+			key: "checksum",
+			value: function checksum(number) {
+				var result = 0;
+
+				var i;
+				for (i = 0; i < 7; i += 2) {
+					result += parseInt(number[i]) * 3;
+				}
+				for (i = 1; i < 7; i += 2) {
+					result += parseInt(number[i]);
+				}
+
+				return (10 - result % 10) % 10;
+			}
+		}]);
+
+		return EAN8;
+	}();
+
+	var EAN5 = function () {
+		function EAN5(string) {
+			_classCallCheck(this, EAN5);
+
+			this.string = string;
+
+			this.structure = ["GGLLL", "GLGLL", "GLLGL", "GLLLG", "LGGLL", "LLGGL", "LLLGG", "LGLGL", "LGLLG", "LLGLG"];
+		}
+
+		_createClass(EAN5, [{
+			key: "valid",
+			value: function valid() {
+				return this.string.search(/^[0-9]{5}$/) !== -1;
+			}
+		}, {
+			key: "encode",
+			value: function encode() {
+				var encoder = new _ean_encoder2.default();
+
+				var result = "1011" + encoder.encode(this.string, this.structure[this.checksum(this.string)], "01");
+
+				return {
+					data: result,
+					text: this.string
+				};
+			}
+		}, {
+			key: "checksum",
+			value: function checksum() {
+				var result = 0;
+
+				var i;
+				for (i = 0; i < 5; i += 2) {
+					result += parseInt(this.string[i]) * 3;
+				}
+				for (i = 1; i < 5; i += 2) {
+					result += parseInt(this.string[i]) * 9;
+				}
+
+				return result % 10;
+			}
+		}]);
+
+		return EAN5;
+	}();
+
+	var EAN2 = function () {
+		function EAN2(string) {
+			_classCallCheck(this, EAN2);
+
+			this.string = string;
+
+			this.structure = ["LL", "LG", "GL", "GG"];
+		}
+
+		_createClass(EAN2, [{
+			key: "valid",
+			value: function valid() {
+				return this.string.search(/^[0-9]{2}$/) !== -1;
+			}
+		}, {
+			key: "encode",
+			value: function encode() {
+				var encoder = new _ean_encoder2.default();
+
+				var result = "1011" + encoder.encode(this.string, this.structure[parseInt(this.string) % 4], "01");
+
+				return {
+					data: result,
+					text: this.string
+				};
+			}
+		}]);
+
+		return EAN2;
+	}();
+
+	var UPC = function (_EAN) {
+		_inherits(UPC, _EAN);
+
+		function UPC(string, options) {
+			_classCallCheck(this, UPC);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(UPC).call(this, "0" + string, options));
+		}
+
+		return UPC;
+	}(EAN13);
+
+	exports.EAN13 = EAN13;
+	exports.EAN8 = EAN8;
+	exports.EAN5 = EAN5;
+	exports.EAN2 = EAN2;
+	exports.UPC = UPC;
 
 /***/ },
 /* 5 */
@@ -1015,84 +1016,64 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	function ITF14(string) {
-		this.valid = function () {
-			return string.search(/^[0-9]{13,14}$/) !== -1 && (string.length === 13 || string[13] == checksum(string));
-		};
 
-		this.encode = function () {
-			//Create the variable that should be returned at the end of the function
-			var result = "";
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-			//If checksum is not already calculated, do it
-			if (string.length === 13) {
-				string += checksum(string);
-			}
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-			//Always add the same start bits
-			result += startBin;
+	var EANencoder = function () {
+		function EANencoder() {
+			_classCallCheck(this, EANencoder);
 
-			//Calculate all the digit pairs
-			for (var i = 0; i < 14; i += 2) {
-				result += calculatePair(string.substr(i, 2));
-			}
+			this.startBin = "101";
+			this.endBin = "101";
+			this.middleBin = "01010";
 
-			//Always add the same end bits
-			result += endBin;
+			//The L (left) type of encoding
+			this.Lbinary = ["0001101", "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011"];
 
-			return { data: result, text: string };
-		};
+			//The G type of encoding
+			this.Gbinary = ["0100111", "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111"];
 
-		//The structure for the all digits, 1 is wide and 0 is narrow
-		var digitStructure = {
-			"0": "00110",
-			"1": "10001",
-			"2": "01001",
-			"3": "11000",
-			"4": "00101",
-			"5": "10100",
-			"6": "01100",
-			"7": "00011",
-			"8": "10010",
-			"9": "01010" };
-
-		//The start bits
-		var startBin = "1010";
-		//The end bits
-		var endBin = "11101";
-
-		//Calculate the data of a number pair
-		function calculatePair(twoNumbers) {
-			var result = "";
-
-			var number1Struct = digitStructure[twoNumbers[0]];
-			var number2Struct = digitStructure[twoNumbers[1]];
-
-			//Take every second bit and add to the result
-			for (var i = 0; i < 5; i++) {
-				result += number1Struct[i] == "1" ? "111" : "1";
-				result += number2Struct[i] == "1" ? "000" : "0";
-			}
-			return result;
+			//The R (right) type of encoding
+			this.Rbinary = ["1110010", "1100110", "1101100", "1000010", "1011100", "1001110", "1010000", "1000100", "1001000", "1110100"];
 		}
 
-		//Calulate the checksum digit
-		function checksum(numberString) {
-			var result = 0;
+		//Convert a numberarray to the representing
 
-			for (var i = 0; i < 13; i++) {
-				result += parseInt(numberString[i]) * (3 - i % 2 * 2);
+
+		_createClass(EANencoder, [{
+			key: "encode",
+			value: function encode(number, structure, separator) {
+				//Create the variable that should be returned at the end of the function
+				var result = "";
+
+				separator = typeof separator === "undefined" ? "" : separator;
+
+				//Loop all the numbers
+				for (var i = 0; i < number.length; i++) {
+					//Using the L, G or R encoding and add it to the returning variable
+					if (structure[i] == "L") {
+						result += this.Lbinary[number[i]];
+					} else if (structure[i] == "G") {
+						result += this.Gbinary[number[i]];
+					} else if (structure[i] == "R") {
+						result += this.Rbinary[number[i]];
+					}
+
+					// Add separator
+					if (i < number.length - 1) {
+						result += separator;
+					}
+				}
+				return result;
 			}
+		}]);
 
-			return 10 - result % 10;
-		}
-	}
+		return EANencoder;
+	}();
 
-	//Required to register for both browser and nodejs
-	function register(core) {
-		core.register(ITF14, /^ITF.?14$/i, 5);
-	}
-	exports.default = register;
+	exports.default = EANencoder;
 
 /***/ },
 /* 6 */
@@ -1103,75 +1084,98 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	function ITF(string) {
-		this.valid = function () {
-			return valid(string);
-		};
 
-		this.encode = function () {
-			//Create the variable that should be returned at the end of the function
-			var result = "";
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-			//Always add the same start bits
-			result += startBin;
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-			//Calculate all the digit pairs
-			for (var i = 0; i < string.length; i += 2) {
-				result += calculatePair(string.substr(i, 2));
+	var ITF14 = function () {
+		function ITF14(string) {
+			_classCallCheck(this, ITF14);
+
+			this.string = string;
+
+			// Add checksum if it does not exist
+			if (string.search(/^[0-9]{13}$/) !== -1) {
+				this.string += this.checksum(string);
 			}
 
-			//Always add the same end bits
-			result += endBin;
+			this.binaryRepresentation = {
+				"0": "00110",
+				"1": "10001",
+				"2": "01001",
+				"3": "11000",
+				"4": "00101",
+				"5": "10100",
+				"6": "01100",
+				"7": "00011",
+				"8": "10010",
+				"9": "01010"
+			};
+		}
 
-			return { data: result, text: string };
-		};
-
-		//The structure for the all digits, 1 is wide and 0 is narrow
-		var digitStructure = {
-			"0": "00110",
-			"1": "10001",
-			"2": "01001",
-			"3": "11000",
-			"4": "00101",
-			"5": "10100",
-			"6": "01100",
-			"7": "00011",
-			"8": "10010",
-			"9": "01010" };
-
-		//The start bits
-		var startBin = "1010";
-		//The end bits
-		var endBin = "11101";
-
-		//Regexp for a valid Inter25 code
-		var regexp = /^([0-9][0-9])+$/;
-
-		//Calculate the data of a number pair
-		function calculatePair(twoNumbers) {
-			var result = "";
-
-			var number1Struct = digitStructure[twoNumbers[0]];
-			var number2Struct = digitStructure[twoNumbers[1]];
-
-			//Take every second bit and add to the result
-			for (var i = 0; i < 5; i++) {
-				result += number1Struct[i] == "1" ? "111" : "1";
-				result += number2Struct[i] == "1" ? "000" : "0";
+		_createClass(ITF14, [{
+			key: "valid",
+			value: function valid() {
+				return this.string.search(/^[0-9]{14}$/) !== -1 && this.string[13] == this.checksum();
 			}
-			return result;
-		}
+		}, {
+			key: "encode",
+			value: function encode() {
+				var result = "1010";
 
-		function valid(number) {
-			return number.search(regexp) !== -1;
-		}
-	}
+				//Calculate all the digit pairs
+				for (var i = 0; i < 14; i += 2) {
+					result += this.calculatePair(this.string.substr(i, 2));
+				}
 
-	//Required to register for both browser and nodejs
-	function register(core) {
-		core.register(ITF, /^ITF$/i, 4);
-	};
-	exports.default = register;
+				//Always add the same end bits
+				result += "11101";
+
+				return {
+					data: result,
+					text: this.string
+				};
+			}
+
+			//Calculate the data of a number pair
+
+		}, {
+			key: "calculatePair",
+			value: function calculatePair(numberPair) {
+				var result = "";
+
+				var number1Struct = this.binaryRepresentation[numberPair[0]];
+				var number2Struct = this.binaryRepresentation[numberPair[1]];
+
+				//Take every second bit and add to the result
+				for (var i = 0; i < 5; i++) {
+					result += number1Struct[i] == "1" ? "111" : "1";
+					result += number2Struct[i] == "1" ? "000" : "0";
+				}
+
+				return result;
+			}
+
+			//Calulate the checksum digit
+
+		}, {
+			key: "checksum",
+			value: function checksum() {
+				var result = 0;
+
+				for (var i = 0; i < 13; i++) {
+					result += parseInt(this.string[i]) * (3 - i % 2 * 2);
+				}
+
+				return 10 - result % 10;
+			}
+		}]);
+
+		return ITF14;
+	}();
+
+	exports.default = ITF14;
 
 /***/ },
 /* 7 */
@@ -1182,65 +1186,214 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	var prototype = {};
 
-	prototype.encode = function () {
-		var ret = "110";
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-		for (var i = 0; i < this.string.length; i++) {
-			var digit = parseInt(this.string[i]);
-			var bin = digit.toString(2);
-			bin = addZeroes(bin, 4 - bin.length);
-			for (var b = 0; b < bin.length; b++) {
-				ret += bin[b] == 0 ? "100" : "110";
-			}
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var ITF = function () {
+		function ITF(string) {
+			_classCallCheck(this, ITF);
+
+			this.string = string;
+
+			this.binaryRepresentation = {
+				"0": "00110",
+				"1": "10001",
+				"2": "01001",
+				"3": "11000",
+				"4": "00101",
+				"5": "10100",
+				"6": "01100",
+				"7": "00011",
+				"8": "10010",
+				"9": "01010"
+			};
 		}
 
-		ret += "1001";
-		return { data: ret, text: this.string };
-	};
+		_createClass(ITF, [{
+			key: "valid",
+			value: function valid() {
+				return this.string.search(/^([0-9]{2})+$/) !== -1;
+			}
+		}, {
+			key: "encode",
+			value: function encode() {
+				//Always add the same start bits
+				var result = "1010";
 
-	prototype.valid = function () {
-		return this.string.search(/^[0-9]+$/) != -1;
-	};
+				//Calculate all the digit pairs
+				for (var i = 0; i < this.string.length; i += 2) {
+					result += this.calculatePair(this.string.substr(i, 2));
+				}
 
-	function MSI(string) {
-		this.string = "" + string;
+				//Always add the same end bits
+				result += "11101";
+
+				return {
+					data: result,
+					text: this.string
+				};
+			}
+
+			//Calculate the data of a number pair
+
+		}, {
+			key: "calculatePair",
+			value: function calculatePair(numberPair) {
+				var result = "";
+
+				var number1Struct = this.binaryRepresentation[numberPair[0]];
+				var number2Struct = this.binaryRepresentation[numberPair[1]];
+
+				//Take every second bit and add to the result
+				for (var i = 0; i < 5; i++) {
+					result += number1Struct[i] == "1" ? "111" : "1";
+					result += number2Struct[i] == "1" ? "000" : "0";
+				}
+
+				return result;
+			}
+		}]);
+
+		return ITF;
+	}();
+
+	exports.default = ITF;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.MSI1110 = exports.MSI1010 = exports.MSI11 = exports.MSI = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _checksums = __webpack_require__(9);
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var MSI = function () {
+		function MSI(string) {
+			_classCallCheck(this, MSI);
+
+			this.string = string;
+		}
+
+		_createClass(MSI, [{
+			key: "encode",
+			value: function encode() {
+				var ret = "110";
+
+				for (var i = 0; i < this.string.length; i++) {
+					var digit = parseInt(this.string[i]);
+					var bin = digit.toString(2);
+					bin = addZeroes(bin, 4 - bin.length);
+					for (var b = 0; b < bin.length; b++) {
+						ret += bin[b] == "0" ? "100" : "110";
+					}
+				}
+
+				ret += "1001";
+				return {
+					data: ret,
+					text: this.string
+				};
+			}
+		}, {
+			key: "valid",
+			value: function valid() {
+				return this.string.search(/^[0-9]+$/) !== -1;
+			}
+		}]);
+
+		return MSI;
+	}();
+
+	var MSI11 = function (_MSI) {
+		_inherits(MSI11, _MSI);
+
+		function MSI11(string) {
+			_classCallCheck(this, MSI11);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MSI11).call(this, string));
+
+			_this.string += (0, _checksums.mod11)(_this.string);
+			return _this;
+		}
+
+		return MSI11;
+	}(MSI);
+
+	var MSI1010 = function (_MSI2) {
+		_inherits(MSI1010, _MSI2);
+
+		function MSI1010(string) {
+			_classCallCheck(this, MSI1010);
+
+			var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(MSI1010).call(this, string));
+
+			_this2.string += (0, _checksums.mod10)(_this2.string);
+			_this2.string += (0, _checksums.mod10)(_this2.string);
+			return _this2;
+		}
+
+		return MSI1010;
+	}(MSI);
+
+	var MSI1110 = function (_MSI3) {
+		_inherits(MSI1110, _MSI3);
+
+		function MSI1110(string) {
+			_classCallCheck(this, MSI1110);
+
+			var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(MSI1110).call(this, string));
+
+			_this3.string += (0, _checksums.mod11)(_this3.string);
+			_this3.string += (0, _checksums.mod10)(_this3.string);
+			return _this3;
+		}
+
+		return MSI1110;
+	}(MSI);
+
+	function addZeroes(number, n) {
+		for (var i = 0; i < n; i++) {
+			number = "0" + number;
+		}
+		return number;
 	}
 
-	MSI.prototype = Object.create(prototype);
+	exports.MSI = MSI;
+	exports.MSI11 = MSI11;
+	exports.MSI1010 = MSI1010;
+	exports.MSI1110 = MSI1110;
 
-	function MSI10(string) {
-		this.string = "" + string;
-		this.string += mod10(this.string);
-	}
-	MSI10.prototype = Object.create(prototype);
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
 
-	function MSI11(string) {
-		this.string = "" + string;
-		this.string += mod11(this.string);
-	}
-	MSI11.prototype = Object.create(prototype);
+	"use strict";
 
-	function MSI1010(string) {
-		this.string = "" + string;
-		this.string += mod10(this.string);
-		this.string += mod10(this.string);
-	}
-	MSI1010.prototype = Object.create(prototype);
-
-	function MSI1110(string) {
-		this.string = "" + string;
-		this.string += mod11(this.string);
-		this.string += mod10(this.string);
-	}
-	MSI1110.prototype = Object.create(prototype);
-
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.mod10 = mod10;
+	exports.mod11 = mod11;
 	function mod10(number) {
 		var sum = 0;
 		for (var i = 0; i < number.length; i++) {
 			var n = parseInt(number[i]);
-			if ((i + number.length) % 2 == 0) {
+			if ((i + number.length) % 2 === 0) {
 				sum += n;
 			} else {
 				sum += n * 2 % 10 + Math.floor(n * 2 / 10);
@@ -1259,89 +1412,84 @@
 		return (11 - sum % 11) % 11;
 	}
 
-	function addZeroes(number, n) {
-		for (var i = 0; i < n; i++) {
-			number = "0" + number;
-		}
-		return number;
-	}
-
-	//Required to register for both browser and nodejs
-	function register(core) {
-		core.register(MSI, /^MSI$/i, 4);
-		core.register(MSI10, /^MSI.?10$/i);
-		core.register(MSI11, /^MSI.?11$/i);
-		core.register(MSI1010, /^MSI.?1010$/i);
-		core.register(MSI1110, /^MSI.?1110$/i);
-	}
-	exports.default = register;
-
 /***/ },
-/* 8 */
+/* 10 */
 /***/ function(module, exports) {
 
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
-	function pharmacode(number) {
-	    //Ensure that the input is inturpreted as a number
-	    this.number = parseInt(number);
 
-	    function recursiveEncoding(code, state) {
-	        //End condition
-	        if (code.length == 0) return "";
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	        var generated;
-	        var nextState = false;
-	        var nZeros = zeros(code);
-	        if (nZeros == 0) {
-	            generated = state ? "001" : "00111";
-	            nextState = state;
-	        } else {
-	            generated = "001".repeat(nZeros - (state ? 1 : 0));
-	            generated += "00111";
-	        }
-	        return recursiveEncoding(code.substr(0, code.length - nZeros - 1), nextState) + generated;
-	    };
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	    this.encode = function () {
-	        return {
-	            data: recursiveEncoding(this.number.toString(2), true).substr(2),
-	            text: this.number + ""
-	        };
-	    };
+	var pharmacode = function () {
+	  function pharmacode(string) {
+	    _classCallCheck(this, pharmacode);
 
-	    this.valid = function () {
-	        return this.number >= 3 && this.number <= 131070;
-	    };
+	    this.number = parseInt(string);
+	  }
 
-	    //A help function to calculate the zeros at the end of a string (the code)
-	    var zeros = function zeros(code) {
-	        var i = code.length - 1;
-	        var zeros = 0;
-	        while (code[i] == "0" || i < 0) {
-	            zeros++;
-	            i--;
-	        }
-	        return zeros;
-	    };
+	  _createClass(pharmacode, [{
+	    key: "encode",
+	    value: function encode() {
+	      return {
+	        data: recursiveEncoding(this.number.toString(2), true).substr(2),
+	        text: this.number + ""
+	      };
+	    }
+	  }, {
+	    key: "valid",
+	    value: function valid() {
+	      return this.number >= 3 && this.number <= 131070;
+	    }
+	  }]);
 
-	    //http://stackoverflow.com/a/202627
-	    String.prototype.repeat = function (num) {
-	        return new Array(num + 1).join(this);
-	    };
+	  return pharmacode;
+	}();
+
+	function recursiveEncoding(code, state) {
+	  // TODO explanation needed
+
+	  //End condition
+	  if (code.length === 0) return "";
+
+	  var generated;
+	  var nextState = false;
+	  var nzeroes = zeroes(code);
+	  if (nzeroes === 0) {
+	    generated = state ? "001" : "00111";
+	    nextState = state;
+	  } else {
+	    generated = "001".repeat(nzeroes - (state ? 1 : 0));
+	    generated += "00111";
+	  }
+	  return recursiveEncoding(code.substr(0, code.length - nzeroes - 1), nextState) + generated;
+	}
+
+	//http://stackoverflow.com/a/202627
+	String.prototype.repeat = function (num) {
+	  return new Array(num + 1).join(this);
 	};
 
-	//Required to register for both browser and nodejs
-	function register(core) {
-	    core.register(pharmacode, /^pharmacode$/i, 2);
+	//A help function to calculate the zeroes at the end of a string (the code)
+	function zeroes(code) {
+	  var i = code.length - 1;
+	  var zeroes = 0;
+	  while (code[i] == "0" || i < 0) {
+	    zeroes++;
+	    i--;
+	  }
+	  return zeroes;
 	}
-	exports.default = register;
+
+	exports.default = pharmacode;
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1349,26 +1497,91 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	function GenericBarcode(string) {
-		//Return the corresponding binary numbers for the data provided
-		this.encode = function () {
-			return { data: "10101010101010101010101010101010101010101", text: string };
-		};
 
-		//Resturn true/false if the string provided is valid for this encoder
-		this.valid = function () {
-			return true;
-		};
-	}
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	//Required to register for both browser and nodejs
-	function register(core) {
-		core.register(GenericBarcode, /^GEN(ERIC(BARCODE)?)?$/i, 0);
-	}
-	exports.default = register;
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var blank = function () {
+		function blank(string) {
+			_classCallCheck(this, blank);
+
+			this.size = parseInt(string, 10);
+		}
+
+		_createClass(blank, [{
+			key: "encode",
+			value: function encode() {
+				var binary = "";
+				for (var i = 0; i < this.size; i++) {
+					binary += "0";
+				}
+				return {
+					data: binary,
+					text: ""
+				};
+			}
+		}, {
+			key: "valid",
+			value: function valid() {
+				return this.size > 0;
+			}
+		}]);
+
+		return blank;
+	}();
+
+	exports.blank = blank;
 
 /***/ },
-/* 10 */
+/* 12 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var GenericBarcode = function () {
+		function GenericBarcode(string) {
+			_classCallCheck(this, GenericBarcode);
+
+			this.string = string;
+		}
+
+		//Return the corresponding binary numbers for the data provided
+
+
+		_createClass(GenericBarcode, [{
+			key: "encode",
+			value: function encode() {
+				return {
+					data: "10101010101010101010101010101010101010101",
+					text: this.string
+				};
+			}
+
+			//Resturn true/false if the string provided is valid for this encoder
+
+		}, {
+			key: "valid",
+			value: function valid() {
+				return true;
+			}
+		}]);
+
+		return GenericBarcode;
+	}();
+
+	exports.default = GenericBarcode;
+
+/***/ },
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1377,7 +1590,7 @@
 		value: true
 	});
 
-	var _merge = __webpack_require__(11);
+	var _merge = __webpack_require__(14);
 
 	var _merge2 = _interopRequireDefault(_merge);
 
@@ -1418,7 +1631,7 @@
 		ctx.restore();
 	}
 
-	function drawCanvasText(canvas, options, encoding, sizeOptions) {
+	function drawCanvasText(canvas, options, encoding) {
 		// Get the canvas context
 		var ctx = canvas.getContext("2d");
 
@@ -1502,7 +1715,7 @@
 		ctx.translate(options.marginLeft, 0);
 	}
 
-	function drawCanvasBarcode(canvas, options, encoding, sizeOptions) {
+	function drawCanvasBarcode(canvas, options, encoding) {
 		// Get the canvas context
 		var ctx = canvas.getContext("2d");
 
@@ -1531,7 +1744,7 @@
 	}
 
 /***/ },
-/* 11 */
+/* 14 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1544,28 +1757,29 @@
 
 	function merge(old, replaceObj) {
 	  var newMerge = {};
-	  for (var k in old) {
+	  var k;
+	  for (k in old) {
 	    newMerge[k] = old[k];
 	  }
-	  for (var k in replaceObj) {
+	  for (k in replaceObj) {
 	    if (typeof replaceObj[k] !== "undefined") {
 	      newMerge[k] = replaceObj[k];
 	    }
 	  }
 	  return newMerge;
-	};
+	}
 
 /***/ },
-/* 12 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	  value: true
 	});
 
-	var _merge = __webpack_require__(11);
+	var _merge = __webpack_require__(14);
 
 	var _merge2 = _interopRequireDefault(_merge);
 
@@ -1574,138 +1788,194 @@
 	exports.default = drawSVG;
 
 
+	var svgns = "http://www.w3.org/2000/svg";
+
 	function drawSVG(svg, encodings, options) {
-		prepareSVG(svg, encodings, options);
+	  var currentX = options.marginLeft;
 
-		var currentX = options.marginLeft;
-		for (var i in encodings) {
-			var options = (0, _merge2.default)(options, encodings[i].options);
+	  prepareSVG(svg, options, encodings);
+	  for (var i in encodings) {
+	    var encodingOptions = (0, _merge2.default)(options, encodings[i].options);
+	    var group = createGroup(currentX, options.marginTop, svg);
 
-			var group = createGroup(currentX, options.marginTop, svg);
+	    drawSvgBarcode(group, encodingOptions, encodings[i]);
+	    drawSVGText(group, encodingOptions, encodings[i]);
 
-			var text = encodings[i].text;
-			var binary = encodings[i].data;
+	    currentX += encodings[i].width;
+	  }
 
-			var yFrom, yHeight;
-			if (options.textPosition == "top") {
-				yFrom = options.marginTop + options.fontSize + options.textMargin;
-			} else {
-				yFrom = options.marginTop;
-			}
-			yHeight = options.height;
-
-			for (var b in binary) {
-				var x = b * options.width;
-				if (binary[b] == 0) {} else if (binary[b] === "1") {
-					drawLine(x, yFrom, options.width, options.height, group);
-				} else if (binary[b]) {
-					drawLine(x, yFrom, options.width, options.height * binary[b], group);
-				}
-			}
-
-			// Draw the text if displayValue is set
-			if (options.displayValue) {
-				var x, y;
-				var textElem = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-
-				if (options.textPosition == "top") {
-					y = options.marginTop + options.fontSize;
-					textElem.setAttribute("alignment-baseline", "baseline");
-				} else {
-					y = options.height + options.textMargin + options.marginTop;
-					textElem.setAttribute("alignment-baseline", "text-before-edge");
-				}
-
-				textElem.setAttribute("font-family", options.font);
-				textElem.setAttribute("font-size", options.fontSize);
-
-				// Draw the text in the correct X depending on the textAlign option
-				if (options.textAlign == "left") {
-					// || barcodePadding > 0
-					x = 0;
-					textElem.setAttribute("text-anchor", "start");
-				} else if (options.textAlign == "right") {
-					x = encodings[i].width - 1;
-					textElem.setAttribute("text-anchor", "end");
-				}
-				//In all other cases, center the text
-				else {
-						x = encodings[i].width / 2;
-						textElem.setAttribute("text-anchor", "middle");
-					}
-
-				textElem.setAttribute("x", x);
-				textElem.setAttribute("y", y);
-
-				textElem.appendChild(document.createTextNode(text));
-
-				group.appendChild(textElem);
-			}
-
-			currentX += encodings[i].width;
-		}
+	  //restoreCanvas(canvas);
 	}
 
-	var prepareSVG = function prepareSVG(svg, encodings, options) {
-		// Clear SVG
-		// TODO
+	function drawSvgBarcode(parent, options, encoding) {
+	  var binary = encoding.data;
+	  var text = encoding.text;
 
-		// Calculate total width
-		var totalWidth = 0;
-		for (var i in encodings) {
-			var textWidth = messureSVGtext(encodings[i].text, svg, options);
-			var barcodeWidth = encodings[i].data.length * options.width;
+	  // Creates the barcode out of the encoded binary
+	  var yFrom, yHeight;
+	  if (options.textPosition == "top") {
+	    yFrom = options.fontSize + options.textMargin;
+	  } else {
+	    yFrom = 0;
+	  }
+	  yHeight = options.height;
 
-			encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
+	  // TODO fix line color here
 
-			totalWidth += encodings[i].width;
-		}
+	  for (var b in binary) {
+	    var x = b * options.width + encoding.barcodePadding;
+	    if (binary[b] === "0" && binary[b] === 0) {} else if (binary[b] === "1") {
+	      drawLine(x, yFrom, options.width, options.height, parent);
+	    } else if (binary[b]) {
+	      drawLine(x, yFrom, options.width, options.height * binary[b], parent);
+	    }
+	  }
+	}
 
-		svg.setAttribute("width", totalWidth + options.marginLeft + options.marginRight);
+	function drawSVGText(parent, options, encoding) {
+	  var textElem = document.createElementNS(svgns, 'text');
 
-		svg.setAttribute("height", options.height + (options.displayValue ? options.fontSize : 0) + options.textMargin + options.marginTop + options.marginBottom);
+	  // Draw the text if displayValue is set
+	  if (options.displayValue) {
+	    var x, y;
 
-		// Paint the canvas
-		/*ctx.clearRect(0,0,canvas.width,canvas.height);
-	 if(options.background){
-	 	ctx.fillStyle = options.background;
-	 	ctx.fillRect(0,0,canvas.width, canvas.height);
-	 }*/
+	    textElem.setAttribute("style", "font-family:" + options.font + ";" + "font-size:" + options.fontSize + "px;");
+
+	    if (options.textPosition == "top") {
+	      y = options.fontSize;
+	      textElem.setAttribute("alignment-baseline", "baseline");
+	    } else {
+	      y = options.height + options.textMargin;
+	      textElem.setAttribute("alignment-baseline", "text-before-edge");
+	    }
+
+	    // Draw the text in the correct X depending on the textAlign option
+	    if (options.textAlign == "left" || encoding.barcodePadding > 0) {
+	      x = 0;
+	      textElem.setAttribute("text-anchor", "start");
+	    } else if (options.textAlign == "right") {
+	      x = encoding.width - 1;
+	      textElem.setAttribute("text-anchor", "end");
+	    }
+	    //In all other cases, center the text
+	    else {
+	        x = encoding.width / 2;
+	        textElem.setAttribute("text-anchor", "middle");
+	      }
+
+	    textElem.setAttribute("x", x);
+	    textElem.setAttribute("y", y);
+
+	    textElem.appendChild(document.createTextNode(encoding.text));
+
+	    parent.appendChild(textElem);
+	  }
+	}
+
+	var prepareSVG = function prepareSVG(svg, options, encodings) {
+	  // Clear SVG
+	  // TODO
+
+	  var totalWidth = 0;
+	  for (var i in encodings) {
+	    var textWidth = messureSVGtext(encodings[i].text, svg, options);
+	    var barcodeWidth = encodings[i].data.length * options.width;
+
+	    encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
+
+	    var barcodePadding = 0;
+	    if (options.displayValue && barcodeWidth < textWidth) {
+	      if (options.textAlign == "center") {
+	        barcodePadding = Math.floor((textWidth - barcodeWidth) / 2);
+	      } else if (options.textAlign == "left") {
+	        barcodePadding = 0;
+	      } else if (options.textAlign == "right") {
+	        barcodePadding = Math.floor(textWidth - barcodeWidth);
+	      }
+	    }
+	    encodings[i].barcodePadding = barcodePadding;
+
+	    totalWidth += encodings[i].width;
+	  }
+
+	  svg.setAttribute("width", totalWidth + options.marginLeft + options.marginRight);
+
+	  svg.setAttribute("height", options.height + (options.displayValue ? options.fontSize : 0) + options.textMargin + options.marginTop + options.marginBottom);
+
+	  // Paint the canvas
+	  /*ctx.clearRect(0,0,canvas.width,canvas.height);
+	  if(options.background){
+	  	ctx.fillStyle = options.background;
+	  	ctx.fillRect(0,0,canvas.width, canvas.height);
+	  }*/
 	};
 
 	var messureSVGtext = function messureSVGtext(text, svg, options) {
-		// Create text element
-		var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
-		text.style.fontFamily = options.font;
-		// TODO add all font options
+	  // Create text element
+	  var text = document.createElementNS(svgns, 'text');
+	  text.style.fontFamily = options.font;
 
-		var textNode = document.createTextNode(text);
+	  text.setAttribute("style", "font-family:" + options.font + ";" + "font-size:" + options.fontSize + "px;");
 
-		text.appendChild(textNode);
+	  var textNode = document.createTextNode(text);
 
-		return text.getComputedTextLength();
+	  text.appendChild(textNode);
+
+	  //svg.appendChild(text);
+
+	  return text.getComputedTextLength();
 	};
 
 	function createGroup(x, y, svg) {
-		var group = document.createElementNS("http://www.w3.org/2000/svg", 'g');
+	  var group = document.createElementNS(svgns, 'g');
 
-		group.setAttribute("transform", "translate(" + x + ", " + y + ")");
+	  group.setAttribute("transform", "translate(" + x + ", " + y + ")");
 
-		svg.appendChild(group);
+	  svg.appendChild(group);
 
-		return group;
+	  return group;
 	}
 
-	function drawLine(x, y, width, height, svg) {
-		var line = document.createElementNS("http://www.w3.org/2000/svg", 'rect');
+	function drawLine(x, y, width, height, parent) {
+	  var line = document.createElementNS(svgns, 'rect');
 
-		line.setAttribute("x", x);
-		line.setAttribute("y", y);
-		line.setAttribute("width", width);
-		line.setAttribute("height", height);
-		line.setAttribute("style", "fill:rgb(0,0,0)");
+	  line.setAttribute("x", x);
+	  line.setAttribute("y", y);
+	  line.setAttribute("width", width);
+	  line.setAttribute("height", height);
+	  line.setAttribute("style", "fill:rgb(0,0,0)");
 
-		svg.appendChild(line);
+	  parent.appendChild(line);
+	}
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = linearizeEncodings;
+
+
+	function linearizeEncodings(encodings) {
+	  var linearEncodings = [];
+	  function nextLevel(encoded) {
+	    if (Array.isArray(encoded)) {
+	      for (var i in encoded) {
+	        nextLevel(encoded[i]);
+	      }
+	    } else {
+	      encoded.text = encoded.text || "";
+	      encoded.data = encoded.data || "";
+	      linearEncodings.push(encoded);
+	    }
+	  }
+	  nextLevel(encodings);
+
+	  return linearEncodings;
 	}
 
 /***/ }

@@ -350,11 +350,4 @@ class CODE128C extends CODE128{
 	}
 }
 
-//Required to register for both browser and nodejs
-function register(core) {
-	core.register(CODE128AUTO, /^CODE128(.?AUTO)?$/, 10);
-	core.register(CODE128A, /^CODE128.?A$/i, 2);
-	core.register(CODE128B, /^CODE128.?B$/i, 3);
-	core.register(CODE128C, /^CODE128.?C$/i, 2);
-}
-export default register;
+export {CODE128, CODE128A, CODE128B, CODE128C};
