@@ -21,59 +21,6 @@ function drawCanvas(canvas, encodings, options){
 	restoreCanvas(canvas);
 }
 
-function moveCanvasDrawing(canvas, encoding){
-	var ctx = canvas.getContext("2d");
-
-	ctx.translate(encoding.width, 0);
-}
-
-function restoreCanvas(canvas){
-	// Get the canvas context
-	var ctx = canvas.getContext("2d");
-
-	ctx.restore();
-}
-
-function drawCanvasText(canvas, options, encoding){
-	// Get the canvas context
-	var ctx = canvas.getContext("2d");
-
-	var font = options.fontOptions + " " + options.fontSize + "px "+options.font;
-
-	// Draw the text if displayValue is set
-	if(options.displayValue){
-		var x, y;
-
-		if(options.textPosition == "top"){
-			y = options.marginTop + options.fontSize;
-			ctx.textBaseline = "bottom";
-		}
-		else{
-			y = options.height + options.textMargin + options.marginTop;
-			ctx.textBaseline = "top";
-		}
-
-		ctx.font = font;
-
-		// Draw the text in the correct X depending on the textAlign option
-		if(options.textAlign == "left" || encoding.barcodePadding > 0){
-			x = 0;
-			ctx.textAlign = 'left';
-		}
-		else if(options.textAlign == "right"){
-			x = encoding.width-1;
-			ctx.textAlign = 'right';
-		}
-		//In all other cases, center the text
-		else{
-			x = encoding.width / 2;
-			ctx.textAlign = 'center';
-		}
-
-		ctx.fillText(encoding.text, x, y);
-	}
-}
-
 function prepareCanvas(canvas, options, encodings){
 	// Get the canvas context
 	var ctx = canvas.getContext("2d");
@@ -167,4 +114,59 @@ function drawCanvasBarcode(canvas, options, encoding){
 			ctx.fillRect(x, yFrom, options.width, options.height * binary[b]);
 		}
 	}
+}
+
+function drawCanvasText(canvas, options, encoding){
+	// Get the canvas context
+	var ctx = canvas.getContext("2d");
+
+	var font = options.fontOptions + " " + options.fontSize + "px "+options.font;
+
+	// Draw the text if displayValue is set
+	if(options.displayValue){
+		var x, y;
+
+		if(options.textPosition == "top"){
+			y = options.marginTop + options.fontSize;
+			ctx.textBaseline = "bottom";
+		}
+		else{
+			y = options.height + options.textMargin + options.marginTop;
+			ctx.textBaseline = "top";
+		}
+
+		ctx.font = font;
+
+		// Draw the text in the correct X depending on the textAlign option
+		if(options.textAlign == "left" || encoding.barcodePadding > 0){
+			x = 0;
+			ctx.textAlign = 'left';
+		}
+		else if(options.textAlign == "right"){
+			x = encoding.width-1;
+			ctx.textAlign = 'right';
+		}
+		//In all other cases, center the text
+		else{
+			x = encoding.width / 2;
+			ctx.textAlign = 'center';
+		}
+
+		ctx.fillText(encoding.text, x, y);
+	}
+}
+
+
+
+function moveCanvasDrawing(canvas, encoding){
+	var ctx = canvas.getContext("2d");
+
+	ctx.translate(encoding.width, 0);
+}
+
+function restoreCanvas(canvas){
+	// Get the canvas context
+	var ctx = canvas.getContext("2d");
+
+	ctx.restore();
 }

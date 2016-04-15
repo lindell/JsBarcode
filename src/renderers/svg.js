@@ -23,10 +23,57 @@ function drawSVG(svg, encodings, options){
 }
 
 
-function setGroupOptions(group, options, encoding){
-  group.setAttribute("style",
-    "fill:" + options.lineColor + ";"
-  );
+function prepareSVG(svg, options, encodings){
+  // Clear the SVG
+  while (svg.firstChild) {
+    svg.removeChild(svg.firstChild);
+  }
+
+  var totalWidth = 0;
+  var maxHeight = 0;
+	for(var i in encodings){
+    let options = merge(options, encodings[i].options);
+
+    // Calculate the width of the encoding
+		var textWidth = messureSVGtext(encodings[i].text, svg, options);
+		var barcodeWidth = encodings[i].data.length * options.width;
+		encodings[i].width =  Math.ceil(Math.max(textWidth, barcodeWidth));
+
+    // Calculate the height of the encoding
+    var height = options.height +
+      (options.displayValue ? options.fontSize : 0) +
+      options.textMargin +
+      options.marginTop +
+      options.marginBottom;
+
+		var barcodePadding = 0;
+		if(options.displayValue && barcodeWidth < textWidth){
+			if(options.textAlign == "center"){
+				barcodePadding = Math.floor((textWidth - barcodeWidth)/2);
+			}
+			else if(options.textAlign == "left"){
+				barcodePadding = 0;
+			}
+			else if(options.textAlign == "right"){
+				barcodePadding = Math.floor(textWidth - barcodeWidth);
+			}
+		}
+		encodings[i].barcodePadding = barcodePadding;
+
+    if(height > maxHeight){
+      maxHeight = height;
+    }
+
+		totalWidth += encodings[i].width;
+	}
+
+	svg.setAttribute("width", totalWidth + options.marginLeft + options.marginRight);
+
+	svg.setAttribute("height", maxHeight);
+
+	if(options.background){
+		svg.style.background = options.background;
+	}
 }
 
 function drawSvgBarcode(parent, options, encoding){
@@ -101,61 +148,10 @@ function drawSVGText(parent, options, encoding){
   }
 }
 
-
-var prepareSVG = function(svg, options, encodings){
-  // Clear the SVG
-  while (svg.firstChild) {
-    svg.removeChild(svg.firstChild);
-  }
-
-  var totalWidth = 0;
-  var maxHeight = 0;
-	for(var i in encodings){
-    let options = merge(options, encodings[i].options);
-
-    // Calculate the width of the encoding
-		var textWidth = messureSVGtext(encodings[i].text, svg, options);
-		var barcodeWidth = encodings[i].data.length * options.width;
-		encodings[i].width =  Math.ceil(Math.max(textWidth, barcodeWidth));
-
-    // Calculate the height of the encoding
-    var height = options.height +
-      (options.displayValue ? options.fontSize : 0) +
-      options.textMargin +
-      options.marginTop +
-      options.marginBottom;
-
-		var barcodePadding = 0;
-		if(options.displayValue && barcodeWidth < textWidth){
-			if(options.textAlign == "center"){
-				barcodePadding = Math.floor((textWidth - barcodeWidth)/2);
-			}
-			else if(options.textAlign == "left"){
-				barcodePadding = 0;
-			}
-			else if(options.textAlign == "right"){
-				barcodePadding = Math.floor(textWidth - barcodeWidth);
-			}
-		}
-		encodings[i].barcodePadding = barcodePadding;
-
-    if(height > maxHeight){
-      maxHeight = height;
-    }
-
-		totalWidth += encodings[i].width;
-	}
-
-	svg.setAttribute("width", totalWidth + options.marginLeft + options.marginRight);
-
-	svg.setAttribute("height", maxHeight);
-
-	if(options.background){
-		svg.style.background = options.background;
-	}
-}
-
-var messureSVGtext = function(string, svg, options){
+//
+// Help functions
+//
+function messureSVGtext(string, svg, options){
 	// Create text element
 	var text = document.createElementNS(svgns, 'text');
 	text.style.fontFamily = options.font;
@@ -186,6 +182,12 @@ function createGroup(x, y, svg){
 	svg.appendChild(group);
 
 	return group;
+}
+
+function setGroupOptions(group, options, encoding){
+  group.setAttribute("style",
+    "fill:" + options.lineColor + ";"
+  );
 }
 
 function drawLine(x, y, width, height, parent){
