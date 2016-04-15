@@ -33,6 +33,8 @@ let JsBarcode = function(element, text, options){
 	// Parts of the API that is not the barcodes
 	api.render = renderCall;
 	api.options = optionsCall;
+	api.blank = blankCall;
+
 
 	// Variables that will be pased through the API calls
 	api._renderProperties = getRenderProperies(element);
@@ -108,6 +110,13 @@ function autoSelectBarcode(){
 // Added to the api by the JsBarcode function
 function optionsCall(options){
 	this._options = merge(this._options, options);
+	return this;
+}
+
+// Will create a blank space (usually in between barcodes)
+function blankCall(size){
+	var zeroes = "0".repeat(size);
+	this._encodings.push({data: zeroes});
 	return this;
 }
 

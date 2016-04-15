@@ -5,7 +5,6 @@ import ITF14 from './barcodes/ITF14/';
 import ITF from './barcodes/ITF/';
 import {MSI, MSI10, MSI11, MSI1010, MSI1110} from './barcodes/MSI/';
 import pharmacode from './barcodes/pharmacode/';
-import {blank} from './barcodes/blank.js'
 import GenericBarcode from './barcodes/GenericBarcode/';
 
 export default {
@@ -16,6 +15,5 @@ export default {
   ITF,
   MSI, MSI10, MSI11, MSI1010, MSI1110,
   pharmacode,
-  blank,
   GenericBarcode
 };
