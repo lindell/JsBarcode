@@ -41,7 +41,7 @@ function prepareSVG(svg, options, encodings){
 
     // Calculate the height of the encoding
     var height = options.height +
-      (options.displayValue ? options.fontSize : 0) +
+      ((options.displayValue && encodings[i].text.length > 0) ? options.fontSize : 0) +
       options.textMargin +
       options.marginTop +
       options.marginBottom;
