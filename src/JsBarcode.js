@@ -28,6 +28,8 @@ let JsBarcode = function(element, text, options){
 		return api;
 	}
 
+	options = options || {};
+
 	// Parts of the API that is not the barcodes
 	api.render = renderCall;
 	api.options = optionsCall;
@@ -71,7 +73,12 @@ function registerBarcode(barcodes, name){
 		var encoder = new Encoder(text, newOptions);
 
 		if(!encoder.valid()){
-			throw new Error('"'+ text +'" is not a valid input for ' + name);
+			if(this._options.valid === defaults.valid){
+				throw new Error('"'+ text +'" is not a valid input for ' + name);
+			}
+			else{
+				this._options.valid(false);
+			}
 		}
 
 		var encoded = encoder.encode();
@@ -123,6 +130,8 @@ function renderCall(){
 	if(this._drawProperties.afterRender){
 		this._drawProperties.afterRender();
 	}
+
+	this._options.valid(true);
 
 	return this;
 }

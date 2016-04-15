@@ -5,7 +5,7 @@ var Canvas = require("canvas");
 describe('Encoders', function() {
   it('should be able to include the encoders needed', function () {
     CODE128 = JsBarcode.getModule("CODE128");
-    GENERIC = JsBarcode.getModule("generic");
+    GENERIC = JsBarcode.getModule("GenericBarcode");
   });
 });
 
@@ -28,7 +28,6 @@ describe('node-canvas generation', function() {
   it('should throws errors when suppose to', function () {
     var canvas = new Canvas();
     assert.throws(function(){JsBarcode(canvas, "Hello", {format: "EAN8"});});
-    assert.throws(function(){JsBarcode(canvas, "Hello", {format: "DOESNOTEXIST"});}, /Module DOESNOTEXIST does not exist/i);
     assert.throws(function(){JsBarcode("Hello", "Hello", {format: "DOESNOTEXIST"});});
     assert.throws(function(){JsBarcode(123, "Hello", {format: "DOESNOTEXIST"});});
   });
