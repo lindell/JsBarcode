@@ -1,6 +1,7 @@
 export default drawCanvas;
 
 import merge from "../help/merge.js";
+import fixOptions from "../help/fixOptions.js";
 
 function drawCanvas(canvas, encodings, options){
 	//Abort if the browser does not support HTML5 canvas
@@ -11,6 +12,7 @@ function drawCanvas(canvas, encodings, options){
 	prepareCanvas(canvas, options, encodings);
 	for(var i in encodings){
 		var encodingOptions = merge(options, encodings[i].options);
+		fixOptions(encodingOptions);
 
 		drawCanvasBarcode(canvas, encodingOptions, encodings[i]);
 		drawCanvasText(canvas, encodingOptions, encodings[i]);
@@ -80,16 +82,27 @@ function prepareCanvas(canvas, options, encodings){
 
 	ctx.save();
 
-	// Set font
-	ctx.font = options.fontOptions + " " + options.fontSize + "px "+options.font;
-
 	// Calculate total width
 	var totalWidth = 0;
+	var maxHeight = 0;
 	for(var i in encodings){
+	 	let options = merge(options, encodings[i].options);
+		fixOptions(options);
+
+		// Set font
+		ctx.font = options.fontOptions + " " + options.fontSize + "px "+options.font;
+
+		// Calculate the width of the encoding
 		var textWidth = ctx.measureText(encodings[i].text).width;
 		var barcodeWidth = encodings[i].data.length * options.width;
-
 		encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
+
+		// Calculate the height of the encoding
+		var height = options.height +
+			(options.displayValue ? options.fontSize : 0) +
+			options.textMargin +
+			options.marginTop +
+			options.marginBottom;
 
 		var barcodePadding = 0;
 		if(options.displayValue && barcodeWidth < textWidth){
@@ -105,17 +118,18 @@ function prepareCanvas(canvas, options, encodings){
 		}
 		encodings[i].barcodePadding = barcodePadding;
 
+		if(height > maxHeight){
+			maxHeight = height;
+		}
+
 		totalWidth += encodings[i].width;
 	}
 
+	fixOptions(options);
+
 	canvas.width = totalWidth + options.marginLeft + options.marginRight;
 
-
-	canvas.height = options.height +
-		(options.displayValue ? options.fontSize : 0) +
-		options.textMargin +
-		options.marginTop +
-		options.marginBottom;
+	canvas.height = maxHeight;
 
 	// Paint the canvas
 	ctx.clearRect(0,0,canvas.width,canvas.height);

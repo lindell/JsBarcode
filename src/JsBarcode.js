@@ -14,19 +14,35 @@ import merge from './help/merge.js';
 import linearizeEncodings from './help/linearizeEncodings.js'
 
 let api = {};
-let JsBarcode = function(element){
+let JsBarcode = function(element, text, options){
 	var newApi = {};
 	for(var key in api){
 		newApi[key]=api[key];
 	}
 
+	if(typeof element === "undefined"){
+		return newApi;
+	}
+
 	newApi.drawProperties = getDrawProperies(element);
 
 	newApi.encodings = [];
-	newApi.draw = draw;
+	newApi.render = render;
 	newApi._options = defaults;
 
+	// If text is set, use simple syntax
+	if(typeof text !== "undefined"){
+		newApi.options(options);
+		newApi[options.format](text, options);
+		newApi.render();
+	}
+
 	return newApi;
+}
+
+// To make tests work
+JsBarcode.getModule = function(name){
+	return barcodes[name];
 }
 
 api.options = function(options){
@@ -48,7 +64,11 @@ function registerBarcode(barcodes, name){
 		var encoder = new Encoder(text, newOptions);
 
 		var encoded = encoder.encode();
-		encoded.options = newOptions;
+		encoded = linearizeEncodings(encoded);
+
+		for(var i in encoded){
+			encoded[i].options = merge(newOptions, encoded[i].options);
+		}
 
 		this.encodings.push(encoded);
 
@@ -56,18 +76,23 @@ function registerBarcode(barcodes, name){
 	};
 }
 
-function draw(){
+function render(){
 	var renderer = renderers[this.drawProperties.renderer];
 
 	var encodings = linearizeEncodings(this.encodings);
-	fixOptions(this._options);
 
 	renderer(this.drawProperties.element, encodings, this._options);
+
+	if(this.drawProperties.afterRender){
+		this.drawProperties.afterRender();
+	}
 
 	return this;
 }
 
-window.JsBarcode = JsBarcode;
+if(typeof window !== "undefined"){
+	window.JsBarcode = JsBarcode;
+}
 module.exports = JsBarcode;
 
 function getDrawProperies(element){
@@ -82,7 +107,7 @@ function getDrawProperies(element){
 		return {
 			element: canvas,
 			renderer: "canvas",
-			afterDraw: function(){
+			afterRender: function(){
 				element.setAttribute("src", canvas.toDataURL());
 			}
 		};
@@ -93,7 +118,7 @@ function getDrawProperies(element){
 			renderer: "svg"
 		};
 	}
-	// If canvas, just draw
+	// If canvas, draw it
 	else if(element.getContext){
 		return {
 			element: element,
@@ -104,20 +129,6 @@ function getDrawProperies(element){
 		throw new Error("Not supported type to draw on.");
 	}
 };
-
-function fixOptions(options){
-	// Fix the margins
-	options.marginTop = typeof options.marginTop === "undefined" ?
-		options.margin : options.marginTop;
-	options.marginBottom = typeof options.marginBottom === "undefined" ?
-		options.margin : options.marginBottom;
-	options.marginRight = typeof options.marginRight === "undefined" ?
-		options.margin : options.marginRight;
-	options.marginLeft = typeof options.marginLeft === "undefined" ?
-		options.margin : options.marginLeft;
-
-	return options;
-}
 
 var defaults = {
 	width: 2,

@@ -1,24 +1,35 @@
 export default drawSVG;
 
 import merge from "../help/merge.js";
+import fixOptions from "../help/fixOptions.js";
 
 var svgns = "http://www.w3.org/2000/svg";
 
 function drawSVG(svg, encodings, options){
+  fixOptions(options);
   var currentX = options.marginLeft;
 
 	prepareSVG(svg, options, encodings);
 	for(var i in encodings){
 		var encodingOptions = merge(options, encodings[i].options);
-    var group = createGroup(currentX, options.marginTop, svg);
+    fixOptions(encodingOptions);
+
+    var group = createGroup(currentX, encodingOptions.marginTop, svg);
+
+    setGroupOptions(group, encodingOptions, encodings[i]);
 
 		drawSvgBarcode(group, encodingOptions, encodings[i]);
 		drawSVGText(group, encodingOptions, encodings[i]);
 
     currentX += encodings[i].width;
 	}
+}
 
-	//restoreCanvas(canvas);
+
+function setGroupOptions(group, options, encoding){
+  group.setAttribute("style",
+    "fill:" + options.lineColor + ";"
+  );
 }
 
 function drawSvgBarcode(parent, options, encoding){
@@ -59,8 +70,7 @@ function drawSVGText(parent, options, encoding){
     var x, y;
 
     textElem.setAttribute("style",
-      "font-family:" + options.font + ";" +
-      "font-size:" + options.fontSize + "px;"
+      "font:" + options.fontOptions + " " + options.fontSize + "px "+options.font
     );
 
     if(options.textPosition == "top"){
@@ -98,15 +108,28 @@ function drawSVGText(parent, options, encoding){
 
 
 var prepareSVG = function(svg, options, encodings){
-	// Clear SVG
-	// TODO
+  // Clear the SVG
+  while (svg.firstChild) {
+    svg.removeChild(svg.firstChild);
+  }
 
   var totalWidth = 0;
+  var maxHeight = 0;
 	for(var i in encodings){
+    let options = merge(options, encodings[i].options);
+    fixOptions(options);
+
+    // Calculate the width of the encoding
 		var textWidth = messureSVGtext(encodings[i].text, svg, options);
 		var barcodeWidth = encodings[i].data.length * options.width;
-
 		encodings[i].width =  Math.ceil(Math.max(textWidth, barcodeWidth));
+
+    // Calculate the height of the encoding
+    var height = options.height +
+      (options.displayValue ? options.fontSize : 0) +
+      options.textMargin +
+      options.marginTop +
+      options.marginBottom;
 
 		var barcodePadding = 0;
 		if(options.displayValue && barcodeWidth < textWidth){
@@ -122,26 +145,25 @@ var prepareSVG = function(svg, options, encodings){
 		}
 		encodings[i].barcodePadding = barcodePadding;
 
+    if(height > maxHeight){
+      maxHeight = height;
+    }
+
 		totalWidth += encodings[i].width;
 	}
 
+  fixOptions(options);
+
 	svg.setAttribute("width", totalWidth + options.marginLeft + options.marginRight);
 
-	svg.setAttribute("height", options.height
-		+ (options.displayValue ? options.fontSize : 0)
-		+ options.textMargin
-		+ options.marginTop
-		+ options.marginBottom);
+	svg.setAttribute("height", maxHeight);
 
-	// Paint the canvas
-	/*ctx.clearRect(0,0,canvas.width,canvas.height);
 	if(options.background){
-		ctx.fillStyle = options.background;
-		ctx.fillRect(0,0,canvas.width, canvas.height);
-	}*/
+		svg.style.background = options.background;
+	}
 }
 
-var messureSVGtext = function(text, svg, options){
+var messureSVGtext = function(string, svg, options){
 	// Create text element
 	var text = document.createElementNS(svgns, 'text');
 	text.style.fontFamily = options.font;
@@ -151,13 +173,17 @@ var messureSVGtext = function(text, svg, options){
     "font-size:" + options.fontSize + "px;"
   );
 
-	var textNode = document.createTextNode(text);
+	var textNode = document.createTextNode(string);
 
 	text.appendChild(textNode);
 
-  //svg.appendChild(text);
+  svg.appendChild(text);
 
-	return text.getComputedTextLength();
+  var size = text.getComputedTextLength();
+
+  svg.removeChild(text);
+
+	return size;
 }
 
 function createGroup(x, y, svg){
@@ -177,7 +203,6 @@ function drawLine(x, y, width, height, parent){
 	line.setAttribute("y", y);
 	line.setAttribute("width", width);
 	line.setAttribute("height", height);
-	line.setAttribute("style", "fill:rgb(0,0,0)");
 
 	parent.appendChild(line);
 }

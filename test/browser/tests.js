@@ -7,9 +7,9 @@ function createTests(newTest){
   newTest("12345", {format: "EAN5", width: 1});
   newTest("52", {format: "EAN2", width: 1});
   newTest("123456789999", {format: "UPC", width: 1});
-  newTest("5901234123457", {format: "EAN", fontSize: 20, textMargin: 0});
-  newTest("590123412345", {format: "EAN", width: 2, fontSize: 16});
-  newTest("590123412345", {format: "EAN", width: 3, fontSize: 35});
+  newTest("5901234123457", {format: "EAN13", fontSize: 20, textMargin: 0});
+  newTest("590123412345", {format: "EAN13", width: 2, fontSize: 16});
+  newTest("590123412345", {format: "EAN13", width: 3});
   newTest("96385074", {format: "EAN8", width: 1});
   newTest("9638507", {format: "EAN8", width: 1});
   newTest("12345678", {format: "ITF", width: 1});
@@ -17,7 +17,7 @@ function createTests(newTest){
   newTest("12345", {format: "pharmacode", width: 1});
   newTest("133742", {format: "CODE128C", width: 1});
   newTest("12345674", {format: "MSI", width: 1});
-  newTest("12345674", {format: "Generic", width: 1});
+  newTest("12345674", {format: "GenericBarcode", width: 1});
   newTest("Such customize!", {
     width: 1,
     height:	50,

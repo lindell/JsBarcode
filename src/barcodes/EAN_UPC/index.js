@@ -24,19 +24,19 @@ class EAN13{
 			"LGGLGL"
 		];
 
-		this.guardHeight = options.height + options.fontSize/2 + options.textMargin;
+		if(options.fontSize > options.width * 10){
+			this.fontSize = options.width * 10;
+		}
+		else{
+			this.fontSize = options.fontSize;
+		}
+
+		this.guardHeight = options.height + this.fontSize/2 + options.textMargin;
 	}
 
 	valid(){
 		return this.string.search(/^[0-9]{13}$/) !== -1 &&
 			this.string[12] == this.checksum(this.string);
-	}
-
-	options(options){
-		options.textMargin = 0;
-		if(options.fontSize > options.width * 11){
-			options.fontSize = options.width * 11;
-		}
 	}
 
 	encode(){
@@ -54,26 +54,41 @@ class EAN13{
 		// Add the first digigt
 		result.push({
 			data: "000000000000",
-			text: this.string[0], options: {textAlign: "left"}
+			text: this.string[0],
+			options: {textAlign: "left", fontSize: this.fontSize}
 		});
 
 		//Add the guard bars
-		result.push({data: "101", options: {height: this.guardHeight}});
+		result.push({
+			data: "101",
+			options: {height: this.guardHeight}
+		});
 
 		//Add the left side
 		result.push({
 			data: encoder.encode(leftSide, structure),
-			text: leftSide
+			text: leftSide,
+			options: {fontSize: this.fontSize}
 		});
 
 		//Add the middle bits
-		result.push({data: "01010", options: {height: this.guardHeight}});
+		result.push({
+			data: "01010",
+			options: {height: this.guardHeight}
+		});
 
 		//Add the right side
-		result.push({data: encoder.encode(rightSide, "RRRRRR"), text: rightSide});
+		result.push({
+			data: encoder.encode(rightSide, "RRRRRR"),
+			text: rightSide,
+			options: {fontSize: this.fontSize}
+		});
 
 		//Add the end bits
-		result.push({data: "101", options: {height: this.guardHeight}});
+		result.push({
+			data: "101",
+			options: {height: this.guardHeight}
+		});
 
 		return result;
 	}
