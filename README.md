@@ -42,7 +42,7 @@ Examples for browsers:
 
 
 
-#### Code:
+#### Simple example:
 ````javascript
 JsBarcode("#barcode","Hi!");
 // or with jQuery
@@ -50,41 +50,40 @@ $("#barcode").JsBarcode("Hi!");
 ````
 
 ##### Result:
-![Result](http://lindell.github.io/JsBarcode/README_images/hi.png)
+![Result](http://i.imgur.com/TIp2tk5.png)
 
 
-
-#### Code:
-````javascript
-$("#barcode").JsBarcode("9780199532179", {
-  format:"EAN",
-  fontSize:24,
-  lineColor: "#0cc"
-});
-````
-##### Result:
-![Result](http://lindell.github.io/JsBarcode/README_images/ean.png)
-
-
-
-
-#### Code:
+#### Example with options:
 ````javascript
 JsBarcode("#barcode", "1234", {
-  format: "pharmacode"
+  format: "pharmacode",
+  lineColor: "#0aa",
   width:4,
   height:40,
   displayValue: false
 });
 ````
 ##### Result:
-![Result](http://lindell.github.io/JsBarcode/README_images/pharmacode.png)
+![Result](http://i.imgur.com/Y2IrjUi.png)
+
+
+#### More advanced use case:
+````javascript
+JsBarcode("#barcode")
+  .options({fontOptions: "italic"})
+  .EAN13("1234567890128")
+  .blank(20)
+  .EAN5("12345", {height: 85, textPosition: "top", fontSize: 16})
+  .render();
+````
+##### Result:
+![Result](http://i.imgur.com/PV2PuTE.png)
 
 
 Setup for browsers:
 ----
 ### Step 1:
-##### [Download the library from this page](http://lindell.me/JsBarcode/download/)
+##### [Download the library](https://github.com/lindell/JsBarcode/releases)
 
 ### Step 2:
 Include the script in your code:
