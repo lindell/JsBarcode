@@ -12,6 +12,8 @@ let renderers = {
 // Help functions
 import merge from './help/merge.js';
 import linearizeEncodings from './help/linearizeEncodings.js'
+import fixOptions from "./help/fixOptions.js";
+
 
 let api = {};
 let JsBarcode = function(element, text, options){
@@ -80,6 +82,13 @@ function render(){
 	var renderer = renderers[this.drawProperties.renderer];
 
 	var encodings = linearizeEncodings(this.encodings);
+
+	for(var i in encodings){
+		encodings[i].options = merge(this._options, encodings[i].options);
+		fixOptions(encodings[i].options);
+	}
+
+	fixOptions(this._options);
 
 	renderer(this.drawProperties.element, encodings, this._options);
 

@@ -1,7 +1,6 @@
 export default drawCanvas;
 
 import merge from "../help/merge.js";
-import fixOptions from "../help/fixOptions.js";
 
 function drawCanvas(canvas, encodings, options){
 	//Abort if the browser does not support HTML5 canvas
@@ -12,7 +11,6 @@ function drawCanvas(canvas, encodings, options){
 	prepareCanvas(canvas, options, encodings);
 	for(var i in encodings){
 		var encodingOptions = merge(options, encodings[i].options);
-		fixOptions(encodingOptions);
 
 		drawCanvasBarcode(canvas, encodingOptions, encodings[i]);
 		drawCanvasText(canvas, encodingOptions, encodings[i]);
@@ -87,7 +85,6 @@ function prepareCanvas(canvas, options, encodings){
 	var maxHeight = 0;
 	for(var i in encodings){
 	 	let options = merge(options, encodings[i].options);
-		fixOptions(options);
 
 		// Set font
 		ctx.font = options.fontOptions + " " + options.fontSize + "px "+options.font;
@@ -124,8 +121,6 @@ function prepareCanvas(canvas, options, encodings){
 
 		totalWidth += encodings[i].width;
 	}
-
-	fixOptions(options);
 
 	canvas.width = totalWidth + options.marginLeft + options.marginRight;
 

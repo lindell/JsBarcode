@@ -1,18 +1,15 @@
 export default drawSVG;
 
 import merge from "../help/merge.js";
-import fixOptions from "../help/fixOptions.js";
 
 var svgns = "http://www.w3.org/2000/svg";
 
 function drawSVG(svg, encodings, options){
-  fixOptions(options);
   var currentX = options.marginLeft;
 
 	prepareSVG(svg, options, encodings);
 	for(var i in encodings){
 		var encodingOptions = merge(options, encodings[i].options);
-    fixOptions(encodingOptions);
 
     var group = createGroup(currentX, encodingOptions.marginTop, svg);
 
@@ -45,8 +42,6 @@ function drawSvgBarcode(parent, options, encoding){
     yFrom = 0;
   }
   yHeight = options.height;
-
-  // TODO fix line color here
 
   for(var b in binary){
     var x = b*options.width + encoding.barcodePadding;
@@ -117,7 +112,6 @@ var prepareSVG = function(svg, options, encodings){
   var maxHeight = 0;
 	for(var i in encodings){
     let options = merge(options, encodings[i].options);
-    fixOptions(options);
 
     // Calculate the width of the encoding
 		var textWidth = messureSVGtext(encodings[i].text, svg, options);
@@ -151,8 +145,6 @@ var prepareSVG = function(svg, options, encodings){
 
 		totalWidth += encodings[i].width;
 	}
-
-  fixOptions(options);
 
 	svg.setAttribute("width", totalWidth + options.marginLeft + options.marginRight);
 
