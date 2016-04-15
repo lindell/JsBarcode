@@ -11,7 +11,7 @@ let renderers = {
 
 // Help functions
 import merge from './help/merge.js';
-import linearizeEncodings from './help/linearizeEncodings.js'
+import linearizeEncodings from './help/linearizeEncodings.js';
 import fixOptions from "./help/fixOptions.js";
 
 let barcodesAPIs = {};
@@ -39,6 +39,10 @@ let JsBarcode = function(element, text, options){
 
 	// If text is set, use simple syntax
 	if(typeof text !== "undefined"){
+		if(!options.format){
+			options.format = autoSelectBarcode();
+		}
+
 		api.options(options);
 		api[options.format](text, options);
 		api.render();
@@ -81,6 +85,16 @@ function registerBarcode(barcodes, name){
 
 		return this;
 	};
+}
+
+function autoSelectBarcode(){
+	// If CODE128 exists. Use it
+	if(barcodesAPIs["CODE128"]){
+		return "CODE128";
+	}
+
+	// Else, take the first (probably only) barcode
+	return Object.keys(barcodesAPIs)[0];
 }
 
 // Sets global encoder options
