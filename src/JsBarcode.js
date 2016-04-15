@@ -2,11 +2,11 @@
 import barcodes from './barcodes.js';
 
 // Import the renderers
-import drawCanvas from './renderers/canvas.js';
-import drawSVG from './renderers/svg.js';
+import renderCanvas from './renderers/canvas.js';
+import renderSVG from './renderers/svg.js';
 let renderers = {
-	"canvas": drawCanvas,
-	"svg": drawSVG
+	"canvas": renderCanvas,
+	"svg": renderSVG
 };
 
 // Help functions
@@ -35,7 +35,7 @@ let JsBarcode = function(element, text, options){
 	api.options = optionsCall;
 
 	// Variables that will be pased through the API calls
-	api._drawProperties = getDrawProperies(element);
+	api._renderProperties = getRenderProperies(element);
 	api._encodings = [];
 	api._options = defaults;
 
@@ -114,7 +114,7 @@ function optionsCall(options){
 // Prepares the encodings and calls the renderer
 // Added to the api by the JsBarcode function
 function renderCall(){
-	var renderer = renderers[this._drawProperties.renderer];
+	var renderer = renderers[this._renderProperties.renderer];
 
 	var encodings = linearizeEncodings(this._encodings);
 
@@ -125,10 +125,10 @@ function renderCall(){
 
 	fixOptions(this._options);
 
-	renderer(this._drawProperties.element, encodings, this._options);
+	renderer(this._renderProperties.element, encodings, this._options);
 
-	if(this._drawProperties.afterRender){
-		this._drawProperties.afterRender();
+	if(this._renderProperties.afterRender){
+		this._renderProperties.afterRender();
 	}
 
 	this._options.valid(true);
@@ -149,13 +149,13 @@ module.exports = JsBarcode;
 //   afterRender (optional): If something has to done after the renderer
 //     completed, calls afterRender (function)
 // }
-function getDrawProperies(element){
+function getRenderProperies(element){
 	// If the element is a string, query select call again
 	if(typeof element === "string"){
 		element = document.querySelector(element);
-		return getDrawProperies(element);
+		return getRenderProperies(element);
 	}
-	// If element, draw on canvas and set the uri as src
+	// If element, render on canvas and set the uri as src
 	else if(typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLImageElement){
 		var canvas = document.createElement('canvas');
 		return {
@@ -172,7 +172,7 @@ function getDrawProperies(element){
 			renderer: "svg"
 		};
 	}
-	// If canvas, draw it
+	// If canvas
 	else if(element.getContext){
 		return {
 			element: element,
@@ -180,7 +180,7 @@ function getDrawProperies(element){
 		};
 	}
 	else{
-		throw new Error("Not supported type to draw on.");
+		throw new Error("Not supported type to render on.");
 	}
 };
 

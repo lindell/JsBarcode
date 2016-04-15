@@ -1,10 +1,10 @@
-export default drawSVG;
+export default renderSVG;
 
 import merge from "../help/merge.js";
 
 var svgns = "http://www.w3.org/2000/svg";
 
-function drawSVG(svg, encodings, options){
+function renderSVG(svg, encodings, options){
   var currentX = options.marginLeft;
 
 	prepareSVG(svg, options, encodings);

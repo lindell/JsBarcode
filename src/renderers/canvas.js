@@ -1,8 +1,8 @@
-export default drawCanvas;
+export default renderCanvas;
 
 import merge from "../help/merge.js";
 
-function drawCanvas(canvas, encodings, options){
+function renderCanvas(canvas, encodings, options){
 	//Abort if the browser does not support HTML5 canvas
 	if (!canvas.getContext) {
 		throw new Error('The browser does not support canvas.');
