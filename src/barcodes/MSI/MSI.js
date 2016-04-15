@@ -1,5 +1,3 @@
-import {mod10, mod11} from './checksums.js'
-
 class MSI{
 	constructor(string){
 		this.string = string;
@@ -29,27 +27,6 @@ class MSI{
 	}
 }
 
-class MSI11 extends MSI{
-	constructor(string){
-		super(string);
-		this.string += mod11(this.string);
-	}
-}
-class MSI1010 extends MSI{
-	constructor(string){
-		super(string);
-		this.string += mod10(this.string);
-		this.string += mod10(this.string);
-	}
-}
-class MSI1110 extends MSI{
-	constructor(string){
-		super(string);
-		this.string += mod11(this.string);
-		this.string += mod10(this.string);
-	}
-}
-
 function addZeroes(number, n){
 	for(var i=0;i<n;i++){
 		number = "0"+number;
@@ -57,4 +34,4 @@ function addZeroes(number, n){
 	return number;
 }
 
-export {MSI, MSI11, MSI1010, MSI1110};
+export default MSI;

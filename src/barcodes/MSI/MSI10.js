@@ -1,5 +1,5 @@
 import MSI from './MSI.js';
-import mod10 from './checksums.js';
+import {mod10} from './checksums.js';
 
 class MSI10 extends MSI{
 	constructor(string){
@@ -7,3 +7,5 @@ class MSI10 extends MSI{
 		this.string += mod10(this.string);
 	}
 }
+
+export default MSI10;
