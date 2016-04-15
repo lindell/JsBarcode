@@ -14,52 +14,53 @@ import merge from './help/merge.js';
 import linearizeEncodings from './help/linearizeEncodings.js'
 import fixOptions from "./help/fixOptions.js";
 
+let barcodesAPIs = {};
 
-let api = {};
+// The first call of the library API
+// Will generate a
 let JsBarcode = function(element, text, options){
-	var newApi = {};
-	for(var key in api){
-		newApi[key]=api[key];
+	var api = {};
+	for(var key in barcodesAPIs){
+		api[key]=barcodesAPIs[key];
 	}
 
 	if(typeof element === "undefined"){
-		return newApi;
+		return api;
 	}
 
-	newApi.drawProperties = getDrawProperies(element);
+	// Parts of the API that is not the barcodes
+	api.render = renderCall;
+	api.options = optionsCall;
 
-	newApi.encodings = [];
-	newApi.render = render;
-	newApi._options = defaults;
+	// Variables that will be pased through the API calls
+	api._drawProperties = getDrawProperies(element);
+	api._encodings = [];
+	api._options = defaults;
 
 	// If text is set, use simple syntax
 	if(typeof text !== "undefined"){
-		newApi.options(options);
-		newApi[options.format](text, options);
-		newApi.render();
+		api.options(options);
+		api[options.format](text, options);
+		api.render();
 	}
 
-	return newApi;
+	return api;
 }
 
-// To make tests work
+// To make tests work TODO: remove
 JsBarcode.getModule = function(name){
 	return barcodes[name];
-}
-
-api.options = function(options){
-	this._options = merge(this._options, options);
-
-	return this;
 }
 
 // Register all barcodes
 for(var name in barcodes){
 	registerBarcode(barcodes, name);
 }
-
 function registerBarcode(barcodes, name){
-	api[name] = function(text, options){
+	barcodesAPIs[name] =
+	barcodesAPIs[name.toUpperCase()] =
+	barcodesAPIs[name.toLowerCase()] =
+	function(text, options){
 		var newOptions = merge(this._options, options);
 
 		var Encoder = barcodes[name];
@@ -72,16 +73,25 @@ function registerBarcode(barcodes, name){
 			encoded[i].options = merge(newOptions, encoded[i].options);
 		}
 
-		this.encodings.push(encoded);
+		this._encodings.push(encoded);
 
 		return this;
 	};
 }
 
-function render(){
-	var renderer = renderers[this.drawProperties.renderer];
+// Sets global encoder options
+// Added to the api by the JsBarcode function
+function optionsCall(options){
+	this._options = merge(this._options, options);
+	return this;
+}
 
-	var encodings = linearizeEncodings(this.encodings);
+// Prepares the encodings and calls the renderer
+// Added to the api by the JsBarcode function
+function renderCall(){
+	var renderer = renderers[this._drawProperties.renderer];
+
+	var encodings = linearizeEncodings(this._encodings);
 
 	for(var i in encodings){
 		encodings[i].options = merge(this._options, encodings[i].options);
@@ -90,10 +100,10 @@ function render(){
 
 	fixOptions(this._options);
 
-	renderer(this.drawProperties.element, encodings, this._options);
+	renderer(this._drawProperties.element, encodings, this._options);
 
-	if(this.drawProperties.afterRender){
-		this.drawProperties.afterRender();
+	if(this._drawProperties.afterRender){
+		this._drawProperties.afterRender();
 	}
 
 	return this;
@@ -104,6 +114,14 @@ if(typeof window !== "undefined"){
 }
 module.exports = JsBarcode;
 
+// Takes an element and returns an object with information about how
+//it should be rendered
+// {
+//   element: The element that the renderer should draw on
+//   renderer: The name of the renderer
+//   afterRender (optional): If something has to done after the renderer
+//     completed, calls afterRender (function)
+// }
 function getDrawProperies(element){
 	// If the element is a string, query select call again
 	if(typeof element === "string"){
