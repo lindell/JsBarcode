@@ -66,6 +66,10 @@ function registerBarcode(barcodes, name){
 		var Encoder = barcodes[name];
 		var encoder = new Encoder(text, newOptions);
 
+		if(!encoder.valid()){
+			throw new Error('"'+ text +'" is not a valid input for ' + name);
+		}
+
 		var encoded = encoder.encode();
 		encoded = linearizeEncodings(encoded);
 
