@@ -67,9 +67,14 @@ function prepareSVG(svg, options, encodings){
 		totalWidth += encodings[i].width;
 	}
 
-	svg.setAttribute("width", totalWidth + options.marginLeft + options.marginRight);
+  var width = totalWidth + options.marginLeft + options.marginRight;
+  var height = maxHeight;
 
-	svg.setAttribute("height", maxHeight);
+	svg.setAttribute("width", width + "px");
+	svg.setAttribute("height", height + "px");
+	svg.setAttribute("x", "0px");
+	svg.setAttribute("y", "0px");
+  svg.setAttribute("viewBox", "0 0 " + width + " " + height);
 
 	if(options.background){
 		svg.style.background = options.background;
@@ -151,7 +156,7 @@ function drawSVGText(parent, options, encoding){
 //
 function messureSVGtext(string, svg, options){
 	// Create text element
-	var text = document.createElementNS(svgns, 'text');
+	/*var text = document.createElementNS(svgns, 'text');
 	text.style.fontFamily = options.font;
 
   text.setAttribute("style",
@@ -165,10 +170,17 @@ function messureSVGtext(string, svg, options){
 
   svg.appendChild(text);
 
-  //var size = text.getComputedTextLength();
-  var size = 0;
+  var size = text.getComputedTextLength();
 
   svg.removeChild(text);
+  */
+  // TODO: Use svg to messure the text width
+  // Set font
+  var ctx = document.createElement("canvas").getContext("2d");
+  ctx.font = options.fontOptions + " " + options.fontSize + "px "+options.font;
+
+  // Calculate the width of the encoding
+  var size = ctx.measureText(string).width;
 
 	return size;
 }
