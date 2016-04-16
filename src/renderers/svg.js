@@ -116,12 +116,10 @@ function drawSVGText(parent, options, encoding){
     );
 
     if(options.textPosition == "top"){
-      y = options.fontSize;
-      textElem.setAttribute("alignment-baseline", "baseline");
+      y = options.fontSize - options.textMargin;
     }
     else{
-      y = options.height + options.textMargin;
-      textElem.setAttribute("alignment-baseline", "text-before-edge");
+      y = options.height + options.textMargin + options.fontSize;
     }
 
     // Draw the text in the correct X depending on the textAlign option
@@ -167,7 +165,8 @@ function messureSVGtext(string, svg, options){
 
   svg.appendChild(text);
 
-  var size = text.getComputedTextLength();
+  //var size = text.getComputedTextLength();
+  var size = 0;
 
   svg.removeChild(text);
 

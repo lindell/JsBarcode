@@ -127,12 +127,10 @@ function drawCanvasText(canvas, options, encoding){
 		var x, y;
 
 		if(options.textPosition == "top"){
-			y = options.marginTop + options.fontSize;
-			ctx.textBaseline = "bottom";
+			y = options.marginTop + options.fontSize - options.textMargin;
 		}
 		else{
-			y = options.height + options.textMargin + options.marginTop;
-			ctx.textBaseline = "top";
+			y = options.height + options.textMargin + options.marginTop + options.fontSize;
 		}
 
 		ctx.font = font;
