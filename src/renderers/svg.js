@@ -49,7 +49,7 @@ function prepareSVG(svg, options, encodings){
 		var barcodePadding = 0;
 		if(options.displayValue && barcodeWidth < textWidth){
 			if(options.textAlign == "center"){
-				barcodePadding = Math.floor((textWidth - barcodeWidth)/2);
+				barcodePadding = Math.floor((textWidth - barcodeWidth) / 2);
 			}
 			else if(options.textAlign == "left"){
 				barcodePadding = 0;
@@ -96,7 +96,7 @@ function drawSvgBarcode(parent, options, encoding){
   yHeight = options.height;
 
   for(var b in binary){
-    var x = b*options.width + encoding.barcodePadding;
+    var x = b * options.width + encoding.barcodePadding;
     if(binary[b] === "0" && binary[b] === 0){
 
     }
@@ -117,7 +117,7 @@ function drawSVGText(parent, options, encoding){
     var x, y;
 
     textElem.setAttribute("style",
-      "font:" + options.fontOptions + " " + options.fontSize + "px "+options.font
+      "font:" + options.fontOptions + " " + options.fontSize + "px " + options.font
     );
 
     if(options.textPosition == "top"){
@@ -133,7 +133,7 @@ function drawSVGText(parent, options, encoding){
       textElem.setAttribute("text-anchor", "start");
     }
     else if(options.textAlign == "right"){
-      x = encoding.width-1;
+      x = encoding.width - 1;
       textElem.setAttribute("text-anchor", "end");
     }
     //In all other cases, center the text
@@ -177,7 +177,7 @@ function messureSVGtext(string, svg, options){
   // TODO: Use svg to messure the text width
   // Set font
   var ctx = document.createElement("canvas").getContext("2d");
-  ctx.font = options.fontOptions + " " + options.fontSize + "px "+options.font;
+  ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
 
   // Calculate the width of the encoding
   var size = ctx.measureText(string).width;
@@ -188,7 +188,7 @@ function messureSVGtext(string, svg, options){
 function createGroup(x, y, svg){
 	var group = document.createElementNS(svgns, 'g');
 
-	group.setAttribute("transform", "translate(" + x +", " + y + ")");
+	group.setAttribute("transform", "translate(" + x + ", " + y + ")");
 
 	svg.appendChild(group);
 

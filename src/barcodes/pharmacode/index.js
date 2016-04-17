@@ -19,7 +19,9 @@ function recursiveEncoding(code,state){
   // TODO explanation needed
 
   //End condition
-  if(code.length === 0) return "";
+  if(code.length === 0){
+    return "";
+  }
 
   var generated;
   var nextState = false;
@@ -45,7 +47,7 @@ String.prototype.repeat = function( num )
 function zeroes(code){
     var i = code.length - 1;
     var zeroes = 0;
-    while(code[i]=="0" || i<0){
+    while(code[i] == "0" || i < 0){
         zeroes++;
         i--;
     }

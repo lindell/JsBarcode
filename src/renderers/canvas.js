@@ -34,7 +34,7 @@ function prepareCanvas(canvas, options, encodings){
 	 	let options = merge(options, encodings[i].options);
 
 		// Set font
-		ctx.font = options.fontOptions + " " + options.fontSize + "px "+options.font;
+		ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
 
 		// Calculate the width of the encoding
 		var textWidth = ctx.measureText(encodings[i].text).width;
@@ -51,7 +51,7 @@ function prepareCanvas(canvas, options, encodings){
 		var barcodePadding = 0;
 		if(options.displayValue && barcodeWidth < textWidth){
 			if(options.textAlign == "center"){
-				barcodePadding = Math.floor((textWidth - barcodeWidth)/2);
+				barcodePadding = Math.floor((textWidth - barcodeWidth) / 2);
 			}
 			else if(options.textAlign == "left"){
 				barcodePadding = 0;
@@ -103,7 +103,7 @@ function drawCanvasBarcode(canvas, options, encoding){
 	ctx.fillStyle = options.lineColor;
 
 	for(var b in binary){
-		var x = b*options.width + encoding.barcodePadding;
+		var x = b * options.width + encoding.barcodePadding;
 		if(binary[b] === "0" && binary[b] === 0){
 
 		}
@@ -120,7 +120,7 @@ function drawCanvasText(canvas, options, encoding){
 	// Get the canvas context
 	var ctx = canvas.getContext("2d");
 
-	var font = options.fontOptions + " " + options.fontSize + "px "+options.font;
+	var font = options.fontOptions + " " + options.fontSize + "px " + options.font;
 
 	// Draw the text if displayValue is set
 	if(options.displayValue){
@@ -141,7 +141,7 @@ function drawCanvasText(canvas, options, encoding){
 			ctx.textAlign = 'left';
 		}
 		else if(options.textAlign == "right"){
-			x = encoding.width-1;
+			x = encoding.width - 1;
 			ctx.textAlign = 'right';
 		}
 		//In all other cases, center the text

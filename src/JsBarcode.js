@@ -21,7 +21,7 @@ let barcodesAPIs = {};
 let JsBarcode = function(element, text, options){
 	var api = {};
 	for(var key in barcodesAPIs){
-		api[key]=barcodesAPIs[key];
+		api[key] = barcodesAPIs[key];
 	}
 
 	if(typeof element === "undefined"){
@@ -76,7 +76,7 @@ function registerBarcode(barcodes, name){
 
 		if(!encoder.valid()){
 			if(this._options.valid === defaults.valid){
-				throw new Error('"'+ text +'" is not a valid input for ' + name);
+				throw new Error('"' + text + '" is not a valid input for ' + name);
 			}
 			else{
 				this._options.valid(false);

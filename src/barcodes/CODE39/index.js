@@ -20,7 +20,7 @@ class CODE39 {
 	encode(){
 		var result = "";
 		result += this.encodings["*"].toString(2);
-		for(var i=0; i<this.string.length; i++){
+		for(var i = 0; i < this.string.length; i++){
 			result += this.encodings[this.string[i]].toString(2) + "0";
 		}
 		result += this.encodings["*"].toString(2);

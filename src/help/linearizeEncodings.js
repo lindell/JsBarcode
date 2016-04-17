@@ -4,7 +4,7 @@ function linearizeEncodings(encodings){
   var linearEncodings = [];
   function nextLevel(encoded){
   	if(Array.isArray(encoded)){
-  		for(var i in encoded){
+  		for(let i = 0; i < encoded.length; i++){
   			nextLevel(encoded[i]);
   		}
   	}

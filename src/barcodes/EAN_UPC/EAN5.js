@@ -19,7 +19,7 @@ class EAN5{
 	}
 
 	valid(){
-		return this.string.search(/^[0-9]{5}$/)!==-1;
+		return this.string.search(/^[0-9]{5}$/) !== -1;
 	}
 
 	encode(){
@@ -38,8 +38,12 @@ class EAN5{
 		var result = 0;
 
 		var i;
-		for(i=0;i<5;i+=2){result+=parseInt(this.string[i])*3;}
-		for(i=1;i<5;i+=2){result+=parseInt(this.string[i])*9;}
+		for(i = 0; i < 5; i += 2){
+			result += parseInt(this.string[i]) * 3;
+		}
+		for(i = 1; i < 5; 	i += 2){
+			result += parseInt(this.string[i]) * 9;
+		}
 
 		return result % 10;
 	}

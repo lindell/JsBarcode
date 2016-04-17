@@ -54,8 +54,13 @@ class EAN8{
 		var result = 0;
 
 		var i;
-		for(i=0;i<7;i+=2){result+=parseInt(number[i])*3;}
-		for(i=1;i<7;i+=2){result+=parseInt(number[i]);}
+		for(i = 0; i < 7; i += 2){
+			result += parseInt(number[i]) * 3;
+		}
+
+		for(i = 1; i < 7; i += 2){
+			result += parseInt(number[i]);
+		}
 
 		return (10 - (result % 10)) % 10;
 	}

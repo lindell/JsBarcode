@@ -17,7 +17,7 @@ class ITF{
 	}
 
 	valid(){
-		return this.string.search(/^([0-9]{2})+$/) !==-1;
+		return this.string.search(/^([0-9]{2})+$/) !== -1;
 	}
 
 	encode(){
@@ -25,7 +25,7 @@ class ITF{
 		var result = "1010";
 
 		//Calculate all the digit pairs
-		for(var i=0;i<this.string.length;i+=2){
+		for(var i = 0; i < this.string.length; i += 2){
 			result += this.calculatePair(this.string.substr(i,2));
 		}
 
@@ -46,9 +46,9 @@ class ITF{
 		var number2Struct = this.binaryRepresentation[numberPair[1]];
 
 		//Take every second bit and add to the result
-		for(var i=0;i<5;i++){
-			result += (number1Struct[i]=="1") ? "111" : "1";
-			result += (number2Struct[i]=="1") ? "000" : "0";
+		for(var i = 0; i < 5; i++){
+			result += (number1Struct[i] == "1") ? "111" : "1";
+			result += (number2Struct[i] == "1") ? "000" : "0";
 		}
 
 		return result;

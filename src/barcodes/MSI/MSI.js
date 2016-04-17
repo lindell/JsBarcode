@@ -6,11 +6,11 @@ class MSI{
 	encode(){
 		var ret = "110";
 
-		for(var i=0;i<this.string.length;i++){
+		for(var i = 0; i < this.string.length; i++){
 			var digit = parseInt(this.string[i]);
 			var bin = digit.toString(2);
-			bin = addZeroes(bin, 4-bin.length);
-			for(var b=0;b<bin.length;b++){
+			bin = addZeroes(bin, 4 - bin.length);
+			for(var b = 0; b < bin.length; b++){
 				ret += bin[b] == "0" ? "100" : "110";
 			}
 		}
@@ -28,8 +28,8 @@ class MSI{
 }
 
 function addZeroes(number, n){
-	for(var i=0;i<n;i++){
-		number = "0"+number;
+	for(var i = 0; i < n; i++){
+		number = "0" + number;
 	}
 	return number;
 }

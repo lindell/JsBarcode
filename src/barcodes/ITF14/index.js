@@ -30,7 +30,7 @@ class ITF14{
 		var result = "1010";
 
 		//Calculate all the digit pairs
-		for(var i=0;i<14;i+=2){
+		for(var i = 0; i < 14; i += 2){
 			result += this.calculatePair(this.string.substr(i,2));
 		}
 
@@ -51,9 +51,9 @@ class ITF14{
 		var number2Struct = this.binaryRepresentation[numberPair[1]];
 
 		//Take every second bit and add to the result
-		for(var i=0;i<5;i++){
-			result += (number1Struct[i]=="1") ? "111" : "1";
-			result += (number2Struct[i]=="1") ? "000" : "0";
+		for(var i = 0; i < 5; i++){
+			result += (number1Struct[i] == "1") ? "111" : "1";
+			result += (number2Struct[i] == "1") ? "000" : "0";
 		}
 
 		return result;
@@ -63,7 +63,7 @@ class ITF14{
 	checksum(){
 		var result = 0;
 
-		for(var i=0;i<13;i++){
+		for(var i = 0; i < 13; i++){
 				result += parseInt(this.string[i]) * (3 - (i % 2) * 2);
 		}
 

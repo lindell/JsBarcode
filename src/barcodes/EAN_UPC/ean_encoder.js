@@ -55,15 +55,15 @@ class EANencoder{
 		separator = typeof separator === "undefined" ? "" : separator;
 
 		//Loop all the numbers
-		for(var i = 0;i<number.length;i++){
+		for(var i = 0; i < number.length; i++){
 			//Using the L, G or R encoding and add it to the returning variable
-			if(structure[i]=="L"){
+			if(structure[i] == "L"){
 				result += this.Lbinary[number[i]];
 			}
-			else if(structure[i]=="G"){
+			else if(structure[i] == "G"){
 				result += this.Gbinary[number[i]];
 			}
-			else if(structure[i]=="R"){
+			else if(structure[i] == "R"){
 				result += this.Rbinary[number[i]];
 			}
 

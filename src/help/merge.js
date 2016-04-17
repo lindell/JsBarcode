@@ -4,10 +4,12 @@ function merge(old, replaceObj) {
   var newMerge = {};
   var k;
   for (k in old) {
-    newMerge[k] = old[k];
+    if (old.hasOwnProperty(k)) {
+      newMerge[k] = old[k];
+    }
   }
   for (k in replaceObj) {
-    if(typeof replaceObj[k] !== "undefined"){
+    if(replaceObj.hasOwnProperty(k) && typeof replaceObj[k] !== "undefined"){
       newMerge[k] = replaceObj[k];
     }
   }

@@ -8,7 +8,7 @@ class EAN2{
 	}
 
 	valid(){
-		return this.string.search(/^[0-9]{2}$/)!==-1;
+		return this.string.search(/^[0-9]{2}$/) !== -1;
 	}
 
 	encode(){

@@ -212,7 +212,7 @@ class CODE128{
 		}
 		// Continue encoding of CODE128C
 		else{
-			index = (bytes[0]-48) * 10 + bytes[1]-48;
+			index = (bytes[0] - 48) * 10 + bytes[1] - 48;
 			bytes.shift();
 			bytes.shift();
 			next = this.nextC(bytes, depth + 1);

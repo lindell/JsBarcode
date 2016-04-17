@@ -3,7 +3,7 @@ import EANencoder from './ean_encoder.js'
 class EAN13{
 	constructor(string, options){
 		//Add checksum if it does not exist
-		if(string.search(/^[0-9]{12}$/)!=-1){
+		if(string.search(/^[0-9]{12}$/) !== 	-1){
 			this.string = string + this.checksum(string);
 		}
 		else{
@@ -31,7 +31,7 @@ class EAN13{
 			this.fontSize = options.fontSize;
 		}
 
-		this.guardHeight = options.height + this.fontSize/2 + options.textMargin;
+		this.guardHeight = options.height + this.fontSize / 2 + options.textMargin;
 	}
 
 	valid(){
@@ -98,8 +98,12 @@ class EAN13{
 		var result = 0;
 
 		var i;
-		for(i=0;i<12;i+=2){result+=parseInt(number[i]);}
-		for(i=1;i<12;i+=2){result+=parseInt(number[i])*3;}
+		for(i = 0; i < 12; i += 2){
+			result += parseInt(number[i]);
+		}
+		for(i = 1; i < 12; i += 2){
+			result += parseInt(number[i]) * 3;
+		}
 
 		return (10 - (result % 10)) % 10;
 	}
