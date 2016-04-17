@@ -1,5 +1,5 @@
 // Import all the barcodes
-import barcodes from './barcodes.js';
+import barcodes from './barcodes/';
 
 // Import the renderers
 import renderCanvas from './renderers/canvas.js';
