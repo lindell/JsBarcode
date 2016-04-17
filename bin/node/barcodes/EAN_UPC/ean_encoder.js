@@ -4,13 +4,19 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var EANencoder = function () {
 	function EANencoder() {
-		_classCallCheck(this, EANencoder);
+		(0, _classCallCheck3.default)(this, EANencoder);
 
 		this.startBin = "101";
 		this.endBin = "101";
@@ -29,7 +35,7 @@ var EANencoder = function () {
 	//Convert a numberarray to the representing
 
 
-	_createClass(EANencoder, [{
+	(0, _createClass3.default)(EANencoder, [{
 		key: "encode",
 		value: function encode(number, structure, separator) {
 			//Create the variable that should be returned at the end of the function
@@ -56,7 +62,6 @@ var EANencoder = function () {
 			return result;
 		}
 	}]);
-
 	return EANencoder;
 }();
 

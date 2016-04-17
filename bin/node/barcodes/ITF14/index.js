@@ -4,13 +4,19 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var ITF14 = function () {
 	function ITF14(string) {
-		_classCallCheck(this, ITF14);
+		(0, _classCallCheck3.default)(this, ITF14);
 
 		this.string = string;
 
@@ -33,7 +39,7 @@ var ITF14 = function () {
 		};
 	}
 
-	_createClass(ITF14, [{
+	(0, _createClass3.default)(ITF14, [{
 		key: "valid",
 		value: function valid() {
 			return this.string.search(/^[0-9]{14}$/) !== -1 && this.string[13] == this.checksum();
@@ -90,7 +96,6 @@ var ITF14 = function () {
 			return 10 - result % 10;
 		}
 	}]);
-
 	return ITF14;
 }();
 

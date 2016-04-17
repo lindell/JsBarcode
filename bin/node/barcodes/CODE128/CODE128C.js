@@ -12,6 +12,10 @@ var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
 var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
 
 var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
@@ -20,27 +24,27 @@ var _inherits2 = require('babel-runtime/helpers/inherits');
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _MSI2 = require('./MSI.js');
+var _CODE2 = require('./CODE128.js');
 
-var _MSI3 = _interopRequireDefault(_MSI2);
-
-var _checksums = require('./checksums.js');
+var _CODE3 = _interopRequireDefault(_CODE2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var MSI11 = function (_MSI) {
-	(0, _inherits3.default)(MSI11, _MSI);
+var CODE128C = function (_CODE) {
+	(0, _inherits3.default)(CODE128C, _CODE);
 
-	function MSI11(string) {
-		(0, _classCallCheck3.default)(this, MSI11);
-
-		var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(MSI11).call(this, string));
-
-		_this.string += (0, _checksums.mod11)(_this.string);
-		return _this;
+	function CODE128C(string) {
+		(0, _classCallCheck3.default)(this, CODE128C);
+		return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(CODE128C).call(this, String.fromCharCode(210) + string));
 	}
 
-	return MSI11;
-}(_MSI3.default);
+	(0, _createClass3.default)(CODE128C, [{
+		key: 'valid',
+		value: function valid() {
+			return this.string.search(/^(\xCF*[0-9]{2}\xCF*)+$/) !== -1;
+		}
+	}]);
+	return CODE128C;
+}(_CODE3.default);
 
-exports.default = MSI11;
+exports.default = CODE128C;

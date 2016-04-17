@@ -46,25 +46,33 @@
 
 	'use strict';
 
-	var _barcodes = __webpack_require__(1);
+	var _keys = __webpack_require__(1);
+
+	var _keys2 = _interopRequireDefault(_keys);
+
+	var _barcodes = __webpack_require__(13);
 
 	var _barcodes2 = _interopRequireDefault(_barcodes);
 
-	var _canvas = __webpack_require__(13);
+	var _canvas = __webpack_require__(79);
 
 	var _canvas2 = _interopRequireDefault(_canvas);
 
-	var _svg = __webpack_require__(15);
+	var _svg = __webpack_require__(81);
 
 	var _svg2 = _interopRequireDefault(_svg);
 
-	var _merge = __webpack_require__(14);
+	var _merge = __webpack_require__(80);
 
 	var _merge2 = _interopRequireDefault(_merge);
 
-	var _linearizeEncodings = __webpack_require__(16);
+	var _linearizeEncodings = __webpack_require__(82);
 
 	var _linearizeEncodings2 = _interopRequireDefault(_linearizeEncodings);
+
+	var _fixOptions = __webpack_require__(83);
+
+	var _fixOptions2 = _interopRequireDefault(_fixOptions);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -79,72 +87,158 @@
 	// Import all the barcodes
 
 
-	var api = {};
-	var JsBarcode = function JsBarcode(element) {
-		var newApi = {};
-		for (var key in api) {
-			newApi[key] = api[key];
+	var barcodesAPIs = {};
+
+	// The first call of the library API
+	// Will generate a
+	var JsBarcode = function JsBarcode(element, text, options) {
+		var api = {};
+		for (var key in barcodesAPIs) {
+			api[key] = barcodesAPIs[key];
 		}
 
-		newApi.drawProperties = getDrawProperies(element);
+		if (typeof element === "undefined") {
+			return api;
+		}
 
-		newApi.encodings = [];
-		newApi.draw = draw;
-		newApi._options = defaults;
+		options = options || {};
 
-		return newApi;
+		// Parts of the API that is not the barcodes
+		api.render = renderCall;
+		api.options = optionsCall;
+		api.blank = blankCall;
+
+		// Variables that will be pased through the API calls
+		api._renderProperties = getRenderProperies(element);
+		api._encodings = [];
+		api._options = defaults;
+
+		// If text is set, use simple syntax
+		if (typeof text !== "undefined") {
+			if (!options.format) {
+				options.format = autoSelectBarcode();
+			}
+
+			api.options(options);
+			api[options.format](text, options);
+			api.render();
+		}
+
+		return api;
 	};
 
-	api.options = function (options) {
-		this._options = (0, _merge2.default)(this._options, options);
-
-		return this;
+	// To make tests work TODO: remove
+	JsBarcode.getModule = function (name) {
+		return _barcodes2.default[name];
 	};
 
 	// Register all barcodes
 	for (var name in _barcodes2.default) {
 		registerBarcode(_barcodes2.default, name);
 	}
-
 	function registerBarcode(barcodes, name) {
-		api[name] = function (text, options) {
+		barcodesAPIs[name] = barcodesAPIs[name.toUpperCase()] = barcodesAPIs[name.toLowerCase()] = function (text, options) {
+			var newOptions = (0, _merge2.default)(this._options, options);
 
 			var Encoder = barcodes[name];
-			var encoder = new Encoder(text, this._options);
+			var encoder = new Encoder(text, newOptions);
 
-			this.encodings.push(encoder.encode());
+			if (!encoder.valid()) {
+				if (this._options.valid === defaults.valid) {
+					throw new Error('"' + text + '" is not a valid input for ' + name);
+				} else {
+					this._options.valid(false);
+				}
+			}
+
+			var encoded = encoder.encode();
+			encoded = (0, _linearizeEncodings2.default)(encoded);
+
+			for (var i in encoded) {
+				encoded[i].options = (0, _merge2.default)(newOptions, encoded[i].options);
+			}
+
+			this._encodings.push(encoded);
 
 			return this;
 		};
 	}
 
-	function draw() {
-		var renderer = renderers[this.drawProperties.renderer];
+	function autoSelectBarcode() {
+		// If CODE128 exists. Use it
+		if (barcodesAPIs["CODE128"]) {
+			return "CODE128";
+		}
 
-		var encodings = (0, _linearizeEncodings2.default)(this.encodings);
-		fixOptions(this._options);
+		// Else, take the first (probably only) barcode
+		return (0, _keys2.default)(barcodesAPIs)[0];
+	}
 
-		renderer(this.drawProperties.element, encodings, this._options);
+	// Sets global encoder options
+	// Added to the api by the JsBarcode function
+	function optionsCall(options) {
+		this._options = (0, _merge2.default)(this._options, options);
+		return this;
+	}
+
+	// Will create a blank space (usually in between barcodes)
+	function blankCall(size) {
+		var zeroes = "0".repeat(size);
+		this._encodings.push({ data: zeroes });
+		return this;
+	}
+
+	// Prepares the encodings and calls the renderer
+	// Added to the api by the JsBarcode function
+	function renderCall() {
+		var renderer = renderers[this._renderProperties.renderer];
+
+		var encodings = (0, _linearizeEncodings2.default)(this._encodings);
+
+		for (var i in encodings) {
+			encodings[i].options = (0, _merge2.default)(this._options, encodings[i].options);
+			(0, _fixOptions2.default)(encodings[i].options);
+		}
+
+		(0, _fixOptions2.default)(this._options);
+
+		renderer(this._renderProperties.element, encodings, this._options);
+
+		if (this._renderProperties.afterRender) {
+			this._renderProperties.afterRender();
+		}
+
+		this._options.valid(true);
 
 		return this;
 	}
 
-	window.JsBarcode = JsBarcode;
+	if (typeof window !== "undefined") {
+		window.JsBarcode = JsBarcode;
+	}
 	module.exports = JsBarcode;
 
-	function getDrawProperies(element) {
+	// Takes an element and returns an object with information about how
+	//it should be rendered
+	// {
+	//   element: The element that the renderer should draw on
+	//   renderer: The name of the renderer
+	//   afterRender (optional): If something has to done after the renderer
+	//     completed, calls afterRender (function)
+	// }
+	function getRenderProperies(element) {
 		// If the element is a string, query select call again
 		if (typeof element === "string") {
 			element = document.querySelector(element);
-			return getDrawProperies(element);
+			return getRenderProperies(element);
 		}
-		// If element, draw on canvas and set the uri as src
+		// If element, render on canvas and set the uri as src
 		else if (typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLImageElement) {
 				var canvas = document.createElement('canvas');
 				return {
 					element: canvas,
 					renderer: "canvas",
-					afterDraw: function afterDraw() {
+					afterRender: function afterRender() {
 						element.setAttribute("src", canvas.toDataURL());
 					}
 				};
@@ -154,26 +248,16 @@
 					renderer: "svg"
 				};
 			}
-			// If canvas, just draw
+			// If canvas
 			else if (element.getContext) {
 					return {
 						element: element,
 						renderer: "canvas"
 					};
 				} else {
-					throw new Error("Not supported type to draw on.");
+					throw new Error("Not supported type to render on.");
 				}
 	};
-
-	function fixOptions(options) {
-		// Fix the margins
-		options.marginTop = typeof options.marginTop === "undefined" ? options.margin : options.marginTop;
-		options.marginBottom = typeof options.marginBottom === "undefined" ? options.margin : options.marginBottom;
-		options.marginRight = typeof options.marginRight === "undefined" ? options.margin : options.marginRight;
-		options.marginLeft = typeof options.marginLeft === "undefined" ? options.margin : options.marginLeft;
-
-		return options;
-	}
 
 	var defaults = {
 		width: 2,
@@ -200,39 +284,209 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+	module.exports = { "default": __webpack_require__(2), __esModule: true };
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(3);
+	module.exports = __webpack_require__(9).Object.keys;
+
+/***/ },
+/* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.14 Object.keys(O)
+	var toObject = __webpack_require__(4);
+
+	__webpack_require__(6)('keys', function($keys){
+	  return function keys(it){
+	    return $keys(toObject(it));
+	  };
+	});
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.1.13 ToObject(argument)
+	var defined = __webpack_require__(5);
+	module.exports = function(it){
+	  return Object(defined(it));
+	};
+
+/***/ },
+/* 5 */
+/***/ function(module, exports) {
+
+	// 7.2.1 RequireObjectCoercible(argument)
+	module.exports = function(it){
+	  if(it == undefined)throw TypeError("Can't call method on  " + it);
+	  return it;
+	};
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// most Object methods by ES6 should accept primitives
+	var $export = __webpack_require__(7)
+	  , core    = __webpack_require__(9)
+	  , fails   = __webpack_require__(12);
+	module.exports = function(KEY, exec){
+	  var fn  = (core.Object || {})[KEY] || Object[KEY]
+	    , exp = {};
+	  exp[KEY] = exec(fn);
+	  $export($export.S + $export.F * fails(function(){ fn(1); }), 'Object', exp);
+	};
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var global    = __webpack_require__(8)
+	  , core      = __webpack_require__(9)
+	  , ctx       = __webpack_require__(10)
+	  , PROTOTYPE = 'prototype';
+
+	var $export = function(type, name, source){
+	  var IS_FORCED = type & $export.F
+	    , IS_GLOBAL = type & $export.G
+	    , IS_STATIC = type & $export.S
+	    , IS_PROTO  = type & $export.P
+	    , IS_BIND   = type & $export.B
+	    , IS_WRAP   = type & $export.W
+	    , exports   = IS_GLOBAL ? core : core[name] || (core[name] = {})
+	    , target    = IS_GLOBAL ? global : IS_STATIC ? global[name] : (global[name] || {})[PROTOTYPE]
+	    , key, own, out;
+	  if(IS_GLOBAL)source = name;
+	  for(key in source){
+	    // contains in native
+	    own = !IS_FORCED && target && key in target;
+	    if(own && key in exports)continue;
+	    // export native or passed
+	    out = own ? target[key] : source[key];
+	    // prevent global pollution for namespaces
+	    exports[key] = IS_GLOBAL && typeof target[key] != 'function' ? source[key]
+	    // bind timers to global for call from export context
+	    : IS_BIND && own ? ctx(out, global)
+	    // wrap global constructors for prevent change them in library
+	    : IS_WRAP && target[key] == out ? (function(C){
+	      var F = function(param){
+	        return this instanceof C ? new C(param) : C(param);
+	      };
+	      F[PROTOTYPE] = C[PROTOTYPE];
+	      return F;
+	    // make static versions for prototype methods
+	    })(out) : IS_PROTO && typeof out == 'function' ? ctx(Function.call, out) : out;
+	    if(IS_PROTO)(exports[PROTOTYPE] || (exports[PROTOTYPE] = {}))[key] = out;
+	  }
+	};
+	// type bitmap
+	$export.F = 1;  // forced
+	$export.G = 2;  // global
+	$export.S = 4;  // static
+	$export.P = 8;  // proto
+	$export.B = 16; // bind
+	$export.W = 32; // wrap
+	module.exports = $export;
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	// https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
+	var global = module.exports = typeof window != 'undefined' && window.Math == Math
+	  ? window : typeof self != 'undefined' && self.Math == Math ? self : Function('return this')();
+	if(typeof __g == 'number')__g = global; // eslint-disable-line no-undef
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+	var core = module.exports = {version: '1.2.6'};
+	if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// optional / simple context binding
+	var aFunction = __webpack_require__(11);
+	module.exports = function(fn, that, length){
+	  aFunction(fn);
+	  if(that === undefined)return fn;
+	  switch(length){
+	    case 1: return function(a){
+	      return fn.call(that, a);
+	    };
+	    case 2: return function(a, b){
+	      return fn.call(that, a, b);
+	    };
+	    case 3: return function(a, b, c){
+	      return fn.call(that, a, b, c);
+	    };
+	  }
+	  return function(/* ...args */){
+	    return fn.apply(that, arguments);
+	  };
+	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	module.exports = function(it){
+	  if(typeof it != 'function')throw TypeError(it + ' is not a function!');
+	  return it;
+	};
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	module.exports = function(exec){
+	  try {
+	    return !!exec();
+	  } catch(e){
+	    return true;
+	  }
+	};
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
-	var _CODE = __webpack_require__(2);
+	var _CODE = __webpack_require__(14);
 
 	var _CODE2 = _interopRequireDefault(_CODE);
 
-	var _CODE3 = __webpack_require__(3);
+	var _CODE3 = __webpack_require__(20);
 
-	var _CODE4 = _interopRequireDefault(_CODE3);
+	var _EAN_UPC = __webpack_require__(61);
 
-	var _EAN_UPC = __webpack_require__(4);
-
-	var _ITF = __webpack_require__(6);
+	var _ITF = __webpack_require__(68);
 
 	var _ITF2 = _interopRequireDefault(_ITF);
 
-	var _ITF3 = __webpack_require__(7);
+	var _ITF3 = __webpack_require__(69);
 
 	var _ITF4 = _interopRequireDefault(_ITF3);
 
-	var _MSI = __webpack_require__(8);
+	var _MSI = __webpack_require__(70);
 
-	var _pharmacode = __webpack_require__(10);
+	var _pharmacode = __webpack_require__(77);
 
 	var _pharmacode2 = _interopRequireDefault(_pharmacode);
 
-	var _blank = __webpack_require__(11);
-
-	var _GenericBarcode = __webpack_require__(12);
+	var _GenericBarcode = __webpack_require__(78);
 
 	var _GenericBarcode2 = _interopRequireDefault(_GenericBarcode);
 
@@ -240,19 +494,18 @@
 
 	exports.default = {
 	  CODE39: _CODE2.default,
-	  CODE128: _CODE4.default,
+	  CODE128: _CODE3.CODE128, CODE128A: _CODE3.CODE128A, CODE128B: _CODE3.CODE128B, CODE128C: _CODE3.CODE128C,
 	  EAN13: _EAN_UPC.EAN13, EAN8: _EAN_UPC.EAN8, EAN5: _EAN_UPC.EAN5, EAN2: _EAN_UPC.EAN2, UPC: _EAN_UPC.UPC,
 	  ITF14: _ITF2.default,
 	  ITF: _ITF4.default,
-	  MSI: _MSI.MSI, MSI11: _MSI.MSI11, MSI1010: _MSI.MSI1010,
+	  MSI: _MSI.MSI, MSI10: _MSI.MSI10, MSI11: _MSI.MSI11, MSI1010: _MSI.MSI1010, MSI1110: _MSI.MSI1110,
 	  pharmacode: _pharmacode2.default,
-	  blank: _blank.blank,
 	  GenericBarcode: _GenericBarcode2.default
 	};
 
 /***/ },
-/* 2 */
-/***/ function(module, exports) {
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -260,13 +513,19 @@
 		value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _classCallCheck2 = __webpack_require__(15);
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(16);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var CODE39 = function () {
 		function CODE39(string) {
-			_classCallCheck(this, CODE39);
+			(0, _classCallCheck3.default)(this, CODE39);
 
 			this.string = string.toUpperCase();
 
@@ -285,7 +544,7 @@
 			};
 		}
 
-		_createClass(CODE39, [{
+		(0, _createClass3.default)(CODE39, [{
 			key: "encode",
 			value: function encode() {
 				var result = "";
@@ -303,15 +562,888 @@
 				return this.string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
 			}
 		}]);
-
 		return CODE39;
 	}();
 
 	exports.default = CODE39;
 
 /***/ },
-/* 3 */
+/* 15 */
 /***/ function(module, exports) {
+
+	"use strict";
+
+	exports.__esModule = true;
+
+	exports.default = function (instance, Constructor) {
+	  if (!(instance instanceof Constructor)) {
+	    throw new TypeError("Cannot call a class as a function");
+	  }
+	};
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	exports.__esModule = true;
+
+	var _defineProperty = __webpack_require__(17);
+
+	var _defineProperty2 = _interopRequireDefault(_defineProperty);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function () {
+	  function defineProperties(target, props) {
+	    for (var i = 0; i < props.length; i++) {
+	      var descriptor = props[i];
+	      descriptor.enumerable = descriptor.enumerable || false;
+	      descriptor.configurable = true;
+	      if ("value" in descriptor) descriptor.writable = true;
+	      (0, _defineProperty2.default)(target, descriptor.key, descriptor);
+	    }
+	  }
+
+	  return function (Constructor, protoProps, staticProps) {
+	    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+	    if (staticProps) defineProperties(Constructor, staticProps);
+	    return Constructor;
+	  };
+	}();
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(18), __esModule: true };
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $ = __webpack_require__(19);
+	module.exports = function defineProperty(it, key, desc){
+	  return $.setDesc(it, key, desc);
+	};
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+	var $Object = Object;
+	module.exports = {
+	  create:     $Object.create,
+	  getProto:   $Object.getPrototypeOf,
+	  isEnum:     {}.propertyIsEnumerable,
+	  getDesc:    $Object.getOwnPropertyDescriptor,
+	  setDesc:    $Object.defineProperty,
+	  setDescs:   $Object.defineProperties,
+	  getKeys:    $Object.keys,
+	  getNames:   $Object.getOwnPropertyNames,
+	  getSymbols: $Object.getOwnPropertySymbols,
+	  each:       [].forEach
+	};
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.CODE128C = exports.CODE128B = exports.CODE128A = exports.CODE128 = undefined;
+
+	var _CODE128_AUTO = __webpack_require__(21);
+
+	var _CODE128_AUTO2 = _interopRequireDefault(_CODE128_AUTO);
+
+	var _CODE128A = __webpack_require__(58);
+
+	var _CODE128A2 = _interopRequireDefault(_CODE128A);
+
+	var _CODE128B = __webpack_require__(59);
+
+	var _CODE128B2 = _interopRequireDefault(_CODE128B);
+
+	var _CODE128C = __webpack_require__(60);
+
+	var _CODE128C2 = _interopRequireDefault(_CODE128C);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.CODE128 = _CODE128_AUTO2.default;
+	exports.CODE128A = _CODE128A2.default;
+	exports.CODE128B = _CODE128B2.default;
+	exports.CODE128C = _CODE128C2.default;
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _getPrototypeOf = __webpack_require__(22);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(15);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(25);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(50);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _CODE2 = __webpack_require__(57);
+
+	var _CODE3 = _interopRequireDefault(_CODE2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var CODE128AUTO = function (_CODE) {
+		(0, _inherits3.default)(CODE128AUTO, _CODE);
+
+		function CODE128AUTO(string) {
+			(0, _classCallCheck3.default)(this, CODE128AUTO);
+
+
+			// ASCII value ranges 0-127, 200-211
+
+			var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(CODE128AUTO).call(this, string));
+
+			if (string.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1) {
+				var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(CODE128AUTO).call(this, autoSelectModes(string)));
+			} else {
+				var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(CODE128AUTO).call(this, string));
+			}
+			return (0, _possibleConstructorReturn3.default)(_this);
+		}
+
+		return CODE128AUTO;
+	}(_CODE3.default);
+
+	function autoSelectModes(string) {
+		// ASCII ranges 0-98 and 200-207 (FUNCs and SHIFTs)
+		var aLength = string.match(/^[\x00-\x5F\xC8-\xCF]*/)[0].length;
+		// ASCII ranges 32-127 and 200-207 (FUNCs and SHIFTs)
+		var bLength = string.match(/^[\x20-\x7F\xC8-\xCF]*/)[0].length;
+		// Number pairs or [FNC1]
+		var cLength = string.match(/^(\xCF*[0-9]{2}\xCF*)*/)[0].length;
+
+		var newString;
+		// Select CODE128C if the string start with enough digits
+		if (cLength >= 2) {
+			newString = String.fromCharCode(210) + autoSelectFromC(string);
+		}
+		// Select A/C depending on the longest match
+		else if (aLength > bLength) {
+				newString = String.fromCharCode(208) + autoSelectFromA(string);
+			} else {
+				newString = String.fromCharCode(209) + autoSelectFromB(string);
+			}
+
+		newString = newString.replace(/[\xCD\xCE]([^])[\xCD\xCE]/, function (match, char) {
+			return String.fromCharCode(203) + char;
+		});
+
+		return newString;
+	}
+
+	function autoSelectFromA(string) {
+		var untilC = string.match(/^([\x00-\x5F\xC8-\xCF]+?)(([0-9]{2}){2,})([^0-9]|$)/);
+
+		if (untilC) {
+			return untilC[1] + String.fromCharCode(204) + autoSelectFromC(string.substring(untilC[1].length));
+		}
+
+		var aChars = string.match(/^[\x00-\x5F\xC8-\xCF]+/);
+		if (aChars[0].length === string.length) {
+			return string;
+		}
+
+		return aChars[0] + String.fromCharCode(205) + autoSelectFromB(string.substring(aChars[0].length));
+	}
+
+	function autoSelectFromB(string) {
+		var untilC = string.match(/^([\x20-\x7F\xC8-\xCF]+?)(([0-9]{2}){2,})([^0-9]|$)/);
+
+		if (untilC) {
+			return untilC[1] + String.fromCharCode(204) + autoSelectFromC(string.substring(untilC[1].length));
+		}
+
+		var bChars = string.match(/^[\x20-\x7F\xC8-\xCF]+/);
+		if (bChars[0].length === string.length) {
+			return string;
+		}
+
+		return bChars[0] + String.fromCharCode(206) + autoSelectFromA(string.substring(bChars[0].length));
+	}
+
+	function autoSelectFromC(string) {
+		var cMatch = string.match(/^(\xCF*[0-9]{2}\xCF*)+/)[0];
+		var length = cMatch.length;
+
+		if (length === string.length) {
+			return string;
+		}
+
+		string = string.substring(length);
+
+		// Select A/B depending on the longest match
+		var aLength = string.match(/^[\x00-\x5F\xC8-\xCF]*/)[0].length;
+		var bLength = string.match(/^[\x20-\x7F\xC8-\xCF]*/)[0].length;
+		if (aLength >= bLength) {
+			return cMatch + String.fromCharCode(206) + autoSelectFromA(string);
+		} else {
+			return cMatch + String.fromCharCode(205) + autoSelectFromB(string);
+		}
+	}
+
+	exports.default = CODE128AUTO;
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(23), __esModule: true };
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(24);
+	module.exports = __webpack_require__(9).Object.getPrototypeOf;
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.2.9 Object.getPrototypeOf(O)
+	var toObject = __webpack_require__(4);
+
+	__webpack_require__(6)('getPrototypeOf', function($getPrototypeOf){
+	  return function getPrototypeOf(it){
+	    return $getPrototypeOf(toObject(it));
+	  };
+	});
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	exports.__esModule = true;
+
+	var _typeof2 = __webpack_require__(26);
+
+	var _typeof3 = _interopRequireDefault(_typeof2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = function (self, call) {
+	  if (!self) {
+	    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+	  }
+
+	  return call && ((typeof call === "undefined" ? "undefined" : (0, _typeof3.default)(call)) === "object" || typeof call === "function") ? call : self;
+	};
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _Symbol = __webpack_require__(27)["default"];
+
+	exports["default"] = function (obj) {
+	  return obj && obj.constructor === _Symbol ? "symbol" : typeof obj;
+	};
+
+	exports.__esModule = true;
+
+/***/ },
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(28), __esModule: true };
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(29);
+	__webpack_require__(49);
+	module.exports = __webpack_require__(9).Symbol;
+
+/***/ },
+/* 29 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	// ECMAScript 6 symbols shim
+	var $              = __webpack_require__(19)
+	  , global         = __webpack_require__(8)
+	  , has            = __webpack_require__(30)
+	  , DESCRIPTORS    = __webpack_require__(31)
+	  , $export        = __webpack_require__(7)
+	  , redefine       = __webpack_require__(32)
+	  , $fails         = __webpack_require__(12)
+	  , shared         = __webpack_require__(35)
+	  , setToStringTag = __webpack_require__(36)
+	  , uid            = __webpack_require__(38)
+	  , wks            = __webpack_require__(37)
+	  , keyOf          = __webpack_require__(39)
+	  , $names         = __webpack_require__(43)
+	  , enumKeys       = __webpack_require__(44)
+	  , isArray        = __webpack_require__(45)
+	  , anObject       = __webpack_require__(46)
+	  , toIObject      = __webpack_require__(40)
+	  , createDesc     = __webpack_require__(34)
+	  , getDesc        = $.getDesc
+	  , setDesc        = $.setDesc
+	  , _create        = $.create
+	  , getNames       = $names.get
+	  , $Symbol        = global.Symbol
+	  , $JSON          = global.JSON
+	  , _stringify     = $JSON && $JSON.stringify
+	  , setter         = false
+	  , HIDDEN         = wks('_hidden')
+	  , isEnum         = $.isEnum
+	  , SymbolRegistry = shared('symbol-registry')
+	  , AllSymbols     = shared('symbols')
+	  , useNative      = typeof $Symbol == 'function'
+	  , ObjectProto    = Object.prototype;
+
+	// fallback for old Android, https://code.google.com/p/v8/issues/detail?id=687
+	var setSymbolDesc = DESCRIPTORS && $fails(function(){
+	  return _create(setDesc({}, 'a', {
+	    get: function(){ return setDesc(this, 'a', {value: 7}).a; }
+	  })).a != 7;
+	}) ? function(it, key, D){
+	  var protoDesc = getDesc(ObjectProto, key);
+	  if(protoDesc)delete ObjectProto[key];
+	  setDesc(it, key, D);
+	  if(protoDesc && it !== ObjectProto)setDesc(ObjectProto, key, protoDesc);
+	} : setDesc;
+
+	var wrap = function(tag){
+	  var sym = AllSymbols[tag] = _create($Symbol.prototype);
+	  sym._k = tag;
+	  DESCRIPTORS && setter && setSymbolDesc(ObjectProto, tag, {
+	    configurable: true,
+	    set: function(value){
+	      if(has(this, HIDDEN) && has(this[HIDDEN], tag))this[HIDDEN][tag] = false;
+	      setSymbolDesc(this, tag, createDesc(1, value));
+	    }
+	  });
+	  return sym;
+	};
+
+	var isSymbol = function(it){
+	  return typeof it == 'symbol';
+	};
+
+	var $defineProperty = function defineProperty(it, key, D){
+	  if(D && has(AllSymbols, key)){
+	    if(!D.enumerable){
+	      if(!has(it, HIDDEN))setDesc(it, HIDDEN, createDesc(1, {}));
+	      it[HIDDEN][key] = true;
+	    } else {
+	      if(has(it, HIDDEN) && it[HIDDEN][key])it[HIDDEN][key] = false;
+	      D = _create(D, {enumerable: createDesc(0, false)});
+	    } return setSymbolDesc(it, key, D);
+	  } return setDesc(it, key, D);
+	};
+	var $defineProperties = function defineProperties(it, P){
+	  anObject(it);
+	  var keys = enumKeys(P = toIObject(P))
+	    , i    = 0
+	    , l = keys.length
+	    , key;
+	  while(l > i)$defineProperty(it, key = keys[i++], P[key]);
+	  return it;
+	};
+	var $create = function create(it, P){
+	  return P === undefined ? _create(it) : $defineProperties(_create(it), P);
+	};
+	var $propertyIsEnumerable = function propertyIsEnumerable(key){
+	  var E = isEnum.call(this, key);
+	  return E || !has(this, key) || !has(AllSymbols, key) || has(this, HIDDEN) && this[HIDDEN][key]
+	    ? E : true;
+	};
+	var $getOwnPropertyDescriptor = function getOwnPropertyDescriptor(it, key){
+	  var D = getDesc(it = toIObject(it), key);
+	  if(D && has(AllSymbols, key) && !(has(it, HIDDEN) && it[HIDDEN][key]))D.enumerable = true;
+	  return D;
+	};
+	var $getOwnPropertyNames = function getOwnPropertyNames(it){
+	  var names  = getNames(toIObject(it))
+	    , result = []
+	    , i      = 0
+	    , key;
+	  while(names.length > i)if(!has(AllSymbols, key = names[i++]) && key != HIDDEN)result.push(key);
+	  return result;
+	};
+	var $getOwnPropertySymbols = function getOwnPropertySymbols(it){
+	  var names  = getNames(toIObject(it))
+	    , result = []
+	    , i      = 0
+	    , key;
+	  while(names.length > i)if(has(AllSymbols, key = names[i++]))result.push(AllSymbols[key]);
+	  return result;
+	};
+	var $stringify = function stringify(it){
+	  if(it === undefined || isSymbol(it))return; // IE8 returns string on undefined
+	  var args = [it]
+	    , i    = 1
+	    , $$   = arguments
+	    , replacer, $replacer;
+	  while($$.length > i)args.push($$[i++]);
+	  replacer = args[1];
+	  if(typeof replacer == 'function')$replacer = replacer;
+	  if($replacer || !isArray(replacer))replacer = function(key, value){
+	    if($replacer)value = $replacer.call(this, key, value);
+	    if(!isSymbol(value))return value;
+	  };
+	  args[1] = replacer;
+	  return _stringify.apply($JSON, args);
+	};
+	var buggyJSON = $fails(function(){
+	  var S = $Symbol();
+	  // MS Edge converts symbol values to JSON as {}
+	  // WebKit converts symbol values to JSON as null
+	  // V8 throws on boxed symbols
+	  return _stringify([S]) != '[null]' || _stringify({a: S}) != '{}' || _stringify(Object(S)) != '{}';
+	});
+
+	// 19.4.1.1 Symbol([description])
+	if(!useNative){
+	  $Symbol = function Symbol(){
+	    if(isSymbol(this))throw TypeError('Symbol is not a constructor');
+	    return wrap(uid(arguments.length > 0 ? arguments[0] : undefined));
+	  };
+	  redefine($Symbol.prototype, 'toString', function toString(){
+	    return this._k;
+	  });
+
+	  isSymbol = function(it){
+	    return it instanceof $Symbol;
+	  };
+
+	  $.create     = $create;
+	  $.isEnum     = $propertyIsEnumerable;
+	  $.getDesc    = $getOwnPropertyDescriptor;
+	  $.setDesc    = $defineProperty;
+	  $.setDescs   = $defineProperties;
+	  $.getNames   = $names.get = $getOwnPropertyNames;
+	  $.getSymbols = $getOwnPropertySymbols;
+
+	  if(DESCRIPTORS && !__webpack_require__(48)){
+	    redefine(ObjectProto, 'propertyIsEnumerable', $propertyIsEnumerable, true);
+	  }
+	}
+
+	var symbolStatics = {
+	  // 19.4.2.1 Symbol.for(key)
+	  'for': function(key){
+	    return has(SymbolRegistry, key += '')
+	      ? SymbolRegistry[key]
+	      : SymbolRegistry[key] = $Symbol(key);
+	  },
+	  // 19.4.2.5 Symbol.keyFor(sym)
+	  keyFor: function keyFor(key){
+	    return keyOf(SymbolRegistry, key);
+	  },
+	  useSetter: function(){ setter = true; },
+	  useSimple: function(){ setter = false; }
+	};
+	// 19.4.2.2 Symbol.hasInstance
+	// 19.4.2.3 Symbol.isConcatSpreadable
+	// 19.4.2.4 Symbol.iterator
+	// 19.4.2.6 Symbol.match
+	// 19.4.2.8 Symbol.replace
+	// 19.4.2.9 Symbol.search
+	// 19.4.2.10 Symbol.species
+	// 19.4.2.11 Symbol.split
+	// 19.4.2.12 Symbol.toPrimitive
+	// 19.4.2.13 Symbol.toStringTag
+	// 19.4.2.14 Symbol.unscopables
+	$.each.call((
+	  'hasInstance,isConcatSpreadable,iterator,match,replace,search,' +
+	  'species,split,toPrimitive,toStringTag,unscopables'
+	).split(','), function(it){
+	  var sym = wks(it);
+	  symbolStatics[it] = useNative ? sym : wrap(sym);
+	});
+
+	setter = true;
+
+	$export($export.G + $export.W, {Symbol: $Symbol});
+
+	$export($export.S, 'Symbol', symbolStatics);
+
+	$export($export.S + $export.F * !useNative, 'Object', {
+	  // 19.1.2.2 Object.create(O [, Properties])
+	  create: $create,
+	  // 19.1.2.4 Object.defineProperty(O, P, Attributes)
+	  defineProperty: $defineProperty,
+	  // 19.1.2.3 Object.defineProperties(O, Properties)
+	  defineProperties: $defineProperties,
+	  // 19.1.2.6 Object.getOwnPropertyDescriptor(O, P)
+	  getOwnPropertyDescriptor: $getOwnPropertyDescriptor,
+	  // 19.1.2.7 Object.getOwnPropertyNames(O)
+	  getOwnPropertyNames: $getOwnPropertyNames,
+	  // 19.1.2.8 Object.getOwnPropertySymbols(O)
+	  getOwnPropertySymbols: $getOwnPropertySymbols
+	});
+
+	// 24.3.2 JSON.stringify(value [, replacer [, space]])
+	$JSON && $export($export.S + $export.F * (!useNative || buggyJSON), 'JSON', {stringify: $stringify});
+
+	// 19.4.3.5 Symbol.prototype[@@toStringTag]
+	setToStringTag($Symbol, 'Symbol');
+	// 20.2.1.9 Math[@@toStringTag]
+	setToStringTag(Math, 'Math', true);
+	// 24.3.3 JSON[@@toStringTag]
+	setToStringTag(global.JSON, 'JSON', true);
+
+/***/ },
+/* 30 */
+/***/ function(module, exports) {
+
+	var hasOwnProperty = {}.hasOwnProperty;
+	module.exports = function(it, key){
+	  return hasOwnProperty.call(it, key);
+	};
+
+/***/ },
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// Thank's IE8 for his funny defineProperty
+	module.exports = !__webpack_require__(12)(function(){
+	  return Object.defineProperty({}, 'a', {get: function(){ return 7; }}).a != 7;
+	});
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(33);
+
+/***/ },
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $          = __webpack_require__(19)
+	  , createDesc = __webpack_require__(34);
+	module.exports = __webpack_require__(31) ? function(object, key, value){
+	  return $.setDesc(object, key, createDesc(1, value));
+	} : function(object, key, value){
+	  object[key] = value;
+	  return object;
+	};
+
+/***/ },
+/* 34 */
+/***/ function(module, exports) {
+
+	module.exports = function(bitmap, value){
+	  return {
+	    enumerable  : !(bitmap & 1),
+	    configurable: !(bitmap & 2),
+	    writable    : !(bitmap & 4),
+	    value       : value
+	  };
+	};
+
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var global = __webpack_require__(8)
+	  , SHARED = '__core-js_shared__'
+	  , store  = global[SHARED] || (global[SHARED] = {});
+	module.exports = function(key){
+	  return store[key] || (store[key] = {});
+	};
+
+/***/ },
+/* 36 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var def = __webpack_require__(19).setDesc
+	  , has = __webpack_require__(30)
+	  , TAG = __webpack_require__(37)('toStringTag');
+
+	module.exports = function(it, tag, stat){
+	  if(it && !has(it = stat ? it : it.prototype, TAG))def(it, TAG, {configurable: true, value: tag});
+	};
+
+/***/ },
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var store  = __webpack_require__(35)('wks')
+	  , uid    = __webpack_require__(38)
+	  , Symbol = __webpack_require__(8).Symbol;
+	module.exports = function(name){
+	  return store[name] || (store[name] =
+	    Symbol && Symbol[name] || (Symbol || uid)('Symbol.' + name));
+	};
+
+/***/ },
+/* 38 */
+/***/ function(module, exports) {
+
+	var id = 0
+	  , px = Math.random();
+	module.exports = function(key){
+	  return 'Symbol('.concat(key === undefined ? '' : key, ')_', (++id + px).toString(36));
+	};
+
+/***/ },
+/* 39 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $         = __webpack_require__(19)
+	  , toIObject = __webpack_require__(40);
+	module.exports = function(object, el){
+	  var O      = toIObject(object)
+	    , keys   = $.getKeys(O)
+	    , length = keys.length
+	    , index  = 0
+	    , key;
+	  while(length > index)if(O[key = keys[index++]] === el)return key;
+	};
+
+/***/ },
+/* 40 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// to indexed object, toObject with fallback for non-array-like ES3 strings
+	var IObject = __webpack_require__(41)
+	  , defined = __webpack_require__(5);
+	module.exports = function(it){
+	  return IObject(defined(it));
+	};
+
+/***/ },
+/* 41 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// fallback for non-array-like ES3 and non-enumerable old V8 strings
+	var cof = __webpack_require__(42);
+	module.exports = Object('z').propertyIsEnumerable(0) ? Object : function(it){
+	  return cof(it) == 'String' ? it.split('') : Object(it);
+	};
+
+/***/ },
+/* 42 */
+/***/ function(module, exports) {
+
+	var toString = {}.toString;
+
+	module.exports = function(it){
+	  return toString.call(it).slice(8, -1);
+	};
+
+/***/ },
+/* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// fallback for IE11 buggy Object.getOwnPropertyNames with iframe and window
+	var toIObject = __webpack_require__(40)
+	  , getNames  = __webpack_require__(19).getNames
+	  , toString  = {}.toString;
+
+	var windowNames = typeof window == 'object' && Object.getOwnPropertyNames
+	  ? Object.getOwnPropertyNames(window) : [];
+
+	var getWindowNames = function(it){
+	  try {
+	    return getNames(it);
+	  } catch(e){
+	    return windowNames.slice();
+	  }
+	};
+
+	module.exports.get = function getOwnPropertyNames(it){
+	  if(windowNames && toString.call(it) == '[object Window]')return getWindowNames(it);
+	  return getNames(toIObject(it));
+	};
+
+/***/ },
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// all enumerable object keys, includes symbols
+	var $ = __webpack_require__(19);
+	module.exports = function(it){
+	  var keys       = $.getKeys(it)
+	    , getSymbols = $.getSymbols;
+	  if(getSymbols){
+	    var symbols = getSymbols(it)
+	      , isEnum  = $.isEnum
+	      , i       = 0
+	      , key;
+	    while(symbols.length > i)if(isEnum.call(it, key = symbols[i++]))keys.push(key);
+	  }
+	  return keys;
+	};
+
+/***/ },
+/* 45 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 7.2.2 IsArray(argument)
+	var cof = __webpack_require__(42);
+	module.exports = Array.isArray || function(arg){
+	  return cof(arg) == 'Array';
+	};
+
+/***/ },
+/* 46 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(47);
+	module.exports = function(it){
+	  if(!isObject(it))throw TypeError(it + ' is not an object!');
+	  return it;
+	};
+
+/***/ },
+/* 47 */
+/***/ function(module, exports) {
+
+	module.exports = function(it){
+	  return typeof it === 'object' ? it !== null : typeof it === 'function';
+	};
+
+/***/ },
+/* 48 */
+/***/ function(module, exports) {
+
+	module.exports = true;
+
+/***/ },
+/* 49 */
+/***/ function(module, exports) {
+
+	
+
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	var _Object$create = __webpack_require__(51)["default"];
+
+	var _Object$setPrototypeOf = __webpack_require__(53)["default"];
+
+	exports["default"] = function (subClass, superClass) {
+	  if (typeof superClass !== "function" && superClass !== null) {
+	    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+	  }
+
+	  subClass.prototype = _Object$create(superClass && superClass.prototype, {
+	    constructor: {
+	      value: subClass,
+	      enumerable: false,
+	      writable: true,
+	      configurable: true
+	    }
+	  });
+	  if (superClass) _Object$setPrototypeOf ? _Object$setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+	};
+
+	exports.__esModule = true;
+
+/***/ },
+/* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(52), __esModule: true };
+
+/***/ },
+/* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $ = __webpack_require__(19);
+	module.exports = function create(P, D){
+	  return $.create(P, D);
+	};
+
+/***/ },
+/* 53 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = { "default": __webpack_require__(54), __esModule: true };
+
+/***/ },
+/* 54 */
+/***/ function(module, exports, __webpack_require__) {
+
+	__webpack_require__(55);
+	module.exports = __webpack_require__(9).Object.setPrototypeOf;
+
+/***/ },
+/* 55 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// 19.1.3.19 Object.setPrototypeOf(O, proto)
+	var $export = __webpack_require__(7);
+	$export($export.S, 'Object', {setPrototypeOf: __webpack_require__(56).set});
+
+/***/ },
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// Works with __proto__ only. Old v8 can't work with null proto objects.
+	/* eslint-disable no-proto */
+	var getDesc  = __webpack_require__(19).getDesc
+	  , isObject = __webpack_require__(47)
+	  , anObject = __webpack_require__(46);
+	var check = function(O, proto){
+	  anObject(O);
+	  if(!isObject(proto) && proto !== null)throw TypeError(proto + ": can't set as prototype!");
+	};
+	module.exports = {
+	  set: Object.setPrototypeOf || ('__proto__' in {} ? // eslint-disable-line
+	    function(test, buggy, set){
+	      try {
+	        set = __webpack_require__(10)(Function.call, getDesc(Object.prototype, '__proto__').set, 2);
+	        set(test, []);
+	        buggy = !(test instanceof Array);
+	      } catch(e){ buggy = true; }
+	      return function setPrototypeOf(O, proto){
+	        check(O, proto);
+	        if(buggy)O.__proto__ = proto;
+	        else set(O, proto);
+	        return O;
+	      };
+	    }({}, false) : undefined),
+	  check: check
+	};
+
+/***/ },
+/* 57 */
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -319,23 +1451,22 @@
 		value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _classCallCheck2 = __webpack_require__(15);
 
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	var _createClass2 = __webpack_require__(16);
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var _createClass3 = _interopRequireDefault(_createClass2);
 
-	// ASCII value ranges 0-127, 200-211
-	var validCODE128 = /^[\x00-\x7F\xC8-\xD3]+$/;
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	// This is the master class, it does require the start code to be
 	//included in the string
 
 	var CODE128 = function () {
 		function CODE128(string) {
-			_classCallCheck(this, CODE128);
+			(0, _classCallCheck3.default)(this, CODE128);
 
 			// Fill the bytes variable with the ascii codes of string
 			this.bytes = [];
@@ -352,7 +1483,7 @@
 			740, 644, 638, 176, 164, 100, 224, 220, 124, 608, 604, 572, 436, 244, 230, 484, 260, 254, 650, 628, 614, 764, 652, 902, 868, 836, 830, 892, 844, 842, 752, 734, 590, 304, 112, 94, 416, 128, 122, 672, 576, 570, 464, 422, 134, 496, 478, 142, 910, 678, 582, 768, 762, 774, 880, 862, 814, 896, 890, 818, 914, 602, 930, 328, 292, 200, 158, 68, 62, 424, 412, 232, 218, 76, 74, 554, 616, 978, 556, 146, 340, 212, 182, 508, 268, 266, 956, 940, 938, 758, 782, 974, 400, 310, 118, 512, 506, 960, 954, 502, 518, 886, 966, /* Start codes */668, 680, 692, 5379];
 		}
 
-		_createClass(CODE128, [{
+		(0, _createClass3.default)(CODE128, [{
 			key: "getText",
 			value: function getText() {
 				var string = this.string;
@@ -409,7 +1540,8 @@
 		}, {
 			key: "valid",
 			value: function valid() {
-				return this.string.search(validCODE128) !== -1;
+				// ASCII value ranges 0-127, 200-211
+				return this.string.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1;
 			}
 		}, {
 			key: "nextA",
@@ -558,170 +1690,217 @@
 				return { "result": enc + next.result, "checksum": weight + next.checksum };
 			}
 		}]);
-
 		return CODE128;
 	}();
 
-	function autoSelectModes(string) {
-		// ASCII ranges 0-98 and 200-207 (FUNCs and SHIFTs)
-		var aLength = string.match(/^[\x00-\x5F\xC8-\xCF]*/)[0].length;
-		// ASCII ranges 32-127 and 200-207 (FUNCs and SHIFTs)
-		var bLength = string.match(/^[\x20-\x7F\xC8-\xCF]*/)[0].length;
-		// Number pairs or [FNC1]
-		var cLength = string.match(/^(\xCF*[0-9]{2}\xCF*)*/)[0].length;
+	exports.default = CODE128;
 
-		var newString;
-		// Select CODE128C if the string start with enough digits
-		if (cLength >= 2) {
-			newString = String.fromCharCode(210) + autoSelectFromC(string);
-		}
-		// Select A/C depending on the longest match
-		else if (aLength > bLength) {
-				newString = String.fromCharCode(208) + autoSelectFromA(string);
-			} else {
-				newString = String.fromCharCode(209) + autoSelectFromB(string);
-			}
+/***/ },
+/* 58 */
+/***/ function(module, exports, __webpack_require__) {
 
-		newString = newString.replace(/[\xCD\xCE]([^])[\xCD\xCE]/, function (match, char) {
-			return String.fromCharCode(203) + char;
-		});
+	'use strict';
 
-		return newString;
-	}
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
 
-	function autoSelectFromA(string) {
-		var untilC = string.match(/^([\x00-\x5F\xC8-\xCF]+?)(([0-9]{2}){2,})([^0-9]|$)/);
+	var _getPrototypeOf = __webpack_require__(22);
 
-		if (untilC) {
-			return untilC[1] + String.fromCharCode(204) + autoSelectFromC(string.substring(untilC[1].length));
-		}
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
 
-		var aChars = string.match(/^[\x00-\x5F\xC8-\xCF]+/);
-		if (aChars[0].length === string.length) {
-			return string;
-		}
+	var _classCallCheck2 = __webpack_require__(15);
 
-		return aChars[0] + String.fromCharCode(205) + autoSelectFromB(string.substring(aChars[0].length));
-	}
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	function autoSelectFromB(string) {
-		var untilC = string.match(/^([\x20-\x7F\xC8-\xCF]+?)(([0-9]{2}){2,})([^0-9]|$)/);
+	var _createClass2 = __webpack_require__(16);
 
-		if (untilC) {
-			return untilC[1] + String.fromCharCode(204) + autoSelectFromC(string.substring(untilC[1].length));
-		}
+	var _createClass3 = _interopRequireDefault(_createClass2);
 
-		var bChars = string.match(/^[\x20-\x7F\xC8-\xCF]+/);
-		if (bChars[0].length === string.length) {
-			return string;
-		}
+	var _possibleConstructorReturn2 = __webpack_require__(25);
 
-		return bChars[0] + String.fromCharCode(206) + autoSelectFromA(string.substring(bChars[0].length));
-	}
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
 
-	function autoSelectFromC(string) {
-		var cMatch = string.match(/^(\xCF*[0-9]{2}\xCF*)+/)[0];
-		var length = cMatch.length;
+	var _inherits2 = __webpack_require__(50);
 
-		if (length === string.length) {
-			return string;
-		}
+	var _inherits3 = _interopRequireDefault(_inherits2);
 
-		string = string.substring(length);
+	var _CODE2 = __webpack_require__(57);
 
-		// Select A/B depending on the longest match
-		var aLength = string.match(/^[\x00-\x5F\xC8-\xCF]*/)[0].length;
-		var bLength = string.match(/^[\x20-\x7F\xC8-\xCF]*/)[0].length;
-		if (aLength >= bLength) {
-			return cMatch + String.fromCharCode(206) + autoSelectFromA(string);
-		} else {
-			return cMatch + String.fromCharCode(205) + autoSelectFromB(string);
-		}
-	}
+	var _CODE3 = _interopRequireDefault(_CODE2);
 
-	var CODE128AUTO = function (_CODE) {
-		_inherits(CODE128AUTO, _CODE);
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-		function CODE128AUTO(string) {
-			_classCallCheck(this, CODE128AUTO);
-
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CODE128AUTO).call(this, string));
-
-			if (string.search(validCODE128) !== -1) {
-				var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CODE128AUTO).call(this, autoSelectModes(string)));
-			} else {
-				var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(CODE128AUTO).call(this, string));
-			}
-			return _possibleConstructorReturn(_this);
-		}
-
-		return CODE128AUTO;
-	}(CODE128);
-
-	var CODE128A = function (_CODE2) {
-		_inherits(CODE128A, _CODE2);
+	var CODE128A = function (_CODE) {
+		(0, _inherits3.default)(CODE128A, _CODE);
 
 		function CODE128A(string) {
-			_classCallCheck(this, CODE128A);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(CODE128A).call(this, String.fromCharCode(208) + string));
+			(0, _classCallCheck3.default)(this, CODE128A);
+			return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(CODE128A).call(this, String.fromCharCode(208) + string));
 		}
 
-		_createClass(CODE128A, [{
-			key: "valid",
+		(0, _createClass3.default)(CODE128A, [{
+			key: 'valid',
 			value: function valid() {
 				return this.string.search(/^[\x00-\x5F\xC8-\xCF]+$/) !== -1;
 			}
 		}]);
-
 		return CODE128A;
-	}(CODE128);
+	}(_CODE3.default);
 
-	var CODE128B = function (_CODE3) {
-		_inherits(CODE128B, _CODE3);
+	exports.default = CODE128A;
+
+/***/ },
+/* 59 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _getPrototypeOf = __webpack_require__(22);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(15);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(16);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(25);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(50);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _CODE2 = __webpack_require__(57);
+
+	var _CODE3 = _interopRequireDefault(_CODE2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var CODE128B = function (_CODE) {
+		(0, _inherits3.default)(CODE128B, _CODE);
 
 		function CODE128B(string) {
-			_classCallCheck(this, CODE128B);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(CODE128B).call(this, String.fromCharCode(209) + string));
+			(0, _classCallCheck3.default)(this, CODE128B);
+			return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(CODE128B).call(this, String.fromCharCode(209) + string));
 		}
 
-		_createClass(CODE128B, [{
-			key: "valid",
+		(0, _createClass3.default)(CODE128B, [{
+			key: 'valid',
 			value: function valid() {
 				return this.string.search(/^[\x20-\x7F\xC8-\xCF]+$/) !== -1;
 			}
 		}]);
-
 		return CODE128B;
-	}(CODE128);
+	}(_CODE3.default);
 
-	var CODE128C = function (_CODE4) {
-		_inherits(CODE128C, _CODE4);
+	exports.default = CODE128B;
+
+/***/ },
+/* 60 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _getPrototypeOf = __webpack_require__(22);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(15);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(16);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(25);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(50);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _CODE2 = __webpack_require__(57);
+
+	var _CODE3 = _interopRequireDefault(_CODE2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var CODE128C = function (_CODE) {
+		(0, _inherits3.default)(CODE128C, _CODE);
 
 		function CODE128C(string) {
-			_classCallCheck(this, CODE128C);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(CODE128C).call(this, String.fromCharCode(210) + string));
+			(0, _classCallCheck3.default)(this, CODE128C);
+			return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(CODE128C).call(this, String.fromCharCode(210) + string));
 		}
 
-		_createClass(CODE128C, [{
-			key: "valid",
+		(0, _createClass3.default)(CODE128C, [{
+			key: 'valid',
 			value: function valid() {
 				return this.string.search(/^(\xCF*[0-9]{2}\xCF*)+$/) !== -1;
 			}
 		}]);
-
 		return CODE128C;
-	}(CODE128);
+	}(_CODE3.default);
 
-	exports.CODE128 = CODE128;
-	exports.CODE128A = CODE128A;
-	exports.CODE128B = CODE128B;
-	exports.CODE128C = CODE128C;
+	exports.default = CODE128C;
 
 /***/ },
-/* 4 */
+/* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.UPC = exports.EAN2 = exports.EAN5 = exports.EAN8 = exports.EAN13 = undefined;
+
+	var _EAN = __webpack_require__(62);
+
+	var _EAN2 = _interopRequireDefault(_EAN);
+
+	var _EAN3 = __webpack_require__(64);
+
+	var _EAN4 = _interopRequireDefault(_EAN3);
+
+	var _EAN5 = __webpack_require__(65);
+
+	var _EAN6 = _interopRequireDefault(_EAN5);
+
+	var _EAN7 = __webpack_require__(66);
+
+	var _EAN8 = _interopRequireDefault(_EAN7);
+
+	var _UPC = __webpack_require__(67);
+
+	var _UPC2 = _interopRequireDefault(_UPC);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.EAN13 = _EAN2.default;
+	exports.EAN8 = _EAN4.default;
+	exports.EAN5 = _EAN6.default;
+	exports.EAN2 = _EAN8.default;
+	exports.UPC = _UPC2.default;
+
+/***/ },
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -729,25 +1908,24 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.UPC = exports.EAN2 = exports.EAN5 = exports.EAN8 = exports.EAN13 = undefined;
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _classCallCheck2 = __webpack_require__(15);
 
-	var _ean_encoder = __webpack_require__(5);
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(16);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _ean_encoder = __webpack_require__(63);
 
 	var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 	var EAN13 = function () {
 		function EAN13(string, options) {
-			_classCallCheck(this, EAN13);
+			(0, _classCallCheck3.default)(this, EAN13);
 
 			//Add checksum if it does not exist
 			if (string.search(/^[0-9]{12}$/) != -1) {
@@ -759,21 +1937,19 @@
 			// Define the EAN-13 structure
 			this.structure = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
 
-			this.guardHeight = options.height + options.fontSize / 2 + options.textMargin;
+			if (options.fontSize > options.width * 10) {
+				this.fontSize = options.width * 10;
+			} else {
+				this.fontSize = options.fontSize;
+			}
+
+			this.guardHeight = options.height + this.fontSize / 2 + options.textMargin;
 		}
 
-		_createClass(EAN13, [{
+		(0, _createClass3.default)(EAN13, [{
 			key: "valid",
 			value: function valid() {
 				return this.string.search(/^[0-9]{13}$/) !== -1 && this.string[12] == this.checksum(this.string);
-			}
-		}, {
-			key: "options",
-			value: function options(_options) {
-				_options.textMargin = 0;
-				if (_options.fontSize > _options.width * 11) {
-					_options.fontSize = _options.width * 11;
-				}
 			}
 		}, {
 			key: "encode",
@@ -792,26 +1968,41 @@
 				// Add the first digigt
 				result.push({
 					data: "000000000000",
-					text: this.string[0], options: { textAlign: "left" }
+					text: this.string[0],
+					options: { textAlign: "left", fontSize: this.fontSize }
 				});
 
 				//Add the guard bars
-				result.push({ data: "101", options: { height: this.guardHeight } });
+				result.push({
+					data: "101",
+					options: { height: this.guardHeight }
+				});
 
 				//Add the left side
 				result.push({
 					data: encoder.encode(leftSide, structure),
-					text: leftSide
+					text: leftSide,
+					options: { fontSize: this.fontSize }
 				});
 
 				//Add the middle bits
-				result.push({ data: "01010", options: { height: this.guardHeight } });
+				result.push({
+					data: "01010",
+					options: { height: this.guardHeight }
+				});
 
 				//Add the right side
-				result.push({ data: encoder.encode(rightSide, "RRRRRR"), text: rightSide });
+				result.push({
+					data: encoder.encode(rightSide, "RRRRRR"),
+					text: rightSide,
+					options: { fontSize: this.fontSize }
+				});
 
 				//Add the end bits
-				result.push({ data: "101", options: { height: this.guardHeight } });
+				result.push({
+					data: "101",
+					options: { height: this.guardHeight }
+				});
 
 				return result;
 			}
@@ -834,13 +2025,111 @@
 				return (10 - result % 10) % 10;
 			}
 		}]);
-
 		return EAN13;
 	}();
 
+	exports.default = EAN13;
+
+/***/ },
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _classCallCheck2 = __webpack_require__(15);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(16);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EANencoder = function () {
+		function EANencoder() {
+			(0, _classCallCheck3.default)(this, EANencoder);
+
+			this.startBin = "101";
+			this.endBin = "101";
+			this.middleBin = "01010";
+
+			//The L (left) type of encoding
+			this.Lbinary = ["0001101", "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011"];
+
+			//The G type of encoding
+			this.Gbinary = ["0100111", "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111"];
+
+			//The R (right) type of encoding
+			this.Rbinary = ["1110010", "1100110", "1101100", "1000010", "1011100", "1001110", "1010000", "1000100", "1001000", "1110100"];
+		}
+
+		//Convert a numberarray to the representing
+
+
+		(0, _createClass3.default)(EANencoder, [{
+			key: "encode",
+			value: function encode(number, structure, separator) {
+				//Create the variable that should be returned at the end of the function
+				var result = "";
+
+				separator = typeof separator === "undefined" ? "" : separator;
+
+				//Loop all the numbers
+				for (var i = 0; i < number.length; i++) {
+					//Using the L, G or R encoding and add it to the returning variable
+					if (structure[i] == "L") {
+						result += this.Lbinary[number[i]];
+					} else if (structure[i] == "G") {
+						result += this.Gbinary[number[i]];
+					} else if (structure[i] == "R") {
+						result += this.Rbinary[number[i]];
+					}
+
+					// Add separator
+					if (i < number.length - 1) {
+						result += separator;
+					}
+				}
+				return result;
+			}
+		}]);
+		return EANencoder;
+	}();
+
+	exports.default = EANencoder;
+
+/***/ },
+/* 64 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _classCallCheck2 = __webpack_require__(15);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(16);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _ean_encoder = __webpack_require__(63);
+
+	var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var EAN8 = function () {
 		function EAN8(string) {
-			_classCallCheck(this, EAN8);
+			(0, _classCallCheck3.default)(this, EAN8);
 
 			//Add checksum if it does not exist
 			if (string.search(/^[0-9]{7}$/) !== -1) {
@@ -850,7 +2139,7 @@
 			}
 		}
 
-		_createClass(EAN8, [{
+		(0, _createClass3.default)(EAN8, [{
 			key: "valid",
 			value: function valid() {
 				return this.string.search(/^[0-9]{8}$/) !== -1 && this.string[7] == this.checksum(this.string);
@@ -908,20 +2197,45 @@
 				return (10 - result % 10) % 10;
 			}
 		}]);
-
 		return EAN8;
 	}();
 
+	exports.default = EAN8;
+
+/***/ },
+/* 65 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _classCallCheck2 = __webpack_require__(15);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(16);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _ean_encoder = __webpack_require__(63);
+
+	var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var EAN5 = function () {
 		function EAN5(string) {
-			_classCallCheck(this, EAN5);
+			(0, _classCallCheck3.default)(this, EAN5);
 
 			this.string = string;
 
 			this.structure = ["GGLLL", "GLGLL", "GLLGL", "GLLLG", "LGGLL", "LLGGL", "LLLGG", "LGLGL", "LGLLG", "LLGLG"];
 		}
 
-		_createClass(EAN5, [{
+		(0, _createClass3.default)(EAN5, [{
 			key: "valid",
 			value: function valid() {
 				return this.string.search(/^[0-9]{5}$/) !== -1;
@@ -954,20 +2268,45 @@
 				return result % 10;
 			}
 		}]);
-
 		return EAN5;
 	}();
 
+	exports.default = EAN5;
+
+/***/ },
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _classCallCheck2 = __webpack_require__(15);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(16);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	var _ean_encoder = __webpack_require__(63);
+
+	var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var EAN2 = function () {
 		function EAN2(string) {
-			_classCallCheck(this, EAN2);
+			(0, _classCallCheck3.default)(this, EAN2);
 
 			this.string = string;
 
 			this.structure = ["LL", "LG", "GL", "GG"];
 		}
 
-		_createClass(EAN2, [{
+		(0, _createClass3.default)(EAN2, [{
 			key: "valid",
 			value: function valid() {
 				return this.string.search(/^[0-9]{2}$/) !== -1;
@@ -985,31 +2324,59 @@
 				};
 			}
 		}]);
-
 		return EAN2;
 	}();
 
+	exports.default = EAN2;
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _getPrototypeOf = __webpack_require__(22);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(15);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(25);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(50);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _EAN2 = __webpack_require__(62);
+
+	var _EAN3 = _interopRequireDefault(_EAN2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	var UPC = function (_EAN) {
-		_inherits(UPC, _EAN);
+		(0, _inherits3.default)(UPC, _EAN);
 
 		function UPC(string, options) {
-			_classCallCheck(this, UPC);
-
-			return _possibleConstructorReturn(this, Object.getPrototypeOf(UPC).call(this, "0" + string, options));
+			(0, _classCallCheck3.default)(this, UPC);
+			return (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(UPC).call(this, "0" + string, options));
 		}
 
 		return UPC;
-	}(EAN13);
+	}(_EAN3.default);
 
-	exports.EAN13 = EAN13;
-	exports.EAN8 = EAN8;
-	exports.EAN5 = EAN5;
-	exports.EAN2 = EAN2;
-	exports.UPC = UPC;
+	exports.default = UPC;
 
 /***/ },
-/* 5 */
-/***/ function(module, exports) {
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -1017,81 +2384,19 @@
 		value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _classCallCheck2 = __webpack_require__(15);
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	var EANencoder = function () {
-		function EANencoder() {
-			_classCallCheck(this, EANencoder);
+	var _createClass2 = __webpack_require__(16);
 
-			this.startBin = "101";
-			this.endBin = "101";
-			this.middleBin = "01010";
+	var _createClass3 = _interopRequireDefault(_createClass2);
 
-			//The L (left) type of encoding
-			this.Lbinary = ["0001101", "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011"];
-
-			//The G type of encoding
-			this.Gbinary = ["0100111", "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111"];
-
-			//The R (right) type of encoding
-			this.Rbinary = ["1110010", "1100110", "1101100", "1000010", "1011100", "1001110", "1010000", "1000100", "1001000", "1110100"];
-		}
-
-		//Convert a numberarray to the representing
-
-
-		_createClass(EANencoder, [{
-			key: "encode",
-			value: function encode(number, structure, separator) {
-				//Create the variable that should be returned at the end of the function
-				var result = "";
-
-				separator = typeof separator === "undefined" ? "" : separator;
-
-				//Loop all the numbers
-				for (var i = 0; i < number.length; i++) {
-					//Using the L, G or R encoding and add it to the returning variable
-					if (structure[i] == "L") {
-						result += this.Lbinary[number[i]];
-					} else if (structure[i] == "G") {
-						result += this.Gbinary[number[i]];
-					} else if (structure[i] == "R") {
-						result += this.Rbinary[number[i]];
-					}
-
-					// Add separator
-					if (i < number.length - 1) {
-						result += separator;
-					}
-				}
-				return result;
-			}
-		}]);
-
-		return EANencoder;
-	}();
-
-	exports.default = EANencoder;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var ITF14 = function () {
 		function ITF14(string) {
-			_classCallCheck(this, ITF14);
+			(0, _classCallCheck3.default)(this, ITF14);
 
 			this.string = string;
 
@@ -1114,7 +2419,7 @@
 			};
 		}
 
-		_createClass(ITF14, [{
+		(0, _createClass3.default)(ITF14, [{
 			key: "valid",
 			value: function valid() {
 				return this.string.search(/^[0-9]{14}$/) !== -1 && this.string[13] == this.checksum();
@@ -1171,15 +2476,14 @@
 				return 10 - result % 10;
 			}
 		}]);
-
 		return ITF14;
 	}();
 
 	exports.default = ITF14;
 
 /***/ },
-/* 7 */
-/***/ function(module, exports) {
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -1187,13 +2491,19 @@
 		value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _classCallCheck2 = __webpack_require__(15);
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(16);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var ITF = function () {
 		function ITF(string) {
-			_classCallCheck(this, ITF);
+			(0, _classCallCheck3.default)(this, ITF);
 
 			this.string = string;
 
@@ -1211,7 +2521,7 @@
 			};
 		}
 
-		_createClass(ITF, [{
+		(0, _createClass3.default)(ITF, [{
 			key: "valid",
 			value: function valid() {
 				return this.string.search(/^([0-9]{2})+$/) !== -1;
@@ -1255,14 +2565,52 @@
 				return result;
 			}
 		}]);
-
 		return ITF;
 	}();
 
 	exports.default = ITF;
 
 /***/ },
-/* 8 */
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.MSI1110 = exports.MSI1010 = exports.MSI11 = exports.MSI10 = exports.MSI = undefined;
+
+	var _MSI = __webpack_require__(71);
+
+	var _MSI2 = _interopRequireDefault(_MSI);
+
+	var _MSI3 = __webpack_require__(72);
+
+	var _MSI4 = _interopRequireDefault(_MSI3);
+
+	var _MSI5 = __webpack_require__(74);
+
+	var _MSI6 = _interopRequireDefault(_MSI5);
+
+	var _MSI7 = __webpack_require__(75);
+
+	var _MSI8 = _interopRequireDefault(_MSI7);
+
+	var _MSI9 = __webpack_require__(76);
+
+	var _MSI10 = _interopRequireDefault(_MSI9);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.MSI = _MSI2.default;
+	exports.MSI10 = _MSI4.default;
+	exports.MSI11 = _MSI6.default;
+	exports.MSI1010 = _MSI8.default;
+	exports.MSI1110 = _MSI10.default;
+
+/***/ },
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1270,26 +2618,25 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.MSI1110 = exports.MSI1010 = exports.MSI11 = exports.MSI = undefined;
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _classCallCheck2 = __webpack_require__(15);
 
-	var _checksums = __webpack_require__(9);
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	var _createClass2 = __webpack_require__(16);
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	var _createClass3 = _interopRequireDefault(_createClass2);
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var MSI = function () {
 		function MSI(string) {
-			_classCallCheck(this, MSI);
+			(0, _classCallCheck3.default)(this, MSI);
 
 			this.string = string;
 		}
 
-		_createClass(MSI, [{
+		(0, _createClass3.default)(MSI, [{
 			key: "encode",
 			value: function encode() {
 				var ret = "110";
@@ -1315,56 +2662,8 @@
 				return this.string.search(/^[0-9]+$/) !== -1;
 			}
 		}]);
-
 		return MSI;
 	}();
-
-	var MSI11 = function (_MSI) {
-		_inherits(MSI11, _MSI);
-
-		function MSI11(string) {
-			_classCallCheck(this, MSI11);
-
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MSI11).call(this, string));
-
-			_this.string += (0, _checksums.mod11)(_this.string);
-			return _this;
-		}
-
-		return MSI11;
-	}(MSI);
-
-	var MSI1010 = function (_MSI2) {
-		_inherits(MSI1010, _MSI2);
-
-		function MSI1010(string) {
-			_classCallCheck(this, MSI1010);
-
-			var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(MSI1010).call(this, string));
-
-			_this2.string += (0, _checksums.mod10)(_this2.string);
-			_this2.string += (0, _checksums.mod10)(_this2.string);
-			return _this2;
-		}
-
-		return MSI1010;
-	}(MSI);
-
-	var MSI1110 = function (_MSI3) {
-		_inherits(MSI1110, _MSI3);
-
-		function MSI1110(string) {
-			_classCallCheck(this, MSI1110);
-
-			var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(MSI1110).call(this, string));
-
-			_this3.string += (0, _checksums.mod11)(_this3.string);
-			_this3.string += (0, _checksums.mod10)(_this3.string);
-			return _this3;
-		}
-
-		return MSI1110;
-	}(MSI);
 
 	function addZeroes(number, n) {
 		for (var i = 0; i < n; i++) {
@@ -1373,13 +2672,61 @@
 		return number;
 	}
 
-	exports.MSI = MSI;
-	exports.MSI11 = MSI11;
-	exports.MSI1010 = MSI1010;
-	exports.MSI1110 = MSI1110;
+	exports.default = MSI;
 
 /***/ },
-/* 9 */
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _getPrototypeOf = __webpack_require__(22);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(15);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(25);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(50);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _MSI2 = __webpack_require__(71);
+
+	var _MSI3 = _interopRequireDefault(_MSI2);
+
+	var _checksums = __webpack_require__(73);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var MSI10 = function (_MSI) {
+		(0, _inherits3.default)(MSI10, _MSI);
+
+		function MSI10(string) {
+			(0, _classCallCheck3.default)(this, MSI10);
+
+			var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(MSI10).call(this, string));
+
+			_this.string += (0, _checksums.mod10)(_this.string);
+			return _this;
+		}
+
+		return MSI10;
+	}(_MSI3.default);
+
+	exports.default = MSI10;
+
+/***/ },
+/* 73 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1413,8 +2760,163 @@
 	}
 
 /***/ },
-/* 10 */
-/***/ function(module, exports) {
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _getPrototypeOf = __webpack_require__(22);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(15);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(25);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(50);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _MSI2 = __webpack_require__(71);
+
+	var _MSI3 = _interopRequireDefault(_MSI2);
+
+	var _checksums = __webpack_require__(73);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var MSI11 = function (_MSI) {
+		(0, _inherits3.default)(MSI11, _MSI);
+
+		function MSI11(string) {
+			(0, _classCallCheck3.default)(this, MSI11);
+
+			var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(MSI11).call(this, string));
+
+			_this.string += (0, _checksums.mod11)(_this.string);
+			return _this;
+		}
+
+		return MSI11;
+	}(_MSI3.default);
+
+	exports.default = MSI11;
+
+/***/ },
+/* 75 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _getPrototypeOf = __webpack_require__(22);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(15);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(25);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(50);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _MSI2 = __webpack_require__(71);
+
+	var _MSI3 = _interopRequireDefault(_MSI2);
+
+	var _checksums = __webpack_require__(73);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var MSI1010 = function (_MSI) {
+		(0, _inherits3.default)(MSI1010, _MSI);
+
+		function MSI1010(string) {
+			(0, _classCallCheck3.default)(this, MSI1010);
+
+			var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(MSI1010).call(this, string));
+
+			_this.string += (0, _checksums.mod10)(_this.string);
+			_this.string += (0, _checksums.mod10)(_this.string);
+			return _this;
+		}
+
+		return MSI1010;
+	}(_MSI3.default);
+
+	exports.default = MSI1010;
+
+/***/ },
+/* 76 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _getPrototypeOf = __webpack_require__(22);
+
+	var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+	var _classCallCheck2 = __webpack_require__(15);
+
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _possibleConstructorReturn2 = __webpack_require__(25);
+
+	var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+	var _inherits2 = __webpack_require__(50);
+
+	var _inherits3 = _interopRequireDefault(_inherits2);
+
+	var _MSI2 = __webpack_require__(71);
+
+	var _MSI3 = _interopRequireDefault(_MSI2);
+
+	var _checksums = __webpack_require__(73);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var MSI1110 = function (_MSI) {
+		(0, _inherits3.default)(MSI1110, _MSI);
+
+		function MSI1110(string) {
+			(0, _classCallCheck3.default)(this, MSI1110);
+
+			var _this = (0, _possibleConstructorReturn3.default)(this, (0, _getPrototypeOf2.default)(MSI1110).call(this, string));
+
+			_this.string += (0, _checksums.mod11)(_this.string);
+			_this.string += (0, _checksums.mod10)(_this.string);
+			return _this;
+		}
+
+		return MSI1110;
+	}(_MSI3.default);
+
+	exports.default = MSI1110;
+
+/***/ },
+/* 77 */
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -1422,18 +2924,24 @@
 	  value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _classCallCheck2 = __webpack_require__(15);
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+	var _createClass2 = __webpack_require__(16);
+
+	var _createClass3 = _interopRequireDefault(_createClass2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var pharmacode = function () {
 	  function pharmacode(string) {
-	    _classCallCheck(this, pharmacode);
+	    (0, _classCallCheck3.default)(this, pharmacode);
 
 	    this.number = parseInt(string);
 	  }
 
-	  _createClass(pharmacode, [{
+	  (0, _createClass3.default)(pharmacode, [{
 	    key: "encode",
 	    value: function encode() {
 	      return {
@@ -1447,7 +2955,6 @@
 	      return this.number >= 3 && this.number <= 131070;
 	    }
 	  }]);
-
 	  return pharmacode;
 	}();
 
@@ -1489,8 +2996,8 @@
 	exports.default = pharmacode;
 
 /***/ },
-/* 11 */
-/***/ function(module, exports) {
+/* 78 */
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 
@@ -1498,58 +3005,19 @@
 		value: true
 	});
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	var _classCallCheck2 = __webpack_require__(15);
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-	var blank = function () {
-		function blank(string) {
-			_classCallCheck(this, blank);
+	var _createClass2 = __webpack_require__(16);
 
-			this.size = parseInt(string, 10);
-		}
+	var _createClass3 = _interopRequireDefault(_createClass2);
 
-		_createClass(blank, [{
-			key: "encode",
-			value: function encode() {
-				var binary = "";
-				for (var i = 0; i < this.size; i++) {
-					binary += "0";
-				}
-				return {
-					data: binary,
-					text: ""
-				};
-			}
-		}, {
-			key: "valid",
-			value: function valid() {
-				return this.size > 0;
-			}
-		}]);
-
-		return blank;
-	}();
-
-	exports.blank = blank;
-
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var GenericBarcode = function () {
 		function GenericBarcode(string) {
-			_classCallCheck(this, GenericBarcode);
+			(0, _classCallCheck3.default)(this, GenericBarcode);
 
 			this.string = string;
 		}
@@ -1557,7 +3025,7 @@
 		//Return the corresponding binary numbers for the data provided
 
 
-		_createClass(GenericBarcode, [{
+		(0, _createClass3.default)(GenericBarcode, [{
 			key: "encode",
 			value: function encode() {
 				return {
@@ -1574,14 +3042,13 @@
 				return true;
 			}
 		}]);
-
 		return GenericBarcode;
 	}();
 
 	exports.default = GenericBarcode;
 
 /***/ },
-/* 13 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1590,16 +3057,16 @@
 		value: true
 	});
 
-	var _merge = __webpack_require__(14);
+	var _merge = __webpack_require__(80);
 
 	var _merge2 = _interopRequireDefault(_merge);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = drawCanvas;
+	exports.default = renderCanvas;
 
 
-	function drawCanvas(canvas, encodings, options) {
+	function renderCanvas(canvas, encodings, options) {
 		//Abort if the browser does not support HTML5 canvas
 		if (!canvas.getContext) {
 			throw new Error('The browser does not support canvas.');
@@ -1618,92 +3085,51 @@
 		restoreCanvas(canvas);
 	}
 
-	function moveCanvasDrawing(canvas, encoding) {
-		var ctx = canvas.getContext("2d");
-
-		ctx.translate(encoding.width, 0);
-	}
-
-	function restoreCanvas(canvas) {
-		// Get the canvas context
-		var ctx = canvas.getContext("2d");
-
-		ctx.restore();
-	}
-
-	function drawCanvasText(canvas, options, encoding) {
-		// Get the canvas context
-		var ctx = canvas.getContext("2d");
-
-		var font = options.fontOptions + " " + options.fontSize + "px " + options.font;
-
-		// Draw the text if displayValue is set
-		if (options.displayValue) {
-			var x, y;
-
-			if (options.textPosition == "top") {
-				y = options.marginTop + options.fontSize;
-				ctx.textBaseline = "bottom";
-			} else {
-				y = options.height + options.textMargin + options.marginTop;
-				ctx.textBaseline = "top";
-			}
-
-			ctx.font = font;
-
-			// Draw the text in the correct X depending on the textAlign option
-			if (options.textAlign == "left" || encoding.barcodePadding > 0) {
-				x = 0;
-				ctx.textAlign = 'left';
-			} else if (options.textAlign == "right") {
-				x = encoding.width - 1;
-				ctx.textAlign = 'right';
-			}
-			//In all other cases, center the text
-			else {
-					x = encoding.width / 2;
-					ctx.textAlign = 'center';
-				}
-
-			ctx.fillText(encoding.text, x, y);
-		}
-	}
-
 	function prepareCanvas(canvas, options, encodings) {
 		// Get the canvas context
 		var ctx = canvas.getContext("2d");
 
 		ctx.save();
 
-		// Set font
-		ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
-
 		// Calculate total width
 		var totalWidth = 0;
+		var maxHeight = 0;
 		for (var i in encodings) {
-			var textWidth = ctx.measureText(encodings[i].text).width;
-			var barcodeWidth = encodings[i].data.length * options.width;
+			var _options = (0, _merge2.default)(_options, encodings[i].options);
 
+			// Set font
+			ctx.font = _options.fontOptions + " " + _options.fontSize + "px " + _options.font;
+
+			// Calculate the width of the encoding
+			var textWidth = ctx.measureText(encodings[i].text).width;
+			var barcodeWidth = encodings[i].data.length * _options.width;
 			encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
 
+			// Calculate the height of the encoding
+			var height = _options.height + (_options.displayValue && encodings[i].text.length > 0 ? _options.fontSize : 0) + _options.textMargin + _options.marginTop + _options.marginBottom;
+
 			var barcodePadding = 0;
-			if (options.displayValue && barcodeWidth < textWidth) {
-				if (options.textAlign == "center") {
+			if (_options.displayValue && barcodeWidth < textWidth) {
+				if (_options.textAlign == "center") {
 					barcodePadding = Math.floor((textWidth - barcodeWidth) / 2);
-				} else if (options.textAlign == "left") {
+				} else if (_options.textAlign == "left") {
 					barcodePadding = 0;
-				} else if (options.textAlign == "right") {
+				} else if (_options.textAlign == "right") {
 					barcodePadding = Math.floor(textWidth - barcodeWidth);
 				}
 			}
 			encodings[i].barcodePadding = barcodePadding;
+
+			if (height > maxHeight) {
+				maxHeight = height;
+			}
 
 			totalWidth += encodings[i].width;
 		}
 
 		canvas.width = totalWidth + options.marginLeft + options.marginRight;
 
-		canvas.height = options.height + (options.displayValue ? options.fontSize : 0) + options.textMargin + options.marginTop + options.marginBottom;
+		canvas.height = maxHeight;
 
 		// Paint the canvas
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1743,8 +3169,57 @@
 		}
 	}
 
+	function drawCanvasText(canvas, options, encoding) {
+		// Get the canvas context
+		var ctx = canvas.getContext("2d");
+
+		var font = options.fontOptions + " " + options.fontSize + "px " + options.font;
+
+		// Draw the text if displayValue is set
+		if (options.displayValue) {
+			var x, y;
+
+			if (options.textPosition == "top") {
+				y = options.marginTop + options.fontSize - options.textMargin;
+			} else {
+				y = options.height + options.textMargin + options.marginTop + options.fontSize;
+			}
+
+			ctx.font = font;
+
+			// Draw the text in the correct X depending on the textAlign option
+			if (options.textAlign == "left" || encoding.barcodePadding > 0) {
+				x = 0;
+				ctx.textAlign = 'left';
+			} else if (options.textAlign == "right") {
+				x = encoding.width - 1;
+				ctx.textAlign = 'right';
+			}
+			//In all other cases, center the text
+			else {
+					x = encoding.width / 2;
+					ctx.textAlign = 'center';
+				}
+
+			ctx.fillText(encoding.text, x, y);
+		}
+	}
+
+	function moveCanvasDrawing(canvas, encoding) {
+		var ctx = canvas.getContext("2d");
+
+		ctx.translate(encoding.width, 0);
+	}
+
+	function restoreCanvas(canvas) {
+		// Get the canvas context
+		var ctx = canvas.getContext("2d");
+
+		ctx.restore();
+	}
+
 /***/ },
-/* 14 */
+/* 80 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1770,7 +3245,7 @@
 	}
 
 /***/ },
-/* 15 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1779,32 +3254,85 @@
 	  value: true
 	});
 
-	var _merge = __webpack_require__(14);
+	var _merge = __webpack_require__(80);
 
 	var _merge2 = _interopRequireDefault(_merge);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = drawSVG;
+	exports.default = renderSVG;
 
 
 	var svgns = "http://www.w3.org/2000/svg";
 
-	function drawSVG(svg, encodings, options) {
+	function renderSVG(svg, encodings, options) {
 	  var currentX = options.marginLeft;
 
 	  prepareSVG(svg, options, encodings);
 	  for (var i in encodings) {
 	    var encodingOptions = (0, _merge2.default)(options, encodings[i].options);
-	    var group = createGroup(currentX, options.marginTop, svg);
+
+	    var group = createGroup(currentX, encodingOptions.marginTop, svg);
+
+	    setGroupOptions(group, encodingOptions, encodings[i]);
 
 	    drawSvgBarcode(group, encodingOptions, encodings[i]);
 	    drawSVGText(group, encodingOptions, encodings[i]);
 
 	    currentX += encodings[i].width;
 	  }
+	}
 
-	  //restoreCanvas(canvas);
+	function prepareSVG(svg, options, encodings) {
+	  // Clear the SVG
+	  while (svg.firstChild) {
+	    svg.removeChild(svg.firstChild);
+	  }
+
+	  var totalWidth = 0;
+	  var maxHeight = 0;
+	  for (var i in encodings) {
+	    var _options = (0, _merge2.default)(_options, encodings[i].options);
+
+	    // Calculate the width of the encoding
+	    var textWidth = messureSVGtext(encodings[i].text, svg, _options);
+	    var barcodeWidth = encodings[i].data.length * _options.width;
+	    encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
+
+	    // Calculate the height of the encoding
+	    var height = _options.height + (_options.displayValue && encodings[i].text.length > 0 ? _options.fontSize : 0) + _options.textMargin + _options.marginTop + _options.marginBottom;
+
+	    var barcodePadding = 0;
+	    if (_options.displayValue && barcodeWidth < textWidth) {
+	      if (_options.textAlign == "center") {
+	        barcodePadding = Math.floor((textWidth - barcodeWidth) / 2);
+	      } else if (_options.textAlign == "left") {
+	        barcodePadding = 0;
+	      } else if (_options.textAlign == "right") {
+	        barcodePadding = Math.floor(textWidth - barcodeWidth);
+	      }
+	    }
+	    encodings[i].barcodePadding = barcodePadding;
+
+	    if (height > maxHeight) {
+	      maxHeight = height;
+	    }
+
+	    totalWidth += encodings[i].width;
+	  }
+
+	  var width = totalWidth + options.marginLeft + options.marginRight;
+	  var height = maxHeight;
+
+	  svg.setAttribute("width", width + "px");
+	  svg.setAttribute("height", height + "px");
+	  svg.setAttribute("x", "0px");
+	  svg.setAttribute("y", "0px");
+	  svg.setAttribute("viewBox", "0 0 " + width + " " + height);
+
+	  if (options.background) {
+	    svg.style.background = options.background;
+	  }
 	}
 
 	function drawSvgBarcode(parent, options, encoding) {
@@ -1820,13 +3348,11 @@
 	  }
 	  yHeight = options.height;
 
-	  // TODO fix line color here
-
 	  for (var b in binary) {
 	    var x = b * options.width + encoding.barcodePadding;
 	    if (binary[b] === "0" && binary[b] === 0) {} else if (binary[b] === "1") {
 	      drawLine(x, yFrom, options.width, options.height, parent);
-	    } else if (binary[b]) {
+	    } else if (binary[b] > 0) {
 	      drawLine(x, yFrom, options.width, options.height * binary[b], parent);
 	    }
 	  }
@@ -1839,14 +3365,12 @@
 	  if (options.displayValue) {
 	    var x, y;
 
-	    textElem.setAttribute("style", "font-family:" + options.font + ";" + "font-size:" + options.fontSize + "px;");
+	    textElem.setAttribute("style", "font:" + options.fontOptions + " " + options.fontSize + "px " + options.font);
 
 	    if (options.textPosition == "top") {
-	      y = options.fontSize;
-	      textElem.setAttribute("alignment-baseline", "baseline");
+	      y = options.fontSize - options.textMargin;
 	    } else {
-	      y = options.height + options.textMargin;
-	      textElem.setAttribute("alignment-baseline", "text-before-edge");
+	      y = options.height + options.textMargin + options.fontSize;
 	    }
 
 	    // Draw the text in the correct X depending on the textAlign option
@@ -1872,59 +3396,33 @@
 	  }
 	}
 
-	var prepareSVG = function prepareSVG(svg, options, encodings) {
-	  // Clear SVG
-	  // TODO
-
-	  var totalWidth = 0;
-	  for (var i in encodings) {
-	    var textWidth = messureSVGtext(encodings[i].text, svg, options);
-	    var barcodeWidth = encodings[i].data.length * options.width;
-
-	    encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
-
-	    var barcodePadding = 0;
-	    if (options.displayValue && barcodeWidth < textWidth) {
-	      if (options.textAlign == "center") {
-	        barcodePadding = Math.floor((textWidth - barcodeWidth) / 2);
-	      } else if (options.textAlign == "left") {
-	        barcodePadding = 0;
-	      } else if (options.textAlign == "right") {
-	        barcodePadding = Math.floor(textWidth - barcodeWidth);
-	      }
-	    }
-	    encodings[i].barcodePadding = barcodePadding;
-
-	    totalWidth += encodings[i].width;
-	  }
-
-	  svg.setAttribute("width", totalWidth + options.marginLeft + options.marginRight);
-
-	  svg.setAttribute("height", options.height + (options.displayValue ? options.fontSize : 0) + options.textMargin + options.marginTop + options.marginBottom);
-
-	  // Paint the canvas
-	  /*ctx.clearRect(0,0,canvas.width,canvas.height);
-	  if(options.background){
-	  	ctx.fillStyle = options.background;
-	  	ctx.fillRect(0,0,canvas.width, canvas.height);
-	  }*/
-	};
-
-	var messureSVGtext = function messureSVGtext(text, svg, options) {
+	//
+	// Help functions
+	//
+	function messureSVGtext(string, svg, options) {
 	  // Create text element
-	  var text = document.createElementNS(svgns, 'text');
+	  /*var text = document.createElementNS(svgns, 'text');
 	  text.style.fontFamily = options.font;
+	    text.setAttribute("style",
+	     "font-family:" + options.font + ";" +
+	     "font-size:" + options.fontSize + "px;"
+	   );
+	  	var textNode = document.createTextNode(string);
+	  	text.appendChild(textNode);
+	    svg.appendChild(text);
+	    var size = text.getComputedTextLength();
+	    svg.removeChild(text);
+	   */
+	  // TODO: Use svg to messure the text width
+	  // Set font
+	  var ctx = document.createElement("canvas").getContext("2d");
+	  ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
 
-	  text.setAttribute("style", "font-family:" + options.font + ";" + "font-size:" + options.fontSize + "px;");
+	  // Calculate the width of the encoding
+	  var size = ctx.measureText(string).width;
 
-	  var textNode = document.createTextNode(text);
-
-	  text.appendChild(textNode);
-
-	  //svg.appendChild(text);
-
-	  return text.getComputedTextLength();
-	};
+	  return size;
+	}
 
 	function createGroup(x, y, svg) {
 	  var group = document.createElementNS(svgns, 'g');
@@ -1936,6 +3434,10 @@
 	  return group;
 	}
 
+	function setGroupOptions(group, options, encoding) {
+	  group.setAttribute("style", "fill:" + options.lineColor + ";");
+	}
+
 	function drawLine(x, y, width, height, parent) {
 	  var line = document.createElementNS(svgns, 'rect');
 
@@ -1943,13 +3445,12 @@
 	  line.setAttribute("y", y);
 	  line.setAttribute("width", width);
 	  line.setAttribute("height", height);
-	  line.setAttribute("style", "fill:rgb(0,0,0)");
 
 	  parent.appendChild(line);
 	}
 
 /***/ },
-/* 16 */
+/* 82 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1976,6 +3477,28 @@
 	  nextLevel(encodings);
 
 	  return linearEncodings;
+	}
+
+/***/ },
+/* 83 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.default = fixOptions;
+
+
+	function fixOptions(options) {
+		// Fix the margins
+		options.marginTop = options.marginTop || options.margin;
+		options.marginBottom = options.marginBottom || options.margin;
+		options.marginRight = options.marginRight || options.margin;
+		options.marginLeft = options.marginLeft || options.margin;
+
+		return options;
 	}
 
 /***/ }

@@ -1,6 +1,10 @@
 'use strict';
 
-var _barcodes = require('./barcodes.js');
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
+var _barcodes = require('./barcodes/');
 
 var _barcodes2 = _interopRequireDefault(_barcodes);
 
@@ -20,6 +24,10 @@ var _linearizeEncodings = require('./help/linearizeEncodings.js');
 
 var _linearizeEncodings2 = _interopRequireDefault(_linearizeEncodings);
 
+var _fixOptions = require('./help/fixOptions.js');
+
+var _fixOptions2 = _interopRequireDefault(_fixOptions);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Import the renderers
@@ -33,72 +41,158 @@ var renderers = {
 // Import all the barcodes
 
 
-var api = {};
-var JsBarcode = function JsBarcode(element) {
-	var newApi = {};
-	for (var key in api) {
-		newApi[key] = api[key];
+var barcodesAPIs = {};
+
+// The first call of the library API
+// Will generate a
+var JsBarcode = function JsBarcode(element, text, options) {
+	var api = {};
+	for (var key in barcodesAPIs) {
+		api[key] = barcodesAPIs[key];
 	}
 
-	newApi.drawProperties = getDrawProperies(element);
+	if (typeof element === "undefined") {
+		return api;
+	}
 
-	newApi.encodings = [];
-	newApi.draw = draw;
-	newApi._options = defaults;
+	options = options || {};
 
-	return newApi;
+	// Parts of the API that is not the barcodes
+	api.render = renderCall;
+	api.options = optionsCall;
+	api.blank = blankCall;
+
+	// Variables that will be pased through the API calls
+	api._renderProperties = getRenderProperies(element);
+	api._encodings = [];
+	api._options = defaults;
+
+	// If text is set, use simple syntax
+	if (typeof text !== "undefined") {
+		if (!options.format) {
+			options.format = autoSelectBarcode();
+		}
+
+		api.options(options);
+		api[options.format](text, options);
+		api.render();
+	}
+
+	return api;
 };
 
-api.options = function (options) {
-	this._options = (0, _merge2.default)(this._options, options);
-
-	return this;
+// To make tests work TODO: remove
+JsBarcode.getModule = function (name) {
+	return _barcodes2.default[name];
 };
 
 // Register all barcodes
 for (var name in _barcodes2.default) {
 	registerBarcode(_barcodes2.default, name);
 }
-
 function registerBarcode(barcodes, name) {
-	api[name] = function (text, options) {
+	barcodesAPIs[name] = barcodesAPIs[name.toUpperCase()] = barcodesAPIs[name.toLowerCase()] = function (text, options) {
+		var newOptions = (0, _merge2.default)(this._options, options);
 
 		var Encoder = barcodes[name];
-		var encoder = new Encoder(text, this._options);
+		var encoder = new Encoder(text, newOptions);
 
-		this.encodings.push(encoder.encode());
+		if (!encoder.valid()) {
+			if (this._options.valid === defaults.valid) {
+				throw new Error('"' + text + '" is not a valid input for ' + name);
+			} else {
+				this._options.valid(false);
+			}
+		}
+
+		var encoded = encoder.encode();
+		encoded = (0, _linearizeEncodings2.default)(encoded);
+
+		for (var i in encoded) {
+			encoded[i].options = (0, _merge2.default)(newOptions, encoded[i].options);
+		}
+
+		this._encodings.push(encoded);
 
 		return this;
 	};
 }
 
-function draw() {
-	var renderer = renderers[this.drawProperties.renderer];
+function autoSelectBarcode() {
+	// If CODE128 exists. Use it
+	if (barcodesAPIs["CODE128"]) {
+		return "CODE128";
+	}
 
-	var encodings = (0, _linearizeEncodings2.default)(this.encodings);
-	fixOptions(this._options);
+	// Else, take the first (probably only) barcode
+	return (0, _keys2.default)(barcodesAPIs)[0];
+}
 
-	renderer(this.drawProperties.element, encodings, this._options);
+// Sets global encoder options
+// Added to the api by the JsBarcode function
+function optionsCall(options) {
+	this._options = (0, _merge2.default)(this._options, options);
+	return this;
+}
+
+// Will create a blank space (usually in between barcodes)
+function blankCall(size) {
+	var zeroes = "0".repeat(size);
+	this._encodings.push({ data: zeroes });
+	return this;
+}
+
+// Prepares the encodings and calls the renderer
+// Added to the api by the JsBarcode function
+function renderCall() {
+	var renderer = renderers[this._renderProperties.renderer];
+
+	var encodings = (0, _linearizeEncodings2.default)(this._encodings);
+
+	for (var i in encodings) {
+		encodings[i].options = (0, _merge2.default)(this._options, encodings[i].options);
+		(0, _fixOptions2.default)(encodings[i].options);
+	}
+
+	(0, _fixOptions2.default)(this._options);
+
+	renderer(this._renderProperties.element, encodings, this._options);
+
+	if (this._renderProperties.afterRender) {
+		this._renderProperties.afterRender();
+	}
+
+	this._options.valid(true);
 
 	return this;
 }
 
-window.JsBarcode = JsBarcode;
+if (typeof window !== "undefined") {
+	window.JsBarcode = JsBarcode;
+}
 module.exports = JsBarcode;
 
-function getDrawProperies(element) {
+// Takes an element and returns an object with information about how
+//it should be rendered
+// {
+//   element: The element that the renderer should draw on
+//   renderer: The name of the renderer
+//   afterRender (optional): If something has to done after the renderer
+//     completed, calls afterRender (function)
+// }
+function getRenderProperies(element) {
 	// If the element is a string, query select call again
 	if (typeof element === "string") {
 		element = document.querySelector(element);
-		return getDrawProperies(element);
+		return getRenderProperies(element);
 	}
-	// If element, draw on canvas and set the uri as src
+	// If element, render on canvas and set the uri as src
 	else if (typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLImageElement) {
 			var canvas = document.createElement('canvas');
 			return {
 				element: canvas,
 				renderer: "canvas",
-				afterDraw: function afterDraw() {
+				afterRender: function afterRender() {
 					element.setAttribute("src", canvas.toDataURL());
 				}
 			};
@@ -108,26 +202,16 @@ function getDrawProperies(element) {
 				renderer: "svg"
 			};
 		}
-		// If canvas, just draw
+		// If canvas
 		else if (element.getContext) {
 				return {
 					element: element,
 					renderer: "canvas"
 				};
 			} else {
-				throw new Error("Not supported type to draw on.");
+				throw new Error("Not supported type to render on.");
 			}
 };
-
-function fixOptions(options) {
-	// Fix the margins
-	options.marginTop = typeof options.marginTop === "undefined" ? options.margin : options.marginTop;
-	options.marginBottom = typeof options.marginBottom === "undefined" ? options.margin : options.marginBottom;
-	options.marginRight = typeof options.marginRight === "undefined" ? options.margin : options.marginRight;
-	options.marginLeft = typeof options.marginLeft === "undefined" ? options.margin : options.marginLeft;
-
-	return options;
-}
 
 var defaults = {
 	width: 2,
