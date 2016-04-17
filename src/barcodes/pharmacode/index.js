@@ -5,7 +5,7 @@ class pharmacode{
 
   encode(){
     return {
-      data: recursiveEncoding(this.number.toString(2),true).substr(2),
+      data: recursiveEncoding(this.number.toString(2), true).substr(2),
       text: this.number + ""
     };
   }
@@ -15,7 +15,7 @@ class pharmacode{
   }
 }
 
-function recursiveEncoding(code,state){
+function recursiveEncoding(code, state){
   // TODO explanation needed
 
   //End condition
@@ -34,7 +34,7 @@ function recursiveEncoding(code,state){
     generated = "001".repeat(nzeroes - (state ? 1 : 0));
     generated += "00111";
   }
-  return recursiveEncoding(code.substr(0,code.length - nzeroes - 1),nextState) + generated;
+  return recursiveEncoding(code.substr(0, code.length - nzeroes - 1), nextState) + generated;
 }
 
 //http://stackoverflow.com/a/202627

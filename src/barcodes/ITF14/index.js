@@ -8,16 +8,16 @@ class ITF14{
 		}
 
 		this.binaryRepresentation = {
-			 "0":"00110"
-			,"1":"10001"
-			,"2":"01001"
-			,"3":"11000"
-			,"4":"00101"
-			,"5":"10100"
-			,"6":"01100"
-			,"7":"00011"
-			,"8":"10010"
-			,"9":"01010"
+			  "0":"00110"
+			, "1":"10001"
+			, "2":"01001"
+			, "3":"11000"
+			, "4":"00101"
+			, "5":"10100"
+			, "6":"01100"
+			, "7":"00011"
+			, "8":"10010"
+			, "9":"01010"
 		};
 	}
 
@@ -31,7 +31,7 @@ class ITF14{
 
 		//Calculate all the digit pairs
 		for(var i = 0; i < 14; i += 2){
-			result += this.calculatePair(this.string.substr(i,2));
+			result += this.calculatePair(this.string.substr(i, 2));
 		}
 
 		//Always add the same end bits

@@ -46,10 +46,10 @@ class EAN13{
 		var structure = this.structure[this.string[0]];
 
 		//Get the string to be encoded on the left side of the EAN code
-		var leftSide = this.string.substr(1,6);
+		var leftSide = this.string.substr(1, 6);
 
 		//Get the string to be encoded on the right side of the EAN code
-		var rightSide = this.string.substr(7,6);
+		var rightSide = this.string.substr(7, 6);
 
 		// Add the first digigt
 		result.push({

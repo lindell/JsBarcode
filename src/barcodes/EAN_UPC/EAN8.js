@@ -23,10 +23,10 @@ class EAN8{
 		var result = "";
 
 		//Get the number to be encoded on the left side of the EAN code
-		var leftSide = this.string.substr(0,4);
+		var leftSide = this.string.substr(0, 4);
 
 		//Get the number to be encoded on the right side of the EAN code
-		var rightSide = this.string.substr(4,4);
+		var rightSide = this.string.substr(4, 4);
 
 		//Add the start bits
 		result += encoder.startBin;
@@ -38,7 +38,7 @@ class EAN8{
 		result += encoder.middleBin;
 
 		//Add the right side
-		result += encoder.encode(rightSide,"RRRR");
+		result += encoder.encode(rightSide, "RRRR");
 
 		//Add the end bits
 		result += encoder.endBin;

@@ -14,7 +14,7 @@ export function mod10(number){
 
 export function mod11(number){
 	var sum = 0;
-	var weights = [2,3,4,5,6,7];
+	var weights = [2, 3, 4, 5, 6, 7];
 	for(var i = 0; i < number.length; i++){
 		var n = parseInt(number[number.length - 1 - i]);
 		sum += weights[i % weights.length] * n;
