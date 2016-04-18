@@ -4,49 +4,47 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = require("babel-runtime/helpers/createClass");
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+// Encoding documentation
+// https://en.wikipedia.org/wiki/MSI_Barcode#Character_set_and_binary_lookup
 
 var MSI = function () {
 	function MSI(string) {
-		(0, _classCallCheck3.default)(this, MSI);
+		_classCallCheck(this, MSI);
 
 		this.string = string;
 	}
 
-	(0, _createClass3.default)(MSI, [{
-		key: "encode",
-		value: function encode() {
-			var ret = "110";
+	MSI.prototype.encode = function encode() {
+		// Start bits
+		var ret = "110";
 
-			for (var i = 0; i < this.string.length; i++) {
-				var digit = parseInt(this.string[i]);
-				var bin = digit.toString(2);
-				bin = addZeroes(bin, 4 - bin.length);
-				for (var b = 0; b < bin.length; b++) {
-					ret += bin[b] == "0" ? "100" : "110";
-				}
+		for (var i = 0; i < this.string.length; i++) {
+			// Convert the character to binary (always 4 binary digits)
+			var digit = parseInt(this.string[i]);
+			var bin = digit.toString(2);
+			bin = addZeroes(bin, 4 - bin.length);
+
+			// Add 100 for every zero and 110 for every 1
+			for (var b = 0; b < bin.length; b++) {
+				ret += bin[b] == "0" ? "100" : "110";
 			}
+		}
 
-			ret += "1001";
-			return {
-				data: ret,
-				text: this.string
-			};
-		}
-	}, {
-		key: "valid",
-		value: function valid() {
-			return this.string.search(/^[0-9]+$/) !== -1;
-		}
-	}]);
+		// End bits
+		ret += "1001";
+
+		return {
+			data: ret,
+			text: this.string
+		};
+	};
+
+	MSI.prototype.valid = function valid() {
+		return this.string.search(/^[0-9]+$/) !== -1;
+	};
+
 	return MSI;
 }();
 

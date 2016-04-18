@@ -4,22 +4,19 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = require("babel-runtime/helpers/createClass");
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+// Encoding documentation:
+// https://en.wikipedia.org/wiki/Code_39#Encoding
 
 var CODE39 = function () {
 	function CODE39(string) {
-		(0, _classCallCheck3.default)(this, CODE39);
+		_classCallCheck(this, CODE39);
 
 		this.string = string.toUpperCase();
 
+		// The decimal representation of the characters, is converted to the
+		// corresponding binary with the getEncoding function
 		this.encodings = {
 			"0": 20957, "1": 29783, "2": 23639, "3": 30485,
 			"4": 20951, "5": 29813, "6": 23669, "7": 20855,
@@ -35,24 +32,36 @@ var CODE39 = function () {
 		};
 	}
 
-	(0, _createClass3.default)(CODE39, [{
-		key: "encode",
-		value: function encode() {
-			var result = "";
-			result += this.encodings["*"].toString(2);
-			for (var i = 0; i < this.string.length; i++) {
-				result += this.encodings[this.string[i]].toString(2) + "0";
-			}
-			result += this.encodings["*"].toString(2);
+	// Get the binary representation of a character by converting the encodings
+	// from decimal to binary
 
-			return { data: result, text: this.string };
+
+	CODE39.prototype.getEncoding = function getEncoding(character) {
+		return this.encodings[character].toString(2);
+	};
+
+	CODE39.prototype.encode = function encode() {
+		// First character is always a *
+		var result = this.getEncoding("*");
+
+		// Take every character and add the binary representation to the result
+		for (var i = 0; i < this.string.length; i++) {
+			result += this.getEncoding(this.string[i]) + "0";
 		}
-	}, {
-		key: "valid",
-		value: function valid() {
-			return this.string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
-		}
-	}]);
+
+		// Last character is always a *
+		result += this.getEncoding("*");
+
+		return {
+			data: result,
+			text: this.string
+		};
+	};
+
+	CODE39.prototype.valid = function valid() {
+		return this.string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
+	};
+
 	return CODE39;
 }();
 
