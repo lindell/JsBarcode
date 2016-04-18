@@ -40,7 +40,7 @@ gulp.task("webpack", function () {
     .pipe(gulp.dest("bin/browser/"));
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', ['compile'], function() {
   gulp.watch("src/**/*", ['compile']);
 });
 
@@ -122,7 +122,7 @@ var done = function (error) {
   }
 };
 
-gulp.task('compile', function(){
+gulp.task('compile', function(done){
   runSequence(
     'babel',
     'webpack',
