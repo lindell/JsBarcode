@@ -20,6 +20,7 @@ gulp.task("clean", function(){
 gulp.task("babel", function () {
   return gulp.src("src/**/*")
     .pipe(babel({
+      presets: ['es2015'],
       plugins: [["transform-es2015-classes", {loose: true}]]
 		}))
     .pipe(gulp.dest("bin/node/"));
@@ -31,7 +32,7 @@ gulp.task("webpack", function () {
     .pipe(gulpWebpack(
       {
         output: {
-          filename: 'JsBarcode.min.js',
+          filename: 'JsBarcode.js',
         },
         plugins: [new webpack.optimize.UglifyJsPlugin()],
       }
