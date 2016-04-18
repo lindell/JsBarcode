@@ -1,11 +1,11 @@
 var assert = require('assert');
-var JsBarcode = require('../../JsBarcode.js');
+var JsBarcode = require('../../bin/node/JsBarcode.js');
 var Canvas = require("canvas");
 
 describe('Encoders', function() {
   it('should be able to include the encoders needed', function () {
     CODE128 = JsBarcode.getModule("CODE128");
-    GENERIC = JsBarcode.getModule("generic");
+    GENERIC = JsBarcode.getModule("GenericBarcode");
   });
 });
 
@@ -28,7 +28,6 @@ describe('node-canvas generation', function() {
   it('should throws errors when suppose to', function () {
     var canvas = new Canvas();
     assert.throws(function(){JsBarcode(canvas, "Hello", {format: "EAN8"});});
-    assert.throws(function(){JsBarcode(canvas, "Hello", {format: "DOESNOTEXIST"});}, /Module DOESNOTEXIST does not exist/i);
     assert.throws(function(){JsBarcode("Hello", "Hello", {format: "DOESNOTEXIST"});});
     assert.throws(function(){JsBarcode(123, "Hello", {format: "DOESNOTEXIST"});});
   });
@@ -79,28 +78,6 @@ describe('node-canvas generation', function() {
     assert.equal(topLeft.data[1], 0);
     assert.equal(topLeft.data[2], 0);
   });
-
-  it('should automatically select barcodes', function () {
-    var canvas1 = new Canvas();
-    var canvas2 = new Canvas();
-    var ctx1 = canvas1.getContext("2d");
-    var ctx2 = canvas2.getContext("2d");
-
-    JsBarcode(canvas1, "5901234123457", {format: "EAN"});
-    JsBarcode(canvas2, "5901234123457");
-
-    assert.equal(canvas1.toDataURL(), canvas2.toDataURL());
-
-    var canvas1 = new Canvas();
-    var canvas2 = new Canvas();
-    var ctx1 = canvas1.getContext("2d");
-    var ctx2 = canvas2.getContext("2d");
-
-    JsBarcode(canvas1, "HELL0", {format: "CODE39"});
-    JsBarcode(canvas2, "HELL0");
-
-    assert.equal(canvas1.toDataURL(), canvas2.toDataURL());
-  });
 });
 
 describe('Text printing', function() {
@@ -126,5 +103,13 @@ describe('Text printing', function() {
     assert.notEqual(canvas1.toDataURL(), canvas2.toDataURL());
     assert.notEqual(canvas2.toDataURL(), canvas3.toDataURL());
     assert.notEqual(canvas1.toDataURL(), canvas3.toDataURL());
+  });
+});
+
+describe('Generic barcode', function() {
+  it('should not fail generic barcode', function () {
+    var enc = new GENERIC("1234");
+    assert.equal(enc.valid(), true);
+    assert.equal(enc.encode().text, "1234");
   });
 });
