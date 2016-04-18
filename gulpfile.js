@@ -26,13 +26,27 @@ gulp.task("babel", function () {
     .pipe(gulp.dest("bin/node/"));
 });
 
-gulp.task("webpack", function () {
+gulp.task("webpack", ["babel"], function () {
   return gulp.src('bin/node/JsBarcode.js')
 
     .pipe(gulpWebpack(
       {
         output: {
           filename: 'JsBarcode.js',
+        }
+      }
+    , webpack))
+
+    .pipe(gulp.dest("bin/browser/"));
+});
+
+gulp.task("webpack-min", ["babel"], function () {
+  return gulp.src('bin/node/JsBarcode.js')
+
+    .pipe(gulpWebpack(
+      {
+        output: {
+          filename: 'JsBarcode.min.js',
         },
         plugins: [new webpack.optimize.UglifyJsPlugin()],
       }
@@ -45,7 +59,7 @@ gulp.task('watch', ['compile'], function() {
   gulp.watch("src/**/*", ['compile']);
 });
 
-gulp.task('compress', ["babel", "webpack"], function() {
+gulp.task('compress', ["webpack", "webpack-min"], function() {
   var pkg = require('./package.json');
 });
 
@@ -105,7 +119,7 @@ gulp.task('github-release', function(done) {
     repo: "JsBarcode",
     tag: v,
     name: name,
-    assets: [__dirname + "/bin/browser/JsBarcode.all.min.js"],
+    assets: [__dirname + "/bin/browser/JsBarcode.js"],
   }, done);
 });
 
