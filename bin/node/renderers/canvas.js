@@ -14,13 +14,13 @@ exports.default = renderCanvas;
 
 
 function renderCanvas(canvas, encodings, options) {
-	//Abort if the browser does not support HTML5 canvas
+	// Abort if the browser does not support HTML5 canvas
 	if (!canvas.getContext) {
 		throw new Error('The browser does not support canvas.');
 	}
 
 	prepareCanvas(canvas, options, encodings);
-	for (var i in encodings) {
+	for (var i = 0; i < encodings.length; i++) {
 		var encodingOptions = (0, _merge2.default)(options, encodings[i].options);
 
 		drawCanvasBarcode(canvas, encodingOptions, encodings[i]);
@@ -41,7 +41,7 @@ function prepareCanvas(canvas, options, encodings) {
 	// Calculate total width
 	var totalWidth = 0;
 	var maxHeight = 0;
-	for (var i in encodings) {
+	for (var i = 0; i < encodings.length; i++) {
 		var _options = (0, _merge2.default)(_options, encodings[i].options);
 
 		// Set font
@@ -93,7 +93,6 @@ function drawCanvasBarcode(canvas, options, encoding) {
 	var ctx = canvas.getContext("2d");
 
 	var binary = encoding.data;
-	var text = encoding.text;
 
 	// Creates the barcode out of the encoded binary
 	var yFrom, yHeight;
@@ -106,9 +105,10 @@ function drawCanvasBarcode(canvas, options, encoding) {
 
 	ctx.fillStyle = options.lineColor;
 
-	for (var b in binary) {
+	for (var b = 0; b < binary.length; b++) {
 		var x = b * options.width + encoding.barcodePadding;
-		if (binary[b] === "0" && binary[b] === 0) {} else if (binary[b] === "1") {
+
+		if (binary[b] === "1") {
 			ctx.fillRect(x, yFrom, options.width, options.height);
 		} else if (binary[b]) {
 			ctx.fillRect(x, yFrom, options.width, options.height * binary[b]);
@@ -142,7 +142,7 @@ function drawCanvasText(canvas, options, encoding) {
 			x = encoding.width - 1;
 			ctx.textAlign = 'right';
 		}
-		//In all other cases, center the text
+		// In all other cases, center the text
 		else {
 				x = encoding.width / 2;
 				ctx.textAlign = 'center';

@@ -4,19 +4,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = require("babel-runtime/helpers/createClass");
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ITF = function () {
 	function ITF(string) {
-		(0, _classCallCheck3.default)(this, ITF);
+		_classCallCheck(this, ITF);
 
 		this.string = string;
 
@@ -34,50 +26,46 @@ var ITF = function () {
 		};
 	}
 
-	(0, _createClass3.default)(ITF, [{
-		key: "valid",
-		value: function valid() {
-			return this.string.search(/^([0-9]{2})+$/) !== -1;
-		}
-	}, {
-		key: "encode",
-		value: function encode() {
-			//Always add the same start bits
-			var result = "1010";
+	ITF.prototype.valid = function valid() {
+		return this.string.search(/^([0-9]{2})+$/) !== -1;
+	};
 
-			//Calculate all the digit pairs
-			for (var i = 0; i < this.string.length; i += 2) {
-				result += this.calculatePair(this.string.substr(i, 2));
-			}
+	ITF.prototype.encode = function encode() {
+		// Always add the same start bits
+		var result = "1010";
 
-			//Always add the same end bits
-			result += "11101";
-
-			return {
-				data: result,
-				text: this.string
-			};
+		// Calculate all the digit pairs
+		for (var i = 0; i < this.string.length; i += 2) {
+			result += this.calculatePair(this.string.substr(i, 2));
 		}
 
-		//Calculate the data of a number pair
+		// Always add the same end bits
+		result += "11101";
 
-	}, {
-		key: "calculatePair",
-		value: function calculatePair(numberPair) {
-			var result = "";
+		return {
+			data: result,
+			text: this.string
+		};
+	};
 
-			var number1Struct = this.binaryRepresentation[numberPair[0]];
-			var number2Struct = this.binaryRepresentation[numberPair[1]];
+	// Calculate the data of a number pair
 
-			//Take every second bit and add to the result
-			for (var i = 0; i < 5; i++) {
-				result += number1Struct[i] == "1" ? "111" : "1";
-				result += number2Struct[i] == "1" ? "000" : "0";
-			}
 
-			return result;
+	ITF.prototype.calculatePair = function calculatePair(numberPair) {
+		var result = "";
+
+		var number1Struct = this.binaryRepresentation[numberPair[0]];
+		var number2Struct = this.binaryRepresentation[numberPair[1]];
+
+		// Take every second bit and add to the result
+		for (var i = 0; i < 5; i++) {
+			result += number1Struct[i] == "1" ? "111" : "1";
+			result += number2Struct[i] == "1" ? "000" : "0";
 		}
-	}]);
+
+		return result;
+	};
+
 	return ITF;
 }();
 

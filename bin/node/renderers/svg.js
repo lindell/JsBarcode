@@ -19,7 +19,7 @@ function renderSVG(svg, encodings, options) {
   var currentX = options.marginLeft;
 
   prepareSVG(svg, options, encodings);
-  for (var i in encodings) {
+  for (var i = 0; i < encodings.length; i++) {
     var encodingOptions = (0, _merge2.default)(options, encodings[i].options);
 
     var group = createGroup(currentX, encodingOptions.marginTop, svg);
@@ -41,7 +41,7 @@ function prepareSVG(svg, options, encodings) {
 
   var totalWidth = 0;
   var maxHeight = 0;
-  for (var i in encodings) {
+  for (var i = 0; i < encodings.length; i++) {
     var _options = (0, _merge2.default)(_options, encodings[i].options);
 
     // Calculate the width of the encoding
@@ -50,7 +50,7 @@ function prepareSVG(svg, options, encodings) {
     encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
 
     // Calculate the height of the encoding
-    var height = _options.height + (_options.displayValue && encodings[i].text.length > 0 ? _options.fontSize : 0) + _options.textMargin + _options.marginTop + _options.marginBottom;
+    var encodingHeight = _options.height + (_options.displayValue && encodings[i].text.length > 0 ? _options.fontSize : 0) + _options.textMargin + _options.marginTop + _options.marginBottom;
 
     var barcodePadding = 0;
     if (_options.displayValue && barcodeWidth < textWidth) {
@@ -64,8 +64,8 @@ function prepareSVG(svg, options, encodings) {
     }
     encodings[i].barcodePadding = barcodePadding;
 
-    if (height > maxHeight) {
-      maxHeight = height;
+    if (encodingHeight > maxHeight) {
+      maxHeight = encodingHeight;
     }
 
     totalWidth += encodings[i].width;
@@ -87,7 +87,6 @@ function prepareSVG(svg, options, encodings) {
 
 function drawSvgBarcode(parent, options, encoding) {
   var binary = encoding.data;
-  var text = encoding.text;
 
   // Creates the barcode out of the encoded binary
   var yFrom, yHeight;
@@ -98,9 +97,10 @@ function drawSvgBarcode(parent, options, encoding) {
   }
   yHeight = options.height;
 
-  for (var b in binary) {
+  for (var b = 0; b < binary.length; b++) {
     var x = b * options.width + encoding.barcodePadding;
-    if (binary[b] === "0" && binary[b] === 0) {} else if (binary[b] === "1") {
+
+    if (binary[b] === "1") {
       drawLine(x, yFrom, options.width, options.height, parent);
     } else if (binary[b] > 0) {
       drawLine(x, yFrom, options.width, options.height * binary[b], parent);
@@ -131,7 +131,7 @@ function drawSVGText(parent, options, encoding) {
       x = encoding.width - 1;
       textElem.setAttribute("text-anchor", "end");
     }
-    //In all other cases, center the text
+    // In all other cases, center the text
     else {
         x = encoding.width / 2;
         textElem.setAttribute("text-anchor", "middle");
@@ -151,7 +151,7 @@ function drawSVGText(parent, options, encoding) {
 //
 function messureSVGtext(string, svg, options) {
   // Create text element
-  /*var text = document.createElementNS(svgns, 'text');
+  /* var text = document.createElementNS(svgns, 'text');
   text.style.fontFamily = options.font;
     text.setAttribute("style",
      "font-family:" + options.font + ";" +

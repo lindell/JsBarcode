@@ -1,9 +1,5 @@
 'use strict';
 
-var _keys = require('babel-runtime/core-js/object/keys');
-
-var _keys2 = _interopRequireDefault(_keys);
-
 var _barcodes = require('./barcodes/');
 
 var _barcodes2 = _interopRequireDefault(_barcodes);
@@ -41,26 +37,18 @@ var renderers = {
 // Import all the barcodes
 
 
-var barcodesAPIs = {};
+// The protype of the object returned from the JsBarcode() call
+var API = function API() {};
 
 // The first call of the library API
-// Will generate a
+// Will return an object with all barcodes calls and the information needed
+// when the rendering function is called and options the barcodes might need
 var JsBarcode = function JsBarcode(element, text, options) {
-	var api = {};
-	for (var key in barcodesAPIs) {
-		api[key] = barcodesAPIs[key];
-	}
+	var api = new API();
 
 	if (typeof element === "undefined") {
-		return api;
+		throw Error("No element to render on was provided.");
 	}
-
-	options = options || {};
-
-	// Parts of the API that is not the barcodes
-	api.render = renderCall;
-	api.options = optionsCall;
-	api.blank = blankCall;
 
 	// Variables that will be pased through the API calls
 	api._renderProperties = getRenderProperies(element);
@@ -69,6 +57,8 @@ var JsBarcode = function JsBarcode(element, text, options) {
 
 	// If text is set, use simple syntax
 	if (typeof text !== "undefined") {
+		options = options || {};
+
 		if (!options.format) {
 			options.format = autoSelectBarcode();
 		}
@@ -88,15 +78,20 @@ JsBarcode.getModule = function (name) {
 
 // Register all barcodes
 for (var name in _barcodes2.default) {
-	registerBarcode(_barcodes2.default, name);
+	if (_barcodes2.default.hasOwnProperty(name)) {
+		// Security check if the propery is a prototype property
+		registerBarcode(_barcodes2.default, name);
+	}
 }
 function registerBarcode(barcodes, name) {
-	barcodesAPIs[name] = barcodesAPIs[name.toUpperCase()] = barcodesAPIs[name.toLowerCase()] = function (text, options) {
+	API.prototype[name] = API.prototype[name.toUpperCase()] = API.prototype[name.toLowerCase()] = function (text, options) {
 		var newOptions = (0, _merge2.default)(this._options, options);
 
 		var Encoder = barcodes[name];
 		var encoder = new Encoder(text, newOptions);
 
+		// If the input is not valid for the encoder, throw error.
+		// If the valid callback option is set, call it instead of throwing error
 		if (!encoder.valid()) {
 			if (this._options.valid === defaults.valid) {
 				throw new Error('"' + text + '" is not a valid input for ' + name);
@@ -106,9 +101,12 @@ function registerBarcode(barcodes, name) {
 		}
 
 		var encoded = encoder.encode();
+
+		// Encodings can be nestled like [[1-1, 1-2], 2, [3-1, 3-2]
+		// Convert to [1-1, 1-2, 2, 3-1, 3-2]
 		encoded = (0, _linearizeEncodings2.default)(encoded);
 
-		for (var i in encoded) {
+		for (var i = 0; i < encoded.length; i++) {
 			encoded[i].options = (0, _merge2.default)(newOptions, encoded[i].options);
 		}
 
@@ -120,36 +118,36 @@ function registerBarcode(barcodes, name) {
 
 function autoSelectBarcode() {
 	// If CODE128 exists. Use it
-	if (barcodesAPIs["CODE128"]) {
+	if (_barcodes2.default["CODE128"]) {
 		return "CODE128";
 	}
 
 	// Else, take the first (probably only) barcode
-	return (0, _keys2.default)(barcodesAPIs)[0];
+	return Object.keys(_barcodes2.default)[0];
 }
 
 // Sets global encoder options
 // Added to the api by the JsBarcode function
-function optionsCall(options) {
+API.prototype.options = function (options) {
 	this._options = (0, _merge2.default)(this._options, options);
 	return this;
-}
+};
 
 // Will create a blank space (usually in between barcodes)
-function blankCall(size) {
+API.prototype.blank = function (size) {
 	var zeroes = "0".repeat(size);
 	this._encodings.push({ data: zeroes });
 	return this;
-}
+};
 
 // Prepares the encodings and calls the renderer
 // Added to the api by the JsBarcode function
-function renderCall() {
+API.prototype.render = function () {
 	var renderer = renderers[this._renderProperties.renderer];
 
 	var encodings = (0, _linearizeEncodings2.default)(this._encodings);
 
-	for (var i in encodings) {
+	for (var i = 0; i < encodings.length; i++) {
 		encodings[i].options = (0, _merge2.default)(this._options, encodings[i].options);
 		(0, _fixOptions2.default)(encodings[i].options);
 	}
@@ -165,7 +163,7 @@ function renderCall() {
 	this._options.valid(true);
 
 	return this;
-}
+};
 
 if (typeof window !== "undefined") {
 	window.JsBarcode = JsBarcode;
@@ -173,7 +171,7 @@ if (typeof window !== "undefined") {
 module.exports = JsBarcode;
 
 // Takes an element and returns an object with information about how
-//it should be rendered
+// it should be rendered
 // {
 //   element: The element that the renderer should draw on
 //   renderer: The name of the renderer
@@ -196,22 +194,24 @@ function getRenderProperies(element) {
 					element.setAttribute("src", canvas.toDataURL());
 				}
 			};
-		} else if (typeof SVGElement !== 'undefined' && element instanceof SVGElement) {
-			return {
-				element: element,
-				renderer: "svg"
-			};
 		}
-		// If canvas
-		else if (element.getContext) {
+		// If SVG
+		else if (typeof SVGElement !== 'undefined' && element instanceof SVGElement) {
 				return {
 					element: element,
-					renderer: "canvas"
+					renderer: "svg"
 				};
-			} else {
-				throw new Error("Not supported type to render on.");
 			}
-};
+			// If canvas
+			else if (element.getContext) {
+					return {
+						element: element,
+						renderer: "canvas"
+					};
+				} else {
+					throw new Error("Not supported type to render on.");
+				}
+}
 
 var defaults = {
 	width: 2,

@@ -4,64 +4,56 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
-
-var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = require("babel-runtime/helpers/createClass");
-
-var _createClass3 = _interopRequireDefault(_createClass2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var EANencoder = function () {
 	function EANencoder() {
-		(0, _classCallCheck3.default)(this, EANencoder);
+		_classCallCheck(this, EANencoder);
 
+		// Standard start end and middle bits
 		this.startBin = "101";
 		this.endBin = "101";
 		this.middleBin = "01010";
 
-		//The L (left) type of encoding
+		// The L (left) type of encoding
 		this.Lbinary = ["0001101", "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011"];
 
-		//The G type of encoding
+		// The G type of encoding
 		this.Gbinary = ["0100111", "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111"];
 
-		//The R (right) type of encoding
+		// The R (right) type of encoding
 		this.Rbinary = ["1110010", "1100110", "1101100", "1000010", "1011100", "1001110", "1010000", "1000100", "1001000", "1110100"];
 	}
 
-	//Convert a numberarray to the representing
+	// Convert a numberarray to the representing
 
 
-	(0, _createClass3.default)(EANencoder, [{
-		key: "encode",
-		value: function encode(number, structure, separator) {
-			//Create the variable that should be returned at the end of the function
-			var result = "";
+	EANencoder.prototype.encode = function encode(number, structure, separator) {
+		// Create the variable that should be returned at the end of the function
+		var result = "";
 
-			separator = typeof separator === "undefined" ? "" : separator;
+		// Make sure that the separator is set
+		separator = separator || "";
 
-			//Loop all the numbers
-			for (var i = 0; i < number.length; i++) {
-				//Using the L, G or R encoding and add it to the returning variable
-				if (structure[i] == "L") {
-					result += this.Lbinary[number[i]];
-				} else if (structure[i] == "G") {
-					result += this.Gbinary[number[i]];
-				} else if (structure[i] == "R") {
-					result += this.Rbinary[number[i]];
-				}
-
-				// Add separator
-				if (i < number.length - 1) {
-					result += separator;
-				}
+		// Loop all the numbers
+		for (var i = 0; i < number.length; i++) {
+			// Using the L, G or R encoding and add it to the returning variable
+			if (structure[i] == "L") {
+				result += this.Lbinary[number[i]];
+			} else if (structure[i] == "G") {
+				result += this.Gbinary[number[i]];
+			} else if (structure[i] == "R") {
+				result += this.Rbinary[number[i]];
 			}
-			return result;
+
+			// Add separator in between encodings
+			if (i < number.length - 1) {
+				result += separator;
+			}
 		}
-	}]);
+		return result;
+	};
+
 	return EANencoder;
 }();
 
