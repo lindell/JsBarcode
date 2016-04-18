@@ -19,7 +19,7 @@ let API = function(){};
 
 // The first call of the library API
 // Will return an object with all barcodes calls and the information needed
-//when the rendering function is called and/or options for barcodes
+//when the rendering function is called and options the barcodes might need
 let JsBarcode = function(element, text, options){
 	var api = new API();
 
@@ -69,6 +69,8 @@ function registerBarcode(barcodes, name){
 		var Encoder = barcodes[name];
 		var encoder = new Encoder(text, newOptions);
 
+		// If the input is not valid for the encoder, throw error.
+		// If the valid callback option is set, call it instead of throwing error
 		if(!encoder.valid()){
 			if(this._options.valid === defaults.valid){
 				throw new Error('"' + text + '" is not a valid input for ' + name);
@@ -79,6 +81,9 @@ function registerBarcode(barcodes, name){
 		}
 
 		var encoded = encoder.encode();
+
+		// Encodings can be nestled like [[1-1, 1-2], 2, [3-1, 3-2]
+		// Convert to [1-1, 1-2, 2, 3-1, 3-2]
 		encoded = linearizeEncodings(encoded);
 
 		for(let i = 0; i < encoded.length; i++){
@@ -170,6 +175,7 @@ function getRenderProperies(element){
 			}
 		};
 	}
+	// If SVG
 	else if(typeof SVGElement !== 'undefined' && element instanceof SVGElement){
 		return {
 			element: element,

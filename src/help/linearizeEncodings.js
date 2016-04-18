@@ -1,5 +1,7 @@
 export default linearizeEncodings;
 
+// Encodings can be nestled like [[1-1, 1-2], 2, [3-1, 3-2]
+// Convert to [1-1, 1-2, 2, 3-1, 3-2]
 function linearizeEncodings(encodings){
   var linearEncodings = [];
   function nextLevel(encoded){
