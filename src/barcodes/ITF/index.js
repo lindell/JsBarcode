@@ -21,15 +21,15 @@ class ITF{
 	}
 
 	encode(){
-		//Always add the same start bits
+		// Always add the same start bits
 		var result = "1010";
 
-		//Calculate all the digit pairs
+		// Calculate all the digit pairs
 		for(var i = 0; i < this.string.length; i += 2){
 			result += this.calculatePair(this.string.substr(i, 2));
 		}
 
-		//Always add the same end bits
+		// Always add the same end bits
 		result += "11101";
 
 		return {
@@ -38,14 +38,14 @@ class ITF{
 		};
 	}
 
-	//Calculate the data of a number pair
+	// Calculate the data of a number pair
 	calculatePair(numberPair){
 		var result = "";
 
 		var number1Struct = this.binaryRepresentation[numberPair[0]];
 		var number2Struct = this.binaryRepresentation[numberPair[1]];
 
-		//Take every second bit and add to the result
+		// Take every second bit and add to the result
 		for(var i = 0; i < 5; i++){
 			result += (number1Struct[i] == "1") ? "111" : "1";
 			result += (number2Struct[i] == "1") ? "000" : "0";

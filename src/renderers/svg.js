@@ -136,7 +136,7 @@ function drawSVGText(parent, options, encoding){
       x = encoding.width - 1;
       textElem.setAttribute("text-anchor", "end");
     }
-    //In all other cases, center the text
+    // In all other cases, center the text
     else{
       x = encoding.width / 2;
       textElem.setAttribute("text-anchor", "middle");
@@ -156,7 +156,7 @@ function drawSVGText(parent, options, encoding){
 //
 function messureSVGtext(string, svg, options){
 	// Create text element
-	/*var text = document.createElementNS(svgns, 'text');
+	/* var text = document.createElementNS(svgns, 'text');
 	text.style.fontFamily = options.font;
 
   text.setAttribute("style",

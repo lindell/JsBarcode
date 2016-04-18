@@ -5,7 +5,7 @@ class EANencoder{
 		this.endBin = "101";
 		this.middleBin = "01010";
 
-		//The L (left) type of encoding
+		// The L (left) type of encoding
 		this.Lbinary = [
 			"0001101",
 			"0011001",
@@ -19,7 +19,7 @@ class EANencoder{
 			"0001011"
 		];
 
-		//The G type of encoding
+		// The G type of encoding
 		this.Gbinary = [
 			"0100111",
 			"0110011",
@@ -33,7 +33,7 @@ class EANencoder{
 			"0010111"
 		];
 
-		//The R (right) type of encoding
+		// The R (right) type of encoding
 		this.Rbinary = [
 			"1110010",
 			"1100110",
@@ -48,17 +48,17 @@ class EANencoder{
 		];
 	}
 
-	//Convert a numberarray to the representing
+	// Convert a numberarray to the representing
 	encode(number, structure, separator){
-		//Create the variable that should be returned at the end of the function
+		// Create the variable that should be returned at the end of the function
 		var result = "";
 
 		// Make sure that the separator is set
 		separator = separator || "";
 
-		//Loop all the numbers
+		// Loop all the numbers
 		for(var i = 0; i < number.length; i++){
-			//Using the L, G or R encoding and add it to the returning variable
+			// Using the L, G or R encoding and add it to the returning variable
 			if(structure[i] == "L"){
 				result += this.Lbinary[number[i]];
 			}

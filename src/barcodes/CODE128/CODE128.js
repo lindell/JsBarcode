@@ -1,5 +1,5 @@
 // This is the master class, it does require the start code to be
-//included in the string
+// included in the string
 class CODE128{
 	constructor(string){
 		// Fill the bytes variable with the ascii codes of string
@@ -11,8 +11,8 @@ class CODE128{
 		// First element should be startcode, remove that
 		this.string = string.substring(1);
 
-		//Data for each character, the last characters will not be encoded but are used for error correction
-		//Numbers encode to (n + 1000) -> binary; 740 -> (740 + 1000).toString(2) -> "11011001100"
+		// Data for each character, the last characters will not be encoded but are used for error correction
+		// Numbers encode to (n + 1000) -> binary; 740 -> (740 + 1000).toString(2) -> "11011001100"
 		this.encodings = [ // + 1000
 			740, 644, 638, 176, 164, 100, 224, 220, 124, 608, 604,
 			572, 436, 244, 230, 484, 260, 254, 650, 628, 614, 764,
@@ -61,13 +61,13 @@ class CODE128{
 
 		return {text: this.getText(),
 			data:
-			//Add the start bits
+			// Add the start bits
 			this.getEncoding(startIndex) +
-			//Add the encoded bits
+			// Add the encoded bits
 			encodingResult.result +
-			//Add the checksum
+			// Add the checksum
 			this.getEncoding((encodingResult.checksum + startIndex) % 103) +
-			//Add the end bits
+			// Add the end bits
 			this.getEncoding(106)
 		};
 	}
@@ -93,7 +93,7 @@ class CODE128{
 		if(bytes[0] >= 200){
 			index = bytes[0] - 105;
 
-			//Remove first element
+			// Remove first element
 			bytes.shift();
 
 			// Swap to CODE128C
@@ -147,7 +147,7 @@ class CODE128{
 		if(bytes[0] >= 200){
 			index = bytes[0] - 105;
 
-			//Remove first element
+			// Remove first element
 			bytes.shift();
 
 			// Swap to CODE128C

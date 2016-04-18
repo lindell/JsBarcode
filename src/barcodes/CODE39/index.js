@@ -6,7 +6,7 @@ class CODE39 {
 		this.string = string.toUpperCase();
 
 		// The decimal representation of the characters, is converted to the
-		//corresponding binary with the getEncoding function
+		// corresponding binary with the getEncoding function
 		this.encodings = {
 			"0": 20957, "1": 29783, "2": 23639, "3": 30485,
 			"4": 20951, "5": 29813, "6": 23669, "7": 20855,
@@ -23,7 +23,7 @@ class CODE39 {
 	}
 
 	// Get the binary representation of a character by converting the encodings
-	//from decimal to binary
+	// from decimal to binary
 	getEncoding(character){
 		return this.encodings[character].toString(2);
 	}

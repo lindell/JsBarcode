@@ -5,7 +5,7 @@ import EANencoder from './ean_encoder.js';
 
 class EAN8{
 	constructor(string){
-		//Add checksum if it does not exist
+		// Add checksum if it does not exist
 		if(string.search(/^[0-9]{7}$/) !== -1){
 			this.string = string + this.checksum(string);
 		}
@@ -22,28 +22,28 @@ class EAN8{
 	encode(){
 		var encoder = new EANencoder();
 
-		//Create the return variable
+		// Create the return variable
 		var result = "";
 
-		//Get the number to be encoded on the left side of the EAN code
+		// Get the number to be encoded on the left side of the EAN code
 		var leftSide = this.string.substr(0, 4);
 
-		//Get the number to be encoded on the right side of the EAN code
+		// Get the number to be encoded on the right side of the EAN code
 		var rightSide = this.string.substr(4, 4);
 
-		//Add the start bits
+		// Add the start bits
 		result += encoder.startBin;
 
-		//Add the left side
+		// Add the left side
 		result += encoder.encode(leftSide, "LLLL");
 
-		//Add the middle bits
+		// Add the middle bits
 		result += encoder.middleBin;
 
-		//Add the right side
+		// Add the right side
 		result += encoder.encode(rightSide, "RRRR");
 
-		//Add the end bits
+		// Add the end bits
 		result += encoder.endBin;
 
 		return {
@@ -52,7 +52,7 @@ class EAN8{
 		};
 	}
 
-	//Calulate the checksum digit
+	// Calulate the checksum digit
 	checksum(number){
 		var result = 0;
 

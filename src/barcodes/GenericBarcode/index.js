@@ -3,7 +3,7 @@ class GenericBarcode{
 		this.string = string;
 	}
 
-	//Return the corresponding binary numbers for the data provided
+	// Return the corresponding binary numbers for the data provided
 	encode(){
 		return {
 			data: "10101010101010101010101010101010101010101",
@@ -11,7 +11,7 @@ class GenericBarcode{
 		};
 	}
 
-	//Resturn true/false if the string provided is valid for this encoder
+	// Resturn true/false if the string provided is valid for this encoder
 	valid(){
 		return true;
 	}

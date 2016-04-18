@@ -3,7 +3,7 @@ export default renderCanvas;
 import merge from "../help/merge.js";
 
 function renderCanvas(canvas, encodings, options){
-	//Abort if the browser does not support HTML5 canvas
+	// Abort if the browser does not support HTML5 canvas
 	if (!canvas.getContext) {
 		throw new Error('The browser does not support canvas.');
 	}
@@ -144,7 +144,7 @@ function drawCanvasText(canvas, options, encoding){
 			x = encoding.width - 1;
 			ctx.textAlign = 'right';
 		}
-		//In all other cases, center the text
+		// In all other cases, center the text
 		else{
 			x = encoding.width / 2;
 			ctx.textAlign = 'center';

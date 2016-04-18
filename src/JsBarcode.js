@@ -19,7 +19,7 @@ let API = function(){};
 
 // The first call of the library API
 // Will return an object with all barcodes calls and the information needed
-//when the rendering function is called and options the barcodes might need
+// when the rendering function is called and options the barcodes might need
 let JsBarcode = function(element, text, options){
 	var api = new API();
 
@@ -151,7 +151,7 @@ if(typeof window !== "undefined"){
 module.exports = JsBarcode;
 
 // Takes an element and returns an object with information about how
-//it should be rendered
+// it should be rendered
 // {
 //   element: The element that the renderer should draw on
 //   renderer: The name of the renderer

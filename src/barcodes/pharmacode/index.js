@@ -11,7 +11,7 @@ class pharmacode{
     var result = "";
 
     // http://i.imgur.com/RMm4UDJ.png
-    //(source: http://www.gomaro.ch/ftproot/Laetus_PHARMA-CODE.pdf, page: 34)
+    // (source: http://www.gomaro.ch/ftproot/Laetus_PHARMA-CODE.pdf, page: 34)
     while(!isNaN(z) && z != 0){
       if(z % 2 === 0){ // Even
         result = "11100" + result;
