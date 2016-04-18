@@ -38,6 +38,8 @@ Examples for browsers:
 <canvas id="canvas"></canvas>
 <!-- or -->
 <img id="barcode">
+<!-- or -->
+<svg id="barcode"></svg> <!-- (Beta) -->
 ````
 
 
@@ -67,7 +69,7 @@ JsBarcode("#barcode", "1234", {
 ![Result](http://i.imgur.com/Y2IrjUi.png)
 
 
-#### More advanced use case:
+#### More advanced use case (beta):
 ````javascript
 JsBarcode("#barcode")
   .options({fontOptions: "italic"})
