@@ -1,7 +1,12 @@
+// Encoding documentation:
+// https://en.wikipedia.org/wiki/Code_39#Encoding
+
 class CODE39 {
 	constructor(string){
 		this.string = string.toUpperCase();
 
+		// The decimal representation of the characters, is converted to the
+		//corresponding binary with the getEncoding function
 		this.encodings = {
 			"0": 20957, "1": 29783, "2": 23639, "3": 30485,
 			"4": 20951, "5": 29813, "6": 23669, "7": 20855,
@@ -17,15 +22,28 @@ class CODE39 {
 		};
 	}
 
-	encode(){
-		var result = "";
-		result += this.encodings["*"].toString(2);
-		for(var i = 0; i < this.string.length; i++){
-			result += this.encodings[this.string[i]].toString(2) + "0";
-		}
-		result += this.encodings["*"].toString(2);
+	// Get the binary representation of a character by converting the encodings
+	//from decimal to binary
+	getEncoding(character){
+		return this.encodings[character].toString(2);
+	}
 
-		return {data: result, text: this.string};
+	encode(){
+		// First character is always a *
+		var result = this.getEncoding("*");
+
+		// Take every character and add the binary representation to the result
+		for(var i = 0; i < this.string.length; i++){
+			result += this.getEncoding(this.string[i]) + "0";
+		}
+
+		// Last character is always a *
+		result += this.getEncoding("*");
+
+		return {
+			data: result,
+			text: this.string
+		};
 	}
 
 	valid(){
