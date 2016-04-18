@@ -104,10 +104,8 @@ function drawCanvasBarcode(canvas, options, encoding){
 
 	for(var b = 0; b < binary.length; b++){
 		var x = b * options.width + encoding.barcodePadding;
-		if(binary[b] === "0" && binary[b] === 0){
-
-		}
-		else if(binary[b] === "1"){
+		
+		if(binary[b] === "1"){
 			ctx.fillRect(x, yFrom, options.width, options.height);
 		}
 		else if(binary[b]){

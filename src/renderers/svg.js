@@ -40,7 +40,7 @@ function prepareSVG(svg, options, encodings){
 		encodings[i].width =  Math.ceil(Math.max(textWidth, barcodeWidth));
 
     // Calculate the height of the encoding
-    var height = options.height +
+    var encodingHeight = options.height +
       ((options.displayValue && encodings[i].text.length > 0) ? options.fontSize : 0) +
       options.textMargin +
       options.marginTop +
@@ -60,8 +60,8 @@ function prepareSVG(svg, options, encodings){
 		}
 		encodings[i].barcodePadding = barcodePadding;
 
-    if(height > maxHeight){
-      maxHeight = height;
+    if(encodingHeight > maxHeight){
+      maxHeight = encodingHeight;
     }
 
 		totalWidth += encodings[i].width;
@@ -97,10 +97,8 @@ function drawSvgBarcode(parent, options, encoding){
 
   for(var b = 0; b < binary.length; b++){
     var x = b * options.width + encoding.barcodePadding;
-    if(binary[b] === "0" && binary[b] === 0){
 
-    }
-    else if(binary[b] === "1"){
+    if(binary[b] === "1"){
       drawLine(x, yFrom, options.width, options.height, parent);
     }
     else if(binary[b] > 0){

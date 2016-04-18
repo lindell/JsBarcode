@@ -192,7 +192,7 @@ function getRenderProperies(element){
 	else{
 		throw new Error("Not supported type to render on.");
 	}
-};
+}
 
 var defaults = {
 	width: 2,
