@@ -8,7 +8,7 @@ function renderSVG(svg, encodings, options){
   var currentX = options.marginLeft;
 
 	prepareSVG(svg, options, encodings);
-	for(var i in encodings){
+	for(let i = 0; i < encodings.length; i++){
 		var encodingOptions = merge(options, encodings[i].options);
 
     var group = createGroup(currentX, encodingOptions.marginTop, svg);
@@ -31,7 +31,7 @@ function prepareSVG(svg, options, encodings){
 
   var totalWidth = 0;
   var maxHeight = 0;
-	for(var i in encodings){
+	for(let i = 0; i < encodings.length; i++){
     let options = merge(options, encodings[i].options);
 
     // Calculate the width of the encoding
@@ -95,7 +95,7 @@ function drawSvgBarcode(parent, options, encoding){
   }
   yHeight = options.height;
 
-  for(var b in binary){
+  for(var b = 0; b < binary.length; b++){
     var x = b * options.width + encoding.barcodePadding;
     if(binary[b] === "0" && binary[b] === 0){
 

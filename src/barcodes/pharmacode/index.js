@@ -31,17 +31,15 @@ function recursiveEncoding(code, state){
     nextState = state;
   }
   else{
-    generated = "001".repeat(nzeroes - (state ? 1 : 0));
+    generated = repeatString("001", nzeroes - (state ? 1 : 0));
     generated += "00111";
   }
   return recursiveEncoding(code.substr(0, code.length - nzeroes - 1), nextState) + generated;
 }
 
-//http://stackoverflow.com/a/202627
-String.prototype.repeat = function( num )
-{
-    return new Array( num + 1 ).join( this );
-};
+function repeatString(string, num){
+  return new Array( num + 1 ).join( string );
+}
 
 //A help function to calculate the zeroes at the end of a string (the code)
 function zeroes(code){
