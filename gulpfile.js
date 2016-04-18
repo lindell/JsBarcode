@@ -9,7 +9,8 @@ var runSequence = require('run-sequence');
 var publishRelease = require('publish-release');
 var header = require('gulp-header');
 var clean = require('gulp-clean');
-var webpack = require('webpack-stream');
+var gulpWebpack = require('webpack-stream');
+var webpack = require('webpack');
 
 gulp.task("clean", function(){
   return gulp.src("bin/", {read: false})
@@ -19,40 +20,43 @@ gulp.task("clean", function(){
 gulp.task("babel", function () {
   return gulp.src("src/**/*")
     .pipe(babel({
-			presets: ['es2015']
+      plugins: [["transform-es2015-classes", {loose: true}]]
 		}))
     .pipe(gulp.dest("bin/node/"));
 });
 
 gulp.task("webpack", function () {
   return gulp.src('bin/node/JsBarcode.js')
-    .pipe(webpack())
-    .pipe(rename("bin/browser/JsBarcode.js"))
-    .pipe(gulp.dest("."));
+
+    .pipe(gulpWebpack(
+      {
+        output: {
+          filename: 'JsBarcode.min.js',
+        },
+        plugins: [new webpack.optimize.UglifyJsPlugin()],
+      }
+    , webpack))
+
+    .pipe(gulp.dest("bin/browser/"));
 });
 
 gulp.task('watch', function() {
   gulp.watch("src/**/*", ['compile']);
 });
 
-gulp.task('compress', function() {
+gulp.task('compress', ["babel", "webpack"], function() {
   var pkg = require('./package.json');
-
-  return gulp.src('bin/browser/JsBarcode.js')
-    .pipe(uglify())
-    .pipe(header('/* JsBarcode v<%= pkg.version %> | github.com/lindell/JsBarcode */\n', {pkg: pkg}))
-    .pipe(gulp.dest('bin/browser/JsBarcode.min.js'));
 });
+
 
 gulp.task('git-release', ['compress'], function(cb){
   var pkg = require('./package.json');
   var v = 'v' + pkg.version;
   var message = 'Release ' + v;
 
-  gulp.src(['./package.json', './bower.json', 'JsBarcode.all.min.js'])
-    .pipe(git.add())
+  gulp.src(['./package.json', './bower.json', './bin/'])
+    .pipe(git.add({args: '--all'}))
     .pipe(git.commit(message));
-
 
   git.tag(v, message, function(error){
     if(error){
@@ -100,7 +104,7 @@ gulp.task('github-release', function(done) {
     repo: "JsBarcode",
     tag: v,
     name: name,
-    assets: [__dirname + "/JsBarcode.all.min.js"],
+    assets: [__dirname + "/bin/browser/JsBarcode.all.min.js"],
   }, done);
 });
 
@@ -126,13 +130,20 @@ gulp.task('compile', function(){
   );
 });
 
-gulp.task('patch', function(){
+gulp.task('release', function(callback){
   runSequence(
-    'bump-patch',
     'git-release',
     'wait',
     'github-release',
     'npm',
+    callback
+  );
+});
+
+gulp.task('patch', function(){
+  runSequence(
+    'bump-patch',
+    'release',
     done
   );
 });
@@ -140,10 +151,7 @@ gulp.task('patch', function(){
 gulp.task('minor', function(){
   runSequence(
     'bump-minor',
-    'git-release',
-    'wait',
-    'github-release',
-    'npm',
+    'release',
     done
   );
 });
@@ -151,10 +159,7 @@ gulp.task('minor', function(){
 gulp.task('major', function(){
   runSequence(
     'bump-major',
-    'git-release',
-    'wait',
-    'github-release',
-    'npm',
+    'release',
     done
   );
 });
