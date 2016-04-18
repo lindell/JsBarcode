@@ -1,3 +1,6 @@
+// Encoding documentation:
+// http://www.barcodeisland.com/ean8.phtml
+
 import EANencoder from './ean_encoder.js';
 
 class EAN8{

@@ -1,9 +1,13 @@
+// Encoding documentation:
+// https://en.wikipedia.org/wiki/EAN_5#Encoding
+
 import EANencoder from './ean_encoder.js';
 
 class EAN5{
 	constructor(string){
 		this.string = string;
 
+		// Define the EAN-13 structure
 		this.structure = [
 			"GGLLL",
 			"GLGLL",
@@ -24,26 +28,28 @@ class EAN5{
 
 	encode(){
 		var encoder = new EANencoder();
+		var checksum = this.checksum();
 
-		var result = "1011" +
-			encoder.encode(this.string, this.structure[this.checksum(this.string)], "01");
+		// Start bits
+		var result = "1011";
+
+		// Use normal ean encoding with 01 in between all digits
+		result += encoder.encode(this.string, this.structure[checksum], "01");
 
 		return {
 			data: result,
 			text: this.string
 		};
 	}
-
+	
 	checksum(){
 		var result = 0;
 
-		var i;
-		for(i = 0; i < 5; i += 2){
-			result += parseInt(this.string[i]) * 3;
-		}
-		for(i = 1; i < 5; 	i += 2){
-			result += parseInt(this.string[i]) * 9;
-		}
+		result += parseInt(this.string[0]) * 3;
+		result += parseInt(this.string[1]) * 9;
+		result += parseInt(this.string[2]) * 3;
+		result += parseInt(this.string[3]) * 9;
+		result += parseInt(this.string[4]) * 3;
 
 		return result % 10;
 	}

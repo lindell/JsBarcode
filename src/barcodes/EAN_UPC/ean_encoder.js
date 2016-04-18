@@ -1,5 +1,6 @@
 class EANencoder{
 	constructor(){
+		// Standard start end and middle bits
 		this.startBin = "101";
 		this.endBin = "101";
 		this.middleBin = "01010";
@@ -52,7 +53,8 @@ class EANencoder{
 		//Create the variable that should be returned at the end of the function
 		var result = "";
 
-		separator = typeof separator === "undefined" ? "" : separator;
+		// Make sure that the separator is set
+		separator = separator || "";
 
 		//Loop all the numbers
 		for(var i = 0; i < number.length; i++){
@@ -67,7 +69,7 @@ class EANencoder{
 				result += this.Rbinary[number[i]];
 			}
 
-			// Add separator
+			// Add separator in between encodings
 			if(i < number.length - 1){
 				result += separator;
 			}
