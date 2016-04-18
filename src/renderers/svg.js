@@ -83,7 +83,6 @@ function prepareSVG(svg, options, encodings){
 
 function drawSvgBarcode(parent, options, encoding){
   var binary = encoding.data;
-  var text = encoding.text;
 
   // Creates the barcode out of the encoded binary
   var yFrom, yHeight;

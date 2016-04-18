@@ -88,7 +88,6 @@ function drawCanvasBarcode(canvas, options, encoding){
 	var ctx = canvas.getContext("2d");
 
 	var binary = encoding.data;
-	var text = encoding.text;
 
 	// Creates the barcode out of the encoded binary
 	var yFrom, yHeight;
@@ -104,7 +103,7 @@ function drawCanvasBarcode(canvas, options, encoding){
 
 	for(var b = 0; b < binary.length; b++){
 		var x = b * options.width + encoding.barcodePadding;
-		
+
 		if(binary[b] === "1"){
 			ctx.fillRect(x, yFrom, options.width, options.height);
 		}
