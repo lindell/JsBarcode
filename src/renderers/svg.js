@@ -114,7 +114,7 @@ function drawSVGText(parent, options, encoding){
     var x, y;
 
     textElem.setAttribute("style",
-      "font:" + options.fontOptions + " " + options.fontSize + "px " + options.font
+      "font:" + options.fontOptions + " " + options.fontSize + "px " + options.font + ";transform:translate(0,0);"
     );
 
     if(options.textPosition == "top"){
