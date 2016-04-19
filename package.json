@@ -1,11 +1,13 @@
 {
   "name": "jsbarcode",
   "version": "3.0.0-beta.2",
-  "description": "JsBarcode is a simple way to create different types of 1d barcodes.",
-  "main": "JsBarcode.js",
+  "description": "JsBarcode is a simple and powerfull way to create different types of 1d barcodes.",
+  "main": "./bin/node/JsBarcode.js",
   "directories": {
     "example": "example",
-    "test": "test"
+    "test": "test",
+    "bin": "bin",
+    "lib": "src"
   },
   "scripts": {
     "test": "gulp babel && node_modules/mocha/bin/mocha test/node/ -R spec",
