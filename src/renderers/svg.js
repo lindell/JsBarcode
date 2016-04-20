@@ -76,6 +76,8 @@ function prepareSVG(svg, options, encodings){
 	svg.setAttribute("y", "0px");
   svg.setAttribute("viewBox", "0 0 " + width + " " + height);
 
+  svg.style.transform = "translate(0,0)";
+
 	if(options.background){
 		svg.style.background = options.background;
 	}
@@ -114,7 +116,7 @@ function drawSVGText(parent, options, encoding){
     var x, y;
 
     textElem.setAttribute("style",
-      "font:" + options.fontOptions + " " + options.fontSize + "px " + options.font + ";transform:translate(0,0);"
+      "font:" + options.fontOptions + " " + options.fontSize + "px " + options.font
     );
 
     if(options.textPosition == "top"){
