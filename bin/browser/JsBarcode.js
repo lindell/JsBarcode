@@ -953,6 +953,8 @@
 	  svg.setAttribute("y", "0px");
 	  svg.setAttribute("viewBox", "0 0 " + width + " " + height);
 
+	  svg.style.transform = "translate(0,0)";
+
 	  if (options.background) {
 	    svg.style.background = options.background;
 	  }
@@ -1243,9 +1245,19 @@
 		return this;
 	};
 
+	// Export to browser
 	if (typeof window !== "undefined") {
 		window.JsBarcode = JsBarcode;
 	}
+
+	// Export to jQuery
+	if (typeof jQuery !== 'undefined') {
+		jQuery.fn.JsBarcode = function (content, options) {
+			return JsBarcode(this.get(0), content, options);
+		};
+	}
+
+	// Export to commonJS
 	module.e = JsBarcode;
 
 	// Takes an element and returns an object with information about how

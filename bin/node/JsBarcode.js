@@ -165,9 +165,19 @@ API.prototype.render = function () {
 	return this;
 };
 
+// Export to browser
 if (typeof window !== "undefined") {
 	window.JsBarcode = JsBarcode;
 }
+
+// Export to jQuery
+if (typeof jQuery !== 'undefined') {
+	jQuery.fn.JsBarcode = function (content, options) {
+		return JsBarcode(this.get(0), content, options);
+	};
+}
+
+// Export to commonJS
 module.exports = JsBarcode;
 
 // Takes an element and returns an object with information about how

@@ -80,6 +80,8 @@ function prepareSVG(svg, options, encodings) {
   svg.setAttribute("y", "0px");
   svg.setAttribute("viewBox", "0 0 " + width + " " + height);
 
+  svg.style.transform = "translate(0,0)";
+
   if (options.background) {
     svg.style.background = options.background;
   }
