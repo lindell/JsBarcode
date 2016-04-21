@@ -74,9 +74,9 @@ describe('node-canvas generation', function() {
     JsBarcode(canvas, "Hello", {format: "CODE128", background: "#f00"});
 
     var topLeft = ctx.getImageData(0,0,1,1);
-    assert.equal(topLeft.data[0], 255);
-    assert.equal(topLeft.data[1], 0);
-    assert.equal(topLeft.data[2], 0);
+    assert.equal(255, topLeft.data[0]);
+    assert.equal(0, topLeft.data[1]);
+    assert.equal(0, topLeft.data[2]);
   });
 });
 

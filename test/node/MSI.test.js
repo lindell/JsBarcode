@@ -14,20 +14,22 @@ describe('MSI', function() {
 
   it('should be able to encode normal text', function () {
     var enc = new MSI10("1234567");
-    assert.equal(enc.valid(), true);
-    assert.equal(enc.encode().text, "12345674");
-    assert.equal(enc.encode().data, "1101001001001101001001101001001001101101001101001001001101001101001101101001001101101101001101001001001");
+    assert.equal(true, enc.valid());
+    assert.equal("12345674", enc.encode().text);
+    assert.equal("1101001001001101001001101001001001101101001101001001001101001101001101101001001101101101001101001001001"
+      , enc.encode().data);
 
     var enc = new MSI("12345674");
-    assert.equal(enc.encode().data, "1101001001001101001001101001001001101101001101001001001101001101001101101001001101101101001101001001001");
+    assert.equal("1101001001001101001001101001001001101101001101001001001101001101001101101001001101101101001101001001001"
+      , enc.encode().data);
 
     var enc = new MSI10("17345");
-    assert.equal(enc.valid(), true);
-    assert.equal(enc.encode().text, "173450");
+    assert.equal(true, enc.valid());
+    assert.equal("173450", enc.encode().text);
 
     var enc = new MSI10("1234");
-    assert.equal(enc.valid(), true);
-    assert.equal(enc.encode().text, "12344");
+    assert.equal(true, enc.valid());
+    assert.equal("12344", enc.encode().text);
   });
 
   it('should encode MSI11', function () {
