@@ -28,19 +28,6 @@ class CODE128{
 		];
 	}
 
-	getText() {
-		var string = this.string;
-
-		/*
-		string = string.replace(String.fromCharCode(201), "[FNC3]");
-		string = string.replace(String.fromCharCode(202), "[FNC2]");
-		string = string.replace(String.fromCharCode(203), "[SHIFT]");
-		string = string.replace(String.fromCharCode(207), "[FNC1]");
-		*/
-
-		return string.replace(/[^\x20-\x7E]/g, "");
-	}
-
 	// The public encoding function
 	encode() {
 		var encodingResult;
@@ -59,7 +46,8 @@ class CODE128{
 			encodingResult = this.nextC(bytes, 1);
 		}
 
-		return {text: this.getText(),
+		return {
+			text: this.string.replace(/[^\x20-\x7E]/g, ""),
 			data:
 			// Add the start bits
 			this.getEncoding(startIndex) +

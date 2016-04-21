@@ -29,6 +29,11 @@ describe('CODE128', function() {
       , enc.encode().data);
   });
 
+  it('should remove unprintable characters', function () {
+    var enc = new CODE128C("A\n\x00B \x04\x10\x1FC");
+    assert.equal("AB C", enc.encode().text);
+  });
+
   it('should encode CODE128 (auto)', function () {
     var enc = new CODE128("12345Hejsan123456\tA");
     assert.equal("110100111001011001110010001011000101111011101101110010011000101000101100100001000011001010111100100100101100001100001010010111011110101100111001000101100011100010110111010111101000011010010100011000111011110101100011101011",
