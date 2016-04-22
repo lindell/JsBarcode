@@ -37,7 +37,7 @@ Examples for browsers:
 ````html
 <canvas id="canvas"></canvas>
 <!-- or -->
-<img id="barcode">
+<img id="barcode"/>
 <!-- or -->
 <svg id="barcode"></svg> <!-- (Beta) -->
 ````
@@ -46,7 +46,7 @@ Examples for browsers:
 
 #### Simple example:
 ````javascript
-JsBarcode("#barcode","Hi!");
+JsBarcode("#barcode", "Hi!");
 // or with jQuery
 $("#barcode").JsBarcode("Hi!");
 ````
