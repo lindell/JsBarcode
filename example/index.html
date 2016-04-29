@@ -3,8 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title></title>
-	<script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
-	<script src="../JsBarcode.all.min.js"></script>
+	<script src="../bin/browser/JsBarcode.js"></script>
 	<script>
 		Number.prototype.zeroPadding = function(){
 			var ret = "" + this.valueOf();
@@ -15,14 +14,14 @@
 <body>
 	<div>
 		<img id="barcode1"/>
-		<script>$("#barcode1").JsBarcode("Hi!");</script>
+		<script>JsBarcode("#barcode1", "Hi!");</script>
 	</div>
 
 	<div>
 		<img id="barcode2"/>
 		<script>
-			$("#barcode2").JsBarcode("9780199532179", {
-			  format:"EAN",
+			JsBarcode("#barcode2", "9780199532179", {
+			  format:"EAN13",
 			  displayValue:true,
 			  fontSize:24,
 			  lineColor: "#0cc"
@@ -32,7 +31,11 @@
 
 	<div>
 		<img id="barcode3"/>
-		<script>$("#barcode3").JsBarcode("9780199532179",{format:"EAN",displayValue:true,fontSize:20});</script>
+		<script>JsBarcode("#barcode3", "9780199532179", {
+			format:"EAN13",
+			displayValue:true,
+			fontSize:20
+		});</script>
 	</div>
 
 	<div>
@@ -40,7 +43,11 @@
 		<script>
 			var repeat4 = function(){
 				var date = new Date();
-				$("#barcode4").JsBarcode(date.getHours().zeroPadding()+":"+date.getMinutes().zeroPadding()+":"+date.getSeconds().zeroPadding(), {displayValue: true});
+				JsBarcode("#barcode4",
+						date.getHours().zeroPadding() + ":" +
+						date.getMinutes().zeroPadding() + ":" +
+						date.getSeconds().zeroPadding(),
+					{displayValue: true});
 			};
 			setInterval(repeat4,1000);
 			repeat4();
@@ -51,7 +58,7 @@
 		<img id="barcode5"/>
 		<script>
 			var repeat5 = function(){
-				$("#barcode5").JsBarcode(Math.floor(1000000+Math.random()*9000000)+"",{displayValue:true,fontSize:20});
+				JsBarcode("#barcode5", Math.floor(1000000+Math.random()*9000000)+"",{displayValue:true,fontSize:20});
 			};
 			setInterval(repeat5,500);
 			repeat5();
