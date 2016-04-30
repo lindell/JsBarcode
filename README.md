@@ -35,11 +35,11 @@ Examples for browsers:
 
 #### First create an canvas (or image)
 ````html
+<svg id="barcode"></svg>
+<!-- or -->
 <canvas id="canvas"></canvas>
 <!-- or -->
 <img id="barcode"/>
-<!-- or -->
-<svg id="barcode"></svg> <!-- (Beta) -->
 ````
 
 
@@ -69,7 +69,7 @@ JsBarcode("#barcode", "1234", {
 ![Result](http://i.imgur.com/Y2IrjUi.png)
 
 
-#### More advanced use case (beta):
+#### More advanced use case:
 ````javascript
 JsBarcode("#barcode")
   .options({fontOptions: "italic"})
