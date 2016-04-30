@@ -124,28 +124,27 @@ JsBarcode(canvas, "Hello");
 
 
 
-The default options:
+Options:
 ----
 For information about how to use the options, see [the wiki page](https://github.com/lindell/JsBarcode/wiki/Options).
-````javascript
-{
-  width: 2,
-  height: 100,
-  format: "auto",
-  displayValue: true,
-  fontOptions: "",
-  font: "monospace",
-  textAlign: "center",
-  textPosition: "bottom",
-  textMargin: 2,
-  fontSize: 20,
-  background: "#ffffff",
-  lineColor: "#000000",
-  margin: 10,
-  marginTop: undefined,
-  marginBottom: undefined,
-  marginLeft: undefined,
-  marginRight: undefined,
-  valid: function(valid){}
-}
-````
+
+| Option | Default value | Type |
+|--------|---------------|------|
+| `width` | `2` | `Number` |
+| `height` | `100` | `Number` |
+| `format` | `"auto"` | `String` |
+| `displayValue` | `true` | `Boolean` |
+| `fontOptions` | `""` | `String` |
+| `font` | `"monospace"` | `String` |
+| `textAlign` | `"center"` | `String` |
+| `textPosition` | `"bottom"` | `String` |
+| `textMargin` | `2` | `Number` |
+| `fontSize` | `20` | `Number` |
+| `background`  | `"#ffffff"` | `String (CSS color)` |
+| `lineColor` | `"#000000"` | `String (CSS color)` |
+| `margin` | `10` | `Number` |
+| `marginTop` | `undefined` | `Number` |
+| `marginBottom` | `undefined` | `Number` |
+| `marginLeft` | `undefined` | `Number` |
+| `marginRight` | `undefined` | `Number` |
+| `valid` | `function(valid){}` | `Function` |
