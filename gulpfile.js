@@ -59,6 +59,10 @@ gulp.task('watch', ['compile'], function() {
   gulp.watch("src/**/*", ['compile']);
 });
 
+gulp.task('watch-web', ['webpack'], function() {
+  gulp.watch("src/**/*", ['webpack']);
+});
+
 gulp.task('compress', ["webpack", "webpack-min"], function() {
   var pkg = require('./package.json');
 });
@@ -72,7 +76,7 @@ gulp.task('git-release', ['compress'], function(cb){
   gulp.src(['./package.json', './bower.json', './bin/'])
     .pipe(git.add({args: '--all'}))
     .pipe(git.commit(message));
-
+  
   git.tag(v, message, function(error){
     if(error){
       console.error(error);
@@ -81,7 +85,6 @@ gulp.task('git-release', ['compress'], function(cb){
       git.push('origin', 'master', {args: '--tags'}, cb);
     });
   });
-
 });
 
 // Bump (increase) the version number
@@ -119,7 +122,7 @@ gulp.task('github-release', function(done) {
     repo: "JsBarcode",
     tag: v,
     name: name,
-    assets: [__dirname + "/bin/browser/JsBarcode.js"],
+    assets: [__dirname + "/bin/browser/JsBarcode.min.js", __dirname + "/bin/browser/JsBarcode.js"]
   }, done);
 });
 
@@ -137,12 +140,13 @@ var done = function (error) {
   }
 };
 
-gulp.task('compile', function(done){
-  runSequence(
-    'babel',
-    'webpack',
-    done
-  );
+
+gulp.task('compile', ['babel'], function(done){
+
+});
+
+gulp.task('compile-web', ['webpack'], function(done){
+
 });
 
 gulp.task('release', function(callback){
