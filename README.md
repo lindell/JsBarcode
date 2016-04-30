@@ -72,14 +72,14 @@ JsBarcode("#barcode", "1234", {
 #### More advanced use case:
 ````javascript
 JsBarcode("#barcode")
-  .options({fontOptions: "italic"})
-  .EAN13("1234567890128")
+  .options({font: "OCR-B"}) // Will affect all barcodes
+  .EAN13("1234567890128", {fontSize: 18, textMargin: 0})
   .blank(20)
-  .EAN5("12345", {height: 85, textPosition: "top", fontSize: 16})
+  .EAN5("12345", {height: 85, textPosition: "top", fontSize: 16, marginTop: 15})
   .render();
 ````
 ##### Result:
-![Result](http://i.imgur.com/PV2PuTE.png)
+![Result](http://i.imgur.com/pp2lvYe.png)
 
 
 Setup for browsers:
