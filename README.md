@@ -130,21 +130,21 @@ For information about how to use the options, see [the wiki page](https://github
 
 | Option | Default value | Type |
 |--------|---------------|------|
-| `width` | `2` | `Number` |
-| `height` | `100` | `Number` |
-| `format` | `"auto"` | `String` |
-| `displayValue` | `true` | `Boolean` |
-| `fontOptions` | `""` | `String` |
-| `font` | `"monospace"` | `String` |
-| `textAlign` | `"center"` | `String` |
-| `textPosition` | `"bottom"` | `String` |
-| `textMargin` | `2` | `Number` |
-| `fontSize` | `20` | `Number` |
-| `background`  | `"#ffffff"` | `String (CSS color)` |
-| `lineColor` | `"#000000"` | `String (CSS color)` |
-| `margin` | `10` | `Number` |
-| `marginTop` | `undefined` | `Number` |
-| `marginBottom` | `undefined` | `Number` |
-| `marginLeft` | `undefined` | `Number` |
-| `marginRight` | `undefined` | `Number` |
-| `valid` | `function(valid){}` | `Function` |
+| [`width`](https://github.com/lindell/JsBarcode/wiki/Options#width) | `2` | `Number` |
+| [`height`](https://github.com/lindell/JsBarcode/wiki/Options#height) | `100` | `Number` |
+| [`format`](https://github.com/lindell/JsBarcode/wiki/Options#format) | `"auto"` | `String` |
+| [`displayValue`](https://github.com/lindell/JsBarcode/wiki/Options#display-value) | `true` | `Boolean` |
+| [`fontOptions`](https://github.com/lindell/JsBarcode/wiki/Options#font-options) | `""` | `String` |
+| [`font`](https://github.com/lindell/JsBarcode/wiki/Options#font) | `"monospace"` | `String` |
+| [`textAlign`](https://github.com/lindell/JsBarcode/wiki/Options#text-align) | `"center"` | `String` |
+| [`textPosition`](https://github.com/lindell/JsBarcode/wiki/Options#text-position) | `"bottom"` | `String` |
+| [`textMargin`](https://github.com/lindell/JsBarcode/wiki/Options#text-margin) | `2` | `Number` |
+| [`fontSize`](https://github.com/lindell/JsBarcode/wiki/Options#font-size) | `20` | `Number` |
+| [`background`](https://github.com/lindell/JsBarcode/wiki/Options#background)  | `"#ffffff"` | `String (CSS color)` |
+| [`lineColor`](https://github.com/lindell/JsBarcode/wiki/Options#line-color) | `"#000000"` | `String (CSS color)` |
+| [`margin`](https://github.com/lindell/JsBarcode/wiki/Options#margins) | `10` | `Number` |
+| [`marginTop`](https://github.com/lindell/JsBarcode/wiki/Options#margins) | `undefined` | `Number` |
+| [`marginBottom`](https://github.com/lindell/JsBarcode/wiki/Options#margins) | `undefined` | `Number` |
+| [`marginLeft`](https://github.com/lindell/JsBarcode/wiki/Options#margins) | `undefined` | `Number` |
+| [`marginRight`](https://github.com/lindell/JsBarcode/wiki/Options#margins) | `undefined` | `Number` |
+| [`valid`](https://github.com/lindell/JsBarcode/wiki/Options#valid) | `function(valid){}` | `Function` |
