@@ -124,27 +124,27 @@ JsBarcode(canvas, "Hello");
 
 
 
-The default options:
+Options:
 ----
 For information about how to use the options, see [the wiki page](https://github.com/lindell/JsBarcode/wiki/Options).
 
-| Option | Type | Default value |
+| Option | Default value | Type |
 |--------|------|---------------|
-| `width` | Number | `2` |
-| `height` | Number | `100` |
-| `format` | String | `"auto"` |
-| `displayValue` | Boolean | `true` |
-| `fontOptions` | String | `""` |
-| `font` | String | `"monospace"` |
-| `textAlign` | String | `"center"` |
-| `textPosition` | String | `"bottom"` |
-| `textMargin` | Number | `2` |
-| `fontSize` | Number | `20` |
-| `background` | String (css color) | `"#ffffff"` |
-| `lineColor` | String(css color) | `"#000000"` |
-| `margin` | Number | `10` |
-| `marginTop` | Number | `undefined` |
-| `marginBottom` | Number | `undefined` |
-| `marginLeft` | Number | `undefined` |
-| `marginRight` | Number | `undefined` |
-| `valid` | Function | `function(valid){}` |
+| `width` | `2` | Number |
+| `height` | `100` | Number |
+| `format` | `"auto"` | String |
+| `displayValue` | `true` | Boolean |
+| `fontOptions` | `""` | String |
+| `font` | `"monospace"` | String |
+| `textAlign` | `"center"` | String |
+| `textPosition` | `"bottom"` | String |
+| `textMargin` | `2` | Number |
+| `fontSize` | `20` | Number |
+| `background`  | `"#ffffff"` | String (CSS color) |
+| `lineColor` | `"#000000"` | String (CSS color) |
+| `margin` | `10` | Number |
+| `marginTop` | `undefined` | Number |
+| `marginBottom` | `undefined` | Number |
+| `marginLeft` | `undefined` | Number |
+| `marginRight` | `undefined` | Number |
+| `valid` | `function(valid){}` | Function |
