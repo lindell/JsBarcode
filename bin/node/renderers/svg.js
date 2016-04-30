@@ -105,7 +105,7 @@ function drawSvgBarcode(parent, options, encoding) {
 
     if (binary[b] === "1") {
       barWidth++;
-    } else {
+    } else if (barWidth > 0) {
       drawLine(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
       barWidth = 0;
     }
