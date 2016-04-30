@@ -28,19 +28,6 @@ var CODE128 = function () {
 		740, 644, 638, 176, 164, 100, 224, 220, 124, 608, 604, 572, 436, 244, 230, 484, 260, 254, 650, 628, 614, 764, 652, 902, 868, 836, 830, 892, 844, 842, 752, 734, 590, 304, 112, 94, 416, 128, 122, 672, 576, 570, 464, 422, 134, 496, 478, 142, 910, 678, 582, 768, 762, 774, 880, 862, 814, 896, 890, 818, 914, 602, 930, 328, 292, 200, 158, 68, 62, 424, 412, 232, 218, 76, 74, 554, 616, 978, 556, 146, 340, 212, 182, 508, 268, 266, 956, 940, 938, 758, 782, 974, 400, 310, 118, 512, 506, 960, 954, 502, 518, 886, 966, /* Start codes */668, 680, 692, 5379];
 	}
 
-	CODE128.prototype.getText = function getText() {
-		var string = this.string;
-
-		/*
-  string = string.replace(String.fromCharCode(201), "[FNC3]");
-  string = string.replace(String.fromCharCode(202), "[FNC2]");
-  string = string.replace(String.fromCharCode(203), "[SHIFT]");
-  string = string.replace(String.fromCharCode(207), "[FNC1]");
-  */
-
-		return string.replace(/[^\x20-\x7E]/g, "");
-	};
-
 	// The public encoding function
 
 
@@ -59,7 +46,8 @@ var CODE128 = function () {
 			encodingResult = this.nextC(bytes, 1);
 		}
 
-		return { text: this.getText(),
+		return {
+			text: this.string.replace(/[^\x20-\x7E]/g, ""),
 			data:
 			// Add the start bits
 			this.getEncoding(startIndex) +

@@ -99,14 +99,21 @@ function drawSvgBarcode(parent, options, encoding) {
   }
   yHeight = options.height;
 
+  var barWidth = 0;
   for (var b = 0; b < binary.length; b++) {
     var x = b * options.width + encoding.barcodePadding;
 
     if (binary[b] === "1") {
-      drawLine(x, yFrom, options.width, options.height, parent);
-    } else if (binary[b] > 0) {
-      drawLine(x, yFrom, options.width, options.height * binary[b], parent);
+      barWidth++;
+    } else {
+      drawLine(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
+      barWidth = 0;
     }
+  }
+
+  // Last draw is needed since the barcode ends with 1
+  if (barWidth > 0) {
+    drawLine(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
   }
 }
 
