@@ -74,7 +74,7 @@ JsBarcode("#barcode", "1234", {
 JsBarcode("#barcode")
   .options({font: "OCR-B"}) // Will affect all barcodes
   .EAN13("1234567890128", {fontSize: 18, textMargin: 0})
-  .blank(20)
+  .blank(20) // Create space between the barcodes
   .EAN5("12345", {height: 85, textPosition: "top", fontSize: 16, marginTop: 15})
   .render();
 ````
@@ -130,9 +130,9 @@ For information about how to use the options, see [the wiki page](https://github
 
 | Option | Default value | Type |
 |--------|---------------|------|
+| [`format`](https://github.com/lindell/JsBarcode/wiki/Options#format) | `"auto" (CODE128)` | `String` |
 | [`width`](https://github.com/lindell/JsBarcode/wiki/Options#width) | `2` | `Number` |
 | [`height`](https://github.com/lindell/JsBarcode/wiki/Options#height) | `100` | `Number` |
-| [`format`](https://github.com/lindell/JsBarcode/wiki/Options#format) | `"auto"` | `String` |
 | [`displayValue`](https://github.com/lindell/JsBarcode/wiki/Options#display-value) | `true` | `Boolean` |
 | [`fontOptions`](https://github.com/lindell/JsBarcode/wiki/Options#font-options) | `""` | `String` |
 | [`font`](https://github.com/lindell/JsBarcode/wiki/Options#font) | `"monospace"` | `String` |
