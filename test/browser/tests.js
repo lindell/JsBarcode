@@ -12,7 +12,6 @@ function createTests(newTest){
   newTest("590123412345", {format: "EAN13", width: 3});
   newTest("96385074", {format: "EAN8", width: 1});
   newTest("9638507", {format: "EAN8", width: 1});
-  newTest("12345678", {format: "ITF", width: 1});
   newTest("98765432109213", {format: "ITF14", width: 1});
   newTest("12345", {format: "pharmacode", width: 1});
   newTest("133742", {format: "CODE128C", width: 1});
