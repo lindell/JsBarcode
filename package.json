@@ -35,7 +35,8 @@
     "url": "https://github.com/lindell/JsBarcode/issues"
   },
   "bin": {
-    "JsBarcode": "cli.js"
+    "JsBarcode": "./bin/node/cli.js",
+    "jsbarcode": "./bin/node/cli.js"
   },
   "homepage": "https://github.com/lindell/JsBarcode#readme",
   "devDependencies": {

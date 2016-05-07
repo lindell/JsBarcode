@@ -9,7 +9,9 @@ var path = require("path");
 function parseIntTen (x) {
   return parseInt(x, 10)
 }
+
 var content;
+
 program
   .usage('<content> [options]')
   .option('-o, --output <filename>', "Default: barcode.png")
