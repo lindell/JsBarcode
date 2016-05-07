@@ -51,4 +51,4 @@ class CODE39 {
 	}
 }
 
-export default CODE39;
+export {CODE39};

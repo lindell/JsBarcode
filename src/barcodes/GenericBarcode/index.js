@@ -17,4 +17,4 @@ class GenericBarcode{
 	}
 }
 
-export default GenericBarcode;
+export {GenericBarcode};

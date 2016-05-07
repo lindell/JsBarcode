@@ -37,4 +37,4 @@ class pharmacode{
   }
 }
 
-export default pharmacode;
+export {pharmacode};

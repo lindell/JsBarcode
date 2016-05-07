@@ -71,4 +71,4 @@ class ITF14{
 	}
 }
 
-export default ITF14;
+export {ITF14};
