@@ -33,4 +33,4 @@ var GenericBarcode = function () {
 	return GenericBarcode;
 }();
 
-exports.default = GenericBarcode;
+exports.GenericBarcode = GenericBarcode;

@@ -65,4 +65,4 @@ var CODE39 = function () {
 	return CODE39;
 }();
 
-exports.default = CODE39;
+exports.CODE39 = CODE39;

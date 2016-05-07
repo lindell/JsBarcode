@@ -50,4 +50,4 @@ var pharmacode = function () {
   return pharmacode;
 }();
 
-exports.default = pharmacode;
+exports.pharmacode = pharmacode;

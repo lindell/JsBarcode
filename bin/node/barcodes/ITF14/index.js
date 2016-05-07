@@ -86,4 +86,4 @@ var ITF14 = function () {
 	return ITF14;
 }();
 
-exports.default = ITF14;
+exports.ITF14 = ITF14;

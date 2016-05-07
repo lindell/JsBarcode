@@ -593,36 +593,26 @@
 
 	var _CODE = __webpack_require__(17);
 
-	var _CODE2 = _interopRequireDefault(_CODE);
-
-	var _CODE3 = __webpack_require__(16);
+	var _CODE2 = __webpack_require__(16);
 
 	var _EAN_UPC = __webpack_require__(22);
 
 	var _ITF = __webpack_require__(24);
 
-	var _ITF2 = _interopRequireDefault(_ITF);
-
 	var _MSI = __webpack_require__(29);
 
 	var _pharmacode = __webpack_require__(30);
 
-	var _pharmacode2 = _interopRequireDefault(_pharmacode);
-
 	var _GenericBarcode = __webpack_require__(23);
 
-	var _GenericBarcode2 = _interopRequireDefault(_GenericBarcode);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 	exports.default = {
-	  CODE39: _CODE2.default,
-	  CODE128: _CODE3.CODE128, CODE128A: _CODE3.CODE128A, CODE128B: _CODE3.CODE128B, CODE128C: _CODE3.CODE128C,
+	  CODE39: _CODE.CODE39,
+	  CODE128: _CODE2.CODE128, CODE128A: _CODE2.CODE128A, CODE128B: _CODE2.CODE128B, CODE128C: _CODE2.CODE128C,
 	  EAN13: _EAN_UPC.EAN13, EAN8: _EAN_UPC.EAN8, EAN5: _EAN_UPC.EAN5, EAN2: _EAN_UPC.EAN2, UPC: _EAN_UPC.UPC,
-	  ITF14: _ITF2.default,
+	  ITF14: _ITF.ITF14,
 	  MSI: _MSI.MSI, MSI10: _MSI.MSI10, MSI11: _MSI.MSI11, MSI1010: _MSI.MSI1010, MSI1110: _MSI.MSI1110,
-	  pharmacode: _pharmacode2.default,
-	  GenericBarcode: _GenericBarcode2.default
+	  pharmacode: _pharmacode.pharmacode,
+	  GenericBarcode: _GenericBarcode.GenericBarcode
 	};
 
 /***/ },
@@ -1661,7 +1651,7 @@
 		return CODE39;
 	}();
 
-	exports.default = CODE39;
+	exports.CODE39 = CODE39;
 
 /***/ },
 /* 18 */
@@ -1989,7 +1979,7 @@
 		return GenericBarcode;
 	}();
 
-	exports.default = GenericBarcode;
+	exports.GenericBarcode = GenericBarcode;
 
 /***/ },
 /* 24 */
@@ -2083,7 +2073,7 @@
 		return ITF14;
 	}();
 
-	exports.default = ITF14;
+	exports.ITF14 = ITF14;
 
 /***/ },
 /* 25 */
@@ -2346,7 +2336,7 @@
 	  return pharmacode;
 	}();
 
-	exports.default = pharmacode;
+	exports.pharmacode = pharmacode;
 
 /***/ }
 /******/ ]);
