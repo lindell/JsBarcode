@@ -6,7 +6,7 @@ function createTests(newTest){
   newTest("A little test", {format: "CODE39", width: 1});
   newTest("12345", {format: "EAN5", width: 1});
   newTest("52", {format: "EAN2", width: 1});
-  newTest("123456789999", {format: "UPC", width: 1});
+  newTest("423514346455", {format: "UPC", width: 2, textMargin: 0});
   newTest("5901234123457", {format: "EAN13", fontSize: 20, textMargin: 0});
   newTest("590123412345", {format: "EAN13", width: 2, fontSize: 16});
   newTest("590123412345", {format: "EAN13", width: 3});

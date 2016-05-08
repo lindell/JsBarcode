@@ -16,12 +16,6 @@ describe('UPC', function() {
       , help.fixBin(enc.encode()));
   });
 
-  it('should be able to encode a number', function () {
-    var enc = new UPC(123456789999, options);
-    assert.equal("10100110010010011011110101000110110001010111101010100010010010001110100111010011101001110100101"
-      , help.fixBin(enc.encode()));
-  });
-
   it('should warn with invalid text', function () {
     var enc = new UPC("12345", options);
     assert.equal(false, enc.valid());
@@ -29,7 +23,7 @@ describe('UPC', function() {
 
   it('should auto include the checksum if missing', function () {
     var enc = new UPC("12345678999", options);
-    assert.equal("0123456789999", help.fixText(enc.encode()));
+    assert.equal("123456789999", help.fixText(enc.encode()));
   });
 });
 
