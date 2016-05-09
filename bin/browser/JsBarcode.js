@@ -37,11 +37,76 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var EANencoder = function () {
+		function EANencoder() {
+			_classCallCheck(this, EANencoder);
+
+			// Standard start end and middle bits
+			this.startBin = "101";
+			this.endBin = "101";
+			this.middleBin = "01010";
+
+			// The L (left) type of encoding
+			this.Lbinary = ["0001101", "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011"];
+
+			// The G type of encoding
+			this.Gbinary = ["0100111", "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111"];
+
+			// The R (right) type of encoding
+			this.Rbinary = ["1110010", "1100110", "1101100", "1000010", "1011100", "1001110", "1010000", "1000100", "1001000", "1110100"];
+		}
+
+		// Convert a numberarray to the representing
+
+
+		EANencoder.prototype.encode = function encode(number, structure, separator) {
+			// Create the variable that should be returned at the end of the function
+			var result = "";
+
+			// Make sure that the separator is set
+			separator = separator || "";
+
+			// Loop all the numbers
+			for (var i = 0; i < number.length; i++) {
+				// Using the L, G or R encoding and add it to the returning variable
+				if (structure[i] == "L") {
+					result += this.Lbinary[number[i]];
+				} else if (structure[i] == "G") {
+					result += this.Gbinary[number[i]];
+				} else if (structure[i] == "R") {
+					result += this.Rbinary[number[i]];
+				}
+
+				// Add separator in between encodings
+				if (i < number.length - 1) {
+					result += separator;
+				}
+			}
+			return result;
+		};
+
+		return EANencoder;
+	}();
+
+	exports.default = EANencoder;
+
+/***/ },
+/* 1 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -104,7 +169,7 @@
 	exports.default = MSI;
 
 /***/ },
-/* 1 */
+/* 2 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -330,71 +395,6 @@
 	exports.default = CODE128;
 
 /***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var EANencoder = function () {
-		function EANencoder() {
-			_classCallCheck(this, EANencoder);
-
-			// Standard start end and middle bits
-			this.startBin = "101";
-			this.endBin = "101";
-			this.middleBin = "01010";
-
-			// The L (left) type of encoding
-			this.Lbinary = ["0001101", "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011"];
-
-			// The G type of encoding
-			this.Gbinary = ["0100111", "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111"];
-
-			// The R (right) type of encoding
-			this.Rbinary = ["1110010", "1100110", "1101100", "1000010", "1011100", "1001110", "1010000", "1000100", "1001000", "1110100"];
-		}
-
-		// Convert a numberarray to the representing
-
-
-		EANencoder.prototype.encode = function encode(number, structure, separator) {
-			// Create the variable that should be returned at the end of the function
-			var result = "";
-
-			// Make sure that the separator is set
-			separator = separator || "";
-
-			// Loop all the numbers
-			for (var i = 0; i < number.length; i++) {
-				// Using the L, G or R encoding and add it to the returning variable
-				if (structure[i] == "L") {
-					result += this.Lbinary[number[i]];
-				} else if (structure[i] == "G") {
-					result += this.Gbinary[number[i]];
-				} else if (structure[i] == "R") {
-					result += this.Rbinary[number[i]];
-				}
-
-				// Add separator in between encodings
-				if (i < number.length - 1) {
-					result += separator;
-				}
-			}
-			return result;
-		};
-
-		return EANencoder;
-	}();
-
-	exports.default = EANencoder;
-
-/***/ },
 /* 3 */
 /***/ function(module, exports) {
 
@@ -460,140 +460,15 @@
 /* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _ean_encoder = __webpack_require__(2);
-
-	var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // Encoding documentation:
-	// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Binary_encoding_of_data_digits_into_EAN-13_barcode
-
-	var EAN13 = function () {
-		function EAN13(string, options) {
-			_classCallCheck(this, EAN13);
-
-			// Add checksum if it does not exist
-			if (string.search(/^[0-9]{12}$/) !== -1) {
-				this.string = string + this.checksum(string);
-			} else {
-				this.string = string;
-			}
-
-			// Define the EAN-13 structure
-			this.structure = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
-
-			// Make sure the font is not bigger than the space between the guard bars
-			if (options.fontSize > options.width * 10) {
-				this.fontSize = options.width * 10;
-			} else {
-				this.fontSize = options.fontSize;
-			}
-
-			// Make the guard bars go down half the way of the text
-			this.guardHeight = options.height + this.fontSize / 2 + options.textMargin;
-		}
-
-		EAN13.prototype.valid = function valid() {
-			return this.string.search(/^[0-9]{13}$/) !== -1 && this.string[12] == this.checksum(this.string);
-		};
-
-		EAN13.prototype.encode = function encode() {
-			var encoder = new _ean_encoder2.default();
-			var result = [];
-
-			var structure = this.structure[this.string[0]];
-
-			// Get the string to be encoded on the left side of the EAN code
-			var leftSide = this.string.substr(1, 6);
-
-			// Get the string to be encoded on the right side of the EAN code
-			var rightSide = this.string.substr(7, 6);
-
-			// Add the first digigt
-			result.push({
-				data: "000000000000",
-				text: this.string[0],
-				options: { textAlign: "left", fontSize: this.fontSize }
-			});
-
-			// Add the guard bars
-			result.push({
-				data: "101",
-				options: { height: this.guardHeight }
-			});
-
-			// Add the left side
-			result.push({
-				data: encoder.encode(leftSide, structure),
-				text: leftSide,
-				options: { fontSize: this.fontSize }
-			});
-
-			// Add the middle bits
-			result.push({
-				data: "01010",
-				options: { height: this.guardHeight }
-			});
-
-			// Add the right side
-			result.push({
-				data: encoder.encode(rightSide, "RRRRRR"),
-				text: rightSide,
-				options: { fontSize: this.fontSize }
-			});
-
-			// Add the end bits
-			result.push({
-				data: "101",
-				options: { height: this.guardHeight }
-			});
-
-			return result;
-		};
-
-		// Calulate the checksum digit
-		// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
-
-
-		EAN13.prototype.checksum = function checksum(number) {
-			var result = 0;
-
-			var i;
-			for (i = 0; i < 12; i += 2) {
-				result += parseInt(number[i]);
-			}
-			for (i = 1; i < 12; i += 2) {
-				result += parseInt(number[i]) * 3;
-			}
-
-			return (10 - result % 10) % 10;
-		};
-
-		return EAN13;
-	}();
-
-	exports.default = EAN13;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
-	var _CODE = __webpack_require__(17);
+	var _CODE = __webpack_require__(16);
 
-	var _CODE2 = __webpack_require__(16);
+	var _CODE2 = __webpack_require__(15);
 
 	var _EAN_UPC = __webpack_require__(22);
 
@@ -616,7 +491,7 @@
 	};
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -638,7 +513,7 @@
 	}
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -670,7 +545,7 @@
 	}
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -841,7 +716,7 @@
 	}
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1055,20 +930,20 @@
 	}
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _barcodes = __webpack_require__(6);
+	var _barcodes = __webpack_require__(5);
 
 	var _barcodes2 = _interopRequireDefault(_barcodes);
 
-	var _canvas = __webpack_require__(9);
+	var _canvas = __webpack_require__(8);
 
 	var _canvas2 = _interopRequireDefault(_canvas);
 
-	var _svg = __webpack_require__(10);
+	var _svg = __webpack_require__(9);
 
 	var _svg2 = _interopRequireDefault(_svg);
 
@@ -1076,11 +951,11 @@
 
 	var _merge2 = _interopRequireDefault(_merge);
 
-	var _linearizeEncodings = __webpack_require__(8);
+	var _linearizeEncodings = __webpack_require__(7);
 
 	var _linearizeEncodings2 = _interopRequireDefault(_linearizeEncodings);
 
-	var _fixOptions = __webpack_require__(7);
+	var _fixOptions = __webpack_require__(6);
 
 	var _fixOptions2 = _interopRequireDefault(_fixOptions);
 
@@ -1305,7 +1180,7 @@
 	};
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1314,7 +1189,7 @@
 		value: true
 	});
 
-	var _CODE2 = __webpack_require__(1);
+	var _CODE2 = __webpack_require__(2);
 
 	var _CODE3 = _interopRequireDefault(_CODE2);
 
@@ -1345,7 +1220,7 @@
 	exports.default = CODE128A;
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1354,7 +1229,7 @@
 		value: true
 	});
 
-	var _CODE2 = __webpack_require__(1);
+	var _CODE2 = __webpack_require__(2);
 
 	var _CODE3 = _interopRequireDefault(_CODE2);
 
@@ -1385,7 +1260,7 @@
 	exports.default = CODE128B;
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1394,7 +1269,7 @@
 		value: true
 	});
 
-	var _CODE2 = __webpack_require__(1);
+	var _CODE2 = __webpack_require__(2);
 
 	var _CODE3 = _interopRequireDefault(_CODE2);
 
@@ -1425,7 +1300,7 @@
 	exports.default = CODE128C;
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1434,7 +1309,7 @@
 		value: true
 	});
 
-	var _CODE2 = __webpack_require__(1);
+	var _CODE2 = __webpack_require__(2);
 
 	var _CODE3 = _interopRequireDefault(_CODE2);
 
@@ -1547,7 +1422,7 @@
 	exports.default = CODE128AUTO;
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1557,19 +1432,19 @@
 	});
 	exports.CODE128C = exports.CODE128B = exports.CODE128A = exports.CODE128 = undefined;
 
-	var _CODE128_AUTO = __webpack_require__(15);
+	var _CODE128_AUTO = __webpack_require__(14);
 
 	var _CODE128_AUTO2 = _interopRequireDefault(_CODE128_AUTO);
 
-	var _CODE128A = __webpack_require__(12);
+	var _CODE128A = __webpack_require__(11);
 
 	var _CODE128A2 = _interopRequireDefault(_CODE128A);
 
-	var _CODE128B = __webpack_require__(13);
+	var _CODE128B = __webpack_require__(12);
 
 	var _CODE128B2 = _interopRequireDefault(_CODE128B);
 
-	var _CODE128C = __webpack_require__(14);
+	var _CODE128C = __webpack_require__(13);
 
 	var _CODE128C2 = _interopRequireDefault(_CODE128C);
 
@@ -1581,7 +1456,7 @@
 	exports.CODE128C = _CODE128C2.default;
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1654,6 +1529,131 @@
 	exports.CODE39 = CODE39;
 
 /***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _ean_encoder = __webpack_require__(0);
+
+	var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // Encoding documentation:
+	// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Binary_encoding_of_data_digits_into_EAN-13_barcode
+
+	var EAN13 = function () {
+		function EAN13(string, options) {
+			_classCallCheck(this, EAN13);
+
+			// Add checksum if it does not exist
+			if (string.search(/^[0-9]{12}$/) !== -1) {
+				this.string = string + this.checksum(string);
+			} else {
+				this.string = string;
+			}
+
+			// Define the EAN-13 structure
+			this.structure = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
+
+			// Make sure the font is not bigger than the space between the guard bars
+			if (options.fontSize > options.width * 10) {
+				this.fontSize = options.width * 10;
+			} else {
+				this.fontSize = options.fontSize;
+			}
+
+			// Make the guard bars go down half the way of the text
+			this.guardHeight = options.height + this.fontSize / 2 + options.textMargin;
+		}
+
+		EAN13.prototype.valid = function valid() {
+			return this.string.search(/^[0-9]{13}$/) !== -1 && this.string[12] == this.checksum(this.string);
+		};
+
+		EAN13.prototype.encode = function encode() {
+			var encoder = new _ean_encoder2.default();
+			var result = [];
+
+			var structure = this.structure[this.string[0]];
+
+			// Get the string to be encoded on the left side of the EAN code
+			var leftSide = this.string.substr(1, 6);
+
+			// Get the string to be encoded on the right side of the EAN code
+			var rightSide = this.string.substr(7, 6);
+
+			// Add the first digigt
+			result.push({
+				data: "000000000000",
+				text: this.string[0],
+				options: { textAlign: "left", fontSize: this.fontSize }
+			});
+
+			// Add the guard bars
+			result.push({
+				data: "101",
+				options: { height: this.guardHeight }
+			});
+
+			// Add the left side
+			result.push({
+				data: encoder.encode(leftSide, structure),
+				text: leftSide,
+				options: { fontSize: this.fontSize }
+			});
+
+			// Add the middle bits
+			result.push({
+				data: "01010",
+				options: { height: this.guardHeight }
+			});
+
+			// Add the right side
+			result.push({
+				data: encoder.encode(rightSide, "RRRRRR"),
+				text: rightSide,
+				options: { fontSize: this.fontSize }
+			});
+
+			// Add the end bits
+			result.push({
+				data: "101",
+				options: { height: this.guardHeight }
+			});
+
+			return result;
+		};
+
+		// Calulate the checksum digit
+		// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
+
+
+		EAN13.prototype.checksum = function checksum(number) {
+			var result = 0;
+
+			var i;
+			for (i = 0; i < 12; i += 2) {
+				result += parseInt(number[i]);
+			}
+			for (i = 1; i < 12; i += 2) {
+				result += parseInt(number[i]) * 3;
+			}
+
+			return (10 - result % 10) % 10;
+		};
+
+		return EAN13;
+	}();
+
+	exports.default = EAN13;
+
+/***/ },
 /* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1663,7 +1663,7 @@
 		value: true
 	});
 
-	var _ean_encoder = __webpack_require__(2);
+	var _ean_encoder = __webpack_require__(0);
 
 	var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
@@ -1718,7 +1718,7 @@
 		value: true
 	});
 
-	var _ean_encoder = __webpack_require__(2);
+	var _ean_encoder = __webpack_require__(0);
 
 	var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
@@ -1784,7 +1784,7 @@
 		value: true
 	});
 
-	var _ean_encoder = __webpack_require__(2);
+	var _ean_encoder = __webpack_require__(0);
 
 	var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
@@ -1875,29 +1875,120 @@
 		value: true
 	});
 
-	var _EAN2 = __webpack_require__(5);
+	var _ean_encoder = __webpack_require__(0);
 
-	var _EAN3 = _interopRequireDefault(_EAN2);
+	var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // Encoding documentation:
+	// https://en.wikipedia.org/wiki/Universal_Product_Code#Encoding
 
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // UPC is encoded as EAN13 but the first digit always being zero
-
-	var UPC = function (_EAN) {
-		_inherits(UPC, _EAN);
-
+	var UPC = function () {
 		function UPC(string, options) {
 			_classCallCheck(this, UPC);
 
-			return _possibleConstructorReturn(this, _EAN.call(this, "0" + string, options));
+			// Add checksum if it does not exist
+			if (string.search(/^[0-9]{11}$/) !== -1) {
+				this.string = string + this.checksum(string);
+			} else {
+				this.string = string;
+			}
+
+			// Make sure the font is not bigger than the space between the guard bars
+			if (options.fontSize > options.width * 10) {
+				this.fontSize = options.width * 10;
+			} else {
+				this.fontSize = options.fontSize;
+			}
+
+			// Make the guard bars go down half the way of the text
+			this.guardHeight = options.height + this.fontSize / 2 + options.textMargin;
 		}
 
+		UPC.prototype.valid = function valid() {
+			return this.string.search(/^[0-9]{12}$/) !== -1 && this.string[11] == this.checksum(this.string);
+		};
+
+		UPC.prototype.encode = function encode() {
+			var encoder = new _ean_encoder2.default();
+			var result = [];
+
+			// Get the string to be encoded on the left side of the UPC code
+			var leftSide = this.string.substr(0, 6);
+
+			// Get the string to be encoded on the right side of the UPC code
+			var rightSide = this.string.substr(6, 6);
+
+			// Add the first digigt
+			result.push({
+				data: "00000000",
+				text: this.string[0],
+				options: { textAlign: "left", fontSize: this.fontSize }
+			});
+
+			// Add the guard bars
+			result.push({
+				data: "101" + encoder.encode(this.string[0], "L"),
+				options: { height: this.guardHeight }
+			});
+
+			// Add the left side
+			result.push({
+				data: encoder.encode(this.string.substr(1, 5), "LLLLL"),
+				text: this.string.substr(1, 5),
+				options: { fontSize: this.fontSize }
+			});
+
+			// Add the middle bits
+			result.push({
+				data: "01010",
+				options: { height: this.guardHeight }
+			});
+
+			// Add the right side
+			result.push({
+				data: encoder.encode(this.string.substr(6, 5), "RRRRR"),
+				text: this.string.substr(6, 5),
+				options: { fontSize: this.fontSize }
+			});
+
+			// Add the end bits
+			result.push({
+				data: encoder.encode(this.string[11], "R") + "101",
+				options: { height: this.guardHeight }
+			});
+
+			// Add the last digit
+			result.push({
+				data: "00000000",
+				text: this.string[11],
+				options: { textAlign: "right", fontSize: this.fontSize }
+			});
+
+			return result;
+		};
+
+		// Calulate the checksum digit
+		// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
+
+
+		UPC.prototype.checksum = function checksum(number) {
+			var result = 0;
+
+			var i;
+			for (i = 1; i < 11; i += 2) {
+				result += parseInt(number[i]);
+			}
+			for (i = 0; i < 11; i += 2) {
+				result += parseInt(number[i]) * 3;
+			}
+
+			return (10 - result % 10) % 10;
+		};
+
 		return UPC;
-	}(_EAN3.default);
+	}();
 
 	exports.default = UPC;
 
@@ -1912,7 +2003,7 @@
 	});
 	exports.UPC = exports.EAN2 = exports.EAN5 = exports.EAN8 = exports.EAN13 = undefined;
 
-	var _EAN = __webpack_require__(5);
+	var _EAN = __webpack_require__(17);
 
 	var _EAN2 = _interopRequireDefault(_EAN);
 
@@ -2085,7 +2176,7 @@
 		value: true
 	});
 
-	var _MSI2 = __webpack_require__(0);
+	var _MSI2 = __webpack_require__(1);
 
 	var _MSI3 = _interopRequireDefault(_MSI2);
 
@@ -2126,7 +2217,7 @@
 		value: true
 	});
 
-	var _MSI2 = __webpack_require__(0);
+	var _MSI2 = __webpack_require__(1);
 
 	var _MSI3 = _interopRequireDefault(_MSI2);
 
@@ -2168,7 +2259,7 @@
 		value: true
 	});
 
-	var _MSI2 = __webpack_require__(0);
+	var _MSI2 = __webpack_require__(1);
 
 	var _MSI3 = _interopRequireDefault(_MSI2);
 
@@ -2209,7 +2300,7 @@
 		value: true
 	});
 
-	var _MSI2 = __webpack_require__(0);
+	var _MSI2 = __webpack_require__(1);
 
 	var _MSI3 = _interopRequireDefault(_MSI2);
 
@@ -2252,7 +2343,7 @@
 	});
 	exports.MSI1110 = exports.MSI1010 = exports.MSI11 = exports.MSI10 = exports.MSI = undefined;
 
-	var _MSI = __webpack_require__(0);
+	var _MSI = __webpack_require__(1);
 
 	var _MSI2 = _interopRequireDefault(_MSI);
 
