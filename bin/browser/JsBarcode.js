@@ -1570,6 +1570,9 @@
 
 			// Make the guard bars go down half the way of the text
 			this.guardHeight = options.height + this.fontSize / 2 + options.textMargin;
+
+			// Adds a last character to the end of the barcode
+			this.lastChar = options.lastChar;
 		}
 
 		EAN13.prototype.valid = function valid() {
@@ -1626,6 +1629,16 @@
 				data: "101",
 				options: { height: this.guardHeight }
 			});
+
+			if (this.lastChar) {
+				result.push({ data: "00" });
+
+				result.push({
+					data: "00000",
+					text: this.lastChar,
+					options: { fontSize: this.fontSize }
+				});
+			}
 
 			return result;
 		};
