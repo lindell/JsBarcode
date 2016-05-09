@@ -12,6 +12,7 @@ var clean = require('gulp-clean');
 var gulpWebpack = require('webpack-stream');
 var webpack = require('webpack');
 
+
 gulp.task("clean", function(){
   return gulp.src("bin/", {read: false})
     .pipe(clean());
@@ -76,12 +77,9 @@ gulp.task('git-release', ['compress'], function(cb){
   gulp.src(['./package.json', './bower.json', './bin/'])
     .pipe(git.add({args: '--all'}))
     .pipe(git.commit(message));
-  
-  git.tag(v, message, function(error){
-    if(error){
-      console.error(error);
-    }
-    git.push('origin', 'master', function(){
+
+  git.push('origin', 'master', function(){
+    git.tag(v, message, function(){
       git.push('origin', 'master', {args: '--tags'}, cb);
     });
   });
