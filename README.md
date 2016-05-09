@@ -8,6 +8,7 @@ Introduction
 Demo
 ----
 #### [Barcode Generator](http://lindell.github.io/JsBarcode/)
+#### [Simple CodePen Demo](http://codepen.io/lindell/pen/eZKBdO?editors=1010)
 
 Supported barcodes:
 ----
