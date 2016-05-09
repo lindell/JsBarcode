@@ -1471,26 +1471,20 @@
 	// https://en.wikipedia.org/wiki/Code_39#Encoding
 
 	var CODE39 = function () {
-		function CODE39(string) {
+		function CODE39(string, options) {
 			_classCallCheck(this, CODE39);
 
 			this.string = string.toUpperCase();
 
+			// Enable mod43 checksum?
+			this.mod43Enabled = options.mod43 || false;
+
+			// All characters. The position in the array is the (checksum) value
+			this.characters = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "-", ".", " ", "$", "/", "+", "%", "*"];
+
 			// The decimal representation of the characters, is converted to the
 			// corresponding binary with the getEncoding function
-			this.encodings = {
-				"0": 20957, "1": 29783, "2": 23639, "3": 30485,
-				"4": 20951, "5": 29813, "6": 23669, "7": 20855,
-				"8": 29789, "9": 23645, "A": 29975, "B": 23831,
-				"C": 30533, "D": 22295, "E": 30149, "F": 24005,
-				"G": 21623, "H": 29981, "I": 23837, "J": 22301,
-				"K": 30023, "L": 23879, "M": 30545, "N": 22343,
-				"O": 30161, "P": 24017, "Q": 21959, "R": 30065,
-				"S": 23921, "T": 22385, "U": 29015, "V": 18263,
-				"W": 29141, "X": 17879, "Y": 29045, "Z": 18293,
-				"-": 17783, ".": 29021, " ": 18269, "$": 17477,
-				"/": 17489, "+": 17681, "%": 20753, "*": 35770
-			};
+			this.encodings = [20957, 29783, 23639, 30485, 20951, 29813, 23669, 20855, 29789, 23645, 29975, 23831, 30533, 22295, 30149, 24005, 21623, 29981, 23837, 22301, 30023, 23879, 30545, 22343, 30161, 24017, 21959, 30065, 23921, 22385, 29015, 18263, 29141, 17879, 29045, 18293, 17783, 29021, 18269, 17477, 17489, 17681, 20753, 35770];
 		}
 
 		// Get the binary representation of a character by converting the encodings
@@ -1498,10 +1492,24 @@
 
 
 		CODE39.prototype.getEncoding = function getEncoding(character) {
-			return this.encodings[character].toString(2);
+			return this.getBinary(this.characterValue(character));
+		};
+
+		CODE39.prototype.getBinary = function getBinary(characterValue) {
+			return this.encodings[characterValue].toString(2);
+		};
+
+		CODE39.prototype.getCharacter = function getCharacter(characterValue) {
+			return this.characters[characterValue];
+		};
+
+		CODE39.prototype.characterValue = function characterValue(character) {
+			return this.characters.indexOf(character);
 		};
 
 		CODE39.prototype.encode = function encode() {
+			var string = this.string;
+
 			// First character is always a *
 			var result = this.getEncoding("*");
 
@@ -1510,12 +1518,25 @@
 				result += this.getEncoding(this.string[i]) + "0";
 			}
 
+			// Calculate mod43 checksum if enabled
+			if (this.mod43Enabled) {
+				var checksum = 0;
+				for (var i = 0; i < this.string.length; i++) {
+					checksum += this.characterValue(this.string[i]);
+				}
+
+				checksum = checksum % 43;
+
+				result += this.getBinary(checksum) + "0";
+				string += this.getCharacter(checksum);
+			}
+
 			// Last character is always a *
 			result += this.getEncoding("*");
 
 			return {
 				data: result,
-				text: this.string
+				text: string
 			};
 		};
 
