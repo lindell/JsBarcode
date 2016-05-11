@@ -13,8 +13,7 @@ let renderers = {
 import merge from './help/merge.js';
 import linearizeEncodings from './help/linearizeEncodings.js';
 import fixOptions from "./help/fixOptions.js";
-import optionsFromStrings from "./help/optionsFromStrings.js";
-
+import getOptionsFromElement from "./help/getOptionsFromElement.js";
 
 // The protype of the object returned from the JsBarcode() call
 let API = function(){};
@@ -67,35 +66,40 @@ function registerBarcode(barcodes, name){
 	API.prototype[name.toLowerCase()] =
 	function(text, options){
 		var newOptions = merge(this._options, options);
-
 		var Encoder = barcodes[name];
-		var encoder = new Encoder(text, newOptions);
-
-		// If the input is not valid for the encoder, throw error.
-		// If the valid callback option is set, call it instead of throwing error
-		if(!encoder.valid()){
-			if(this._options.valid === defaults.valid){
-				throw new Error('"' + text + '" is not a valid input for ' + name);
-			}
-			else{
-				this._options.valid(false);
-			}
-		}
-
-		var encoded = encoder.encode();
-
-		// Encodings can be nestled like [[1-1, 1-2], 2, [3-1, 3-2]
-		// Convert to [1-1, 1-2, 2, 3-1, 3-2]
-		encoded = linearizeEncodings(encoded);
-
-		for(let i = 0; i < encoded.length; i++){
-			encoded[i].options = merge(newOptions, encoded[i].options);
-		}
-
+		var encoded = encode(text, Encoder, newOptions);
 		this._encodings.push(encoded);
 
 		return this;
 	};
+}
+
+function encode(text, Encoder, options){
+	var encoder = new Encoder(text, options);
+
+	// If the input is not valid for the encoder, throw error.
+	// If the valid callback option is set, call it instead of throwing error
+	if(!encoder.valid()){
+		if(options.valid === defaults.valid){
+			throw new Error('"' + text + '" is not a valid input for ' + name);
+		}
+		else{
+			options.valid(false);
+		}
+	}
+
+	var encoded = encoder.encode();
+
+	// Encodings can be nestled like [[1-1, 1-2], 2, [3-1, 3-2]
+	// Convert to [1-1, 1-2, 2, 3-1, 3-2]
+	encoded = linearizeEncodings(encoded);
+
+	// Merge
+	for(let i = 0; i < encoded.length; i++){
+		encoded[i].options = merge(options, encoded[i].options);
+	}
+
+	return encoded;
 }
 
 function autoSelectBarcode(){
@@ -123,6 +127,7 @@ API.prototype.blank = function(size){
 }
 
 API.prototype.init = function(){
+	// this._renderProperties can be
 	if(!Array.isArray(this._renderProperties)){
 		this._renderProperties = [this._renderProperties];
 	}
@@ -130,29 +135,19 @@ API.prototype.init = function(){
 	for(let renderProperty of this._renderProperties){
 		let element = renderProperty.element;
 
-		var text = element.getAttribute("jsbarcode-value") || element.getAttribute("data-value");
+		var options = merge(this._options, renderProperty.options);
 
-		var options = {};
-		for(var property in defaults){
-			// jsbarcode-*
-			if(element.hasAttribute("jsbarcode-" + property.toLowerCase())){
-				options[property] = element.getAttribute("jsbarcode-" + property.toLowerCase());
-			}
-
-			// data-*
-			if(element.hasAttribute("data-" + property.toLowerCase())){
-				options[property] = element.getAttribute("data-" + property.toLowerCase());
-			}
+		if(options.format == "auto"){
+			options.format = autoSelectBarcode();
 		}
 
-		// Since all atributes are string they need to be converted to integers
-		options = optionsFromStrings(options);
-		options = merge(this._options, options);
+		var text = options.value;
 
 		var Encoder = barcodes[options.format.toUpperCase()];
-		var encoder = new Encoder(text, options);
 
-		render(renderProperty, encoder.encode(), options);
+		var encoded = encode(text, Encoder, options);
+
+		render(renderProperty, encoded, options);
 	}
 }
 
@@ -170,7 +165,7 @@ function render(renderProperties, encodings, options){
 	var renderer = renderers[renderProperties.renderer];
 
 	encodings = linearizeEncodings(encodings);
-
+	
 	for(let i = 0; i < encodings.length; i++){
 		encodings[i].options = merge(options, encodings[i].options);
 		fixOptions(encodings[i].options);
@@ -207,6 +202,7 @@ module.exports = JsBarcode;
 //   renderer: The name of the renderer
 //   afterRender (optional): If something has to done after the renderer
 //     completed, calls afterRender (function)
+//   options (optional): Options that can be defined in the element
 // }
 function getRenderProperies(element){
 	// If the element is a string, query select call again
@@ -231,6 +227,7 @@ function getRenderProperies(element){
 		var canvas = document.createElement('canvas');
 		return {
 			element: canvas,
+			options: getOptionsFromElement(element, defaults),
 			renderer: "canvas",
 			afterRender: function(){
 				element.setAttribute("src", canvas.toDataURL());
@@ -241,10 +238,19 @@ function getRenderProperies(element){
 	else if(typeof SVGElement !== 'undefined' && element instanceof SVGElement){
 		return {
 			element: element,
+			options: getOptionsFromElement(element, defaults),
 			renderer: "svg"
 		};
 	}
-	// If canvas
+	// If canvas (in browser)
+	else if(typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLCanvasElement){
+		return {
+			element: element,
+			options: getOptionsFromElement(element, defaults),
+			renderer: "canvas"
+		};
+	}
+	// If canvas (in node)
 	else if(element.getContext){
 		return {
 			element: element,
