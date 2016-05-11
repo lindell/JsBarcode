@@ -13,6 +13,8 @@ let renderers = {
 import merge from './help/merge.js';
 import linearizeEncodings from './help/linearizeEncodings.js';
 import fixOptions from "./help/fixOptions.js";
+import optionsFromStrings from "./help/optionsFromStrings.js";
+
 
 // The protype of the object returned from the JsBarcode() call
 let API = function(){};
@@ -120,29 +122,67 @@ API.prototype.blank = function(size){
 	return this;
 }
 
+API.prototype.init = function(){
+	if(!Array.isArray(this._renderProperties)){
+		this._renderProperties = [this._renderProperties];
+	}
+
+	for(let renderProperty of this._renderProperties){
+		let element = renderProperty.element;
+
+		var text = element.getAttribute("jsbarcode-value") || element.getAttribute("data-value");
+
+		var options = {};
+		for(var property in defaults){
+			// jsbarcode-*
+			if(element.hasAttribute("jsbarcode-" + property.toLowerCase())){
+				options[property] = element.getAttribute("jsbarcode-" + property.toLowerCase());
+			}
+
+			// data-*
+			if(element.hasAttribute("data-" + property.toLowerCase())){
+				options[property] = element.getAttribute("data-" + property.toLowerCase());
+			}
+		}
+
+		// Since all atributes are string they need to be converted to integers
+		options = optionsFromStrings(options);
+		options = merge(this._options, options);
+
+		var Encoder = barcodes[options.format.toUpperCase()];
+		var encoder = new Encoder(text, options);
+
+		render(renderProperty, encoder.encode(), options);
+	}
+}
+
 // Prepares the encodings and calls the renderer
 // Added to the api by the JsBarcode function
 API.prototype.render = function(){
-	var renderer = renderers[this._renderProperties.renderer];
-
-	var encodings = linearizeEncodings(this._encodings);
-
-	for(let i = 0; i < encodings.length; i++){
-		encodings[i].options = merge(this._options, encodings[i].options);
-		fixOptions(encodings[i].options);
-	}
-
-	fixOptions(this._options);
-
-	renderer(this._renderProperties.element, encodings, this._options);
-
-	if(this._renderProperties.afterRender){
-		this._renderProperties.afterRender();
-	}
+	render(this._renderProperties, this._encodings, this._options);
 
 	this._options.valid(true);
 
 	return this;
+}
+
+function render(renderProperties, encodings, options){
+	var renderer = renderers[renderProperties.renderer];
+
+	encodings = linearizeEncodings(encodings);
+
+	for(let i = 0; i < encodings.length; i++){
+		encodings[i].options = merge(options, encodings[i].options);
+		fixOptions(encodings[i].options);
+	}
+
+	fixOptions(options);
+
+	renderer(renderProperties.element, encodings, options);
+
+	if(renderProperties.afterRender){
+		renderProperties.afterRender();
+	}
 }
 
 // Export to browser
@@ -171,8 +211,20 @@ module.exports = JsBarcode;
 function getRenderProperies(element){
 	// If the element is a string, query select call again
 	if(typeof element === "string"){
-		element = document.querySelector(element);
-		return getRenderProperies(element);
+		var selector = document.querySelectorAll(element);
+		if(selector.length === 0){
+			throw new Error("No element found");
+		}
+		else if(selector.length === 1){
+			return getRenderProperies(selector[0]);
+		}
+		else{
+			var returnArray = [];
+			for(var i = 0; i < selector.length; i++){
+				returnArray.push(getRenderProperies(selector[i]));
+			}
+			return returnArray;
+		}
 	}
 	// If element, render on canvas and set the uri as src
 	else if(typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLImageElement){
