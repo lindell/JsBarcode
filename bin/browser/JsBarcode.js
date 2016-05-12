@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 10);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -466,19 +466,19 @@
 	  value: true
 	});
 
-	var _CODE = __webpack_require__(16);
+	var _CODE = __webpack_require__(17);
 
-	var _CODE2 = __webpack_require__(15);
+	var _CODE2 = __webpack_require__(16);
 
-	var _EAN_UPC = __webpack_require__(22);
+	var _EAN_UPC = __webpack_require__(23);
 
-	var _ITF = __webpack_require__(24);
+	var _ITF = __webpack_require__(25);
 
-	var _MSI = __webpack_require__(29);
+	var _MSI = __webpack_require__(30);
 
-	var _pharmacode = __webpack_require__(30);
+	var _pharmacode = __webpack_require__(31);
 
-	var _GenericBarcode = __webpack_require__(23);
+	var _GenericBarcode = __webpack_require__(24);
 
 	exports.default = {
 	  CODE39: _CODE.CODE39,
@@ -514,6 +514,46 @@
 
 /***/ },
 /* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _optionsFromStrings = __webpack_require__(32);
+
+	var _optionsFromStrings2 = _interopRequireDefault(_optionsFromStrings);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function getOptionsFromElement(element, defaults) {
+	  var options = {};
+	  for (var property in defaults) {
+	    // jsbarcode-*
+	    if (element.hasAttribute("jsbarcode-" + property.toLowerCase())) {
+	      options[property] = element.getAttribute("jsbarcode-" + property.toLowerCase());
+	    }
+
+	    // data-*
+	    if (element.hasAttribute("data-" + property.toLowerCase())) {
+	      options[property] = element.getAttribute("data-" + property.toLowerCase());
+	    }
+	  }
+
+	  options["value"] = element.getAttribute("jsbarcode-value") || element.getAttribute("data-value");
+
+	  // Since all atributes are string they need to be converted to integers
+	  options = (0, _optionsFromStrings2.default)(options);
+
+	  return options;
+	}
+
+	exports.default = getOptionsFromElement;
+
+/***/ },
+/* 8 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -545,7 +585,7 @@
 	}
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -716,7 +756,7 @@
 	}
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -930,7 +970,7 @@
 	}
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -939,11 +979,11 @@
 
 	var _barcodes2 = _interopRequireDefault(_barcodes);
 
-	var _canvas = __webpack_require__(8);
+	var _canvas = __webpack_require__(9);
 
 	var _canvas2 = _interopRequireDefault(_canvas);
 
-	var _svg = __webpack_require__(9);
+	var _svg = __webpack_require__(10);
 
 	var _svg2 = _interopRequireDefault(_svg);
 
@@ -951,13 +991,17 @@
 
 	var _merge2 = _interopRequireDefault(_merge);
 
-	var _linearizeEncodings = __webpack_require__(7);
+	var _linearizeEncodings = __webpack_require__(8);
 
 	var _linearizeEncodings2 = _interopRequireDefault(_linearizeEncodings);
 
 	var _fixOptions = __webpack_require__(6);
 
 	var _fixOptions2 = _interopRequireDefault(_fixOptions);
+
+	var _getOptionsFromElement = __webpack_require__(7);
+
+	var _getOptionsFromElement2 = _interopRequireDefault(_getOptionsFromElement);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1021,34 +1065,39 @@
 	function registerBarcode(barcodes, name) {
 		API.prototype[name] = API.prototype[name.toUpperCase()] = API.prototype[name.toLowerCase()] = function (text, options) {
 			var newOptions = (0, _merge2.default)(this._options, options);
-
 			var Encoder = barcodes[name];
-			var encoder = new Encoder(text, newOptions);
-
-			// If the input is not valid for the encoder, throw error.
-			// If the valid callback option is set, call it instead of throwing error
-			if (!encoder.valid()) {
-				if (this._options.valid === defaults.valid) {
-					throw new Error('"' + text + '" is not a valid input for ' + name);
-				} else {
-					this._options.valid(false);
-				}
-			}
-
-			var encoded = encoder.encode();
-
-			// Encodings can be nestled like [[1-1, 1-2], 2, [3-1, 3-2]
-			// Convert to [1-1, 1-2, 2, 3-1, 3-2]
-			encoded = (0, _linearizeEncodings2.default)(encoded);
-
-			for (var i = 0; i < encoded.length; i++) {
-				encoded[i].options = (0, _merge2.default)(newOptions, encoded[i].options);
-			}
-
+			var encoded = encode(text, Encoder, newOptions);
 			this._encodings.push(encoded);
 
 			return this;
 		};
+	}
+
+	function encode(text, Encoder, options) {
+		var encoder = new Encoder(text, options);
+
+		// If the input is not valid for the encoder, throw error.
+		// If the valid callback option is set, call it instead of throwing error
+		if (!encoder.valid()) {
+			if (options.valid === defaults.valid) {
+				throw new Error('"' + text + '" is not a valid input for ' + name);
+			} else {
+				options.valid(false);
+			}
+		}
+
+		var encoded = encoder.encode();
+
+		// Encodings can be nestled like [[1-1, 1-2], 2, [3-1, 3-2]
+		// Convert to [1-1, 1-2, 2, 3-1, 3-2]
+		encoded = (0, _linearizeEncodings2.default)(encoded);
+
+		// Merge
+		for (var i = 0; i < encoded.length; i++) {
+			encoded[i].options = (0, _merge2.default)(options, encoded[i].options);
+		}
+
+		return encoded;
 	}
 
 	function autoSelectBarcode() {
@@ -1075,30 +1124,107 @@
 		return this;
 	};
 
-	// Prepares the encodings and calls the renderer
-	// Added to the api by the JsBarcode function
-	API.prototype.render = function () {
-		var renderer = renderers[this._renderProperties.renderer];
-
-		var encodings = (0, _linearizeEncodings2.default)(this._encodings);
-
-		for (var i = 0; i < encodings.length; i++) {
-			encodings[i].options = (0, _merge2.default)(this._options, encodings[i].options);
-			(0, _fixOptions2.default)(encodings[i].options);
+	API.prototype.init = function () {
+		// this._renderProperties can be
+		if (!Array.isArray(this._renderProperties)) {
+			this._renderProperties = [this._renderProperties];
 		}
 
-		(0, _fixOptions2.default)(this._options);
+		var _iteratorNormalCompletion = true;
+		var _didIteratorError = false;
+		var _iteratorError = undefined;
 
-		renderer(this._renderProperties.element, encodings, this._options);
+		try {
+			for (var _iterator = this._renderProperties[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+				var renderProperty = _step.value;
 
-		if (this._renderProperties.afterRender) {
-			this._renderProperties.afterRender();
+				var element = renderProperty.element;
+
+				var options = (0, _merge2.default)(this._options, renderProperty.options);
+
+				if (options.format == "auto") {
+					options.format = autoSelectBarcode();
+				}
+
+				var text = options.value;
+
+				var Encoder = _barcodes2.default[options.format.toUpperCase()];
+
+				var encoded = encode(text, Encoder, options);
+
+				render(renderProperty, encoded, options);
+			}
+		} catch (err) {
+			_didIteratorError = true;
+			_iteratorError = err;
+		} finally {
+			try {
+				if (!_iteratorNormalCompletion && _iterator.return) {
+					_iterator.return();
+				}
+			} finally {
+				if (_didIteratorError) {
+					throw _iteratorError;
+				}
+			}
+		}
+	};
+
+	// The render API call. Calls the real render function.
+	API.prototype.render = function () {
+		if (Array.isArray(this._renderProperties)) {
+			var _iteratorNormalCompletion2 = true;
+			var _didIteratorError2 = false;
+			var _iteratorError2 = undefined;
+
+			try {
+				for (var _iterator2 = this._renderProperties[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+					var renderProperty = _step2.value;
+
+					render(renderProperty, this._encodings, this._options);
+				}
+			} catch (err) {
+				_didIteratorError2 = true;
+				_iteratorError2 = err;
+			} finally {
+				try {
+					if (!_iteratorNormalCompletion2 && _iterator2.return) {
+						_iterator2.return();
+					}
+				} finally {
+					if (_didIteratorError2) {
+						throw _iteratorError2;
+					}
+				}
+			}
+		} else {
+			render(this._renderProperties, this._encodings, this._options);
 		}
 
 		this._options.valid(true);
 
 		return this;
 	};
+
+	// Prepares the encodings and calls the renderer
+	function render(renderProperties, encodings, options) {
+		var renderer = renderers[renderProperties.renderer];
+
+		encodings = (0, _linearizeEncodings2.default)(encodings);
+
+		for (var i = 0; i < encodings.length; i++) {
+			encodings[i].options = (0, _merge2.default)(options, encodings[i].options);
+			(0, _fixOptions2.default)(encodings[i].options);
+		}
+
+		(0, _fixOptions2.default)(options);
+
+		renderer(renderProperties.element, encodings, options);
+
+		if (renderProperties.afterRender) {
+			renderProperties.afterRender();
+		}
+	}
 
 	// Export to browser
 	if (typeof window !== "undefined") {
@@ -1108,7 +1234,11 @@
 	// Export to jQuery
 	if (typeof jQuery !== 'undefined') {
 		jQuery.fn.JsBarcode = function (content, options) {
-			return JsBarcode(this.get(0), content, options);
+			var elementArray = [];
+			$(this).each(function () {
+				elementArray.push(this);
+			});
+			return JsBarcode(elementArray, content, options);
 		};
 	}
 
@@ -1117,45 +1247,73 @@
 
 	// Takes an element and returns an object with information about how
 	// it should be rendered
+	// This could also return an array with these objects
 	// {
 	//   element: The element that the renderer should draw on
 	//   renderer: The name of the renderer
 	//   afterRender (optional): If something has to done after the renderer
 	//     completed, calls afterRender (function)
+	//   options (optional): Options that can be defined in the element
 	// }
 	function getRenderProperies(element) {
 		// If the element is a string, query select call again
 		if (typeof element === "string") {
-			element = document.querySelector(element);
-			return getRenderProperies(element);
-		}
-		// If element, render on canvas and set the uri as src
-		else if (typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLImageElement) {
-				var canvas = document.createElement('canvas');
-				return {
-					element: canvas,
-					renderer: "canvas",
-					afterRender: function afterRender() {
-						element.setAttribute("src", canvas.toDataURL());
-					}
-				};
+			var selector = document.querySelectorAll(element);
+			if (selector.length === 0) {
+				throw new Error("No element found");
+			} else {
+				var returnArray = [];
+				for (var i = 0; i < selector.length; i++) {
+					returnArray.push(getRenderProperies(selector[i]));
+				}
+				return returnArray;
 			}
-			// If SVG
-			else if (typeof SVGElement !== 'undefined' && element instanceof SVGElement) {
+		}
+		// If element is array. Recursivly call with every object in the array
+		else if (Array.isArray(element)) {
+				var returnArray = [];
+				for (var i = 0; i < element.length; i++) {
+					returnArray.push(getRenderProperies(element[i]));
+				}
+				return returnArray;
+			}
+			// If element, render on canvas and set the uri as src
+			else if (typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLImageElement) {
+					var canvas = document.createElement('canvas');
 					return {
-						element: element,
-						renderer: "svg"
+						element: canvas,
+						options: (0, _getOptionsFromElement2.default)(element, defaults),
+						renderer: "canvas",
+						afterRender: function afterRender() {
+							element.setAttribute("src", canvas.toDataURL());
+						}
 					};
 				}
-				// If canvas
-				else if (element.getContext) {
+				// If SVG
+				else if (typeof SVGElement !== 'undefined' && element instanceof SVGElement) {
 						return {
 							element: element,
-							renderer: "canvas"
+							options: (0, _getOptionsFromElement2.default)(element, defaults),
+							renderer: "svg"
 						};
-					} else {
-						throw new Error("Not supported type to render on.");
 					}
+					// If canvas (in browser)
+					else if (typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLCanvasElement) {
+							return {
+								element: element,
+								options: (0, _getOptionsFromElement2.default)(element, defaults),
+								renderer: "canvas"
+							};
+						}
+						// If canvas (in node)
+						else if (element.getContext) {
+								return {
+									element: element,
+									renderer: "canvas"
+								};
+							} else {
+								throw new Error("Not supported type to render on.");
+							}
 	}
 
 	var defaults = {
@@ -1180,7 +1338,7 @@
 	};
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1220,7 +1378,7 @@
 	exports.default = CODE128A;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1260,7 +1418,7 @@
 	exports.default = CODE128B;
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1300,7 +1458,7 @@
 	exports.default = CODE128C;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1422,7 +1580,7 @@
 	exports.default = CODE128AUTO;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1432,19 +1590,19 @@
 	});
 	exports.CODE128C = exports.CODE128B = exports.CODE128A = exports.CODE128 = undefined;
 
-	var _CODE128_AUTO = __webpack_require__(14);
+	var _CODE128_AUTO = __webpack_require__(15);
 
 	var _CODE128_AUTO2 = _interopRequireDefault(_CODE128_AUTO);
 
-	var _CODE128A = __webpack_require__(11);
+	var _CODE128A = __webpack_require__(12);
 
 	var _CODE128A2 = _interopRequireDefault(_CODE128A);
 
-	var _CODE128B = __webpack_require__(12);
+	var _CODE128B = __webpack_require__(13);
 
 	var _CODE128B2 = _interopRequireDefault(_CODE128B);
 
-	var _CODE128C = __webpack_require__(13);
+	var _CODE128C = __webpack_require__(14);
 
 	var _CODE128C2 = _interopRequireDefault(_CODE128C);
 
@@ -1456,7 +1614,7 @@
 	exports.CODE128C = _CODE128C2.default;
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1550,7 +1708,7 @@
 	exports.CODE39 = CODE39;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1688,7 +1846,7 @@
 	exports.default = EAN13;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1743,7 +1901,7 @@
 	exports.default = EAN2;
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1809,7 +1967,7 @@
 	exports.default = EAN5;
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1900,7 +2058,7 @@
 	exports.default = EAN8;
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2027,7 +2185,7 @@
 	exports.default = UPC;
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2037,23 +2195,23 @@
 	});
 	exports.UPC = exports.EAN2 = exports.EAN5 = exports.EAN8 = exports.EAN13 = undefined;
 
-	var _EAN = __webpack_require__(17);
+	var _EAN = __webpack_require__(18);
 
 	var _EAN2 = _interopRequireDefault(_EAN);
 
-	var _EAN3 = __webpack_require__(20);
+	var _EAN3 = __webpack_require__(21);
 
 	var _EAN4 = _interopRequireDefault(_EAN3);
 
-	var _EAN5 = __webpack_require__(19);
+	var _EAN5 = __webpack_require__(20);
 
 	var _EAN6 = _interopRequireDefault(_EAN5);
 
-	var _EAN7 = __webpack_require__(18);
+	var _EAN7 = __webpack_require__(19);
 
 	var _EAN8 = _interopRequireDefault(_EAN7);
 
-	var _UPC = __webpack_require__(21);
+	var _UPC = __webpack_require__(22);
 
 	var _UPC2 = _interopRequireDefault(_UPC);
 
@@ -2066,7 +2224,7 @@
 	exports.UPC = _UPC2.default;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2107,7 +2265,7 @@
 	exports.GenericBarcode = GenericBarcode;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2201,7 +2359,7 @@
 	exports.ITF14 = ITF14;
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2242,7 +2400,7 @@
 	exports.default = MSI10;
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2284,7 +2442,7 @@
 	exports.default = MSI1010;
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2325,7 +2483,7 @@
 	exports.default = MSI11;
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2367,7 +2525,7 @@
 	exports.default = MSI1110;
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -2381,19 +2539,19 @@
 
 	var _MSI2 = _interopRequireDefault(_MSI);
 
-	var _MSI3 = __webpack_require__(25);
+	var _MSI3 = __webpack_require__(26);
 
 	var _MSI4 = _interopRequireDefault(_MSI3);
 
-	var _MSI5 = __webpack_require__(27);
+	var _MSI5 = __webpack_require__(28);
 
 	var _MSI6 = _interopRequireDefault(_MSI5);
 
-	var _MSI7 = __webpack_require__(26);
+	var _MSI7 = __webpack_require__(27);
 
 	var _MSI8 = _interopRequireDefault(_MSI7);
 
-	var _MSI9 = __webpack_require__(28);
+	var _MSI9 = __webpack_require__(29);
 
 	var _MSI10 = _interopRequireDefault(_MSI9);
 
@@ -2406,7 +2564,7 @@
 	exports.MSI1110 = _MSI10.default;
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2462,6 +2620,36 @@
 	}();
 
 	exports.pharmacode = pharmacode;
+
+/***/ },
+/* 32 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = optionsFromStrings;
+
+	// Convert string to integers/booleans where it should be
+
+	function optionsFromStrings(options) {
+	  var intOptions = ["width", "height", "textMargin", "fontSize", "margin", "marginLeft", "marginBottom", "marginLeft", "marginRight"];
+
+	  for (var intOption in intOptions) {
+	    intOption = intOptions[intOption];
+	    if (typeof options[intOption] === "string") {
+	      options[intOption] = parseInt(options[intOption], 10);
+	    }
+	  }
+
+	  if (typeof options["displayValue"] === "string") {
+	    options["displayValue"] = options["displayValue"] != "false";
+	  }
+
+	  return options;
+	}
 
 /***/ }
 /******/ ]);

@@ -24,6 +24,10 @@ var _fixOptions = require('./help/fixOptions.js');
 
 var _fixOptions2 = _interopRequireDefault(_fixOptions);
 
+var _getOptionsFromElement = require('./help/getOptionsFromElement.js');
+
+var _getOptionsFromElement2 = _interopRequireDefault(_getOptionsFromElement);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Import the renderers
@@ -86,34 +90,39 @@ for (var name in _barcodes2.default) {
 function registerBarcode(barcodes, name) {
 	API.prototype[name] = API.prototype[name.toUpperCase()] = API.prototype[name.toLowerCase()] = function (text, options) {
 		var newOptions = (0, _merge2.default)(this._options, options);
-
 		var Encoder = barcodes[name];
-		var encoder = new Encoder(text, newOptions);
-
-		// If the input is not valid for the encoder, throw error.
-		// If the valid callback option is set, call it instead of throwing error
-		if (!encoder.valid()) {
-			if (this._options.valid === defaults.valid) {
-				throw new Error('"' + text + '" is not a valid input for ' + name);
-			} else {
-				this._options.valid(false);
-			}
-		}
-
-		var encoded = encoder.encode();
-
-		// Encodings can be nestled like [[1-1, 1-2], 2, [3-1, 3-2]
-		// Convert to [1-1, 1-2, 2, 3-1, 3-2]
-		encoded = (0, _linearizeEncodings2.default)(encoded);
-
-		for (var i = 0; i < encoded.length; i++) {
-			encoded[i].options = (0, _merge2.default)(newOptions, encoded[i].options);
-		}
-
+		var encoded = encode(text, Encoder, newOptions);
 		this._encodings.push(encoded);
 
 		return this;
 	};
+}
+
+function encode(text, Encoder, options) {
+	var encoder = new Encoder(text, options);
+
+	// If the input is not valid for the encoder, throw error.
+	// If the valid callback option is set, call it instead of throwing error
+	if (!encoder.valid()) {
+		if (options.valid === defaults.valid) {
+			throw new Error('"' + text + '" is not a valid input for ' + name);
+		} else {
+			options.valid(false);
+		}
+	}
+
+	var encoded = encoder.encode();
+
+	// Encodings can be nestled like [[1-1, 1-2], 2, [3-1, 3-2]
+	// Convert to [1-1, 1-2, 2, 3-1, 3-2]
+	encoded = (0, _linearizeEncodings2.default)(encoded);
+
+	// Merge
+	for (var i = 0; i < encoded.length; i++) {
+		encoded[i].options = (0, _merge2.default)(options, encoded[i].options);
+	}
+
+	return encoded;
 }
 
 function autoSelectBarcode() {
@@ -140,30 +149,107 @@ API.prototype.blank = function (size) {
 	return this;
 };
 
-// Prepares the encodings and calls the renderer
-// Added to the api by the JsBarcode function
-API.prototype.render = function () {
-	var renderer = renderers[this._renderProperties.renderer];
-
-	var encodings = (0, _linearizeEncodings2.default)(this._encodings);
-
-	for (var i = 0; i < encodings.length; i++) {
-		encodings[i].options = (0, _merge2.default)(this._options, encodings[i].options);
-		(0, _fixOptions2.default)(encodings[i].options);
+API.prototype.init = function () {
+	// this._renderProperties can be
+	if (!Array.isArray(this._renderProperties)) {
+		this._renderProperties = [this._renderProperties];
 	}
 
-	(0, _fixOptions2.default)(this._options);
+	var _iteratorNormalCompletion = true;
+	var _didIteratorError = false;
+	var _iteratorError = undefined;
 
-	renderer(this._renderProperties.element, encodings, this._options);
+	try {
+		for (var _iterator = this._renderProperties[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+			var renderProperty = _step.value;
 
-	if (this._renderProperties.afterRender) {
-		this._renderProperties.afterRender();
+			var element = renderProperty.element;
+
+			var options = (0, _merge2.default)(this._options, renderProperty.options);
+
+			if (options.format == "auto") {
+				options.format = autoSelectBarcode();
+			}
+
+			var text = options.value;
+
+			var Encoder = _barcodes2.default[options.format.toUpperCase()];
+
+			var encoded = encode(text, Encoder, options);
+
+			render(renderProperty, encoded, options);
+		}
+	} catch (err) {
+		_didIteratorError = true;
+		_iteratorError = err;
+	} finally {
+		try {
+			if (!_iteratorNormalCompletion && _iterator.return) {
+				_iterator.return();
+			}
+		} finally {
+			if (_didIteratorError) {
+				throw _iteratorError;
+			}
+		}
+	}
+};
+
+// The render API call. Calls the real render function.
+API.prototype.render = function () {
+	if (Array.isArray(this._renderProperties)) {
+		var _iteratorNormalCompletion2 = true;
+		var _didIteratorError2 = false;
+		var _iteratorError2 = undefined;
+
+		try {
+			for (var _iterator2 = this._renderProperties[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+				var renderProperty = _step2.value;
+
+				render(renderProperty, this._encodings, this._options);
+			}
+		} catch (err) {
+			_didIteratorError2 = true;
+			_iteratorError2 = err;
+		} finally {
+			try {
+				if (!_iteratorNormalCompletion2 && _iterator2.return) {
+					_iterator2.return();
+				}
+			} finally {
+				if (_didIteratorError2) {
+					throw _iteratorError2;
+				}
+			}
+		}
+	} else {
+		render(this._renderProperties, this._encodings, this._options);
 	}
 
 	this._options.valid(true);
 
 	return this;
 };
+
+// Prepares the encodings and calls the renderer
+function render(renderProperties, encodings, options) {
+	var renderer = renderers[renderProperties.renderer];
+
+	encodings = (0, _linearizeEncodings2.default)(encodings);
+
+	for (var i = 0; i < encodings.length; i++) {
+		encodings[i].options = (0, _merge2.default)(options, encodings[i].options);
+		(0, _fixOptions2.default)(encodings[i].options);
+	}
+
+	(0, _fixOptions2.default)(options);
+
+	renderer(renderProperties.element, encodings, options);
+
+	if (renderProperties.afterRender) {
+		renderProperties.afterRender();
+	}
+}
 
 // Export to browser
 if (typeof window !== "undefined") {
@@ -173,7 +259,11 @@ if (typeof window !== "undefined") {
 // Export to jQuery
 if (typeof jQuery !== 'undefined') {
 	jQuery.fn.JsBarcode = function (content, options) {
-		return JsBarcode(this.get(0), content, options);
+		var elementArray = [];
+		$(this).each(function () {
+			elementArray.push(this);
+		});
+		return JsBarcode(elementArray, content, options);
 	};
 }
 
@@ -182,45 +272,73 @@ module.exports = JsBarcode;
 
 // Takes an element and returns an object with information about how
 // it should be rendered
+// This could also return an array with these objects
 // {
 //   element: The element that the renderer should draw on
 //   renderer: The name of the renderer
 //   afterRender (optional): If something has to done after the renderer
 //     completed, calls afterRender (function)
+//   options (optional): Options that can be defined in the element
 // }
 function getRenderProperies(element) {
 	// If the element is a string, query select call again
 	if (typeof element === "string") {
-		element = document.querySelector(element);
-		return getRenderProperies(element);
-	}
-	// If element, render on canvas and set the uri as src
-	else if (typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLImageElement) {
-			var canvas = document.createElement('canvas');
-			return {
-				element: canvas,
-				renderer: "canvas",
-				afterRender: function afterRender() {
-					element.setAttribute("src", canvas.toDataURL());
-				}
-			};
+		var selector = document.querySelectorAll(element);
+		if (selector.length === 0) {
+			throw new Error("No element found");
+		} else {
+			var returnArray = [];
+			for (var i = 0; i < selector.length; i++) {
+				returnArray.push(getRenderProperies(selector[i]));
+			}
+			return returnArray;
 		}
-		// If SVG
-		else if (typeof SVGElement !== 'undefined' && element instanceof SVGElement) {
+	}
+	// If element is array. Recursivly call with every object in the array
+	else if (Array.isArray(element)) {
+			var returnArray = [];
+			for (var i = 0; i < element.length; i++) {
+				returnArray.push(getRenderProperies(element[i]));
+			}
+			return returnArray;
+		}
+		// If element, render on canvas and set the uri as src
+		else if (typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLImageElement) {
+				var canvas = document.createElement('canvas');
 				return {
-					element: element,
-					renderer: "svg"
+					element: canvas,
+					options: (0, _getOptionsFromElement2.default)(element, defaults),
+					renderer: "canvas",
+					afterRender: function afterRender() {
+						element.setAttribute("src", canvas.toDataURL());
+					}
 				};
 			}
-			// If canvas
-			else if (element.getContext) {
+			// If SVG
+			else if (typeof SVGElement !== 'undefined' && element instanceof SVGElement) {
 					return {
 						element: element,
-						renderer: "canvas"
+						options: (0, _getOptionsFromElement2.default)(element, defaults),
+						renderer: "svg"
 					};
-				} else {
-					throw new Error("Not supported type to render on.");
 				}
+				// If canvas (in browser)
+				else if (typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLCanvasElement) {
+						return {
+							element: element,
+							options: (0, _getOptionsFromElement2.default)(element, defaults),
+							renderer: "canvas"
+						};
+					}
+					// If canvas (in node)
+					else if (element.getContext) {
+							return {
+								element: element,
+								renderer: "canvas"
+							};
+						} else {
+							throw new Error("Not supported type to render on.");
+						}
 }
 
 var defaults = {
