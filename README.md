@@ -83,6 +83,27 @@ JsBarcode("#barcode")
 ![Result](http://i.imgur.com/pp2lvYe.png)
 
 
+
+#### Or define the value and options in the HTML element:
+Use any `jsbarcode-*` or `data-*` as attributes where `*` is any option.
+````html
+<svg class="barcode"
+  jsbarcode-format="upc"
+  jsbarcode-value="123456789012"
+  jsbarcode-textmargin="0"
+  jsbarcode-fontoptions="bold">
+</svg>
+````
+
+And then initialize it with:
+````javascript
+JsBarcode(".barcode").init();
+````
+
+##### Result:
+![Result](http://i.imgur.com/bcG4meD.png)
+
+
 Setup for browsers:
 ----
 ### Step 1:
