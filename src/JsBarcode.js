@@ -151,21 +151,29 @@ API.prototype.init = function(){
 	}
 }
 
-// Prepares the encodings and calls the renderer
-// Added to the api by the JsBarcode function
+
+// The render API call. Calls the real render function.
 API.prototype.render = function(){
-	render(this._renderProperties, this._encodings, this._options);
+	if(Array.isArray(this._renderProperties)){
+		for(let renderProperty of this._renderProperties){
+			render(renderProperty, this._encodings, this._options);
+		}
+	}
+	else{
+		render(this._renderProperties, this._encodings, this._options);
+	}
 
 	this._options.valid(true);
 
 	return this;
 }
 
+// Prepares the encodings and calls the renderer
 function render(renderProperties, encodings, options){
 	var renderer = renderers[renderProperties.renderer];
 
 	encodings = linearizeEncodings(encodings);
-	
+
 	for(let i = 0; i < encodings.length; i++){
 		encodings[i].options = merge(options, encodings[i].options);
 		fixOptions(encodings[i].options);
@@ -188,7 +196,11 @@ if(typeof window !== "undefined"){
 // Export to jQuery
 if (typeof jQuery !== 'undefined') {
 	jQuery.fn.JsBarcode = function(content, options){
-		return JsBarcode(this.get(0), content, options);
+		var elementArray = [];
+		$(this).each(function() {
+			elementArray.push(this);
+		});
+		return JsBarcode(elementArray, content, options);
 	};
 }
 
@@ -197,6 +209,7 @@ module.exports = JsBarcode;
 
 // Takes an element and returns an object with information about how
 // it should be rendered
+// This could also return an array with these objects
 // {
 //   element: The element that the renderer should draw on
 //   renderer: The name of the renderer
@@ -211,9 +224,6 @@ function getRenderProperies(element){
 		if(selector.length === 0){
 			throw new Error("No element found");
 		}
-		else if(selector.length === 1){
-			return getRenderProperies(selector[0]);
-		}
 		else{
 			var returnArray = [];
 			for(var i = 0; i < selector.length; i++){
@@ -221,6 +231,14 @@ function getRenderProperies(element){
 			}
 			return returnArray;
 		}
+	}
+	// If element is array. Recursivly call with every object in the array
+	else if(Array.isArray(element)){
+		var returnArray = [];
+		for(var i = 0; i < element.length; i++){
+			returnArray.push(getRenderProperies(element[i]));
+		}
+		return returnArray;
 	}
 	// If element, render on canvas and set the uri as src
 	else if(typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLImageElement){
