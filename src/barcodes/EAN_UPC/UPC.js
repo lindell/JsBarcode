@@ -34,12 +34,6 @@ class UPC{
 		var encoder = new EANencoder();
 		var result = [];
 
-		// Get the string to be encoded on the left side of the UPC code
-		var leftSide = this.string.substr(0, 6);
-
-		// Get the string to be encoded on the right side of the UPC code
-		var rightSide = this.string.substr(6, 6);
-
 		// Add the first digigt
 		result.push({
 			data: "00000000",

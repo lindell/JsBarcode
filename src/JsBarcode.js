@@ -133,8 +133,6 @@ API.prototype.init = function(){
 	}
 
 	for(let renderProperty of this._renderProperties){
-		let element = renderProperty.element;
-
 		var options = merge(this._options, renderProperty.options);
 
 		if(options.format == "auto"){
