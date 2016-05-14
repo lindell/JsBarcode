@@ -1,6 +1,6 @@
 {
   "name": "JsBarcode",
-  "main": "bin/browser/JsBarcode.js",
+  "main": "bin/browser/JsBarcode.all.js",
   "version": "3.3.1",
   "homepage": "https://github.com/lindell/JsBarcode",
   "authors": [
