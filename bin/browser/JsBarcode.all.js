@@ -1138,8 +1138,6 @@
 			for (var _iterator = this._renderProperties[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 				var renderProperty = _step.value;
 
-				var element = renderProperty.element;
-
 				var options = (0, _merge2.default)(this._options, renderProperty.options);
 
 				if (options.format == "auto") {
@@ -2105,12 +2103,6 @@
 		UPC.prototype.encode = function encode() {
 			var encoder = new _ean_encoder2.default();
 			var result = [];
-
-			// Get the string to be encoded on the left side of the UPC code
-			var leftSide = this.string.substr(0, 6);
-
-			// Get the string to be encoded on the right side of the UPC code
-			var rightSide = this.string.substr(6, 6);
 
 			// Add the first digigt
 			result.push({

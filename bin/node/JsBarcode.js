@@ -163,8 +163,6 @@ API.prototype.init = function () {
 		for (var _iterator = this._renderProperties[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 			var renderProperty = _step.value;
 
-			var element = renderProperty.element;
-
 			var options = (0, _merge2.default)(this._options, renderProperty.options);
 
 			if (options.format == "auto") {
