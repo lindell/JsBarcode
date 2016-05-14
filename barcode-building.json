@@ -1,0 +1,32 @@
+[
+  {
+    "filename": "JsBarcode.code39.min.js",
+    "names": "CODE39",
+    "barcodeFile": "./CODE39"
+  },
+  {
+    "filename": "JsBarcode.code128.min.js",
+    "names": ["CODE128, CODE128A, CODE128B, CODE128C"],
+    "barcodeFile": "./CODE128"
+  },
+  {
+    "filename": "JsBarcode.ean-upc.min.js",
+    "names": "EAN13, EAN8, EAN5, EAN2, UPC",
+    "barcodeFile": "./EAN_UPC"
+  },
+  {
+    "filename": "JsBarcode.itf-14.min.js",
+    "names": "ITF14",
+    "barcodeFile": "./ITF14"
+  },
+  {
+    "filename": "JsBarcode.msi.min.js",
+    "names": "MSI, MSI10, MSI11, MSI1010, MSI1110",
+    "barcodeFile": "./MSI"
+  },
+  {
+    "filename": "JsBarcode.pharmacode.min.js",
+    "names": "pharmacode",
+    "barcodeFile": "./pharmacode"
+  }
+]

@@ -12,6 +12,7 @@ var clean = require('gulp-clean');
 var gulpWebpack = require('webpack-stream');
 var webpack = require('webpack');
 
+var fs = require('fs');
 
 gulp.task("clean", function(){
   return gulp.src("bin/", {read: false})
@@ -19,41 +20,85 @@ gulp.task("clean", function(){
 });
 
 gulp.task("babel", function () {
+  return babelFunc();
+});
+
+function babelFunc(){
   return gulp.src("src/**/*")
     .pipe(babel({
       presets: ['es2015'],
       plugins: [["transform-es2015-classes", {loose: true}]]
-		}))
+    }))
     .pipe(gulp.dest("bin/node/"));
-});
+}
 
 gulp.task("webpack", ["babel"], function () {
-  return gulp.src('bin/node/JsBarcode.js')
+  return webpackFunc();
+});
 
+function webpackFunc(){
+  return gulp.src('bin/node/JsBarcode.js')
     .pipe(gulpWebpack(
       {
         output: {
-          filename: 'JsBarcode.js',
+          filename: 'JsBarcode.all.js',
         }
       }
     , webpack))
-
     .pipe(gulp.dest("bin/browser/"));
-});
+}
 
 gulp.task("webpack-min", ["babel"], function () {
-  return gulp.src('bin/node/JsBarcode.js')
+  return webpackMin('JsBarcode.all.min.js');
+});
 
+function webpackMin(filename){
+  return gulp.src('bin/node/JsBarcode.js')
     .pipe(gulpWebpack(
       {
         output: {
-          filename: 'JsBarcode.min.js',
+          filename: filename,
         },
         plugins: [new webpack.optimize.UglifyJsPlugin()],
       }
     , webpack))
-
     .pipe(gulp.dest("bin/browser/"));
+}
+
+gulp.task("webpack-all", function (cb) {
+  var barcodes = require('./barcode-building.json');
+
+  fs.renameSync("src/barcodes/index.js", "src/barcodes/index.tmp.js");
+
+  function createBarcodeInclude(barcode, callback){
+    var toFile = "";
+    toFile += "import {" + barcode.names + "} from '" + barcode.barcodeFile + "'";
+    toFile += "\n";
+    toFile += "export default {" + barcode.names + "}";
+
+    fs.writeFile("src/barcodes/index.js", toFile, function(){
+      if(fs.existsSync("bin/node/barcodes/index.js")){
+        fs.unlinkSync("bin/node/barcodes/index.js");
+      }
+      babelFunc().on('end', function(){
+        webpackMin("barcodes/" + barcode.filename).on('end', callback);
+      });
+    });
+  }
+
+  var i = 0;
+  (function loopBarcodes(){
+    createBarcodeInclude(barcodes[i], function(){
+      i++;
+      if(i < barcodes.length){
+        loopBarcodes();
+      }
+      else{
+        fs.renameSync("src/barcodes/index.tmp.js", "src/barcodes/index.js");
+        cb(); // Done
+      }
+    });
+  })();
 });
 
 gulp.task('watch', ['compile'], function() {
@@ -64,8 +109,14 @@ gulp.task('watch-web', ['webpack'], function() {
   gulp.watch("src/**/*", ['webpack']);
 });
 
-gulp.task('compress', ["webpack", "webpack-min"], function() {
-  var pkg = require('./package.json');
+gulp.task('compress', function(cb) {
+  runSequence(
+    "clean",
+    "webpack-all",
+    "webpack",
+    "webpack-min",
+    cb
+  );
 });
 
 
