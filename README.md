@@ -107,7 +107,17 @@ JsBarcode(".barcode").init();
 Setup for browsers:
 ----
 ### Step 1:
-##### [Download the library](https://github.com/lindell/JsBarcode/releases)
+Download or get the CDN link to the script:
+
+| Name | Supported barcodes | Size including JsBarcode | CDN / Download |
+|------|--------------------|:------------------------:|---------------:|
+|  *All*  |  *All the barcodes!*  |  *~ 33 KB*  |  *[JsBarcode.all.min.js][1]*  |
+|  CODE128  |  CODE128 (auto and force mode)  |  ~ 18 KB  |  [JsBarcode.code128.min.js][2]  |
+|  CODE39  |  CODE39  |  ~ 12 KB  |  [JsBarcode.code39.min.js][3]  |
+|  EAN / UPC  |  EAN-13, EAN-8, EAN-5, EAN-2, UPC (A)  |  ~ 17 KB  |  [JsBarcode.ean-upc.min.js][4]  |
+|  ITF-14  |  ITF-14  |  ~ 11 KB  |  [JsBarcode.itf-14.min.js][5]  |
+|  MSI  |  MSI, MSI10, MSI11, MSI1010, MSI1110  |  ~ 15 KB  |  [JsBarcode.msi.min.js][6]  |
+|  Pharmacode  |  Pharmacode  |  ~ 10 KB  |  [JsBarcode.pharmacode.min.js][2]  |
 
 ### Step 2:
 Include the script in your code:
@@ -170,3 +180,13 @@ For information about how to use the options, see [the wiki page](https://github
 | [`marginLeft`](https://github.com/lindell/JsBarcode/wiki/Options#margins) | `undefined` | `Number` |
 | [`marginRight`](https://github.com/lindell/JsBarcode/wiki/Options#margins) | `undefined` | `Number` |
 | [`valid`](https://github.com/lindell/JsBarcode/wiki/Options#valid) | `function(valid){}` | `Function` |
+
+
+
+[1]: https://cdn.jsdelivr.net/jsbarcode/3.3.2/JsBarcode.all.min.js "jsdelivr all barcodes"
+[2]: https://cdn.jsdelivr.net/jsbarcode/3.3.2/barcodes/JsBarcode.code128.min.js "jsdelivr code128"
+[3]: https://cdn.jsdelivr.net/jsbarcode/3.3.2/barcodes/JsBarcode.code39.min.js "jsdelivr code39"
+[4]: https://cdn.jsdelivr.net/jsbarcode/3.3.2/barcodes/JsBarcode.ean-upc.min.js "jsdelivr ean/upc"
+[5]: https://cdn.jsdelivr.net/jsbarcode/3.3.2/barcodes/JsBarcode.itf-14.min.js "jsdelivr itf-14"
+[6]: https://cdn.jsdelivr.net/jsbarcode/3.3.2/barcodes/JsBarcode.msi.min.js "jsdelivr msi"
+[7]: https://cdn.jsdelivr.net/jsbarcode/3.3.2/barcodes/JsBarcode.pharmacode.min.js "jsdelivr pharmacode"
