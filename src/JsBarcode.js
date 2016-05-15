@@ -2,12 +2,7 @@
 import barcodes from './barcodes/';
 
 // Import the renderers
-import renderCanvas from './renderers/canvas.js';
-import renderSVG from './renderers/svg.js';
-let renderers = {
-	"canvas": renderCanvas,
-	"svg": renderSVG
-};
+import renderers from './renderers/';
 
 // Help functions
 import merge from './help/merge.js';
