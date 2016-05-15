@@ -117,7 +117,7 @@ Download or get the CDN link to the script:
 |  EAN / UPC  |  EAN-13, EAN-8, EAN-5, EAN-2, UPC (A)  |  ~ 17 KB  |  [JsBarcode.ean-upc.min.js][4]  |
 |  ITF-14  |  ITF-14  |  ~ 11 KB  |  [JsBarcode.itf-14.min.js][5]  |
 |  MSI  |  MSI, MSI10, MSI11, MSI1010, MSI1110  |  ~ 15 KB  |  [JsBarcode.msi.min.js][6]  |
-|  Pharmacode  |  Pharmacode  |  ~ 10 KB  |  [JsBarcode.pharmacode.min.js][2]  |
+|  Pharmacode  |  Pharmacode  |  ~ 10 KB  |  [JsBarcode.pharmacode.min.js][7]  |
 
 ### Step 2:
 Include the script in your code:
