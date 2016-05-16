@@ -11,6 +11,7 @@ var header = require('gulp-header');
 var clean = require('gulp-clean');
 var gulpWebpack = require('webpack-stream');
 var webpack = require('webpack');
+var gzipSize = require('gzip-size');
 
 var fs = require('fs');
 
@@ -175,6 +176,38 @@ gulp.task('github-release', function(done) {
   }, done);
 });
 
+gulp.task('update-readme-sizes', function(){
+  var files = require('./barcode-building.json');
+  var readme = fs.readFileSync('README.md', "utf-8");
+
+  // Update .all files
+  var data = fs.readFileSync('bin/browser/JsBarcode.all.min.js');
+  var filesize = gzipSize.sync(data);
+
+  var regexp = new RegExp('\\|[^\\|]*\\|([ \\t\\*]*\\[JsBarcode\\.all\\.min\\.js\\])');
+  readme = readme.replace(regexp, "|  *" + formatSize(filesize) + "*  |$1");
+
+  // Update all barcodes files
+  for(var i in files){
+    var filename = files[i].filename;
+
+    var data = fs.readFileSync('bin/browser/barcodes/' + filename);
+    var filesize = gzipSize.sync(data);
+
+    var regexp = new RegExp('\\|[^\\|]*\\|([ \\t]*\\[' + RegExp.escape(filename) + '\\])');
+
+    readme = readme.replace(regexp, "|  " + formatSize(filesize) + "  |$1");
+  }
+
+  fs.writeFileSync('README.md', readme, 'utf8');
+});
+
+function formatSize(bytes){
+  var kilobytes = Math.round(bytes/1024*10)/10;
+
+  return kilobytes + " kB";
+}
+
 // Needed so that github can register the push before new release
 gulp.task('wait', function(done) {
   setTimeout(done, 5000);
@@ -200,6 +233,7 @@ gulp.task('compile-web', ['webpack'], function(done){
 
 gulp.task('release', function(callback){
   runSequence(
+    'update-readme-sizes',
     'git-release',
     'wait',
     'github-release',
@@ -231,3 +265,9 @@ gulp.task('major', function(){
     done
   );
 });
+
+// Util functions
+
+RegExp.escape= function(s) {
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+};
