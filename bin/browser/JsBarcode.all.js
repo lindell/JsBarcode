@@ -37,7 +37,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 11);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -472,19 +472,19 @@
 	  value: true
 	});
 
-	var _CODE = __webpack_require__(17);
+	var _CODE = __webpack_require__(16);
 
-	var _CODE2 = __webpack_require__(16);
+	var _CODE2 = __webpack_require__(15);
 
-	var _EAN_UPC = __webpack_require__(23);
+	var _EAN_UPC = __webpack_require__(22);
 
-	var _ITF = __webpack_require__(25);
+	var _ITF = __webpack_require__(24);
 
-	var _MSI = __webpack_require__(30);
+	var _MSI = __webpack_require__(29);
 
-	var _pharmacode = __webpack_require__(31);
+	var _pharmacode = __webpack_require__(30);
 
-	var _GenericBarcode = __webpack_require__(24);
+	var _GenericBarcode = __webpack_require__(23);
 
 	exports.default = {
 	  CODE39: _CODE.CODE39,
@@ -530,7 +530,7 @@
 	  value: true
 	});
 
-	var _optionsFromStrings = __webpack_require__(32);
+	var _optionsFromStrings = __webpack_require__(31);
 
 	var _optionsFromStrings2 = _interopRequireDefault(_optionsFromStrings);
 
@@ -598,390 +598,29 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _merge = __webpack_require__(4);
-
-	var _merge2 = _interopRequireDefault(_merge);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = renderCanvas;
-
-
-	function renderCanvas(canvas, encodings, options) {
-		// Abort if the browser does not support HTML5 canvas
-		if (!canvas.getContext) {
-			throw new Error('The browser does not support canvas.');
-		}
-
-		prepareCanvas(canvas, options, encodings);
-		for (var i = 0; i < encodings.length; i++) {
-			var encodingOptions = (0, _merge2.default)(options, encodings[i].options);
-
-			drawCanvasBarcode(canvas, encodingOptions, encodings[i]);
-			drawCanvasText(canvas, encodingOptions, encodings[i]);
-
-			moveCanvasDrawing(canvas, encodings[i]);
-		}
-
-		restoreCanvas(canvas);
-	}
-
-	function prepareCanvas(canvas, options, encodings) {
-		// Get the canvas context
-		var ctx = canvas.getContext("2d");
-
-		ctx.save();
-
-		// Calculate total width
-		var totalWidth = 0;
-		var maxHeight = 0;
-		for (var i = 0; i < encodings.length; i++) {
-			var _options = (0, _merge2.default)(_options, encodings[i].options);
-
-			// Set font
-			ctx.font = _options.fontOptions + " " + _options.fontSize + "px " + _options.font;
-
-			// Calculate the width of the encoding
-			var textWidth = ctx.measureText(encodings[i].text).width;
-			var barcodeWidth = encodings[i].data.length * _options.width;
-			encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
-
-			// Calculate the height of the encoding
-			var height = _options.height + (_options.displayValue && encodings[i].text.length > 0 ? _options.fontSize : 0) + _options.textMargin + _options.marginTop + _options.marginBottom;
-
-			var barcodePadding = 0;
-			if (_options.displayValue && barcodeWidth < textWidth) {
-				if (_options.textAlign == "center") {
-					barcodePadding = Math.floor((textWidth - barcodeWidth) / 2);
-				} else if (_options.textAlign == "left") {
-					barcodePadding = 0;
-				} else if (_options.textAlign == "right") {
-					barcodePadding = Math.floor(textWidth - barcodeWidth);
-				}
-			}
-			encodings[i].barcodePadding = barcodePadding;
-
-			if (height > maxHeight) {
-				maxHeight = height;
-			}
-
-			totalWidth += encodings[i].width;
-		}
-
-		canvas.width = totalWidth + options.marginLeft + options.marginRight;
-
-		canvas.height = maxHeight;
-
-		// Paint the canvas
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		if (options.background) {
-			ctx.fillStyle = options.background;
-			ctx.fillRect(0, 0, canvas.width, canvas.height);
-		}
-
-		ctx.translate(options.marginLeft, 0);
-	}
-
-	function drawCanvasBarcode(canvas, options, encoding) {
-		// Get the canvas context
-		var ctx = canvas.getContext("2d");
-
-		var binary = encoding.data;
-
-		// Creates the barcode out of the encoded binary
-		var yFrom, yHeight;
-		if (options.textPosition == "top") {
-			yFrom = options.marginTop + options.fontSize + options.textMargin;
-		} else {
-			yFrom = options.marginTop;
-		}
-		yHeight = options.height;
-
-		ctx.fillStyle = options.lineColor;
-
-		for (var b = 0; b < binary.length; b++) {
-			var x = b * options.width + encoding.barcodePadding;
-
-			if (binary[b] === "1") {
-				ctx.fillRect(x, yFrom, options.width, options.height);
-			} else if (binary[b]) {
-				ctx.fillRect(x, yFrom, options.width, options.height * binary[b]);
-			}
-		}
-	}
-
-	function drawCanvasText(canvas, options, encoding) {
-		// Get the canvas context
-		var ctx = canvas.getContext("2d");
-
-		var font = options.fontOptions + " " + options.fontSize + "px " + options.font;
-
-		// Draw the text if displayValue is set
-		if (options.displayValue) {
-			var x, y;
-
-			if (options.textPosition == "top") {
-				y = options.marginTop + options.fontSize - options.textMargin;
-			} else {
-				y = options.height + options.textMargin + options.marginTop + options.fontSize;
-			}
-
-			ctx.font = font;
-
-			// Draw the text in the correct X depending on the textAlign option
-			if (options.textAlign == "left" || encoding.barcodePadding > 0) {
-				x = 0;
-				ctx.textAlign = 'left';
-			} else if (options.textAlign == "right") {
-				x = encoding.width - 1;
-				ctx.textAlign = 'right';
-			}
-			// In all other cases, center the text
-			else {
-					x = encoding.width / 2;
-					ctx.textAlign = 'center';
-				}
-
-			ctx.fillText(encoding.text, x, y);
-		}
-	}
-
-	function moveCanvasDrawing(canvas, encoding) {
-		var ctx = canvas.getContext("2d");
-
-		ctx.translate(encoding.width, 0);
-	}
-
-	function restoreCanvas(canvas) {
-		// Get the canvas context
-		var ctx = canvas.getContext("2d");
-
-		ctx.restore();
-	}
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
-	var _merge = __webpack_require__(4);
+	var _canvas = __webpack_require__(32);
 
-	var _merge2 = _interopRequireDefault(_merge);
+	var _canvas2 = _interopRequireDefault(_canvas);
+
+	var _svg = __webpack_require__(33);
+
+	var _svg2 = _interopRequireDefault(_svg);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	exports.default = renderSVG;
-
-
-	var svgns = "http://www.w3.org/2000/svg";
-
-	function renderSVG(svg, encodings, options) {
-	  var currentX = options.marginLeft;
-
-	  prepareSVG(svg, options, encodings);
-	  for (var i = 0; i < encodings.length; i++) {
-	    var encodingOptions = (0, _merge2.default)(options, encodings[i].options);
-
-	    var group = createGroup(currentX, encodingOptions.marginTop, svg);
-
-	    setGroupOptions(group, encodingOptions, encodings[i]);
-
-	    drawSvgBarcode(group, encodingOptions, encodings[i]);
-	    drawSVGText(group, encodingOptions, encodings[i]);
-
-	    currentX += encodings[i].width;
-	  }
-	}
-
-	function prepareSVG(svg, options, encodings) {
-	  // Clear the SVG
-	  while (svg.firstChild) {
-	    svg.removeChild(svg.firstChild);
-	  }
-
-	  var totalWidth = 0;
-	  var maxHeight = 0;
-	  for (var i = 0; i < encodings.length; i++) {
-	    var _options = (0, _merge2.default)(_options, encodings[i].options);
-
-	    // Calculate the width of the encoding
-	    var textWidth = messureSVGtext(encodings[i].text, svg, _options);
-	    var barcodeWidth = encodings[i].data.length * _options.width;
-	    encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
-
-	    // Calculate the height of the encoding
-	    var encodingHeight = _options.height + (_options.displayValue && encodings[i].text.length > 0 ? _options.fontSize : 0) + _options.textMargin + _options.marginTop + _options.marginBottom;
-
-	    var barcodePadding = 0;
-	    if (_options.displayValue && barcodeWidth < textWidth) {
-	      if (_options.textAlign == "center") {
-	        barcodePadding = Math.floor((textWidth - barcodeWidth) / 2);
-	      } else if (_options.textAlign == "left") {
-	        barcodePadding = 0;
-	      } else if (_options.textAlign == "right") {
-	        barcodePadding = Math.floor(textWidth - barcodeWidth);
-	      }
-	    }
-	    encodings[i].barcodePadding = barcodePadding;
-
-	    if (encodingHeight > maxHeight) {
-	      maxHeight = encodingHeight;
-	    }
-
-	    totalWidth += encodings[i].width;
-	  }
-
-	  var width = totalWidth + options.marginLeft + options.marginRight;
-	  var height = maxHeight;
-
-	  svg.setAttribute("width", width + "px");
-	  svg.setAttribute("height", height + "px");
-	  svg.setAttribute("x", "0px");
-	  svg.setAttribute("y", "0px");
-	  svg.setAttribute("viewBox", "0 0 " + width + " " + height);
-
-	  svg.style.transform = "translate(0,0)";
-
-	  if (options.background) {
-	    svg.style.background = options.background;
-	  }
-	}
-
-	function drawSvgBarcode(parent, options, encoding) {
-	  var binary = encoding.data;
-
-	  // Creates the barcode out of the encoded binary
-	  var yFrom, yHeight;
-	  if (options.textPosition == "top") {
-	    yFrom = options.fontSize + options.textMargin;
-	  } else {
-	    yFrom = 0;
-	  }
-	  yHeight = options.height;
-
-	  var barWidth = 0;
-	  for (var b = 0; b < binary.length; b++) {
-	    var x = b * options.width + encoding.barcodePadding;
-
-	    if (binary[b] === "1") {
-	      barWidth++;
-	    } else if (barWidth > 0) {
-	      drawLine(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
-	      barWidth = 0;
-	    }
-	  }
-
-	  // Last draw is needed since the barcode ends with 1
-	  if (barWidth > 0) {
-	    drawLine(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
-	  }
-	}
-
-	function drawSVGText(parent, options, encoding) {
-	  var textElem = document.createElementNS(svgns, 'text');
-
-	  // Draw the text if displayValue is set
-	  if (options.displayValue) {
-	    var x, y;
-
-	    textElem.setAttribute("style", "font:" + options.fontOptions + " " + options.fontSize + "px " + options.font);
-
-	    if (options.textPosition == "top") {
-	      y = options.fontSize - options.textMargin;
-	    } else {
-	      y = options.height + options.textMargin + options.fontSize;
-	    }
-
-	    // Draw the text in the correct X depending on the textAlign option
-	    if (options.textAlign == "left" || encoding.barcodePadding > 0) {
-	      x = 0;
-	      textElem.setAttribute("text-anchor", "start");
-	    } else if (options.textAlign == "right") {
-	      x = encoding.width - 1;
-	      textElem.setAttribute("text-anchor", "end");
-	    }
-	    // In all other cases, center the text
-	    else {
-	        x = encoding.width / 2;
-	        textElem.setAttribute("text-anchor", "middle");
-	      }
-
-	    textElem.setAttribute("x", x);
-	    textElem.setAttribute("y", y);
-
-	    textElem.appendChild(document.createTextNode(encoding.text));
-
-	    parent.appendChild(textElem);
-	  }
-	}
-
-	//
-	// Help functions
-	//
-	function messureSVGtext(string, svg, options) {
-	  // Create text element
-	  /* var text = document.createElementNS(svgns, 'text');
-	  text.style.fontFamily = options.font;
-	    text.setAttribute("style",
-	     "font-family:" + options.font + ";" +
-	     "font-size:" + options.fontSize + "px;"
-	   );
-	  	var textNode = document.createTextNode(string);
-	  	text.appendChild(textNode);
-	    svg.appendChild(text);
-	    var size = text.getComputedTextLength();
-	    svg.removeChild(text);
-	   */
-	  // TODO: Use svg to messure the text width
-	  // Set font
-	  var ctx = document.createElement("canvas").getContext("2d");
-	  ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
-
-	  // Calculate the width of the encoding
-	  var size = ctx.measureText(string).width;
-
-	  return size;
-	}
-
-	function createGroup(x, y, svg) {
-	  var group = document.createElementNS(svgns, 'g');
-
-	  group.setAttribute("transform", "translate(" + x + ", " + y + ")");
-
-	  svg.appendChild(group);
-
-	  return group;
-	}
-
-	function setGroupOptions(group, options, encoding) {
-	  group.setAttribute("style", "fill:" + options.lineColor + ";");
-	}
-
-	function drawLine(x, y, width, height, parent) {
-	  var line = document.createElementNS(svgns, 'rect');
-
-	  line.setAttribute("x", x);
-	  line.setAttribute("y", y);
-	  line.setAttribute("width", width);
-	  line.setAttribute("height", height);
-
-	  parent.appendChild(line);
-	}
+	exports.default = {
+	  canvas: _canvas2.default,
+	  svg: _svg2.default
+	};
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -991,13 +630,9 @@
 
 	var _barcodes2 = _interopRequireDefault(_barcodes);
 
-	var _canvas = __webpack_require__(9);
+	var _renderers = __webpack_require__(9);
 
-	var _canvas2 = _interopRequireDefault(_canvas);
-
-	var _svg = __webpack_require__(10);
-
-	var _svg2 = _interopRequireDefault(_svg);
+	var _renderers2 = _interopRequireDefault(_renderers);
 
 	var _merge = __webpack_require__(4);
 
@@ -1017,23 +652,19 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// Import the renderers
+	// The protype of the object returned from the JsBarcode() call
 
-	var renderers = {
-		"canvas": _canvas2.default,
-		"svg": _svg2.default
-	};
 
 	// Help functions
 	// Import all the barcodes
-
-
-	// The protype of the object returned from the JsBarcode() call
 	var API = function API() {};
 
 	// The first call of the library API
 	// Will return an object with all barcodes calls and the information needed
 	// when the rendering function is called and options the barcodes might need
+
+
+	// Import the renderers
 	var JsBarcode = function JsBarcode(element, text, options) {
 		var api = new API();
 
@@ -1218,7 +849,7 @@
 
 	// Prepares the encodings and calls the renderer
 	function render(renderProperties, encodings, options) {
-		var renderer = renderers[renderProperties.renderer];
+		var renderer = _renderers2.default[renderProperties.renderer];
 
 		encodings = (0, _linearizeEncodings2.default)(encodings);
 
@@ -1348,7 +979,7 @@
 	};
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1389,7 +1020,7 @@
 	exports.default = CODE128A;
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1430,7 +1061,7 @@
 	exports.default = CODE128B;
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1471,7 +1102,7 @@
 	exports.default = CODE128C;
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1594,7 +1225,7 @@
 	exports.default = CODE128AUTO;
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1605,19 +1236,19 @@
 	});
 	exports.CODE128C = exports.CODE128B = exports.CODE128A = exports.CODE128 = undefined;
 
-	var _CODE128_AUTO = __webpack_require__(15);
+	var _CODE128_AUTO = __webpack_require__(14);
 
 	var _CODE128_AUTO2 = _interopRequireDefault(_CODE128_AUTO);
 
-	var _CODE128A = __webpack_require__(12);
+	var _CODE128A = __webpack_require__(11);
 
 	var _CODE128A2 = _interopRequireDefault(_CODE128A);
 
-	var _CODE128B = __webpack_require__(13);
+	var _CODE128B = __webpack_require__(12);
 
 	var _CODE128B2 = _interopRequireDefault(_CODE128B);
 
-	var _CODE128C = __webpack_require__(14);
+	var _CODE128C = __webpack_require__(13);
 
 	var _CODE128C2 = _interopRequireDefault(_CODE128C);
 
@@ -1629,7 +1260,7 @@
 	exports.CODE128C = _CODE128C2.default;
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -1724,7 +1355,7 @@
 	exports.CODE39 = CODE39;
 
 /***/ },
-/* 18 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1863,7 +1494,7 @@
 	exports.default = EAN13;
 
 /***/ },
-/* 19 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1919,7 +1550,7 @@
 	exports.default = EAN2;
 
 /***/ },
-/* 20 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1986,7 +1617,7 @@
 	exports.default = EAN5;
 
 /***/ },
-/* 21 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2078,7 +1709,7 @@
 	exports.default = EAN8;
 
 /***/ },
-/* 22 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2200,7 +1831,7 @@
 	exports.default = UPC;
 
 /***/ },
-/* 23 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2211,23 +1842,23 @@
 	});
 	exports.UPC = exports.EAN2 = exports.EAN5 = exports.EAN8 = exports.EAN13 = undefined;
 
-	var _EAN = __webpack_require__(18);
+	var _EAN = __webpack_require__(17);
 
 	var _EAN2 = _interopRequireDefault(_EAN);
 
-	var _EAN3 = __webpack_require__(21);
+	var _EAN3 = __webpack_require__(20);
 
 	var _EAN4 = _interopRequireDefault(_EAN3);
 
-	var _EAN5 = __webpack_require__(20);
+	var _EAN5 = __webpack_require__(19);
 
 	var _EAN6 = _interopRequireDefault(_EAN5);
 
-	var _EAN7 = __webpack_require__(19);
+	var _EAN7 = __webpack_require__(18);
 
 	var _EAN8 = _interopRequireDefault(_EAN7);
 
-	var _UPC = __webpack_require__(22);
+	var _UPC = __webpack_require__(21);
 
 	var _UPC2 = _interopRequireDefault(_UPC);
 
@@ -2240,7 +1871,7 @@
 	exports.UPC = _UPC2.default;
 
 /***/ },
-/* 24 */
+/* 23 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2282,7 +1913,7 @@
 	exports.GenericBarcode = GenericBarcode;
 
 /***/ },
-/* 25 */
+/* 24 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2377,7 +2008,7 @@
 	exports.ITF14 = ITF14;
 
 /***/ },
-/* 26 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2419,7 +2050,7 @@
 	exports.default = MSI10;
 
 /***/ },
-/* 27 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2462,7 +2093,7 @@
 	exports.default = MSI1010;
 
 /***/ },
-/* 28 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2504,7 +2135,7 @@
 	exports.default = MSI11;
 
 /***/ },
-/* 29 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2547,7 +2178,7 @@
 	exports.default = MSI1110;
 
 /***/ },
-/* 30 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2562,19 +2193,19 @@
 
 	var _MSI2 = _interopRequireDefault(_MSI);
 
-	var _MSI3 = __webpack_require__(26);
+	var _MSI3 = __webpack_require__(25);
 
 	var _MSI4 = _interopRequireDefault(_MSI3);
 
-	var _MSI5 = __webpack_require__(28);
+	var _MSI5 = __webpack_require__(27);
 
 	var _MSI6 = _interopRequireDefault(_MSI5);
 
-	var _MSI7 = __webpack_require__(27);
+	var _MSI7 = __webpack_require__(26);
 
 	var _MSI8 = _interopRequireDefault(_MSI7);
 
-	var _MSI9 = __webpack_require__(29);
+	var _MSI9 = __webpack_require__(28);
 
 	var _MSI10 = _interopRequireDefault(_MSI9);
 
@@ -2587,7 +2218,7 @@
 	exports.MSI1110 = _MSI10.default;
 
 /***/ },
-/* 31 */
+/* 30 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2646,7 +2277,7 @@
 	exports.pharmacode = pharmacode;
 
 /***/ },
-/* 32 */
+/* 31 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2674,6 +2305,396 @@
 	  }
 
 	  return options;
+	}
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _merge = __webpack_require__(4);
+
+	var _merge2 = _interopRequireDefault(_merge);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = renderCanvas;
+
+
+	function renderCanvas(canvas, encodings, options) {
+		// Abort if the browser does not support HTML5 canvas
+		if (!canvas.getContext) {
+			throw new Error('The browser does not support canvas.');
+		}
+
+		prepareCanvas(canvas, options, encodings);
+		for (var i = 0; i < encodings.length; i++) {
+			var encodingOptions = (0, _merge2.default)(options, encodings[i].options);
+
+			drawCanvasBarcode(canvas, encodingOptions, encodings[i]);
+			drawCanvasText(canvas, encodingOptions, encodings[i]);
+
+			moveCanvasDrawing(canvas, encodings[i]);
+		}
+
+		restoreCanvas(canvas);
+	}
+
+	function prepareCanvas(canvas, options, encodings) {
+		// Get the canvas context
+		var ctx = canvas.getContext("2d");
+
+		ctx.save();
+
+		// Calculate total width
+		var totalWidth = 0;
+		var maxHeight = 0;
+		for (var i = 0; i < encodings.length; i++) {
+			var _options = (0, _merge2.default)(_options, encodings[i].options);
+
+			// Set font
+			ctx.font = _options.fontOptions + " " + _options.fontSize + "px " + _options.font;
+
+			// Calculate the width of the encoding
+			var textWidth = ctx.measureText(encodings[i].text).width;
+			var barcodeWidth = encodings[i].data.length * _options.width;
+			encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
+
+			// Calculate the height of the encoding
+			var height = _options.height + (_options.displayValue && encodings[i].text.length > 0 ? _options.fontSize : 0) + _options.textMargin + _options.marginTop + _options.marginBottom;
+
+			var barcodePadding = 0;
+			if (_options.displayValue && barcodeWidth < textWidth) {
+				if (_options.textAlign == "center") {
+					barcodePadding = Math.floor((textWidth - barcodeWidth) / 2);
+				} else if (_options.textAlign == "left") {
+					barcodePadding = 0;
+				} else if (_options.textAlign == "right") {
+					barcodePadding = Math.floor(textWidth - barcodeWidth);
+				}
+			}
+			encodings[i].barcodePadding = barcodePadding;
+
+			if (height > maxHeight) {
+				maxHeight = height;
+			}
+
+			totalWidth += encodings[i].width;
+		}
+
+		canvas.width = totalWidth + options.marginLeft + options.marginRight;
+
+		canvas.height = maxHeight;
+
+		// Paint the canvas
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		if (options.background) {
+			ctx.fillStyle = options.background;
+			ctx.fillRect(0, 0, canvas.width, canvas.height);
+		}
+
+		ctx.translate(options.marginLeft, 0);
+	}
+
+	function drawCanvasBarcode(canvas, options, encoding) {
+		// Get the canvas context
+		var ctx = canvas.getContext("2d");
+
+		var binary = encoding.data;
+
+		// Creates the barcode out of the encoded binary
+		var yFrom, yHeight;
+		if (options.textPosition == "top") {
+			yFrom = options.marginTop + options.fontSize + options.textMargin;
+		} else {
+			yFrom = options.marginTop;
+		}
+		yHeight = options.height;
+
+		ctx.fillStyle = options.lineColor;
+
+		for (var b = 0; b < binary.length; b++) {
+			var x = b * options.width + encoding.barcodePadding;
+
+			if (binary[b] === "1") {
+				ctx.fillRect(x, yFrom, options.width, options.height);
+			} else if (binary[b]) {
+				ctx.fillRect(x, yFrom, options.width, options.height * binary[b]);
+			}
+		}
+	}
+
+	function drawCanvasText(canvas, options, encoding) {
+		// Get the canvas context
+		var ctx = canvas.getContext("2d");
+
+		var font = options.fontOptions + " " + options.fontSize + "px " + options.font;
+
+		// Draw the text if displayValue is set
+		if (options.displayValue) {
+			var x, y;
+
+			if (options.textPosition == "top") {
+				y = options.marginTop + options.fontSize - options.textMargin;
+			} else {
+				y = options.height + options.textMargin + options.marginTop + options.fontSize;
+			}
+
+			ctx.font = font;
+
+			// Draw the text in the correct X depending on the textAlign option
+			if (options.textAlign == "left" || encoding.barcodePadding > 0) {
+				x = 0;
+				ctx.textAlign = 'left';
+			} else if (options.textAlign == "right") {
+				x = encoding.width - 1;
+				ctx.textAlign = 'right';
+			}
+			// In all other cases, center the text
+			else {
+					x = encoding.width / 2;
+					ctx.textAlign = 'center';
+				}
+
+			ctx.fillText(encoding.text, x, y);
+		}
+	}
+
+	function moveCanvasDrawing(canvas, encoding) {
+		var ctx = canvas.getContext("2d");
+
+		ctx.translate(encoding.width, 0);
+	}
+
+	function restoreCanvas(canvas) {
+		// Get the canvas context
+		var ctx = canvas.getContext("2d");
+
+		ctx.restore();
+	}
+
+/***/ },
+/* 33 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _merge = __webpack_require__(4);
+
+	var _merge2 = _interopRequireDefault(_merge);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = renderSVG;
+
+
+	var svgns = "http://www.w3.org/2000/svg";
+
+	function renderSVG(svg, encodings, options) {
+	  var currentX = options.marginLeft;
+
+	  prepareSVG(svg, options, encodings);
+	  for (var i = 0; i < encodings.length; i++) {
+	    var encodingOptions = (0, _merge2.default)(options, encodings[i].options);
+
+	    var group = createGroup(currentX, encodingOptions.marginTop, svg);
+
+	    setGroupOptions(group, encodingOptions, encodings[i]);
+
+	    drawSvgBarcode(group, encodingOptions, encodings[i]);
+	    drawSVGText(group, encodingOptions, encodings[i]);
+
+	    currentX += encodings[i].width;
+	  }
+	}
+
+	function prepareSVG(svg, options, encodings) {
+	  // Clear the SVG
+	  while (svg.firstChild) {
+	    svg.removeChild(svg.firstChild);
+	  }
+
+	  var totalWidth = 0;
+	  var maxHeight = 0;
+	  for (var i = 0; i < encodings.length; i++) {
+	    var _options = (0, _merge2.default)(_options, encodings[i].options);
+
+	    // Calculate the width of the encoding
+	    var textWidth = messureSVGtext(encodings[i].text, svg, _options);
+	    var barcodeWidth = encodings[i].data.length * _options.width;
+	    encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
+
+	    // Calculate the height of the encoding
+	    var encodingHeight = _options.height + (_options.displayValue && encodings[i].text.length > 0 ? _options.fontSize : 0) + _options.textMargin + _options.marginTop + _options.marginBottom;
+
+	    var barcodePadding = 0;
+	    if (_options.displayValue && barcodeWidth < textWidth) {
+	      if (_options.textAlign == "center") {
+	        barcodePadding = Math.floor((textWidth - barcodeWidth) / 2);
+	      } else if (_options.textAlign == "left") {
+	        barcodePadding = 0;
+	      } else if (_options.textAlign == "right") {
+	        barcodePadding = Math.floor(textWidth - barcodeWidth);
+	      }
+	    }
+	    encodings[i].barcodePadding = barcodePadding;
+
+	    if (encodingHeight > maxHeight) {
+	      maxHeight = encodingHeight;
+	    }
+
+	    totalWidth += encodings[i].width;
+	  }
+
+	  var width = totalWidth + options.marginLeft + options.marginRight;
+	  var height = maxHeight;
+
+	  svg.setAttribute("width", width + "px");
+	  svg.setAttribute("height", height + "px");
+	  svg.setAttribute("x", "0px");
+	  svg.setAttribute("y", "0px");
+	  svg.setAttribute("viewBox", "0 0 " + width + " " + height);
+
+	  svg.setAttribute("xmlns", svgns);
+	  svg.setAttribute("version", "1.1");
+
+	  svg.style.transform = "translate(0,0)";
+
+	  if (options.background) {
+	    svg.style.background = options.background;
+	  }
+	}
+
+	function drawSvgBarcode(parent, options, encoding) {
+	  var binary = encoding.data;
+
+	  // Creates the barcode out of the encoded binary
+	  var yFrom, yHeight;
+	  if (options.textPosition == "top") {
+	    yFrom = options.fontSize + options.textMargin;
+	  } else {
+	    yFrom = 0;
+	  }
+	  yHeight = options.height;
+
+	  var barWidth = 0;
+	  for (var b = 0; b < binary.length; b++) {
+	    var x = b * options.width + encoding.barcodePadding;
+
+	    if (binary[b] === "1") {
+	      barWidth++;
+	    } else if (barWidth > 0) {
+	      drawLine(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
+	      barWidth = 0;
+	    }
+	  }
+
+	  // Last draw is needed since the barcode ends with 1
+	  if (barWidth > 0) {
+	    drawLine(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
+	  }
+	}
+
+	function drawSVGText(parent, options, encoding) {
+	  var textElem = document.createElementNS(svgns, 'text');
+
+	  // Draw the text if displayValue is set
+	  if (options.displayValue) {
+	    var x, y;
+
+	    textElem.setAttribute("style", "font:" + options.fontOptions + " " + options.fontSize + "px " + options.font);
+
+	    if (options.textPosition == "top") {
+	      y = options.fontSize - options.textMargin;
+	    } else {
+	      y = options.height + options.textMargin + options.fontSize;
+	    }
+
+	    // Draw the text in the correct X depending on the textAlign option
+	    if (options.textAlign == "left" || encoding.barcodePadding > 0) {
+	      x = 0;
+	      textElem.setAttribute("text-anchor", "start");
+	    } else if (options.textAlign == "right") {
+	      x = encoding.width - 1;
+	      textElem.setAttribute("text-anchor", "end");
+	    }
+	    // In all other cases, center the text
+	    else {
+	        x = encoding.width / 2;
+	        textElem.setAttribute("text-anchor", "middle");
+	      }
+
+	    textElem.setAttribute("x", x);
+	    textElem.setAttribute("y", y);
+
+	    textElem.appendChild(document.createTextNode(encoding.text));
+
+	    parent.appendChild(textElem);
+	  }
+	}
+
+	//
+	// Help functions
+	//
+	function messureSVGtext(string, svg, options) {
+	  // Create text element
+	  /* var text = document.createElementNS(svgns, 'text');
+	  text.style.fontFamily = options.font;
+	    text.setAttribute("style",
+	     "font-family:" + options.font + ";" +
+	     "font-size:" + options.fontSize + "px;"
+	   );
+	  	var textNode = document.createTextNode(string);
+	  	text.appendChild(textNode);
+	    svg.appendChild(text);
+	    var size = text.getComputedTextLength();
+	    svg.removeChild(text);
+	   */
+	  // TODO: Use svg to messure the text width
+	  // Set font
+	  var ctx = document.createElement("canvas").getContext("2d");
+	  ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
+
+	  // Calculate the width of the encoding
+	  var size = ctx.measureText(string).width;
+
+	  return size;
+	}
+
+	function createGroup(x, y, svg) {
+	  var group = document.createElementNS(svgns, 'g');
+
+	  group.setAttribute("transform", "translate(" + x + ", " + y + ")");
+
+	  svg.appendChild(group);
+
+	  return group;
+	}
+
+	function setGroupOptions(group, options, encoding) {
+	  group.setAttribute("style", "fill:" + options.lineColor + ";");
+	}
+
+	function drawLine(x, y, width, height, parent) {
+	  var line = document.createElementNS(svgns, 'rect');
+
+	  line.setAttribute("x", x);
+	  line.setAttribute("y", y);
+	  line.setAttribute("width", width);
+	  line.setAttribute("height", height);
+
+	  parent.appendChild(line);
 	}
 
 /***/ }

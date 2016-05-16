@@ -4,13 +4,9 @@ var _barcodes = require('./barcodes/');
 
 var _barcodes2 = _interopRequireDefault(_barcodes);
 
-var _canvas = require('./renderers/canvas.js');
+var _renderers = require('./renderers/');
 
-var _canvas2 = _interopRequireDefault(_canvas);
-
-var _svg = require('./renderers/svg.js');
-
-var _svg2 = _interopRequireDefault(_svg);
+var _renderers2 = _interopRequireDefault(_renderers);
 
 var _merge = require('./help/merge.js');
 
@@ -30,23 +26,19 @@ var _getOptionsFromElement2 = _interopRequireDefault(_getOptionsFromElement);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Import the renderers
+// The protype of the object returned from the JsBarcode() call
 
-var renderers = {
-	"canvas": _canvas2.default,
-	"svg": _svg2.default
-};
 
 // Help functions
 // Import all the barcodes
-
-
-// The protype of the object returned from the JsBarcode() call
 var API = function API() {};
 
 // The first call of the library API
 // Will return an object with all barcodes calls and the information needed
 // when the rendering function is called and options the barcodes might need
+
+
+// Import the renderers
 var JsBarcode = function JsBarcode(element, text, options) {
 	var api = new API();
 
@@ -231,7 +223,7 @@ API.prototype.render = function () {
 
 // Prepares the encodings and calls the renderer
 function render(renderProperties, encodings, options) {
-	var renderer = renderers[renderProperties.renderer];
+	var renderer = _renderers2.default[renderProperties.renderer];
 
 	encodings = (0, _linearizeEncodings2.default)(encodings);
 
