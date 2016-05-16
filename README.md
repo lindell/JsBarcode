@@ -54,7 +54,7 @@ $("#barcode").JsBarcode("Hi!");
 ````
 
 ##### Result:
-![Result](http://i.imgur.com/TIp2tk5.png)
+![Result](http://imgh.us/test_208.svg)
 
 
 #### Example with options:
@@ -68,7 +68,7 @@ JsBarcode("#barcode", "1234", {
 });
 ````
 ##### Result:
-![Result](http://i.imgur.com/Y2IrjUi.png)
+![Result](http://imgh.us/pharmacode.svg)
 
 
 #### More advanced use case:
@@ -102,7 +102,7 @@ JsBarcode(".barcode").init();
 ````
 
 ##### Result:
-![Result](http://i.imgur.com/bcG4meD.png)
+![Result](http://imgh.us/upc.svg)
 
 
 Setup for browsers:
