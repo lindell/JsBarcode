@@ -76,6 +76,9 @@ function prepareSVG(svg, options, encodings){
 	svg.setAttribute("y", "0px");
   svg.setAttribute("viewBox", "0 0 " + width + " " + height);
 
+  svg.setAttribute("xmlns", svgns);
+  svg.setAttribute("version", "1.1");
+
   svg.style.transform = "translate(0,0)";
 
 	if(options.background){
