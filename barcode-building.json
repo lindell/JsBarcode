@@ -20,6 +20,11 @@
     "barcodeFile": "./ITF14"
   },
   {
+    "filename": "JsBarcode.itf.min.js",
+    "names": "ITF",
+    "barcodeFile": "./ITF"
+  },
+  {
     "filename": "JsBarcode.msi.min.js",
     "names": "MSI, MSI10, MSI11, MSI1010, MSI1110",
     "barcodeFile": "./MSI"
