@@ -1,6 +1,6 @@
 {
   "name": "jsbarcode",
-  "version": "3.3.4",
+  "version": "3.3.5",
   "description": "JsBarcode is a simple and powerfull way to create different types of 1d barcodes.",
   "main": "./bin/node/JsBarcode.js",
   "directories": {
