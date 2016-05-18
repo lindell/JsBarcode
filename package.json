@@ -2,7 +2,7 @@
   "name": "jsbarcode",
   "version": "3.3.5",
   "description": "JsBarcode is a simple and powerfull way to create different types of 1d barcodes.",
-  "main": "./bin/node/JsBarcode.js",
+  "main": "./bin/JsBarcode.js",
   "directories": {
     "example": "example",
     "test": "test",
@@ -35,8 +35,8 @@
     "url": "https://github.com/lindell/JsBarcode/issues"
   },
   "bin": {
-    "JsBarcode": "./bin/node/cli.js",
-    "jsbarcode": "./bin/node/cli.js"
+    "JsBarcode": "./bin/cli.js",
+    "jsbarcode": "./bin/cli.js"
   },
   "homepage": "https://github.com/lindell/JsBarcode#readme",
   "devDependencies": {

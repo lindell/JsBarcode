@@ -12,11 +12,12 @@ var clean = require('gulp-clean');
 var gulpWebpack = require('webpack-stream');
 var webpack = require('webpack');
 var gzipSize = require('gzip-size');
+var request = require('request');
 
 var fs = require('fs');
 
 gulp.task("clean", function(){
-  return gulp.src("bin/", {read: false})
+  return gulp.src(["bin/", "dist/"], {read: false})
     .pipe(clean());
 });
 
@@ -30,7 +31,7 @@ function babelFunc(){
       presets: ['es2015'],
       plugins: [["transform-es2015-classes", {loose: true}]]
     }))
-    .pipe(gulp.dest("bin/node/"));
+    .pipe(gulp.dest("bin/"));
 }
 
 gulp.task("webpack", ["babel"], function () {
@@ -38,7 +39,7 @@ gulp.task("webpack", ["babel"], function () {
 });
 
 function webpackFunc(){
-  return gulp.src('bin/node/JsBarcode.js')
+  return gulp.src('bin/JsBarcode.js')
     .pipe(gulpWebpack(
       {
         output: {
@@ -46,7 +47,7 @@ function webpackFunc(){
         }
       }
     , webpack))
-    .pipe(gulp.dest("bin/browser/"));
+    .pipe(gulp.dest("dist/"));
 }
 
 gulp.task("webpack-min", ["babel"], function () {
@@ -54,7 +55,7 @@ gulp.task("webpack-min", ["babel"], function () {
 });
 
 function webpackMin(filename){
-  return gulp.src('bin/node/JsBarcode.js')
+  return gulp.src('bin/JsBarcode.js')
     .pipe(gulpWebpack(
       {
         output: {
@@ -63,7 +64,7 @@ function webpackMin(filename){
         plugins: [new webpack.optimize.UglifyJsPlugin()],
       }
     , webpack))
-    .pipe(gulp.dest("bin/browser/"));
+    .pipe(gulp.dest("dist/"));
 }
 
 gulp.task("webpack-all", function (cb) {
@@ -78,8 +79,8 @@ gulp.task("webpack-all", function (cb) {
     toFile += "export default {" + barcode.names + "}";
 
     fs.writeFile("src/barcodes/index.js", toFile, function(){
-      if(fs.existsSync("bin/node/barcodes/index.js")){
-        fs.unlinkSync("bin/node/barcodes/index.js");
+      if(fs.existsSync("bin/barcodes/index.js")){
+        fs.unlinkSync("bin/barcodes/index.js");
       }
       babelFunc().on('end', function(){
         webpackMin("barcodes/" + barcode.filename).on('end', callback);
@@ -126,7 +127,9 @@ gulp.task('git-release', ['compress'], function(cb){
   var v = 'v' + pkg.version;
   var message = 'Release ' + v;
 
-  gulp.src(['./package.json', './bower.json', './bin/'])
+  updateReadmeFileSizes();
+
+  gulp.src(['./package.json', './bower.json', './README.md', './bin/', './dist'])
     .pipe(git.add({args: '--all'}))
     .pipe(git.commit(message));
 
@@ -172,16 +175,37 @@ gulp.task('github-release', function(done) {
     repo: "JsBarcode",
     tag: v,
     name: name,
-    assets: [__dirname + "/bin/browser/JsBarcode.all.min.js", __dirname + "/bin/browser/JsBarcode.all.js"]
+    assets: [__dirname + "/dist/JsBarcode.all.min.js", __dirname + "/dist/JsBarcode.all.js"]
   }, done);
 });
 
-gulp.task('update-readme-sizes', function(){
+gulp.task('jsdelivr', function(){
+  request({
+    url: "https://api.jsdelivr.com/v1/jsdelivr/libraries?name=jsbarcode",
+    json: true
+  }, function (error, response, body) {
+    if (!error && response.statusCode === 200) {
+      var readme = fs.readFileSync('README.md', "utf-8");
+      var version = body[0].lastversion;
+
+      readme = readme.replace(/https:\/\/cdn\.jsdelivr\.net\/jsbarcode\/[0-9]+\.[0-9]+\.[0-9]+\//g,
+        "https://cdn.jsdelivr.net/jsbarcode/" + version + "/");
+
+      fs.writeFileSync('README.md', readme, 'utf8');
+
+      console.log("New version: " + version);
+    }
+  })
+});
+
+gulp.task("update-readme-sizes", updateReadmeFileSizes);
+
+function updateReadmeFileSizes(){
   var files = require('./barcode-building.json');
   var readme = fs.readFileSync('README.md', "utf-8");
 
   // Update .all files
-  var data = fs.readFileSync('bin/browser/JsBarcode.all.min.js');
+  var data = fs.readFileSync('dist/JsBarcode.all.min.js');
   var filesize = gzipSize.sync(data);
 
   var regexp = new RegExp('\\|[^\\|]*\\|([ \\t\\*]*\\[JsBarcode\\.all\\.min\\.js\\])');
@@ -191,7 +215,7 @@ gulp.task('update-readme-sizes', function(){
   for(var i in files){
     var filename = files[i].filename;
 
-    var data = fs.readFileSync('bin/browser/barcodes/' + filename);
+    var data = fs.readFileSync('dist/barcodes/' + filename);
     var filesize = gzipSize.sync(data);
 
     var regexp = new RegExp('\\|[^\\|]*\\|([ \\t]*\\[' + RegExp.escape(filename) + '\\])');
@@ -200,7 +224,7 @@ gulp.task('update-readme-sizes', function(){
   }
 
   fs.writeFileSync('README.md', readme, 'utf8');
-});
+}
 
 function formatSize(bytes){
   var kilobytes = Math.round(bytes/1024*10)/10;
@@ -233,7 +257,6 @@ gulp.task('compile-web', ['webpack'], function(done){
 
 gulp.task('release', function(callback){
   runSequence(
-    'update-readme-sizes',
     'git-release',
     'wait',
     'github-release',
