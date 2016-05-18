@@ -879,7 +879,7 @@
 	if (typeof jQuery !== 'undefined') {
 		jQuery.fn.JsBarcode = function (content, options) {
 			var elementArray = [];
-			$(this).each(function () {
+			jQuery(this).each(function () {
 				elementArray.push(this);
 			});
 			return JsBarcode(elementArray, content, options);
