@@ -15,8 +15,8 @@ Demo
 Supported barcodes:
 ----
 * [CODE128](https://github.com/lindell/JsBarcode/wiki/CODE128)
- * CODE128 (automatic mode switching)
- * CODE128 A/B/C (force mode)
+  * CODE128 (automatic mode switching)
+  * CODE128 A/B/C (force mode)
 * [EAN](https://github.com/lindell/JsBarcode/wiki/EAN)
   * EAN-13
   * EAN-8
@@ -26,10 +26,10 @@ Supported barcodes:
 * [CODE39](https://github.com/lindell/JsBarcode/wiki/CODE39)
 * [ITF-14](https://github.com/lindell/JsBarcode/wiki/ITF-14)
 * [MSI](https://github.com/lindell/JsBarcode/wiki/MSI)
- * MSI10
- * MSI11
- * MSI1010
- * MSI1110
+  * MSI10
+  * MSI11
+  * MSI1010
+  * MSI1110
 * [Pharmacode](https://github.com/lindell/JsBarcode/wiki/pharmacode)
 
 Examples for browsers:
