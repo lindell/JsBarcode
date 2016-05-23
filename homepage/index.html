@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>JsBarcode</title>
+  <meta name="author" content="Johan Lindell">
+
+  <script src="https://cdn.jsdelivr.net/jsbarcode/3.3.6/JsBarcode.all.min.js"></script>
+
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.4.0/styles/default.min.css">
+  <script src="//cdn.jsdelivr.net/highlight.js/9.4.0/highlight.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+  <div id="top-container">
+    <div id="top-inner" class="container">
+      <div id="header">
+        <h1>JsBarcode</h1>
+        <ul id="top-menu">
+          <li><a href="#"><i class="fa fa-book" aria-hidden="true"></i> Docs</a></li>
+          <li><a href="#"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>
+          <li><a href="#"><i class="fa fa-github" aria-hidden="true"></i> Github</a></li>
+        </ul>
+      </div>
+      <div class="barcode-container">
+        <svg id="barcode"></svg>
+      </div>
+      <h2 class="sub-header">Easy to use, yet powerful barcode generator for the web and Node.js</h2>
+    </div>
+  </div>
+  <div id="under-top-container">
+    <div id="under-top-inner-container">
+      <div class="badge">Version: <span>3.3.4</span></div>
+      <div class="badge">Build: <span>Passing</span></div>
+      <div class="badge">License: <span>MIT</span></div>
+    </div>
+  </div>
+
+  <div class="container get-started">
+    <h2><i class="fa fa-cogs" aria-hidden="true"></i> Just include and use</h2>
+    <span>
+      Download the library and include the script or use the CDN and you are ready to go.
+      <br>
+      <pre><code class="html">&lt;script src=&quot;JsBarcode.all.min.js&quot;&gt;&lt;/script&gt;</code></pre>
+    </span>
+
+    <h2><i class="fa fa-barcode" aria-hidden="true"></i> Create an svg/canvas tag and render on it</h2>
+    <span>
+      HTML:<br>
+      <pre><code class="html">&lt;svg id=&quot;barcode&quot;&gt;&lt;/svg&gt;</code></pre>
+    </span>
+    <br>
+    <span>
+      Javascript:</br>
+      <pre><code class="javascript">JsBarcode("#barcode", "Hi!");</code></pre>
+    </span>
+  </div>
+
+  <div class="grey-section examples">
+    <h2><i class="fa fa-file-code-o" aria-hidden="true"></i> Examples</h2>
+    <div class="container">
+      <div class="info-box">
+        <div class="head">Hello world</div>
+        <div class="body">
+          <h3>HTML:</h3>
+          <pre><code class="html">&lt;svg id=&quot;barcode&quot;&gt;&lt;/svg&gt;</code></pre>
+
+          <h3>Javascript:</h3>
+          <pre><code class="javascript">JsBarcode("#barcode", "Hi world!");</code></pre>
+
+          <h3>Result:</h3>
+          <svg class="barcode"
+            jsbarcode-value="Hi world!">
+          </svg>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="head">Example with options</div>
+        <div class="body">
+          <h3>HTML:</h3>
+          <pre><code class="html">&lt;svg id=&quot;barcode&quot;&gt;&lt;/svg&gt;</code></pre>
+
+          <h3>Javascript:</h3>
+          <pre><code class="javascript">JsBarcode("#barcode", "1234", {
+  format: "pharmacode",
+  lineColor: "#0aa",
+  width: 4,
+  height: 40,
+  displayValue: false
+});</code></pre>
+
+          <h3>Result:</h3>
+          <svg class="barcode"
+            jsbarcode-value="1234"
+            jsbarcode-linecolor="#0aa"
+            jsbarcode-width="4"
+            jsbarcode-height="40"
+            jsbarcode-displayvalue="false">
+          </svg>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <div class="head">Declare options in HTML</div>
+        <div class="body">
+          <h3>HTML:</h3>
+          <pre><code class="html">&lt;svg class=&quot;barcode&quot;
+  jsbarcode-format=&quot;upc&quot;
+  jsbarcode-value=&quot;123456789012&quot;
+  jsbarcode-textmargin=&quot;0&quot;
+  jsbarcode-fontoptions=&quot;bold&quot;&gt;
+&lt;/svg&gt;</code></pre>
+
+          <h3>Javascript:</h3>
+          <pre><code class="javascript">JsBarcode(".barcode").init();</code></pre>
+
+          <h3>Result:</h3>
+          <svg class="barcode"
+            jsbarcode-format="upc"
+            jsbarcode-value="123456789012"
+            jsbarcode-textmargin="0"
+            jsbarcode-fontoptions="bold">
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container get-started">
+    <h2>Here is more stuff. Like CDN links</h2>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
