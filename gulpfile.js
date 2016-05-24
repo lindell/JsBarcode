@@ -130,7 +130,7 @@ gulp.task('git-release', ['compress'], function(cb){
   updateReadmeFileSizes();
 
   gulp.src(['./package.json', './bower.json', './README.md', './bin/', './dist'])
-    .pipe(git.add({args: '--all'}))
+    .pipe(git.add({args: '--all --force'}))
     .pipe(git.commit(message));
 
   git.push('origin', 'master', function(){
