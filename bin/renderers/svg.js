@@ -83,7 +83,7 @@ function prepareSVG(svg, options, encodings) {
   svg.setAttribute("xmlns", svgns);
   svg.setAttribute("version", "1.1");
 
-  svg.style.transform = "translate(0,0)";
+  //svg.style.transform = "translate(0,0)";
 
   if (options.background) {
     svg.style.background = options.background;

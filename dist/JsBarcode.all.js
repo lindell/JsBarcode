@@ -776,70 +776,30 @@
 			this._renderProperties = [this._renderProperties];
 		}
 
-		var _iteratorNormalCompletion = true;
-		var _didIteratorError = false;
-		var _iteratorError = undefined;
+		var renderProperty;
+		for (var i in this._renderProperties) {
+			renderProperty = this._renderProperties[i];
+			var options = (0, _merge2.default)(this._options, renderProperty.options);
 
-		try {
-			for (var _iterator = this._renderProperties[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-				var renderProperty = _step.value;
-
-				var options = (0, _merge2.default)(this._options, renderProperty.options);
-
-				if (options.format == "auto") {
-					options.format = autoSelectBarcode();
-				}
-
-				var text = options.value;
-
-				var Encoder = _barcodes2.default[options.format.toUpperCase()];
-
-				var encoded = encode(text, Encoder, options);
-
-				render(renderProperty, encoded, options);
+			if (options.format == "auto") {
+				options.format = autoSelectBarcode();
 			}
-		} catch (err) {
-			_didIteratorError = true;
-			_iteratorError = err;
-		} finally {
-			try {
-				if (!_iteratorNormalCompletion && _iterator.return) {
-					_iterator.return();
-				}
-			} finally {
-				if (_didIteratorError) {
-					throw _iteratorError;
-				}
-			}
+
+			var text = options.value;
+
+			var Encoder = _barcodes2.default[options.format.toUpperCase()];
+
+			var encoded = encode(text, Encoder, options);
+
+			render(renderProperty, encoded, options);
 		}
 	};
 
 	// The render API call. Calls the real render function.
 	API.prototype.render = function () {
 		if (Array.isArray(this._renderProperties)) {
-			var _iteratorNormalCompletion2 = true;
-			var _didIteratorError2 = false;
-			var _iteratorError2 = undefined;
-
-			try {
-				for (var _iterator2 = this._renderProperties[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-					var renderProperty = _step2.value;
-
-					render(renderProperty, this._encodings, this._options);
-				}
-			} catch (err) {
-				_didIteratorError2 = true;
-				_iteratorError2 = err;
-			} finally {
-				try {
-					if (!_iteratorNormalCompletion2 && _iterator2.return) {
-						_iterator2.return();
-					}
-				} finally {
-					if (_didIteratorError2) {
-						throw _iteratorError2;
-					}
-				}
+			for (var i in this._renderProperties) {
+				render(this._renderProperties[i], this._encodings, this._options);
 			}
 		} else {
 			render(this._renderProperties, this._encodings, this._options);
@@ -2650,7 +2610,7 @@
 	  svg.setAttribute("xmlns", svgns);
 	  svg.setAttribute("version", "1.1");
 
-	  svg.style.transform = "translate(0,0)";
+	  //svg.style.transform = "translate(0,0)";
 
 	  if (options.background) {
 	    svg.style.background = options.background;
