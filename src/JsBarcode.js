@@ -127,7 +127,9 @@ API.prototype.init = function(){
 		this._renderProperties = [this._renderProperties];
 	}
 
-	for(let renderProperty of this._renderProperties){
+	var renderProperty;
+	for(let i in this._renderProperties){
+		renderProperty = this._renderProperties[i];
 		var options = merge(this._options, renderProperty.options);
 
 		if(options.format == "auto"){
@@ -148,8 +150,8 @@ API.prototype.init = function(){
 // The render API call. Calls the real render function.
 API.prototype.render = function(){
 	if(Array.isArray(this._renderProperties)){
-		for(let renderProperty of this._renderProperties){
-			render(renderProperty, this._encodings, this._options);
+		for(let i in this._renderProperties){
+			render(this._renderProperties[i], this._encodings, this._options);
 		}
 	}
 	else{
