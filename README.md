@@ -185,11 +185,11 @@ For information about how to use the options, see [the wiki page](https://github
 
 
 
-[1]: https://cdn.jsdelivr.net/jsbarcode/3.3.5/JsBarcode.all.min.js "jsdelivr all barcodes"
-[2]: https://cdn.jsdelivr.net/jsbarcode/3.3.5/barcodes/JsBarcode.code128.min.js "jsdelivr code128"
-[3]: https://cdn.jsdelivr.net/jsbarcode/3.3.5/barcodes/JsBarcode.code39.min.js "jsdelivr code39"
-[4]: https://cdn.jsdelivr.net/jsbarcode/3.3.5/barcodes/JsBarcode.ean-upc.min.js "jsdelivr ean/upc"
-[5]: https://cdn.jsdelivr.net/jsbarcode/3.3.5/barcodes/JsBarcode.itf-14.min.js "jsdelivr itf-14"
-[6]: https://cdn.jsdelivr.net/jsbarcode/3.3.5/barcodes/JsBarcode.itf.min.js "jsdelivr itf"
-[7]: https://cdn.jsdelivr.net/jsbarcode/3.3.5/barcodes/JsBarcode.msi.min.js "jsdelivr msi"
-[8]: https://cdn.jsdelivr.net/jsbarcode/3.3.5/barcodes/JsBarcode.pharmacode.min.js "jsdelivr pharmacode"
+[1]: https://cdn.jsdelivr.net/jsbarcode/3.3.7/JsBarcode.all.min.js "jsdelivr all barcodes"
+[2]: https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.code128.min.js "jsdelivr code128"
+[3]: https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.code39.min.js "jsdelivr code39"
+[4]: https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.ean-upc.min.js "jsdelivr ean/upc"
+[5]: https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.itf-14.min.js "jsdelivr itf-14"
+[6]: https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.itf.min.js "jsdelivr itf"
+[7]: https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.msi.min.js "jsdelivr msi"
+[8]: https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.pharmacode.min.js "jsdelivr pharmacode"
