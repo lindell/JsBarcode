@@ -185,6 +185,41 @@ pre code{
   padding: 0.8em;
 }
 
+.get-started a{
+  text-decoration: none;
+  border-bottom: dotted 1px #777;
+}
+
+.download a{
+  color: #4078c0;
+  text-decoration: none;
+}
+
+.download a:hover{
+  text-decoration: underline;
+}
+
+.download table{
+  display: inline-block;
+  border-collapse: collapse;
+}
+
+.download table tr:nth-child(2n){
+  background: #f8f8f8;
+}
+
+.download th, .download td{
+  border: 1px solid #DDD;
+}
+
+.download td, .download th{
+  padding: 7px;
+}
+
+.img-circle{
+  border-radius: 50%;
+}
+
 
 @media (max-width: 1250px) {
   .container{

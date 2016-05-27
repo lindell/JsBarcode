@@ -6,15 +6,15 @@
   <title>JsBarcode</title>
   <meta name="author" content="Johan Lindell">
 
-  <script src="https://cdn.jsdelivr.net/jsbarcode/3.3.6/JsBarcode.all.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/jsbarcode/3.3.7/JsBarcode.all.min.js"></script>
 
   <link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.4.0/styles/default.min.css">
   <script src="//cdn.jsdelivr.net/highlight.js/9.4.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
 
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-  <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link href='//fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
@@ -23,9 +23,9 @@
       <div id="header">
         <h1>JsBarcode</h1>
         <ul id="top-menu">
-          <li><a href="#"><i class="fa fa-book" aria-hidden="true"></i> Docs</a></li>
-          <li><a href="#"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>
-          <li><a href="#"><i class="fa fa-github" aria-hidden="true"></i> Github</a></li>
+          <li><a href="https://github.com/lindell/JsBarcode/wiki"><i class="fa fa-book" aria-hidden="true"></i> Docs</a></li>
+          <li><a href="#download"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>
+          <li><a href="https://github.com/lindell/JsBarcode/"><i class="fa fa-github" aria-hidden="true"></i> Github</a></li>
         </ul>
       </div>
       <div class="barcode-container">
@@ -36,8 +36,8 @@
   </div>
   <div id="under-top-container">
     <div id="under-top-inner-container">
-      <div class="badge">Version: <span>3.3.4</span></div>
-      <div class="badge">Build: <span>Passing</span></div>
+      <div class="badge">Version: <span id="github-tag-name"><i class="fa fa-cog fa-spin"></i></span></div>
+      <div class="badge">Build: <span id="travis-build-status"><i class="fa fa-cog fa-spin"></i></span></div>
       <div class="badge">License: <span>MIT</span></div>
     </div>
   </div>
@@ -45,7 +45,7 @@
   <div class="container get-started">
     <h2><i class="fa fa-cogs" aria-hidden="true"></i> Just include and use</h2>
     <span>
-      Download the library and include the script or use the CDN and you are ready to go.
+      <a href="#download">Download</a> the library and include the script or use the <a href="#cdn">CDN</a> and you are ready to go.
       <br>
       <pre><code class="html">&lt;script src=&quot;JsBarcode.all.min.js&quot;&gt;&lt;/script&gt;</code></pre>
     </span>
@@ -133,10 +133,73 @@
     </div>
   </div>
 
-  <div class="container get-started">
-    <h2>Here is more stuff. Like CDN links</h2>
+  <div class="container download get-started">
+    <a name="download"></a><a name="cdn"></a>
+    <h2><i class="fa fa-download" aria-hidden="true"></i> Download / CDN links</h2>
+    <table>
+      <thead>
+        <tr>
+          <th align="left">Name</th>
+          <th align="center">Supported barcodes</th>
+          <th align="center">Size (gzip)</th>
+          <th align="right">CDN / Download</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <td align="left"><em>All</em></td>
+        <td align="center"><em>All the barcodes!</em></td>
+        <td align="center"><em>6.9 kB</em></td>
+        <td align="right"><em><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/JsBarcode.all.min.js" title="jsdelivr all barcodes">JsBarcode.all.min.js</a></em></td>
+        </tr>
+        <tr>
+        <td align="left">CODE128</td>
+        <td align="center">CODE128 (auto and force mode)</td>
+        <td align="center">4.6 kB</td>
+        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.code128.min.js" title="jsdelivr code128">JsBarcode.code128.min.js</a></td>
+        </tr>
+        <tr>
+        <td align="left">CODE39</td>
+        <td align="center">CODE39</td>
+        <td align="center">3.6 kB</td>
+        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.code39.min.js" title="jsdelivr code39">JsBarcode.code39.min.js</a></td>
+        </tr>
+        <tr>
+        <td align="left">EAN / UPC</td>
+        <td align="center">EAN-13, EAN-8, EAN-5, EAN-2, UPC (A)</td>
+        <td align="center">4.1 kB</td>
+        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.ean-upc.min.js" title="jsdelivr ean/upc">JsBarcode.ean-upc.min.js</a></td>
+        </tr>
+        <tr>
+        <td align="left">ITF-14</td>
+        <td align="center">ITF-14</td>
+        <td align="center">3.4 kB</td>
+        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.itf-14.min.js" title="jsdelivr itf-14">JsBarcode.itf-14.min.js</a></td>
+        </tr>
+        <tr>
+        <td align="left">ITF</td>
+        <td align="center">ITF</td>
+        <td align="center">3.3 kB</td>
+        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.itf.min.js" title="jsdelivr itf">JsBarcode.itf.min.js</a></td>
+        </tr>
+        <tr>
+        <td align="left">MSI</td>
+        <td align="center">MSI, MSI10, MSI11, MSI1010, MSI1110</td>
+        <td align="center">3.8 kB</td>
+        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.msi.min.js" title="jsdelivr msi">JsBarcode.msi.min.js</a></td>
+        </tr>
+        <tr>
+        <td align="left">Pharmacode</td>
+        <td align="center">Pharmacode</td>
+        <td align="center">3.2 kB</td>
+        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.pharmacode.min.js" title="jsdelivr pharmacode">JsBarcode.pharmacode.min.js</a></td>
+        </tr>
+        </tbody>
+    </table>
   </div>
 
+
   <script src="js/script.js"></script>
+  <script src="js/badges.js"></script>
 </body>
 </html>
