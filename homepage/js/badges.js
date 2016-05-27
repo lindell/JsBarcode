@@ -8,6 +8,7 @@ githubRequest.onreadystatechange = function(){
       var element = document.getElementById("github-tag-name");
       element.innerHTML = json["tag_name"];
     } else {
+      var element = document.getElementById("github-tag-name");
       element.innerHTML = "Unknown";
     }
   }
@@ -42,7 +43,8 @@ travisRequest.onreadystatechange = function(){
 
       element.innerHTML = text;
     } else {
-      alert('There was a problem with the request.');
+      var element = document.getElementById("travis-build-status");
+      element.innerHTML = "Unknown";
     }
   }
 };
