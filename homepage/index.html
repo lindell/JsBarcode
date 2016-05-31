@@ -5,10 +5,11 @@
 
   <title>JsBarcode</title>
   <meta name="author" content="Johan Lindell">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script src="https://cdn.jsdelivr.net/jsbarcode/3.3.7/JsBarcode.all.min.js"></script>
 
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.4.0/styles/default.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.4.0/styles/github.min.css">
   <script src="//cdn.jsdelivr.net/highlight.js/9.4.0/highlight.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script>
 
@@ -23,9 +24,19 @@
       <div id="header">
         <h1>JsBarcode</h1>
         <ul id="top-menu">
-          <li><a href="https://github.com/lindell/JsBarcode/wiki"><i class="fa fa-book" aria-hidden="true"></i> Docs</a></li>
-          <li><a href="#download"><i class="fa fa-download" aria-hidden="true"></i> Download</a></li>
-          <li><a href="https://github.com/lindell/JsBarcode/"><i class="fa fa-github" aria-hidden="true"></i> Github</a></li>
+          <li>
+            <a href="https://github.com/lindell/JsBarcode/wiki"><i class="fa fa-book" aria-hidden="true"></i> Docs</a>
+            <!-- Fix for bold text --> <span class="hover-fix"><i class="fa fa-book" aria-hidden="true"></i> Docs</span>
+          </li>
+          <li>
+            <a href="#download"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
+            <!-- Fix for bold text --> <span class="hover-fix"><i class="fa fa-download" aria-hidden="true"></i> Download</span>
+          </li>
+          <li>
+            <a href="https://github.com/lindell/JsBarcode/"><i class="fa fa-github" aria-hidden="true"></i> Github</a>
+            <!-- Fix for bold text --> <span class="hover-fix"><i class="fa fa-github" aria-hidden="true"></i> Github</span>
+
+          </li>
         </ul>
       </div>
       <div class="barcode-container">
@@ -35,10 +46,14 @@
     </div>
   </div>
   <div id="under-top-container">
-    <div id="under-top-inner-container">
+    <div class="inner">
       <div class="badge">Version: <span id="github-tag-name"><i class="fa fa-cog fa-spin"></i></span></div>
       <div class="badge">Build: <span id="travis-build-status"><i class="fa fa-cog fa-spin"></i></span></div>
       <div class="badge">License: <span>MIT</span></div>
+      <div class="badge"><i class="fa fa-chrome" aria-hidden="true"></i> <span>9+</span></div>
+      <div class="badge"><i class="fa fa-firefox" aria-hidden="true"></i> <span>12+</span></div>
+      <div class="badge"><i class="fa fa-internet-explorer" aria-hidden="true"></i> <span>9+</span></div>
+      <div class="badge"><i class="fa fa-safari" aria-hidden="true"></i> <span>5+</span></div>
     </div>
   </div>
 
@@ -133,7 +148,7 @@
     </div>
   </div>
 
-  <div class="container download get-started">
+  <div class="container download">
     <a name="download"></a><a name="cdn"></a>
     <h2><i class="fa fa-download" aria-hidden="true"></i> Download / CDN links</h2>
     <table>
@@ -196,6 +211,17 @@
         </tr>
         </tbody>
     </table>
+  </div>
+  <div class="grey-section footer">
+    <span>
+      <i class="fa fa-user" aria-hidden="true"></i>
+      Created by <a href="http://lindell.me">Johan Lindell</a>
+    </span>
+
+    <span>
+      <i class="fa fa-server" aria-hidden="true"></i>
+      Hosted on <a href="https://github.com/lindell/JsBarcode/tree/gh-pages">GitHub Pages</a>
+    </span>
   </div>
 
 
