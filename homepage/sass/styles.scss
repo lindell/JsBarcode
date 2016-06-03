@@ -1,9 +1,12 @@
-$base-color: #578A81;
+$base-color: hsla(169, 25%, 44%, 1);
 $grey-color: #E4E4E4;
+
+$base-font: 'Roboto', sans-serif;
+$serif-font: 'Roboto Slab', serif;
 
 body, html{
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: $base-font;
   color: #101918;
 }
 
@@ -17,9 +20,14 @@ a, a:active, a:visited a:focus, a:link {
   padding: 0;
 
   h2{
-    font-weight: 300;
+    font-weight: 500;
     font-size: 32px;
   }
+}
+
+.big-box{
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
 h1{
@@ -27,6 +35,14 @@ h1{
   font-size: 42px;
   font-weight: 300;
   line-height: 50px;
+  font-family: $serif-font;
+}
+
+h2{
+  margin-top: 0.1em;
+  margin-bottom: 0.3em;
+  font-family: $serif-font;
+  font-weight: 400;
 }
 
 #top-menu{
@@ -72,7 +88,7 @@ h1{
   width: 100%;
   background: $base-color;
   color: #F9F9F9;
-  box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.45);
+  border-bottom: 1px #B8B8B8 solid;
   z-index: 2;
   padding-bottom: 20px;
 
@@ -97,8 +113,8 @@ h1{
 #under-top-container{
   position: relative;
   width: 100%;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-top: 4px;
+  padding-bottom: 2px;
   background: $grey-color;
   z-index: 1;
   border-bottom: 1px #B8B8B8 solid;
@@ -119,12 +135,16 @@ h1{
   border-width: 1px;
   border-color: #bbb;
   border-style: solid;
-  margin-right: 15px;
-  box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.1);
+  margin: 8px;
+  //box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.1);
 
   span{
     font-weight: 500;
   }
+}
+
+pre{
+  max-width: 100%;
 }
 
 pre code{
@@ -138,11 +158,14 @@ pre code{
   background: $grey-color;
 }
 
-.examples h2{
-  text-align: center;
-  font-weight: 300;
-  font-size: 32px;
-  margin-bottom: 0.2em;
+.examples{
+  @extend .big-box;
+
+  h2{
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 0.2em;
+  }
 }
 
 .info-box{
@@ -161,6 +184,7 @@ pre code{
     border-bottom: 1px #ABABAB solid;
     padding: 10px;
     font-size: 20px;
+    font-family: $serif-font;
     background: $base-color;
     color: #fff;
   }
@@ -182,11 +206,18 @@ pre code{
 }
 
 .get-started{
+  @extend .big-box;
   font-weight: 300;
-  font-size: 22px;
+  font-size: 20px;
   text-align: center;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  width:95%;
+  margin: 0 auto;
+
+  div{
+    vertical-align: middle;
+    display: inline-block;
+    width: 30%;
+  }
 
   pre{
     display: inline-block;
@@ -194,7 +225,14 @@ pre code{
 
   code{
     padding: 0.8em;
-    font-size: 18px;
+    font-size: 14px;
+    text-align: left;
+  }
+
+  h2{
+    font-size: 38px;
+    margin: 0.4em;
+    margin-left: 0em; // Makes the headers feel more centered
   }
 
   a{
@@ -204,9 +242,9 @@ pre code{
 }
 
 .download{
-  overflow: hidden;
+  @extend .big-box;
+  overflow-x: auto;
   text-align: center;
-  padding-bottom: 20px;
 
   a{
     color: #4078c0;
@@ -254,6 +292,14 @@ pre code{
   }
 }
 
+@media (max-width: 1400px) {
+  .get-started{
+    div{
+      width: 100%;
+    }
+  }
+}
+
 
 @media (max-width: 1250px) {
   .container{
@@ -266,6 +312,10 @@ pre code{
     width: 95%;
   }
 
+  .sub-header{
+    display: none;
+  }
+
   .info-box{
     margin-left: 2%;
     margin-right: 2%;
@@ -273,7 +323,7 @@ pre code{
   }
 
   h1{
-    font-size: 4em;
+    font-size: 60px;
     line-height: 1.5em;
   }
 
@@ -286,15 +336,30 @@ pre code{
     display: inline-block;
     margin-left: 0;
     padding-left: 0;
-    font-size: 1.5em;
 
     li{
       display: block;
       margin-left: 0;
+      font-size: 32px;
+      line-height: 64px;
     }
   }
 
   .barcode-container{
     display: none;
+  }
+}
+
+// Super small mobile devices
+@media (max-width: 400px) {
+  h1{
+    font-size: 42px;
+  }
+
+  #top-menu{
+    li{
+      font-size: 24px;
+      line-height: 42px;
+    }
   }
 }

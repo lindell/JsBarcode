@@ -1,6 +1,6 @@
 body, html {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   color: #101918; }
 
 a, a:active, a:visited a:focus, a:link {
@@ -11,14 +11,25 @@ a, a:active, a:visited a:focus, a:link {
   margin: 0 auto;
   padding: 0; }
   .container h2 {
-    font-weight: 300;
+    font-weight: 500;
     font-size: 32px; }
+
+.big-box, .examples, .get-started, .download {
+  padding-top: 30px;
+  padding-bottom: 30px; }
 
 h1 {
   margin: 0em;
   font-size: 42px;
   font-weight: 300;
-  line-height: 50px; }
+  line-height: 50px;
+  font-family: "Roboto Slab", serif; }
+
+h2 {
+  margin-top: 0.1em;
+  margin-bottom: 0.3em;
+  font-family: "Roboto Slab", serif;
+  font-weight: 400; }
 
 #top-menu {
   list-style-type: none;
@@ -51,9 +62,9 @@ h1 {
 #top-container {
   position: relative;
   width: 100%;
-  background: #578A81;
+  background: #548c82;
   color: #F9F9F9;
-  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.45);
+  border-bottom: 1px #B8B8B8 solid;
   z-index: 2;
   padding-bottom: 20px; }
   #top-container #top-inner {
@@ -71,8 +82,8 @@ h1 {
 #under-top-container {
   position: relative;
   width: 100%;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-top: 4px;
+  padding-bottom: 2px;
   background: #E4E4E4;
   z-index: 1;
   border-bottom: 1px #B8B8B8 solid;
@@ -90,10 +101,12 @@ h1 {
   border-width: 1px;
   border-color: #bbb;
   border-style: solid;
-  margin-right: 15px;
-  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.1); }
+  margin: 8px; }
   .badge span {
     font-weight: 500; }
+
+pre {
+  max-width: 100%; }
 
 pre code {
   border-radius: 3px;
@@ -106,7 +119,6 @@ pre code {
 
 .examples h2 {
   text-align: center;
-  font-weight: 300;
   font-size: 32px;
   margin-bottom: 0.2em; }
 
@@ -125,7 +137,8 @@ pre code {
     border-bottom: 1px #ABABAB solid;
     padding: 10px;
     font-size: 20px;
-    background: #578A81;
+    font-family: "Roboto Slab", serif;
+    background: #548c82;
     color: #fff; }
   .info-box .body {
     margin: 5px;
@@ -139,23 +152,31 @@ pre code {
 
 .get-started {
   font-weight: 300;
-  font-size: 22px;
+  font-size: 20px;
   text-align: center;
-  padding-top: 20px;
-  padding-bottom: 20px; }
+  width: 95%;
+  margin: 0 auto; }
+  .get-started div {
+    vertical-align: middle;
+    display: inline-block;
+    width: 30%; }
   .get-started pre {
     display: inline-block; }
   .get-started code {
     padding: 0.8em;
-    font-size: 18px; }
+    font-size: 14px;
+    text-align: left; }
+  .get-started h2 {
+    font-size: 38px;
+    margin: 0.4em;
+    margin-left: 0em; }
   .get-started a {
     text-decoration: none;
     border-bottom: dotted 1px #777; }
 
 .download {
-  overflow: hidden;
-  text-align: center;
-  padding-bottom: 20px; }
+  overflow-x: auto;
+  text-align: center; }
   .download a {
     color: #4078c0;
     text-decoration: none; }
@@ -183,6 +204,10 @@ pre code {
   .footer a:hover {
     text-decoration: underline; }
 
+@media (max-width: 1400px) {
+  .get-started div {
+    width: 100%; } }
+
 @media (max-width: 1250px) {
   .container {
     width: 800px; } }
@@ -190,12 +215,14 @@ pre code {
 @media (max-width: 850px) {
   .container {
     width: 95%; }
+  .sub-header {
+    display: none; }
   .info-box {
     margin-left: 2%;
     margin-right: 2%;
     width: 96%; }
   h1 {
-    font-size: 4em;
+    font-size: 60px;
     line-height: 1.5em; }
   #header {
     text-align: center; }
@@ -203,10 +230,18 @@ pre code {
     position: relative;
     display: inline-block;
     margin-left: 0;
-    padding-left: 0;
-    font-size: 1.5em; }
+    padding-left: 0; }
     #top-menu li {
       display: block;
-      margin-left: 0; }
+      margin-left: 0;
+      font-size: 32px;
+      line-height: 64px; }
   .barcode-container {
     display: none; } }
+
+@media (max-width: 400px) {
+  h1 {
+    font-size: 42px; }
+  #top-menu li {
+    font-size: 24px;
+    line-height: 42px; } }

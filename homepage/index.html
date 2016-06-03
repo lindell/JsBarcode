@@ -15,7 +15,9 @@
 
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
   <link href='//fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Roboto+Slab:400' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
@@ -42,7 +44,7 @@
       <div class="barcode-container">
         <svg id="barcode"></svg>
       </div>
-      <h2 class="sub-header">Easy to use, yet powerful barcode generator for the web and Node.js</h2>
+      <div class="sub-header">Easy to use, yet powerful barcode generator for the web and Node.js</div>
     </div>
   </div>
   <div id="under-top-container">
@@ -57,24 +59,35 @@
     </div>
   </div>
 
-  <div class="container get-started">
-    <h2><i class="fa fa-cogs" aria-hidden="true"></i> Just include and use</h2>
-    <span>
-      <a href="#download">Download</a> the library and include the script or use the <a href="#cdn">CDN</a> and you are ready to go.
-      <br>
-      <pre><code class="html">&lt;script src=&quot;JsBarcode.all.min.js&quot;&gt;&lt;/script&gt;</code></pre>
-    </span>
+  <div class="get-started">
+    <div>
+      <h2><i class="fa fa-code" aria-hidden="true"></i> Include</h2>
+      <span>
+        <a href="#download">Download</a> the library and include the script or use the <a href="#cdn">CDN</a>.
+        <br>
+        <pre><code class="html">&lt;script src=&quot;JsBarcode.all.min.js&quot;&gt;&lt;/script&gt;</code></pre>
+      </span>
+    </div>
 
-    <h2><i class="fa fa-barcode" aria-hidden="true"></i> Create an svg/canvas tag and render on it</h2>
-    <span>
-      HTML:<br>
-      <pre><code class="html">&lt;svg id=&quot;barcode&quot;&gt;&lt;/svg&gt;</code></pre>
-    </span>
-    <br>
-    <span>
-      Javascript:</br>
-      <pre><code class="javascript">JsBarcode("#barcode", "Hi!");</code></pre>
-    </span>
+    <div>
+      <h2><i class="fa fa-barcode" aria-hidden="true"></i> Use</h2>
+      <span>
+        Create a HTML tag:<br>
+        <pre><code class="html">&lt;svg id=&quot;barcode&quot;&gt;&lt;/svg&gt;</code></pre>
+      </span>
+      <br>
+      <span>
+        Generate with JsBarcode:</br>
+        <pre><code class="javascript">JsBarcode("#barcode", "Hi!");</code></pre>
+      </span>
+    </div>
+
+    <div>
+      <h2><i class="fa fa-cogs" aria-hidden="true"></i> Customize</h2>
+      <span>
+        Customize the barcode with the <a href="#options">17 different options</a>.
+      </span>
+    </div>
   </div>
 
   <div class="grey-section examples">
