@@ -3,6 +3,9 @@ $grey-color: #E4E4E4;
 
 $base-font: 'Roboto', sans-serif;
 $serif-font: 'Roboto Slab', serif;
+$monospace-font: 'Roboto Mono', monospace;
+
+$standard-border: ;
 
 body, html{
   margin: 0;
@@ -12,6 +15,10 @@ body, html{
 
 a, a:active, a:visited a:focus, a:link {
   color: inherit;
+}
+
+::selection{
+  background: hsla(169, 20%, 70%, 1);
 }
 
 .container{
@@ -25,10 +32,23 @@ a, a:active, a:visited a:focus, a:link {
   }
 }
 
+// Inherit classes
 .big-box{
   padding-top: 30px;
   padding-bottom: 30px;
 }
+
+.dotted-links{
+  a{
+    text-decoration: none;
+    border-bottom: dotted 1px #777;
+  }
+
+  a:hover{
+    border-bottom: solid 1px #777;
+  }
+}
+
 
 h1{
   margin: 0em;
@@ -40,9 +60,54 @@ h1{
 
 h2{
   margin-top: 0.1em;
-  margin-bottom: 0.3em;
+  margin-bottom: 0.4em;
   font-family: $serif-font;
   font-weight: 400;
+}
+
+table{
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-family: $monospace-font;
+  font-size: 14px;
+
+
+  th, td{
+    padding: 10px;
+  }
+
+  tr:nth-child(2n){
+    background: #DEECEA;
+  }
+
+  tr{
+    td:nth-child(1), th:nth-child(1){
+      text-align: left;
+    }
+
+    td:last-child, th:last-child{
+      text-align: right;
+    }
+  }
+
+  thead{
+    border-radius: 5px 0;
+  }
+
+  th{
+    background: $base-color;
+    color: #fff;
+    font-size: 16px;
+    font-family: "Roboto Slab", serif;
+  }
+
+  th:nth-child(1){
+    border-radius: 5px 0 0 0;
+  }
+
+  th:last-child{
+    border-radius: 0 5px 0 0;
+  }
 }
 
 #top-menu{
@@ -147,9 +212,11 @@ pre{
   max-width: 100%;
 }
 
-pre code{
+code{
   border-radius: 3px;
   border: #e0e0e0 1px solid;
+  font-family: $monospace-font;
+  font-size: 12px;
 }
 
 .grey-section{
@@ -164,7 +231,6 @@ pre code{
   h2{
     text-align: center;
     font-size: 32px;
-    margin-bottom: 0.2em;
   }
 }
 
@@ -177,6 +243,7 @@ pre code{
   border-radius: 5px;
   width: 358px;
   margin: 20px;
+  margin-top: 0px;
   box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.1);
   overflow: hidden;
 
@@ -207,6 +274,7 @@ pre code{
 
 .get-started{
   @extend .big-box;
+  @extend .dotted-links;
   font-weight: 300;
   font-size: 20px;
   text-align: center;
@@ -231,48 +299,24 @@ pre code{
 
   h2{
     font-size: 38px;
-    margin: 0.4em;
     margin-left: 0em; // Makes the headers feel more centered
-  }
-
-  a{
-    text-decoration: none;
-    border-bottom: dotted 1px #777;
   }
 }
 
 .download{
   @extend .big-box;
+  @extend .dotted-links;
   overflow-x: auto;
   text-align: center;
-
-  a{
-    color: #4078c0;
-    text-decoration: none;
-  }
-
-  a:hover{
-    text-decoration: underline;
-  }
-
-  table{
-    display: inline-block;
-    border-collapse: collapse;
-
-    tr:nth-child(2n){
-      background: #f8f8f8;
-    }
-
-    th{
-      background: #eee;
-    }
-
-    th, td{
-      padding: 7px;
-      border: 1px solid #DDD;
-    }
-  }
 }
+
+.options{
+  @extend .big-box;
+  @extend .dotted-links;
+  text-align: center;
+  overflow-x: auto;
+}
+
 
 .footer{
   text-align: center;
@@ -304,6 +348,10 @@ pre code{
 @media (max-width: 1250px) {
   .container{
     width: 800px;
+  }
+
+  table{
+    width: 100%;
   }
 }
 
@@ -348,9 +396,17 @@ pre code{
   .barcode-container{
     display: none;
   }
+
+  .footer{
+    padding: 0px;
+
+    span{
+      display: block;
+      margin: 15px;
+    }
+  }
 }
 
-// Super small mobile devices
 @media (max-width: 400px) {
   h1{
     font-size: 42px;

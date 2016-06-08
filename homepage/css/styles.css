@@ -6,6 +6,9 @@ body, html {
 a, a:active, a:visited a:focus, a:link {
   color: inherit; }
 
+::selection {
+  background: #a3c2bc; }
+
 .container {
   width: 1220px;
   margin: 0 auto;
@@ -14,9 +17,16 @@ a, a:active, a:visited a:focus, a:link {
     font-weight: 500;
     font-size: 32px; }
 
-.big-box, .examples, .get-started, .download {
+.big-box, .examples, .get-started, .download, .options {
   padding-top: 30px;
   padding-bottom: 30px; }
+
+.dotted-links a, .get-started a, .download a, .options a {
+  text-decoration: none;
+  border-bottom: dotted 1px #777; }
+
+.dotted-links a:hover, .get-started a:hover, .download a:hover, .options a:hover {
+  border-bottom: solid 1px #777; }
 
 h1 {
   margin: 0em;
@@ -27,9 +37,34 @@ h1 {
 
 h2 {
   margin-top: 0.1em;
-  margin-bottom: 0.3em;
+  margin-bottom: 0.4em;
   font-family: "Roboto Slab", serif;
   font-weight: 400; }
+
+table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  font-family: "Roboto Mono", monospace;
+  font-size: 14px; }
+  table th, table td {
+    padding: 10px; }
+  table tr:nth-child(2n) {
+    background: #DEECEA; }
+  table tr td:nth-child(1), table tr th:nth-child(1) {
+    text-align: left; }
+  table tr td:last-child, table tr th:last-child {
+    text-align: right; }
+  table thead {
+    border-radius: 5px 0; }
+  table th {
+    background: #548c82;
+    color: #fff;
+    font-size: 16px;
+    font-family: "Roboto Slab", serif; }
+  table th:nth-child(1) {
+    border-radius: 5px 0 0 0; }
+  table th:last-child {
+    border-radius: 0 5px 0 0; }
 
 #top-menu {
   list-style-type: none;
@@ -108,9 +143,11 @@ h2 {
 pre {
   max-width: 100%; }
 
-pre code {
+code {
   border-radius: 3px;
-  border: #e0e0e0 1px solid; }
+  border: #e0e0e0 1px solid;
+  font-family: "Roboto Mono", monospace;
+  font-size: 12px; }
 
 .grey-section {
   border-bottom: 1px #B8B8B8 solid;
@@ -119,8 +156,7 @@ pre code {
 
 .examples h2 {
   text-align: center;
-  font-size: 32px;
-  margin-bottom: 0.2em; }
+  font-size: 32px; }
 
 .info-box {
   display: inline-block;
@@ -131,6 +167,7 @@ pre code {
   border-radius: 5px;
   width: 358px;
   margin: 20px;
+  margin-top: 0px;
   box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
   overflow: hidden; }
   .info-box .head {
@@ -168,30 +205,15 @@ pre code {
     text-align: left; }
   .get-started h2 {
     font-size: 38px;
-    margin: 0.4em;
     margin-left: 0em; }
-  .get-started a {
-    text-decoration: none;
-    border-bottom: dotted 1px #777; }
 
 .download {
   overflow-x: auto;
   text-align: center; }
-  .download a {
-    color: #4078c0;
-    text-decoration: none; }
-  .download a:hover {
-    text-decoration: underline; }
-  .download table {
-    display: inline-block;
-    border-collapse: collapse; }
-    .download table tr:nth-child(2n) {
-      background: #f8f8f8; }
-    .download table th {
-      background: #eee; }
-    .download table th, .download table td {
-      padding: 7px;
-      border: 1px solid #DDD; }
+
+.options {
+  text-align: center;
+  overflow-x: auto; }
 
 .footer {
   text-align: center;
@@ -210,7 +232,9 @@ pre code {
 
 @media (max-width: 1250px) {
   .container {
-    width: 800px; } }
+    width: 800px; }
+  table {
+    width: 100%; } }
 
 @media (max-width: 850px) {
   .container {
@@ -237,7 +261,12 @@ pre code {
       font-size: 32px;
       line-height: 64px; }
   .barcode-container {
-    display: none; } }
+    display: none; }
+  .footer {
+    padding: 0px; }
+    .footer span {
+      display: block;
+      margin: 15px; } }
 
 @media (max-width: 400px) {
   h1 {

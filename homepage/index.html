@@ -18,6 +18,7 @@
 
   <link href='//fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
   <link href='//fonts.googleapis.com/css?family=Roboto+Slab:400' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Mono' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
@@ -27,15 +28,15 @@
         <h1>JsBarcode</h1>
         <ul id="top-menu">
           <li>
-            <a href="https://github.com/lindell/JsBarcode/wiki"><i class="fa fa-book" aria-hidden="true"></i> Docs</a>
+            <a href="https://github.com/lindell/JsBarcode/wiki"><i class="fa fa-book" aria-hidden="true"></i> <span class="name">Docs</span></a>
             <!-- Fix for bold text --> <span class="hover-fix"><i class="fa fa-book" aria-hidden="true"></i> Docs</span>
           </li>
           <li>
-            <a href="#download"><i class="fa fa-download" aria-hidden="true"></i> Download</a>
+            <a href="#download"><i class="fa fa-download" aria-hidden="true"></i> <span class="name">Download</span></a>
             <!-- Fix for bold text --> <span class="hover-fix"><i class="fa fa-download" aria-hidden="true"></i> Download</span>
           </li>
           <li>
-            <a href="https://github.com/lindell/JsBarcode/"><i class="fa fa-github" aria-hidden="true"></i> Github</a>
+            <a href="https://github.com/lindell/JsBarcode/"><i class="fa fa-github" aria-hidden="true"></i> <span class="name">Github</span></a>
             <!-- Fix for bold text --> <span class="hover-fix"><i class="fa fa-github" aria-hidden="true"></i> Github</span>
 
           </li>
@@ -67,9 +68,9 @@
         <br>
         <pre><code class="html">&lt;script src=&quot;JsBarcode.all.min.js&quot;&gt;&lt;/script&gt;</code></pre>
       </span>
-    </div>
+    </div><!--
 
-    <div>
+    --><div>
       <h2><i class="fa fa-barcode" aria-hidden="true"></i> Use</h2>
       <span>
         Create a HTML tag:<br>
@@ -80,9 +81,9 @@
         Generate with JsBarcode:</br>
         <pre><code class="javascript">JsBarcode("#barcode", "Hi!");</code></pre>
       </span>
-    </div>
+    </div><!--
 
-    <div>
+    --><div>
       <h2><i class="fa fa-cogs" aria-hidden="true"></i> Customize</h2>
       <span>
         Customize the barcode with the <a href="#options">17 different options</a>.
@@ -167,64 +168,174 @@
     <table>
       <thead>
         <tr>
-          <th align="left">Name</th>
-          <th align="center">Supported barcodes</th>
-          <th align="center">Size (gzip)</th>
-          <th align="right">CDN / Download</th>
+          <th>Name</th>
+          <th>Supported barcodes</th>
+          <th>Size (gzip)</th>
+          <th>CDN / Download</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-        <td align="left"><em>All</em></td>
-        <td align="center"><em>All the barcodes!</em></td>
-        <td align="center"><em>6.9 kB</em></td>
-        <td align="right"><em><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/JsBarcode.all.min.js" title="jsdelivr all barcodes">JsBarcode.all.min.js</a></em></td>
+          <td><em>All</em></td>
+          <td><em>All the barcodes!</em></td>
+          <td><em>6.9 kB</em></td>
+          <td><em><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/JsBarcode.all.min.js" title="jsdelivr all barcodes">JsBarcode.all.min.js</a></em></td>
         </tr>
         <tr>
-        <td align="left">CODE128</td>
-        <td align="center">CODE128 (auto and force mode)</td>
-        <td align="center">4.6 kB</td>
-        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.code128.min.js" title="jsdelivr code128">JsBarcode.code128.min.js</a></td>
+          <td>CODE128</td>
+          <td>CODE128 (auto and force mode)</td>
+          <td>4.6 kB</td>
+          <td><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.code128.min.js" title="jsdelivr code128">JsBarcode.code128.min.js</a></td>
         </tr>
         <tr>
-        <td align="left">CODE39</td>
-        <td align="center">CODE39</td>
-        <td align="center">3.6 kB</td>
-        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.code39.min.js" title="jsdelivr code39">JsBarcode.code39.min.js</a></td>
+          <td>CODE39</td>
+          <td>CODE39</td>
+          <td>3.6 kB</td>
+          <td><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.code39.min.js" title="jsdelivr code39">JsBarcode.code39.min.js</a></td>
         </tr>
         <tr>
-        <td align="left">EAN / UPC</td>
-        <td align="center">EAN-13, EAN-8, EAN-5, EAN-2, UPC (A)</td>
-        <td align="center">4.1 kB</td>
-        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.ean-upc.min.js" title="jsdelivr ean/upc">JsBarcode.ean-upc.min.js</a></td>
+          <td>EAN / UPC</td>
+          <td>EAN-13, EAN-8, EAN-5, EAN-2, UPC (A)</td>
+          <td>4.1 kB</td>
+          <td><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.ean-upc.min.js" title="jsdelivr ean/upc">JsBarcode.ean-upc.min.js</a></td>
         </tr>
         <tr>
-        <td align="left">ITF-14</td>
-        <td align="center">ITF-14</td>
-        <td align="center">3.4 kB</td>
-        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.itf-14.min.js" title="jsdelivr itf-14">JsBarcode.itf-14.min.js</a></td>
+          <td>ITF-14</td>
+          <td>ITF-14</td>
+          <td>3.4 kB</td>
+          <td><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.itf-14.min.js" title="jsdelivr itf-14">JsBarcode.itf-14.min.js</a></td>
         </tr>
         <tr>
-        <td align="left">ITF</td>
-        <td align="center">ITF</td>
-        <td align="center">3.3 kB</td>
-        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.itf.min.js" title="jsdelivr itf">JsBarcode.itf.min.js</a></td>
+          <td>ITF</td>
+          <td>ITF</td>
+          <td>3.3 kB</td>
+          <td><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.itf.min.js" title="jsdelivr itf">JsBarcode.itf.min.js</a></td>
         </tr>
         <tr>
-        <td align="left">MSI</td>
-        <td align="center">MSI, MSI10, MSI11, MSI1010, MSI1110</td>
-        <td align="center">3.8 kB</td>
-        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.msi.min.js" title="jsdelivr msi">JsBarcode.msi.min.js</a></td>
+          <td>MSI</td>
+          <td>MSI, MSI10, MSI11, MSI1010, MSI1110</td>
+          <td>3.8 kB</td>
+          <td><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.msi.min.js" title="jsdelivr msi">JsBarcode.msi.min.js</a></td>
         </tr>
         <tr>
-        <td align="left">Pharmacode</td>
-        <td align="center">Pharmacode</td>
-        <td align="center">3.2 kB</td>
-        <td align="right"><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.pharmacode.min.js" title="jsdelivr pharmacode">JsBarcode.pharmacode.min.js</a></td>
+          <td>Pharmacode</td>
+          <td>Pharmacode</td>
+          <td>3.2 kB</td>
+          <td><a href="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.pharmacode.min.js" title="jsdelivr pharmacode">JsBarcode.pharmacode.min.js</a></td>
         </tr>
-        </tbody>
+      </tbody>
     </table>
   </div>
+
+
+  <div class="container options">
+    <a name="options"></a>
+    <h2><i class="fa fa-cogs" aria-hidden="true"></i> Options</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Option</th>
+          <th>Default value</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#format">format</a></td>
+          <td>"auto" (CODE128)</td>
+          <td>String</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#width">width</a></td>
+          <td>2</td>
+          <td>Number</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#height">height</a></td>
+          <td>100</td>
+          <td>Number</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#display-value">displayValue</a></td>
+          <td>true</td>
+          <td>Boolean</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#font-options">fontOptions</a></td>
+          <td>""</td>
+          <td>String</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#font">font</a></td>
+          <td>"monospace"</td>
+          <td>String</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#text-align">textAlign</a></td>
+          <td>"center"</td>
+          <td>String</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#text-position">textPosition</a></td>
+          <td>"bottom"</td>
+          <td>String</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#text-margin">textMargin</a></td>
+          <td>2</td>
+          <td>Number</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#font-size">fontSize</a></td>
+          <td>20</td>
+          <td>Number</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#background">background</a></td>
+          <td>"#ffffff"</td>
+          <td>String (CSS color)</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#line-color">lineColor</a></td>
+          <td>"#000000"</td>
+          <td>String (CSS color)</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#margins">margin</a></td>
+          <td>10</td>
+          <td>Number</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#margins">marginTop</a></td>
+          <td>undefined</td>
+          <td>Number</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#margins">marginBottom</a></td>
+          <td>undefined</td>
+          <td>Number</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#margins">marginLeft</a></td>
+          <td>undefined</td>
+          <td>Number</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#margins">marginRight</a></td>
+          <td>undefined</td>
+          <td>Number</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/lindell/JsBarcode/wiki/Options#valid">valid</a></td>
+          <td>function(valid){}</td>
+          <td>Function</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
   <div class="grey-section footer">
     <span>
       <i class="fa fa-user" aria-hidden="true"></i>

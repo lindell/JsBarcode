@@ -1,6 +1,6 @@
 JsBarcode(".barcode").init();
 
-var barcodeStrings = ["JsBarcode!", "It is super easy.","this is and example"];
+var barcodeStrings = ["JsBarcode!", "It is super easy.", "this is and example"];
 var barcodeStringsI = 0;
 
 var start = null;
