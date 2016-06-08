@@ -8,7 +8,7 @@ Introduction
 
 Demo
 ----
-#### [Barcode Generator](http://lindell.github.io/JsBarcode/)
+#### [Barcode Generator](http://lindell.github.io/JsBarcode/generator/)
 #### [Simple CodePen Demo](http://codepen.io/lindell/pen/eZKBdO?editors=1010)
 #### [Settings CodePen Demo](http://codepen.io/lindell/pen/mPvLXx?editors=1010)
 
