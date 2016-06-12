@@ -104,6 +104,12 @@ describe('Text printing', function() {
     assert.notEqual(canvas2.toDataURL(), canvas3.toDataURL());
     assert.notEqual(canvas1.toDataURL(), canvas3.toDataURL());
   });
+
+  it('should allow numbers as input', function () {
+    var canvas = new Canvas();
+
+    JsBarcode(canvas, 1234567890128, {format: "EAN13"});
+  });
 });
 
 describe('Generic barcode', function() {

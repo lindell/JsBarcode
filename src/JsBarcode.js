@@ -70,6 +70,9 @@ function registerBarcode(barcodes, name){
 }
 
 function encode(text, Encoder, options){
+	// Ensure that text is a string
+	text = "" + text;
+
 	var encoder = new Encoder(text, options);
 
 	// If the input is not valid for the encoder, throw error.
