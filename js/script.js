@@ -28,7 +28,7 @@ function anim(timestamp){
       state = "out";
       setTimeout(function(){
         window.requestAnimationFrame(anim);
-      }, 2500);
+      }, 4500);
     }
 
     else if(state == "out"){
