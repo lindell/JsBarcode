@@ -32,7 +32,3 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
-
-# Node / Distribution folder. Should be included with "git add --force" at new release
-bin
-dist

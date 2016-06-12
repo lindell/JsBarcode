@@ -6,7 +6,8 @@
   "directories": {
     "example": "example",
     "test": "test",
-    "lib": "src"
+    "lib": "src",
+    "bin": "bin"
   },
   "scripts": {
     "test": "gulp babel && node_modules/mocha/bin/mocha test/node/ -R spec",
