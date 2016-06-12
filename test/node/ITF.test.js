@@ -6,7 +6,6 @@ var Canvas = require("canvas");
 describe('ITF', function() {
   it('should be able to include the encoder(s)', function () {
     ITF = JsBarcode.getModule("ITF");
-    console.log(ITF);
   });
 
   it('should be able to encode normal text', function () {
