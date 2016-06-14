@@ -57,7 +57,7 @@ table {
   table thead {
     border-radius: 5px 0; }
   table th {
-    background: #548c82;
+    background: #4b8b7f;
     color: #fff;
     font-size: 16px;
     font-family: "Roboto Slab", serif; }
@@ -97,7 +97,7 @@ table {
 #top-container {
   position: relative;
   width: 100%;
-  background: #548c82;
+  background: #4b8b7f;
   color: #F9F9F9;
   border-bottom: 1px #B8B8B8 solid;
   z-index: 2;
@@ -175,7 +175,7 @@ code {
     padding: 10px;
     font-size: 20px;
     font-family: "Roboto Slab", serif;
-    background: #548c82;
+    background: #4b8b7f;
     color: #fff; }
   .info-box .body {
     margin: 5px;
