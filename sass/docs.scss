@@ -76,12 +76,13 @@ h1{
 }
 
 .main{
+  $padding: 10px;
   position: absolute;
   left: $menu-width;
   font-size: 22px;
-  width: calc(100% - 320px);
+  width: calc(100% - #{$menu-width + $padding*2} );
 
-  padding: 10px;
+  padding: $padding;
 
   section{
     display: block;

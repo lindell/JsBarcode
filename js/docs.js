@@ -37,12 +37,12 @@ window.onload = function(){
 
       var middle = (clientRect.top + clientRect.bottom) / 2;
 
-      var percentageViewed = left / clientRect.height;
+      var percentageViewed = left / Math.min(clientRect.height, window.innerHeight);
       percentageViewed = percentageViewed > 0 ? percentageViewed : 0;
 
-      var lengthFromMiddle = Math.abs(middleOfScreen - middle);
+      var modulatedPercentageViewed = EasingFunctions.easeInOutCubic(percentageViewed);
 
-      liList[i].style.fontSize = (percentageViewed + 1) + "em";
+      liList[i].style.fontSize = (modulatedPercentageViewed + 1) + "em";
     }
   }
 
@@ -56,7 +56,8 @@ window.onload = function(){
 
   var msnry = new Masonry( '.main', {
     itemSelector: 'section',
-    columnWidth: 700
+    columnWidth: 700,
+    transitionDuration: 0
   });
   msnry.layout();
 
