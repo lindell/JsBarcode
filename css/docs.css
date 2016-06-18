@@ -1,0 +1,88 @@
+@import 'https://fonts.googleapis.com/css?family=Jaldi|Roboto+Slab|Source+Code+Pro';
+body {
+  padding: 0px;
+  margin: 0px;
+  font-family: 'Jaldi', sans-serif;
+  background: #f6f6f6; }
+
+.divider {
+  margin: 30px; }
+
+.hidden {
+  visibility: hidden; }
+
+.fa-exchange {
+  transform: rotate(90deg); }
+
+.menu {
+  position: fixed;
+  width: 300px;
+  height: 100%;
+  background: #eee;
+  font-size: 20px;
+  background: #4b8b7f;
+  color: #fff;
+  padding-top: 15px;
+  text-align: center; }
+  .menu .inner {
+    display: inline-block;
+    text-align: left;
+    width: 240px; }
+  .menu header {
+    font-family: 'Roboto Slab', serif;
+    text-align: center; }
+    .menu header h1 {
+      font-size: 42px;
+      margin: 0px; }
+  .menu ul {
+    padding: 0;
+    margin: 0px;
+    font-size: 16px; }
+  .menu li {
+    list-style: none;
+    line-height: 35px;
+    cursor: pointer; }
+    .menu li i {
+      width: 65px;
+      text-align: center;
+      margin-right: -0.5em; }
+
+.main {
+  position: absolute;
+  left: 300px;
+  font-size: 22px;
+  width: calc(100% - 320px);
+  padding: 10px; }
+  .main section {
+    display: block;
+    width: 600px;
+    background: #fff;
+    vertical-align: top;
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1); }
+  .main .barcode-container {
+    text-align: center; }
+  .main .barcode {
+    display: block;
+    margin: auto; }
+  .main code {
+    font-family: "Source Code Pro";
+    font-size: 16px;
+    padding: 20px;
+    border: #e0e0e0 1px solid;
+    border-radius: 3px;
+    text-align: left; }
+  .main h3 {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em; }
+  .main i {
+    font-size: 1.5em;
+    vertical-align: middle;
+    margin-right: 0.19em; }
+  .main p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    margin-left: 0.75em; }
