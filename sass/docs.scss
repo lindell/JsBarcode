@@ -75,8 +75,14 @@ h1{
   }
 }
 
+$padding: 10px;
+$height: 35px;
+$width: 85px;
+$padding: 5px;
+$circle-diameter: $height - 2 * $padding;
+
 .main{
-  $padding: 10px;
+
   position: absolute;
   left: $menu-width;
   font-size: 22px;
@@ -84,9 +90,39 @@ h1{
 
   padding: $padding;
 
+
+  .type-picker{
+    text-align: center;
+    margin: auto 0;
+
+    div, span{
+      vertical-align: middle;
+    }
+
+
+    .slider{
+      display: inline-block;
+      width: $width;
+      height: $height;
+      border-radius: $height / 2;
+      background: $base-color;
+      border: 1px solid #ddd;
+      cursor: pointer;
+
+      .circle{
+        position: relative;
+        border-radius: $circle-diameter / 2;
+        top: $padding;
+        height: $circle-diameter;
+        width: $circle-diameter;
+        background: #fff;
+      }
+    }
+  }
+
   section{
     display: block;
-    width: 600px;
+    width: 40%;
 
     background: #fff;
     vertical-align: top;
@@ -121,6 +157,7 @@ h1{
   h3{
     margin-top: 0.5em;
     margin-bottom: 0.5em;
+    cursor: pointer;
   }
 
   i{
@@ -135,5 +172,58 @@ h1{
 
     margin-left: 0.75em;
   }
+}
 
+.html{
+  .js-text{
+    color: #777;
+  }
+  .circle{
+    left: $width - $circle-diameter - $padding;
+  }
+
+  .js-code{
+    display: none;
+  }
+}
+
+.js{
+  .html-text{
+    color: #777;
+  }
+  .circle{
+    left: $padding;
+  }
+
+  .html-code{
+    display: none;
+  }
+}
+
+@media (max-width: 1500px) {
+  .main{
+    section{
+      width: calc(100% - 100px);
+    }
+  }
+}
+
+@media (max-width: 1000px) {
+  .menu{
+    position: relative;
+    width: 100%;
+
+    ul{
+      width: 100%;
+    }
+
+    li{
+      display: inline-block;
+    }
+  }
+
+  .main{
+    width: 100%;
+    left: 0;
+  }
 }

@@ -13,13 +13,12 @@
     <script src="js/smenu.js"></script>
 
     <script src="js/docs.js"></script>
-    <script src="https://cdn.jsdelivr.net/jsbarcode/3.3.13/JsBarcode.all.min.js"></script>
+    <script src="js/JsBarcode.all.min.js"></script>
 
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.4.0/styles/github.min.css">
-    <script src="//cdn.jsdelivr.net/highlight.js/9.4.0/highlight.min.js"></script>
-    <script>hljs.initHighlightingOnLoad();</script>
+    <link rel="stylesheet" href="css/hljs.github.min.css">
+    <script src="js/highlight.min.js"></script>
 
-    <script src="https://npmcdn.com/masonry-layout@4.0.0/dist/masonry.pkgd.min.js"></script>
+    <script src="js/masonry.pkgd.min.js"></script>
 
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
   </head>
@@ -36,249 +35,125 @@
       </div>
     </div>
     <div class="main">
-      <section>
-        <h3><i class="fa fa-barcode" aria-hidden="true"></i> Format</h3>
-        <p>Select which barcode type to use. <br>Please check the wikipage of the different<br>barcode types for more information.</p>
-
-<pre><code>JsBarcode("#barcode", "123456789012", {
-  format: "EAN13"
-});</code></pre>
-
-        <div class="barcode-container">
-          <svg class="barcode"
-            jsbarcode-value="123456789012"
-            jsbarcode-format="EAN13"
-          ></svg>
+      <div class="type-picker">
+        <span class="js-text">JavaScript</span>
+        <div class="slider">
+          <div class="circle"></div>
         </div>
+        <span class="html-text">HTML</span>
+      </div>
 
-<pre><code>JsBarcode("#barcode", "123456789012", {
-  format: "CODE39"
-});</code></pre>
+      <div class="tile-box">
+        <section>
+          <h3><i class="fa fa-barcode" aria-hidden="true"></i> Format</h3>
+          <p>Select which barcode type to use. <br>Please check the wikipage of the different<br>barcode types for more information.</p>
 
-        <div class="barcode-container">
-          <svg class="barcode"
-            jsbarcode-value="123456789012"
-            jsbarcode-format="CODE39"
-          ></svg>
-        </div>
-      </section>
+          <div class="example" data-value="123456789012" data-options='{"format":"EAN13"}'></div>
 
-      <section>
-        <h3><i class="fa fa-arrows-v" aria-hidden="true"></i> Height</h3>
-        <p>
-          The height of the barcode.
-        </p>
+          <div class="example" data-value="123456789012" data-options='{"format":"CODE39"}'></div>
+        </section>
 
-<pre><code>JsBarcode("#barcode", "Taller barcode", {
-  height: 150
-});</code></pre>
+        <section>
+          <h3><i class="fa fa-arrows-v" aria-hidden="true"></i> Height</h3>
+          <p>
+            The height of the barcode.
+          </p>
 
-        <svg class="barcode"
-          jsbarcode-value="Taller barcode"
-          jsbarcode-height="150"
-        ></svg>
+          <div class="example" data-value="Taller barcode" data-options='{"height":150}'></div>
 
-<pre><code>JsBarcode("#barcode", "Small barcode", {
-  height: 25
-});</code></pre>
+          <div class="example" data-value="Small barcode" data-options='{"height":25}'></div>
 
-        <svg class="barcode"
-          jsbarcode-value="Small barcode"
-          jsbarcode-height="25"
-        ></svg>
+        </section>
 
-      </section>
+        <section>
+          <h3><i class="fa fa-arrows-h" aria-hidden="true"></i> Width</h3>
+          <p>
+            The width option is the width of a single bar.
+          </p>
 
-      <section>
-        <h3><i class="fa fa-arrows-h" aria-hidden="true"></i> Width</h3>
-        <p>
-          The width option is the width of a single bar.
-        </p>
+          <div class="example" data-value="Smallest width" data-options='{"width":1}'></div>
 
-<pre><code>JsBarcode("#barcode", "Smallest width", {
-  width: 1
-});</code></pre>
-
-        <svg class="barcode"
-          jsbarcode-value="Smallest width"
-          jsbarcode-width="1"
-        ></svg>
-
-<pre><code>JsBarcode("#barcode", "Wider barcode", {
-  width: 3
-});</code></pre>
-
-        <svg class="barcode"
-          jsbarcode-value="Wider barcode"
-          jsbarcode-width="3"
-        ></svg>
-      </section>
+          <div class="example" data-value="Wider barcode" data-options='{"width":3}'></div>
+        </section>
 
 
-      <section>
-        <h3><i class="fa fa-sort" aria-hidden="true"></i> Text Position</h3>
-        <p>Set the vertical position of the text.<br>Can be bottom / top.</p>
+        <section>
+          <h3><i class="fa fa-sort" aria-hidden="true"></i> Text Position</h3>
+          <p>Set the vertical position of the text.<br>Can be bottom / top.</p>
 
-<pre><code>JsBarcode("#barcode", "Top text", {
-  textPosition: "top"
-});</code></pre>
+          <div class="example" data-value="Top text" data-options='{"textPosition":"top"}'></div>
 
-        <svg class="barcode"
-          jsbarcode-value="Top text"
-          jsbarcode-textPosition="top"
-        ></svg>
-      </section>
+        </section>
 
-      <section>
-        <h3><i class="fa fa-arrow-down" aria-hidden="true"></i> Text Margin</h3>
-        <p>Set the space between the barcode and the text.</p>
+        <section>
+          <h3><i class="fa fa-arrow-down" aria-hidden="true"></i> Text Margin</h3>
+          <p>Set the space between the barcode and the text.</p>
 
-        <pre><code>JsBarcode("#barcode", "Text margin", {
-  textMargin: 25
-});</code></pre>
+          <div class="example" data-value="Text margin" data-options='{"textMargin": 25}'></div>
 
-        <svg class="barcode"
-          jsbarcode-value="Text margin"
-          jsbarcode-textMargin="25"
-        ></svg>
-      </section>
+        </section>
 
 
-      <section>
-        <h3><i class="fa fa-align-left" aria-hidden="true"></i> Text Align</h3>
-        <p>Set the horizontal alignment of the text. <br>Can be left / center / right.</p>
+        <section>
+          <h3><i class="fa fa-align-left" aria-hidden="true"></i> Text Align</h3>
+          <p>Set the horizontal alignment of the text. <br>Can be left / center / right.</p>
 
-<pre><code>JsBarcode("#barcode", "Left text", {
-  textAlign: "left"
-});</code></pre>
-
-        <svg class="barcode"
-          jsbarcode-value="Left text"
-          jsbarcode-textAlign="left"
-        ></svg>
-      </section>
+          <div class="example" data-value="Left text" data-options='{"textAlign": "left"}'></div>
+        </section>
 
 
-      <section>
-        <h3><i class="fa fa-eyedropper" aria-hidden="true"></i> Background</h3>
-        <p>Set the background of the barcode.</p>
+        <section>
+          <h3><i class="fa fa-eyedropper" aria-hidden="true"></i> Background</h3>
+          <p>Set the background of the barcode.</p>
 
-        <pre><code>JsBarcode("#barcode", "Blue background", {
-  background: "#ccffff"
-});</code></pre>
-
-        <svg class="barcode"
-          jsbarcode-value="Bigger text"
-          jsbarcode-background="#ccffff"
-        ></svg>
-      </section>
+          <div class="example" data-value="Blue background" data-options='{"background": "#ccffff"}'></div>
+        </section>
 
 
-      <section>
-        <h3><i class="fa fa-adjust" aria-hidden="true"></i> Line Color</h3>
-        <p>Set the color of the bars and the text.</p>
+        <section>
+          <h3><i class="fa fa-adjust" aria-hidden="true"></i> Line Color</h3>
+          <p>Set the color of the bars and the text.</p>
 
-<pre><code>JsBarcode("#barcode", "Red lines", {
-  lineColor: "#990000"
-});</code></pre>
-
-        <svg class="barcode"
-          jsbarcode-value="Red lines"
-          jsbarcode-lineColor="#990000"
-        ></svg>
-      </section>
+          <div class="example" data-value="Red lines" data-options='{"lineColor": "#990000"}'></div>
+        </section>
 
 
-      <section>
-        <h3><i class="fa fa-font" aria-hidden="true"></i> Font</h3>
-        <p>Define the font used for the text in the generated barcode. <br>This can be any default font or a font defined by a @font-face rule.</p>
+        <section>
+          <h3><i class="fa fa-font" aria-hidden="true"></i> Font</h3>
+          <p>Define the font used for the text in the generated barcode. <br>This can be any default font or a font defined by a @font-face rule.</p>
 
-<pre><code>JsBarcode("#barcode", "Fantasy font", {
-  font: "fantasy"
-});</code></pre>
-
-        <svg class="barcode"
-          jsbarcode-value="Fantasy font"
-          jsbarcode-font="fantasy"
-        ></svg>
-      </section>
+          <div class="example" data-value="Fantasy font" data-options='{"font": "fantasy"}'></div>
+        </section>
 
 
-      <section>
-        <h3><i class="fa fa-text-height" aria-hidden="true"></i> Font Size</h3>
-        <p>Set the size of the text in pixels</p>
+        <section>
+          <h3><i class="fa fa-text-height" aria-hidden="true"></i> Font Size</h3>
+          <p>Set the size of the text in pixels</p>
 
-<pre><code>JsBarcode("#barcode", "Bigger text", {
-  fontSize: 40
-});</code></pre>
-
-        <svg class="barcode"
-          jsbarcode-value="Bigger text"
-          jsbarcode-fontSize="40"
-        ></svg>
-      </section>
+          <div class="example" data-value="Bigger text" data-options='{"fontSize": 40}'></div>
+        </section>
 
 
-            <section>
-              <h3><i class="fa fa-bold" aria-hidden="true"></i> Font Options</h3>
-              <p>With fontOptions you can add bold or italic text to the barcode.</p>
+        <section>
+          <h3><i class="fa fa-bold" aria-hidden="true"></i> Font Options</h3>
+          <p>With fontOptions you can add bold or italic text to the barcode.</p>
 
-<pre><code>JsBarcode("#barcode", "Bold text", {
-  fontOptions: "bold"
-});</code></pre>
+          <div class="example" data-value="Bold text" data-options='{"fontOptions": "bold"}'></div>
 
-              <svg class="barcode"
-                jsbarcode-value="Bold text"
-                jsbarcode-fontOptions="bold"
-              ></svg>
+          <div class="example" data-value="Italic text" data-options='{"fontOptions": "italic"}'></div>
 
-<pre><code>JsBarcode("#barcode", "Italic text", {
-  fontOptions: "italic"
-});</code></pre>
+          <div class="example" data-value="Both options" data-options='{"fontOptions": "bold italic"}'></div>
+        </section>
 
-              <svg class="barcode"
-                jsbarcode-value="Italic text"
-                jsbarcode-fontOptions="italic"
-              ></svg>
+        <section>
+          <h3><i class="fa fa-arrows-alt" aria-hidden="true"></i> Margins</h3>
+          <p>Set the space margin around the barcode. <br>If nothing else is set, <br>all side will inherit the margins property but can<br>be replaced if you want to set them separably.</p>
 
-<pre><code>JsBarcode("#barcode", "Both options", {
-  fontOptions: "bold italic"
-});</code></pre>
+          <div class="example" data-value="Bigger margins" data-options='{"margin": 30, "background": "#dddddd"}'></div>
 
-              <svg class="barcode"
-                jsbarcode-value="Both options"
-                jsbarcode-fontOptions="bold italic"
-              ></svg>
-            </section>
-
-      <section>
-        <h3><i class="fa fa-arrows-alt" aria-hidden="true"></i> Margins</h3>
-        <p>Set the space margin around the barcode. <br>If nothing else is set, <br>all side will inherit the margins property but can<br>be replaced if you want to set them separably.</p>
-
-<pre><code>JsBarcode("#barcode", "Bigger margins", {
-  margin: 30,
-  background: "#dddddd"
-});</code></pre>
-
-        <svg class="barcode"
-          jsbarcode-value="Bigger margins"
-          jsbarcode-margin="30"
-          jsbarcode-background="#dddddd"
-        ></svg>
-
-<pre><code>JsBarcode("#barcode", "Left/Top margin", {
-  marginLeft: 30,
-  marginTop: 50,
-  background: "#dddddd"
-});</code></pre>
-
-        <svg class="barcode"
-          jsbarcode-value="Left/Top margin"
-          jsbarcode-marginLeft="30"
-          jsbarcode-top="50"
-          jsbarcode-background="#dddddd"
-        ></svg>
-      </section>
+          <div class="example" data-value="Left/Top margin" data-options='{"marginLeft": 30, "marginBottom": 50, "background": "#dddddd"}'></div>
+        </section>
+      </div>
 
     </div>
   </body>
