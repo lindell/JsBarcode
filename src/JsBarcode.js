@@ -17,8 +17,8 @@ import defaults from './defaults/defaults.js';
 let API = function(){};
 
 // The first call of the library API
-// Will return an object with all barcodes calls and the information needed
-// when the rendering function is called and options the barcodes might need
+// Will return an object with all barcodes calls and the data that is used
+// by the renderers
 let JsBarcode = function(element, text, options){
 	var api = new API();
 
@@ -31,7 +31,7 @@ let JsBarcode = function(element, text, options){
 	api._encodings = [];
 	api._options = defaults;
 
-	// If text is set, use simple syntax
+	// If text is set, use the simple syntax (render the barcode directly)
 	if(typeof text !== "undefined"){
 		options = options || {};
 
@@ -72,6 +72,7 @@ function registerBarcode(barcodes, name){
 	};
 }
 
+// encode() handles the Encoder call and builds the binary string to be rendered
 function encode(text, Encoder, options){
 	// Ensure that text is a string
 	text = "" + text;
@@ -89,6 +90,7 @@ function encode(text, Encoder, options){
 		}
 	}
 
+	// Make a request for the binary data (and other infromation) that should be rendered
 	var encoded = encoder.encode();
 
 	// Encodings can be nestled like [[1-1, 1-2], 2, [3-1, 3-2]
@@ -127,8 +129,9 @@ API.prototype.blank = function(size){
 	return this;
 }
 
+// Initialize JsBarcode on all HTML elements defined. 
 API.prototype.init = function(){
-	// this._renderProperties can be
+	// Make sure renderProperies is an array
 	if(!Array.isArray(this._renderProperties)){
 		this._renderProperties = [this._renderProperties];
 	}
