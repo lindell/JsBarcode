@@ -1366,6 +1366,8 @@
 				this.string = string;
 			}
 
+			this.displayValue = options.displayValue;
+
 			// Define the EAN-13 structure
 			this.structure = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
 
@@ -1400,11 +1402,13 @@
 			var rightSide = this.string.substr(7, 6);
 
 			// Add the first digigt
-			result.push({
-				data: "000000000000",
-				text: this.string[0],
-				options: { textAlign: "left", fontSize: this.fontSize }
-			});
+			if (this.displayValue) {
+				result.push({
+					data: "000000000000",
+					text: this.string[0],
+					options: { textAlign: "left", fontSize: this.fontSize }
+				});
+			}
 
 			// Add the guard bars
 			result.push({
@@ -1438,7 +1442,7 @@
 				options: { height: this.guardHeight }
 			});
 
-			if (this.lastChar) {
+			if (this.lastChar && this.displayValue) {
 				result.push({ data: "00" });
 
 				result.push({
@@ -1720,6 +1724,8 @@
 				this.string = string;
 			}
 
+			this.displayValue = options.displayValue;
+
 			// Make sure the font is not bigger than the space between the guard bars
 			if (options.fontSize > options.width * 10) {
 				this.fontSize = options.width * 10;
@@ -1740,11 +1746,13 @@
 			var result = [];
 
 			// Add the first digigt
-			result.push({
-				data: "00000000",
-				text: this.string[0],
-				options: { textAlign: "left", fontSize: this.fontSize }
-			});
+			if (this.displayValue) {
+				result.push({
+					data: "00000000",
+					text: this.string[0],
+					options: { textAlign: "left", fontSize: this.fontSize }
+				});
+			}
 
 			// Add the guard bars
 			result.push({
@@ -1779,11 +1787,13 @@
 			});
 
 			// Add the last digit
-			result.push({
-				data: "00000000",
-				text: this.string[11],
-				options: { textAlign: "right", fontSize: this.fontSize }
-			});
+			if (this.displayValue) {
+				result.push({
+					data: "00000000",
+					text: this.string[11],
+					options: { textAlign: "right", fontSize: this.fontSize }
+				});
+			}
 
 			return result;
 		};
@@ -2350,7 +2360,7 @@
 	// Convert string to integers/booleans where it should be
 
 	function optionsFromStrings(options) {
-	  var intOptions = ["width", "height", "textMargin", "fontSize", "margin", "marginLeft", "marginBottom", "marginLeft", "marginRight"];
+	  var intOptions = ["width", "height", "textMargin", "fontSize", "margin", "marginTop", "marginBottom", "marginLeft", "marginRight"];
 
 	  for (var intOption in intOptions) {
 	    intOption = intOptions[intOption];

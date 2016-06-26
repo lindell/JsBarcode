@@ -24,6 +24,8 @@ var UPC = function () {
 			this.string = string;
 		}
 
+		this.displayValue = options.displayValue;
+
 		// Make sure the font is not bigger than the space between the guard bars
 		if (options.fontSize > options.width * 10) {
 			this.fontSize = options.width * 10;
@@ -44,11 +46,13 @@ var UPC = function () {
 		var result = [];
 
 		// Add the first digigt
-		result.push({
-			data: "00000000",
-			text: this.string[0],
-			options: { textAlign: "left", fontSize: this.fontSize }
-		});
+		if (this.displayValue) {
+			result.push({
+				data: "00000000",
+				text: this.string[0],
+				options: { textAlign: "left", fontSize: this.fontSize }
+			});
+		}
 
 		// Add the guard bars
 		result.push({
@@ -83,11 +87,13 @@ var UPC = function () {
 		});
 
 		// Add the last digit
-		result.push({
-			data: "00000000",
-			text: this.string[11],
-			options: { textAlign: "right", fontSize: this.fontSize }
-		});
+		if (this.displayValue) {
+			result.push({
+				data: "00000000",
+				text: this.string[11],
+				options: { textAlign: "right", fontSize: this.fontSize }
+			});
+		}
 
 		return result;
 	};

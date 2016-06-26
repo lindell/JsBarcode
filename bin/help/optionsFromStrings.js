@@ -8,7 +8,7 @@ exports.default = optionsFromStrings;
 // Convert string to integers/booleans where it should be
 
 function optionsFromStrings(options) {
-  var intOptions = ["width", "height", "textMargin", "fontSize", "margin", "marginLeft", "marginBottom", "marginLeft", "marginRight"];
+  var intOptions = ["width", "height", "textMargin", "fontSize", "margin", "marginTop", "marginBottom", "marginLeft", "marginRight"];
 
   for (var intOption in intOptions) {
     intOption = intOptions[intOption];
