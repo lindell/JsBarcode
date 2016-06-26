@@ -8,7 +8,7 @@ function optionsFromStrings(options){
     "textMargin",
     "fontSize",
     "margin",
-    "marginLeft",
+    "marginTop",
     "marginBottom",
     "marginLeft",
     "marginRight"
