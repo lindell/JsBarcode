@@ -3,7 +3,7 @@ var JsBarcode = require('../../bin/JsBarcode.js');
 var Canvas = require("canvas");
 var help = require("./help/help");
 
-var options = {height: 100};
+var options = {height: 100, displayValue: true};
 
 describe('UPC', function() {
   it('should be able to include the encoder(s)', function () {
