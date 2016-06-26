@@ -13,6 +13,8 @@ class EAN13{
 			this.string = string;
 		}
 
+		this.displayValue = options.displayValue;
+
 		// Define the EAN-13 structure
 		this.structure = [
 			"LLLLLL",
@@ -60,11 +62,13 @@ class EAN13{
 		var rightSide = this.string.substr(7, 6);
 
 		// Add the first digigt
-		result.push({
-			data: "000000000000",
-			text: this.string[0],
-			options: {textAlign: "left", fontSize: this.fontSize}
-		});
+		if(this.displayValue){
+			result.push({
+				data: "000000000000",
+				text: this.string[0],
+				options: {textAlign: "left", fontSize: this.fontSize}
+			});
+		}
 
 		// Add the guard bars
 		result.push({
@@ -98,7 +102,7 @@ class EAN13{
 			options: {height: this.guardHeight}
 		});
 
-		if(this.lastChar){
+		if(this.lastChar && this.displayValue){
 			result.push({data: "00"});
 
 			result.push({
