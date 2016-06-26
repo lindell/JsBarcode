@@ -1,7 +1,7 @@
 // Encoding documentation:
 // https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Binary_encoding_of_data_digits_into_EAN-13_barcode
 
-import EANencoder from './ean_encoder.js'
+import EANencoder from './ean_encoder.js';
 
 class EAN13{
 	constructor(string, options){

@@ -77,5 +77,23 @@
   "dependencies": {
     "canvas": "^1.0.0",
     "commander": ">=2.8.0"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module"
+    },
+    "extends": "eslint:recommended",
+    "predef": "jQuery",
+    "rules": {
+      "semi": ["warn", "always"],
+      "no-console": "error",
+      "no-control-regex": "off",
+      "indent": ["warn", "tab"]
+    }
   }
 }

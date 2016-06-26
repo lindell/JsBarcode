@@ -31,7 +31,7 @@ function prepareCanvas(canvas, options, encodings){
 	var totalWidth = 0;
 	var maxHeight = 0;
 	for(let i = 0; i < encodings.length; i++){
-	 	let options = merge(options, encodings[i].options);
+		let options = merge(options, encodings[i].options);
 
 		// Set font
 		ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
@@ -90,14 +90,13 @@ function drawCanvasBarcode(canvas, options, encoding){
 	var binary = encoding.data;
 
 	// Creates the barcode out of the encoded binary
-	var yFrom, yHeight;
+	var yFrom;
 	if(options.textPosition == "top"){
 		yFrom = options.marginTop + options.fontSize + options.textMargin;
 	}
 	else{
 		yFrom = options.marginTop;
 	}
-	yHeight = options.height;
 
 	ctx.fillStyle = options.lineColor;
 

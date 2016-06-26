@@ -16,7 +16,7 @@ var defaults = {
 	marginBottom: undefined,
 	marginLeft: undefined,
 	marginRight: undefined,
-	valid: function(valid){}
+	valid: function(){}
 };
 
 export default defaults;

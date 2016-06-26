@@ -45,12 +45,12 @@ let JsBarcode = function(element, text, options){
 	}
 
 	return api;
-}
+};
 
 // To make tests work TODO: remove
 JsBarcode.getModule = function(name){
 	return barcodes[name];
-}
+};
 
 // Register all barcodes
 for(var name in barcodes){
@@ -120,16 +120,16 @@ function autoSelectBarcode(){
 API.prototype.options = function(options){
 	this._options = merge(this._options, options);
 	return this;
-}
+};
 
 // Will create a blank space (usually in between barcodes)
 API.prototype.blank = function(size){
 	var zeroes = "0".repeat(size);
 	this._encodings.push({data: zeroes});
 	return this;
-}
+};
 
-// Initialize JsBarcode on all HTML elements defined. 
+// Initialize JsBarcode on all HTML elements defined.
 API.prototype.init = function(){
 	// Make sure renderProperies is an array
 	if(!Array.isArray(this._renderProperties)){
@@ -153,7 +153,7 @@ API.prototype.init = function(){
 
 		render(renderProperty, encoded, options);
 	}
-}
+};
 
 
 // The render API call. Calls the real render function.
@@ -170,7 +170,7 @@ API.prototype.render = function(){
 	this._options.valid(true);
 
 	return this;
-}
+};
 
 // Prepares the encodings and calls the renderer
 function render(renderProperties, encodings, options){
@@ -198,6 +198,7 @@ if(typeof window !== "undefined"){
 }
 
 // Export to jQuery
+/*global jQuery */
 if (typeof jQuery !== 'undefined') {
 	jQuery.fn.JsBarcode = function(content, options){
 		var elementArray = [];
@@ -229,8 +230,8 @@ function getRenderProperies(element){
 			throw new Error("No element found");
 		}
 		else{
-			var returnArray = [];
-			for(var i = 0; i < selector.length; i++){
+			let returnArray = [];
+			for(let i = 0; i < selector.length; i++){
 				returnArray.push(getRenderProperies(selector[i]));
 			}
 			return returnArray;
@@ -238,8 +239,8 @@ function getRenderProperies(element){
 	}
 	// If element is array. Recursivly call with every object in the array
 	else if(Array.isArray(element)){
-		var returnArray = [];
-		for(var i = 0; i < element.length; i++){
+		let returnArray = [];
+		for(let i = 0; i < element.length; i++){
 			returnArray.push(getRenderProperies(element[i]));
 		}
 		return returnArray;

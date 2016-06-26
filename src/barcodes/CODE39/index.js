@@ -66,14 +66,14 @@ class CODE39 {
 		var result = this.getEncoding("*");
 
 		// Take every character and add the binary representation to the result
-		for(var i = 0; i < this.string.length; i++){
+		for(let i = 0; i < this.string.length; i++){
 			result += this.getEncoding(this.string[i]) + "0";
 		}
 
 		// Calculate mod43 checksum if enabled
 		if(this.mod43Enabled){
 			var checksum = 0;
-			for(var i = 0; i < this.string.length; i++){
+			for(let i = 0; i < this.string.length; i++){
 				checksum += this.characterValue(this.string[i]);
 			}
 

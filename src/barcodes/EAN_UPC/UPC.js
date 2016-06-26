@@ -1,7 +1,7 @@
 // Encoding documentation:
 // https://en.wikipedia.org/wiki/Universal_Product_Code#Encoding
 
-import EANencoder from './ean_encoder.js'
+import EANencoder from './ean_encoder.js';
 
 class UPC{
 	constructor(string, options){
