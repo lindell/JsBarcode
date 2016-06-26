@@ -179,7 +179,10 @@ gulp.task('github-release', function(done) {
   }, done);
 });
 
-gulp.task('jsdelivr', function(){
+gulp.task('jsdelivr', function(callback){
+	console.log("Updating sizes...");
+	updateReadmeFileSizes();
+	console.log("Making request...");
   request({
     url: "https://api.jsdelivr.com/v1/jsdelivr/libraries?name=jsbarcode",
     json: true
@@ -191,14 +194,17 @@ gulp.task('jsdelivr', function(){
       readme = readme.replace(/https:\/\/cdn\.jsdelivr\.net\/jsbarcode\/[0-9]+\.[0-9]+\.[0-9]+\//g,
         "https://cdn.jsdelivr.net/jsbarcode/" + version + "/");
 
-      fs.writeFileSync('README.md', readme, 'utf8');
+			fs.writeFileSync('README.md', readme, 'utf8');
 
-      console.log("New version: " + version);
-    }
+			console.log("New version: " + version);
+			callback();
+		}
+		else{
+			console.error("Failed to make jsdelivr api request");
+			callback();
+		}
   })
 });
-
-gulp.task("update-readme-sizes", updateReadmeFileSizes);
 
 function updateReadmeFileSizes(){
   var files = require('./barcode-building.json');
