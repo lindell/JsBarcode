@@ -10,6 +10,9 @@ import linearizeEncodings from './help/linearizeEncodings.js';
 import fixOptions from "./help/fixOptions.js";
 import getOptionsFromElement from "./help/getOptionsFromElement.js";
 
+// Default values
+import defaults from './defaults/defaults.js';
+
 // The protype of the object returned from the JsBarcode() call
 let API = function(){};
 
@@ -277,24 +280,3 @@ function getRenderProperies(element){
 		throw new Error("Not supported type to render on.");
 	}
 }
-
-var defaults = {
-	width: 2,
-	height: 100,
-	format: "auto",
-	displayValue: true,
-	fontOptions: "",
-	font: "monospace",
-	textAlign: "center",
-	textPosition: "bottom",
-	textMargin: 2,
-	fontSize: 20,
-	background: "#ffffff",
-	lineColor: "#000000",
-	margin: 10,
-	marginTop: undefined,
-	marginBottom: undefined,
-	marginLeft: undefined,
-	marginRight: undefined,
-	valid: function(valid){}
-};
