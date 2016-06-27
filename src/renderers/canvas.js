@@ -69,18 +69,18 @@ function prepareCanvas(canvas, globalOptions, encodings){
 		totalWidth += encodings[i].width;
 	}
 
-	canvas.width = totalWidth + options.marginLeft + options.marginRight;
+	canvas.width = totalWidth + globalOptions.marginLeft + globalOptions.marginRight;
 
 	canvas.height = maxHeight;
 
 	// Paint the canvas
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	if(options.background){
-		ctx.fillStyle = options.background;
+	if(globalOptions.background){
+		ctx.fillStyle = globalOptions.background;
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 	}
 
-	ctx.translate(options.marginLeft, 0);
+	ctx.translate(globalOptions.marginLeft, 0);
 }
 
 function drawCanvasBarcode(canvas, options, encoding){

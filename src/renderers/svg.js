@@ -67,7 +67,7 @@ function prepareSVG(svg, globalOptions, encodings){
 		totalWidth += encodings[i].width;
 	}
 
-	var width = totalWidth + options.marginLeft + options.marginRight;
+	var width = totalWidth + globalOptions.marginLeft + globalOptions.marginRight;
 	var height = maxHeight;
 
 	svg.setAttribute("width", width + "px");
@@ -81,8 +81,8 @@ function prepareSVG(svg, globalOptions, encodings){
 
 	svg.style.transform = "translate(0,0)";
 
-	if(options.background){
-		svg.style.background = options.background;
+	if(globalOptions.background){
+		svg.style.background = globalOptions.background;
 	}
 }
 
