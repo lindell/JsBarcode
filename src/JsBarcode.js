@@ -83,7 +83,7 @@ function encode(text, Encoder, options){
 	// If the valid callback option is set, call it instead of throwing error
 	if(!encoder.valid()){
 		if(options.valid === defaults.valid){
-			throw new Error('"' + text + '" is not a valid input for ' + name);
+			throw new Error('"' + text + '" is not a valid input.');
 		}
 		else{
 			options.valid(false);
@@ -284,3 +284,7 @@ function getRenderProperies(element){
 		throw new Error("Not supported type to render on.");
 	}
 }
+
+/** global: HTMLImageElement */
+/** global: HTMLCanvasElement */
+/** global: SVGElement */
