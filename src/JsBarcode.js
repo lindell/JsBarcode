@@ -222,6 +222,10 @@ module.exports = JsBarcode;
 //     completed, calls afterRender (function)
 //   options (optional): Options that can be defined in the element
 // }
+
+/** global: HTMLImageElement */
+/** global: HTMLCanvasElement */
+/** global: SVGElement */
 function getRenderProperies(element){
 	// If the element is a string, query select call again
 	if(typeof element === "string"){
@@ -284,7 +288,3 @@ function getRenderProperies(element){
 		throw new Error("Not supported type to render on.");
 	}
 }
-
-/** global: HTMLImageElement */
-/** global: HTMLCanvasElement */
-/** global: SVGElement */
