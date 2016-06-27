@@ -7,8 +7,8 @@ import renderers from './renderers/';
 // Help functions
 import merge from './help/merge.js';
 import linearizeEncodings from './help/linearizeEncodings.js';
-import fixOptions from "./help/fixOptions.js";
-import getOptionsFromElement from "./help/getOptionsFromElement.js";
+import fixOptions from './help/fixOptions.js';
+import getRenderProperties from './help/getRenderProperties.js';
 
 // Default values
 import defaults from './defaults/defaults.js';
@@ -27,7 +27,7 @@ let JsBarcode = function(element, text, options){
 	}
 
 	// Variables that will be pased through the API calls
-	api._renderProperties = getRenderProperies(element);
+	api._renderProperties = getRenderProperties(element);
 	api._encodings = [];
 	api._options = defaults;
 
@@ -211,80 +211,3 @@ if (typeof jQuery !== 'undefined') {
 
 // Export to commonJS
 module.exports = JsBarcode;
-
-// Takes an element and returns an object with information about how
-// it should be rendered
-// This could also return an array with these objects
-// {
-//   element: The element that the renderer should draw on
-//   renderer: The name of the renderer
-//   afterRender (optional): If something has to done after the renderer
-//     completed, calls afterRender (function)
-//   options (optional): Options that can be defined in the element
-// }
-
-/** global: HTMLImageElement */
-/** global: HTMLCanvasElement */
-/** global: SVGElement */
-function getRenderProperies(element){
-	// If the element is a string, query select call again
-	if(typeof element === "string"){
-		var selector = document.querySelectorAll(element);
-		if(selector.length === 0){
-			throw new Error("No element found");
-		}
-		else{
-			let returnArray = [];
-			for(let i = 0; i < selector.length; i++){
-				returnArray.push(getRenderProperies(selector[i]));
-			}
-			return returnArray;
-		}
-	}
-	// If element is array. Recursivly call with every object in the array
-	else if(Array.isArray(element)){
-		let returnArray = [];
-		for(let i = 0; i < element.length; i++){
-			returnArray.push(getRenderProperies(element[i]));
-		}
-		return returnArray;
-	}
-	// If element, render on canvas and set the uri as src
-	else if(typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLImageElement){
-		var canvas = document.createElement('canvas');
-		return {
-			element: canvas,
-			options: getOptionsFromElement(element, defaults),
-			renderer: "canvas",
-			afterRender: function(){
-				element.setAttribute("src", canvas.toDataURL());
-			}
-		};
-	}
-	// If SVG
-	else if(typeof SVGElement !== 'undefined' && element instanceof SVGElement){
-		return {
-			element: element,
-			options: getOptionsFromElement(element, defaults),
-			renderer: "svg"
-		};
-	}
-	// If canvas (in browser)
-	else if(typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLCanvasElement){
-		return {
-			element: element,
-			options: getOptionsFromElement(element, defaults),
-			renderer: "canvas"
-		};
-	}
-	// If canvas (in node)
-	else if(element.getContext){
-		return {
-			element: element,
-			renderer: "canvas"
-		};
-	}
-	else{
-		throw new Error("Not supported type to render on.");
-	}
-}

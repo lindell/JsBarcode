@@ -1,6 +1,7 @@
 import optionsFromStrings from "./optionsFromStrings.js";
+import defaults from "../defaults/defaults.js";
 
-function getOptionsFromElement(element, defaults){
+function getOptionsFromElement(element){
 	var options = {};
 	for(var property in defaults){
 // jsbarcode-*
