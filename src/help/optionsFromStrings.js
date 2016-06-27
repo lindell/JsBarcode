@@ -15,9 +15,11 @@ function optionsFromStrings(options){
 	];
 
 	for(var intOption in intOptions){
-		intOption = intOptions[intOption];
-		if(typeof options[intOption] === "string"){
-			options[intOption] = parseInt(options[intOption], 10);
+		if(intOptions.hasOwnProperty(intOption)){
+			intOption = intOptions[intOption];
+			if(typeof options[intOption] === "string"){
+				options[intOption] = parseInt(options[intOption], 10);
+			}
 		}
 	}
 

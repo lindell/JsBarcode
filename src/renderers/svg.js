@@ -13,7 +13,7 @@ function renderSVG(svg, encodings, options){
 
 		var group = createGroup(currentX, encodingOptions.marginTop, svg);
 
-		setGroupOptions(group, encodingOptions, encodings[i]);
+		setGroupOptions(group, encodingOptions);
 
 		drawSvgBarcode(group, encodingOptions, encodings[i]);
 		drawSVGText(group, encodingOptions, encodings[i]);
@@ -99,8 +99,9 @@ function drawSvgBarcode(parent, options, encoding){
 	}
 
 	var barWidth = 0;
+	var x;
 	for(var b = 0; b < binary.length; b++){
-		var x = b * options.width + encoding.barcodePadding;
+		x = b * options.width + encoding.barcodePadding;
 
 		if(binary[b] === "1"){
 			barWidth++;
@@ -203,7 +204,7 @@ function createGroup(x, y, svg){
 	return group;
 }
 
-function setGroupOptions(group, options/*, encoding*/){
+function setGroupOptions(group, options){
 	group.setAttribute("style",
 	"fill:" + options.lineColor + ";"
 	);
