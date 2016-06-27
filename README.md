@@ -1,7 +1,10 @@
+# JsBarcode
+
 [![Join the chat at https://gitter.im/lindell/JsBarcode](https://badges.gitter.im/lindell/JsBarcode.svg)](https://gitter.im/lindell/JsBarcode?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://secure.travis-ci.org/lindell/JsBarcode.png)](http://travis-ci.org/lindell/JsBarcode)
 [![Coverage Status](https://coveralls.io/repos/github/lindell/JsBarcode/badge.svg?branch=master)](https://coveralls.io/github/lindell/JsBarcode?branch=master)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/lindell/JsBarcode/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/lindell/JsBarcode/?branch=master)
+[![Package Quality](http://npm.packagequality.com/shield/jsbarcode.svg)](http://packagequality.com/#?package=jsbarcode)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/lindell/JsBarcode/blob/master/MIT-LICENSE.txt)
 
 
