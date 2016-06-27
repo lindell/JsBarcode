@@ -21,7 +21,7 @@ function renderCanvas(canvas, encodings, options){
 	restoreCanvas(canvas);
 }
 
-function prepareCanvas(canvas, options, encodings){
+function prepareCanvas(canvas, globalOptions, encodings){
 	// Get the canvas context
 	var ctx = canvas.getContext("2d");
 
@@ -31,7 +31,7 @@ function prepareCanvas(canvas, options, encodings){
 	var totalWidth = 0;
 	var maxHeight = 0;
 	for(let i = 0; i < encodings.length; i++){
-		let options = merge(options, encodings[i].options);
+		var options = merge(globalOptions, encodings[i].options);
 
 		// Set font
 		ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;

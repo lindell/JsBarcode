@@ -23,7 +23,7 @@ function renderSVG(svg, encodings, options){
 }
 
 
-function prepareSVG(svg, options, encodings){
+function prepareSVG(svg, globalOptions, encodings){
 	// Clear the SVG
 	while (svg.firstChild) {
 		svg.removeChild(svg.firstChild);
@@ -32,7 +32,7 @@ function prepareSVG(svg, options, encodings){
 	var totalWidth = 0;
 	var maxHeight = 0;
 	for(let i = 0; i < encodings.length; i++){
-		let options = merge(options, encodings[i].options);
+		var options = merge(globalOptions, encodings[i].options);
 
 		// Calculate the width of the encoding
 		var textWidth = messureSVGtext(encodings[i].text, svg, options);
