@@ -4,14 +4,16 @@ import defaults from "../defaults/defaults.js";
 function getOptionsFromElement(element){
 	var options = {};
 	for(var property in defaults){
-// jsbarcode-*
-		if(element.hasAttribute("jsbarcode-" + property.toLowerCase())){
-			options[property] = element.getAttribute("jsbarcode-" + property.toLowerCase());
-		}
+		if(defaults.hasOwnProperty(property)){
+			// jsbarcode-*
+			if(element.hasAttribute("jsbarcode-" + property.toLowerCase())){
+				options[property] = element.getAttribute("jsbarcode-" + property.toLowerCase());
+			}
 
-// data-*
-		if(element.hasAttribute("data-" + property.toLowerCase())){
-			options[property] = element.getAttribute("data-" + property.toLowerCase());
+			// data-*
+			if(element.hasAttribute("data-" + property.toLowerCase())){
+				options[property] = element.getAttribute("data-" + property.toLowerCase());
+			}
 		}
 	}
 
