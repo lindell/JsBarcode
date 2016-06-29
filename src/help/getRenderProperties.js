@@ -3,6 +3,7 @@
 /* global SVGElement */
 
 import getOptionsFromElement from "./getOptionsFromElement.js";
+import {getRendererClass} from "../renderers";
 
 // Takes an element and returns an object with information about how
 // it should be rendered
@@ -37,7 +38,7 @@ function getRenderProperties(element){
 		return {
 			element: element,
 			options: getOptionsFromElement(element),
-			renderer: "svg"
+			renderer: getRendererClass("svg")
 		};
 	}
 	// If canvas (in browser)
@@ -45,14 +46,14 @@ function getRenderProperties(element){
 		return {
 			element: element,
 			options: getOptionsFromElement(element),
-			renderer: "canvas"
+			renderer: getRendererClass("canvas")
 		};
 	}
 	// If canvas (in node)
 	else if(element.getContext){
 		return {
 			element: element,
-			renderer: "canvas"
+			renderer: getRendererClass("canvas")
 		};
 	}
 	else{
@@ -81,7 +82,7 @@ function newCanvasRenderProperties(imgElement){
 	return {
 		element: canvas,
 		options: getOptionsFromElement(imgElement),
-		renderer: "canvas",
+		renderer: getRendererClass("canvas"),
 		afterRender: function(){
 			imgElement.setAttribute("src", canvas.toDataURL());
 		}

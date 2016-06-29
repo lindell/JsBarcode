@@ -13,6 +13,6 @@
     "semi": [1, "always"],
     "no-console": 2,
     "no-control-regex": 0,
-    "indent": [1, "tab"]
+    "indent": [1, "tab", {"SwitchCase": 1}]
   }
 }
