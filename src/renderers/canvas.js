@@ -1,6 +1,7 @@
 export default renderCanvas;
 
 import merge from "../help/merge.js";
+import {getEncodingHeight, getBarcodePadding} from "./shared.js"
 
 function renderCanvas(canvas, encodings, options){
 	// Abort if the browser does not support HTML5 canvas
@@ -42,25 +43,9 @@ function prepareCanvas(canvas, globalOptions, encodings){
 		encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
 
 		// Calculate the height of the encoding
-		var height = options.height +
-			((options.displayValue && encodings[i].text.length > 0) ? options.fontSize : 0) +
-			options.textMargin +
-			options.marginTop +
-			options.marginBottom;
+		var height = getEncodingHeight(encodings[i], options);
 
-		var barcodePadding = 0;
-		if(options.displayValue && barcodeWidth < textWidth){
-			if(options.textAlign == "center"){
-				barcodePadding = Math.floor((textWidth - barcodeWidth) / 2);
-			}
-			else if(options.textAlign == "left"){
-				barcodePadding = 0;
-			}
-			else if(options.textAlign == "right"){
-				barcodePadding = Math.floor(textWidth - barcodeWidth);
-			}
-		}
-		encodings[i].barcodePadding = barcodePadding;
+		encodings[i].barcodePadding = getBarcodePadding(textWidth, barcodeWidth, options);
 
 		if(height > maxHeight){
 			maxHeight = height;

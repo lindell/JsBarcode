@@ -1,6 +1,7 @@
 export default renderSVG;
 
 import merge from "../help/merge.js";
+import {getEncodingHeight, getBarcodePadding} from "./shared.js";
 
 var svgns = "http://www.w3.org/2000/svg";
 
@@ -40,25 +41,9 @@ function prepareSVG(svg, globalOptions, encodings){
 		encodings[i].width =  Math.ceil(Math.max(textWidth, barcodeWidth));
 
 		// Calculate the height of the encoding
-		var encodingHeight = options.height +
-			((options.displayValue && encodings[i].text.length > 0) ? options.fontSize : 0) +
-			options.textMargin +
-			options.marginTop +
-			options.marginBottom;
+		var encodingHeight = getEncodingHeight(encodings[i], options);
 
-		var barcodePadding = 0;
-		if(options.displayValue && barcodeWidth < textWidth){
-			if(options.textAlign == "center"){
-				barcodePadding = Math.floor((textWidth - barcodeWidth) / 2);
-			}
-			else if(options.textAlign == "left"){
-				barcodePadding = 0;
-			}
-			else if(options.textAlign == "right"){
-				barcodePadding = Math.floor(textWidth - barcodeWidth);
-			}
-		}
-		encodings[i].barcodePadding = barcodePadding;
+		encodings[i].barcodePadding = getBarcodePadding(textWidth, barcodeWidth, options);
 
 		if(encodingHeight > maxHeight){
 			maxHeight = encodingHeight;
