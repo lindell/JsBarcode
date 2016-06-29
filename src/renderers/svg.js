@@ -36,7 +36,6 @@ class SVGRenderer{
 		}
 
 		calculateEncodingAttributes(this.encodings, this.options);
-
 		var totalWidth = getTotalWidthOfEncodings(this.encodings);
 		var maxHeight = getMaximumHeightOfEncodings(this.encodings);
 
@@ -57,7 +56,7 @@ class SVGRenderer{
 		}
 
 		var barWidth = 0;
-		var x;
+		var x = 0;
 		for(var b = 0; b < binary.length; b++){
 			x = b * options.width + encoding.barcodePadding;
 
