@@ -1,4 +1,4 @@
-export {getEncodingHeight, getBarcodePadding};
+import merge from "../help/merge.js";
 
 function getEncodingHeight(encoding, options){
 	return options.height +
@@ -22,3 +22,50 @@ function getBarcodePadding(textWidth, barcodeWidth, options){
 	}
 	return 0;
 }
+
+function calculateEncodingAttributes(encodings, barcodeOptions){
+	for(let i = 0; i < encodings.length; i++){
+		var encoding = encodings[i];
+		var options = merge(barcodeOptions, encoding.options);
+
+		// Calculate the width of the encoding
+		var textWidth = messureText(encoding.text, options);
+		var barcodeWidth = encoding.data.length * options.width;
+		encoding.width =  Math.ceil(Math.max(textWidth, barcodeWidth));
+
+		encoding.height = getEncodingHeight(encoding, options);
+
+		encoding.barcodePadding = getBarcodePadding(textWidth, barcodeWidth, options);
+	}
+}
+
+function getTotalWidthOfEncodings(encodings){
+	var totalWidth = 0;
+	for(let i = 0; i < encodings.length; i++){
+		totalWidth += encodings[i].width;
+	}
+	return totalWidth;
+}
+
+function getMaximumHeightOfEncodings(encodings){
+	var maxHeight = 0;
+	for(let i = 0; i < encodings.length; i++){
+		if(encodings[i].height > maxHeight){
+			maxHeight = encodings[i].height;
+		}
+	}
+	return maxHeight;
+}
+
+function messureText(string, options){
+	// Set font
+	var ctx = document.createElement("canvas").getContext("2d");
+	ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
+
+	// Calculate the width of the encoding
+	var size = ctx.measureText(string).width;
+
+	return size;
+}
+
+export {getMaximumHeightOfEncodings, getEncodingHeight, getBarcodePadding, calculateEncodingAttributes, getTotalWidthOfEncodings};

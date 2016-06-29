@@ -1,5 +1,5 @@
 import merge from "../help/merge.js";
-import {getEncodingHeight, getBarcodePadding} from "./shared.js";
+import {calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings} from "./shared.js";
 
 var svgns = "http://www.w3.org/2000/svg";
 
@@ -35,28 +35,10 @@ class SVGRenderer{
 			this.svg.removeChild(this.firstChild);
 		}
 
-		var totalWidth = 0;
-		var maxHeight = 0;
-		for(let i = 0; i < this.encodings.length; i++){
-			var encoding = this.encodings[i];
-			var options = merge(this.options, this.encodings[i].options);
+		calculateEncodingAttributes(this.encodings, this.options);
 
-			// Calculate the width of the encoding
-			var textWidth = messureSVGtext(encoding.text, options);
-			var barcodeWidth = encoding.data.length * options.width;
-			encoding.width =  Math.ceil(Math.max(textWidth, barcodeWidth));
-
-			// Calculate the height of the encoding
-			var encodingHeight = getEncodingHeight(encoding, options);
-
-			encoding.barcodePadding = getBarcodePadding(textWidth, barcodeWidth, options);
-
-			if(encodingHeight > maxHeight){
-				maxHeight = encodingHeight;
-			}
-
-			totalWidth += encoding.width;
-		}
+		var totalWidth = getTotalWidthOfEncodings(this.encodings);
+		var maxHeight = getMaximumHeightOfEncodings(this.encodings);
 
 		var width = totalWidth + this.options.marginLeft + this.options.marginRight;
 		this.setSvgAttributes(width, maxHeight);
@@ -156,16 +138,7 @@ class SVGRenderer{
 	}
 }
 
-function messureSVGtext(string, options){
-	// Set font
-	var ctx = document.createElement("canvas").getContext("2d");
-	ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
 
-	// Calculate the width of the encoding
-	var size = ctx.measureText(string).width;
-
-	return size;
-}
 
 function createGroup(x, y, parent){
 	var group = document.createElementNS(svgns, 'g');
@@ -179,7 +152,7 @@ function createGroup(x, y, parent){
 
 function setGroupOptions(group, options){
 	group.setAttribute("style",
-	"fill:" + options.lineColor + ";"
+		"fill:" + options.lineColor + ";"
 	);
 }
 

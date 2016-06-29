@@ -1,5 +1,5 @@
 import merge from "../help/merge.js";
-import {getEncodingHeight, getBarcodePadding} from "./shared.js";
+import {calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings} from "./shared.js";
 
 class CanvasRenderer{
 	constructor(canvas, encodings, options){
@@ -33,32 +33,9 @@ class CanvasRenderer{
 
 		ctx.save();
 
-		// Calculate total width
-		var totalWidth = 0;
-		var maxHeight = 0;
-		for(let i = 0; i < this.encodings.length; i++){
-			var options = merge(this.options, this.encodings[i].options);
-			var encoding = this.encodings[i];
-
-			// Set font
-			ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
-
-			// Calculate the width of the encoding
-			var textWidth = ctx.measureText(encoding.text).width;
-			var barcodeWidth = encoding.data.length * options.width;
-			encoding.width = Math.ceil(Math.max(textWidth, barcodeWidth));
-
-			// Calculate the height of the encoding
-			var height = getEncodingHeight(encoding, options);
-
-			encoding.barcodePadding = getBarcodePadding(textWidth, barcodeWidth, options);
-
-			if(height > maxHeight){
-				maxHeight = height;
-			}
-
-			totalWidth += encoding.width;
-		}
+		calculateEncodingAttributes(this.encodings, this.options);
+		var totalWidth = getTotalWidthOfEncodings(this.encodings);
+		var maxHeight = getMaximumHeightOfEncodings(this.encodings);
 
 		this.canvas.width = totalWidth + this.options.marginLeft + this.options.marginRight;
 
