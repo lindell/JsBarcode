@@ -83,8 +83,8 @@ class SVGRenderer{
 			var x, y;
 
 			textElem.setAttribute("style",
-		"font:" + options.fontOptions + " " + options.fontSize + "px " + options.font
-		);
+				"font:" + options.fontOptions + " " + options.fontSize + "px " + options.font
+			);
 
 			if(options.textPosition == "top"){
 				y = options.fontSize - options.textMargin;

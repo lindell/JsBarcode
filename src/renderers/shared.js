@@ -23,13 +23,13 @@ function getBarcodePadding(textWidth, barcodeWidth, options){
 	return 0;
 }
 
-function calculateEncodingAttributes(encodings, barcodeOptions){
+function calculateEncodingAttributes(encodings, barcodeOptions, context){
 	for(let i = 0; i < encodings.length; i++){
 		var encoding = encodings[i];
 		var options = merge(barcodeOptions, encoding.options);
 
 		// Calculate the width of the encoding
-		var textWidth = messureText(encoding.text, options);
+		var textWidth = messureText(encoding.text, options, context);
 		var barcodeWidth = encoding.data.length * options.width;
 		encoding.width =  Math.ceil(Math.max(textWidth, barcodeWidth));
 
@@ -57,9 +57,15 @@ function getMaximumHeightOfEncodings(encodings){
 	return maxHeight;
 }
 
-function messureText(string, options){
-	// Set font
-	var ctx = document.createElement("canvas").getContext("2d");
+function messureText(string, options, context){
+	var ctx;
+	if(typeof context === "undefined"){
+		ctx = document.createElement("canvas").getContext("2d");
+	}
+	else{
+		ctx = context;
+	}
+
 	ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
 
 	// Calculate the width of the encoding

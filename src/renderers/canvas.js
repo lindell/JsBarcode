@@ -33,7 +33,7 @@ class CanvasRenderer{
 
 		ctx.save();
 
-		calculateEncodingAttributes(this.encodings, this.options);
+		calculateEncodingAttributes(this.encodings, this.options, ctx);
 		var totalWidth = getTotalWidthOfEncodings(this.encodings);
 		var maxHeight = getMaximumHeightOfEncodings(this.encodings);
 
