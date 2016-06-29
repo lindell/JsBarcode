@@ -1,9 +1,6 @@
 // Import all the barcodes
 import barcodes from './barcodes/';
 
-// Import the renderers
-import renderers from './renderers/';
-
 // Help functions
 import merge from './help/merge.js';
 import linearizeEncodings from './help/linearizeEncodings.js';
@@ -174,8 +171,6 @@ API.prototype.render = function(){
 
 // Prepares the encodings and calls the renderer
 function render(renderProperties, encodings, options){
-	var renderer = renderers[renderProperties.renderer];
-
 	encodings = linearizeEncodings(encodings);
 
 	for(let i = 0; i < encodings.length; i++){
@@ -185,7 +180,9 @@ function render(renderProperties, encodings, options){
 
 	fixOptions(options);
 
-	renderer(renderProperties.element, encodings, options);
+	var Renderer = renderProperties.renderer;
+	var renderer = new Renderer(renderProperties.element, encodings, options);
+	renderer.render();
 
 	if(renderProperties.afterRender){
 		renderProperties.afterRender();

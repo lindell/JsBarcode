@@ -1,151 +1,160 @@
-export default renderCanvas;
-
 import merge from "../help/merge.js";
-import {getEncodingHeight, getBarcodePadding} from "./shared.js"
+import {getEncodingHeight, getBarcodePadding} from "./shared.js";
 
-function renderCanvas(canvas, encodings, options){
-	// Abort if the browser does not support HTML5 canvas
-	if (!canvas.getContext) {
-		throw new Error('The browser does not support canvas.');
+class CanvasRenderer{
+	constructor(canvas, encodings, options){
+		this.canvas = canvas;
+		this.encodings = encodings;
+		this.options = options;
 	}
 
-	prepareCanvas(canvas, options, encodings);
-	for(let i = 0; i < encodings.length; i++){
-		var encodingOptions = merge(options, encodings[i].options);
-
-		drawCanvasBarcode(canvas, encodingOptions, encodings[i]);
-		drawCanvasText(canvas, encodingOptions, encodings[i]);
-
-		moveCanvasDrawing(canvas, encodings[i]);
-	}
-
-	restoreCanvas(canvas);
-}
-
-function prepareCanvas(canvas, globalOptions, encodings){
-	// Get the canvas context
-	var ctx = canvas.getContext("2d");
-
-	ctx.save();
-
-	// Calculate total width
-	var totalWidth = 0;
-	var maxHeight = 0;
-	for(let i = 0; i < encodings.length; i++){
-		var options = merge(globalOptions, encodings[i].options);
-
-		// Set font
-		ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
-
-		// Calculate the width of the encoding
-		var textWidth = ctx.measureText(encodings[i].text).width;
-		var barcodeWidth = encodings[i].data.length * options.width;
-		encodings[i].width = Math.ceil(Math.max(textWidth, barcodeWidth));
-
-		// Calculate the height of the encoding
-		var height = getEncodingHeight(encodings[i], options);
-
-		encodings[i].barcodePadding = getBarcodePadding(textWidth, barcodeWidth, options);
-
-		if(height > maxHeight){
-			maxHeight = height;
+	render(){
+		// Abort if the browser does not support HTML5 canvas
+		if (!this.canvas.getContext) {
+			throw new Error('The browser does not support canvas.');
 		}
 
-		totalWidth += encodings[i].width;
-	}
+		this.prepareCanvas();
+		for(let i = 0; i < this.encodings.length; i++){
+			var encodingOptions = merge(this.options, this.encodings[i].options);
 
-	canvas.width = totalWidth + globalOptions.marginLeft + globalOptions.marginRight;
+			this.drawCanvasBarcode(encodingOptions, this.encodings[i]);
+			this.drawCanvasText(encodingOptions, this.encodings[i]);
 
-	canvas.height = maxHeight;
-
-	// Paint the canvas
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	if(globalOptions.background){
-		ctx.fillStyle = globalOptions.background;
-		ctx.fillRect(0, 0, canvas.width, canvas.height);
-	}
-
-	ctx.translate(globalOptions.marginLeft, 0);
-}
-
-function drawCanvasBarcode(canvas, options, encoding){
-	// Get the canvas context
-	var ctx = canvas.getContext("2d");
-
-	var binary = encoding.data;
-
-	// Creates the barcode out of the encoded binary
-	var yFrom;
-	if(options.textPosition == "top"){
-		yFrom = options.marginTop + options.fontSize + options.textMargin;
-	}
-	else{
-		yFrom = options.marginTop;
-	}
-
-	ctx.fillStyle = options.lineColor;
-
-	for(var b = 0; b < binary.length; b++){
-		var x = b * options.width + encoding.barcodePadding;
-
-		if(binary[b] === "1"){
-			ctx.fillRect(x, yFrom, options.width, options.height);
+			this.moveCanvasDrawing(this.encodings[i]);
 		}
-		else if(binary[b]){
-			ctx.fillRect(x, yFrom, options.width, options.height * binary[b]);
-		}
+
+		this.restoreCanvas();
 	}
-}
 
-function drawCanvasText(canvas, options, encoding){
-	// Get the canvas context
-	var ctx = canvas.getContext("2d");
+	prepareCanvas(){
+		// Get the canvas context
+		var ctx = this.canvas.getContext("2d");
 
-	var font = options.fontOptions + " " + options.fontSize + "px " + options.font;
+		ctx.save();
 
-	// Draw the text if displayValue is set
-	if(options.displayValue){
-		var x, y;
+		// Calculate total width
+		var totalWidth = 0;
+		var maxHeight = 0;
+		for(let i = 0; i < this.encodings.length; i++){
+			var options = merge(this.options, this.encodings[i].options);
+			var encoding = this.encodings[i];
 
+			// Set font
+			ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
+
+			// Calculate the width of the encoding
+			var textWidth = ctx.measureText(encoding.text).width;
+			var barcodeWidth = encoding.data.length * options.width;
+			encoding.width = Math.ceil(Math.max(textWidth, barcodeWidth));
+
+			// Calculate the height of the encoding
+			var height = getEncodingHeight(encoding, options);
+
+			encoding.barcodePadding = getBarcodePadding(textWidth, barcodeWidth, options);
+
+			if(height > maxHeight){
+				maxHeight = height;
+			}
+
+			totalWidth += encoding.width;
+		}
+
+		this.canvas.width = totalWidth + this.options.marginLeft + this.options.marginRight;
+
+		this.canvas.height = maxHeight;
+
+		// Paint the canvas
+		ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		if(this.options.background){
+			ctx.fillStyle = this.options.background;
+			ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+		}
+
+		ctx.translate(this.options.marginLeft, 0);
+	}
+
+	drawCanvasBarcode(options, encoding){
+		// Get the canvas context
+		var ctx = this.canvas.getContext("2d");
+
+		var binary = encoding.data;
+
+		// Creates the barcode out of the encoded binary
+		var yFrom;
 		if(options.textPosition == "top"){
-			y = options.marginTop + options.fontSize - options.textMargin;
+			yFrom = options.marginTop + options.fontSize + options.textMargin;
 		}
 		else{
-			y = options.height + options.textMargin + options.marginTop + options.fontSize;
+			yFrom = options.marginTop;
 		}
 
-		ctx.font = font;
+		ctx.fillStyle = options.lineColor;
 
-		// Draw the text in the correct X depending on the textAlign option
-		if(options.textAlign == "left" || encoding.barcodePadding > 0){
-			x = 0;
-			ctx.textAlign = 'left';
-		}
-		else if(options.textAlign == "right"){
-			x = encoding.width - 1;
-			ctx.textAlign = 'right';
-		}
-		// In all other cases, center the text
-		else{
-			x = encoding.width / 2;
-			ctx.textAlign = 'center';
-		}
+		for(var b = 0; b < binary.length; b++){
+			var x = b * options.width + encoding.barcodePadding;
 
-		ctx.fillText(encoding.text, x, y);
+			if(binary[b] === "1"){
+				ctx.fillRect(x, yFrom, options.width, options.height);
+			}
+			else if(binary[b]){
+				ctx.fillRect(x, yFrom, options.width, options.height * binary[b]);
+			}
+		}
+	}
+
+	drawCanvasText(options, encoding){
+		// Get the canvas context
+		var ctx = this.canvas.getContext("2d");
+
+		var font = options.fontOptions + " " + options.fontSize + "px " + options.font;
+
+		// Draw the text if displayValue is set
+		if(options.displayValue){
+			var x, y;
+
+			if(options.textPosition == "top"){
+				y = options.marginTop + options.fontSize - options.textMargin;
+			}
+			else{
+				y = options.height + options.textMargin + options.marginTop + options.fontSize;
+			}
+
+			ctx.font = font;
+
+			// Draw the text in the correct X depending on the textAlign option
+			if(options.textAlign == "left" || encoding.barcodePadding > 0){
+				x = 0;
+				ctx.textAlign = 'left';
+			}
+			else if(options.textAlign == "right"){
+				x = encoding.width - 1;
+				ctx.textAlign = 'right';
+			}
+			// In all other cases, center the text
+			else{
+				x = encoding.width / 2;
+				ctx.textAlign = 'center';
+			}
+
+			ctx.fillText(encoding.text, x, y);
+		}
+	}
+
+
+
+	moveCanvasDrawing(encoding){
+		var ctx = this.canvas.getContext("2d");
+
+		ctx.translate(encoding.width, 0);
+	}
+
+	restoreCanvas(){
+		// Get the canvas context
+		var ctx = this.canvas.getContext("2d");
+
+		ctx.restore();
 	}
 }
 
-
-
-function moveCanvasDrawing(canvas, encoding){
-	var ctx = canvas.getContext("2d");
-
-	ctx.translate(encoding.width, 0);
-}
-
-function restoreCanvas(canvas){
-	// Get the canvas context
-	var ctx = canvas.getContext("2d");
-
-	ctx.restore();
-}
+export default CanvasRenderer;

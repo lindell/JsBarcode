@@ -1,7 +1,15 @@
-import canvas from './canvas.js';
-import svg from './svg.js';
+import CanvasRenderer from './canvas.js';
+import SVGRenderer from './svg.js';
 
-export default {
-	canvas,
-	svg
-};
+function getRendererClass(name){
+	switch (name) {
+		case "canvas":
+			return CanvasRenderer;
+		case "svg":
+			return SVGRenderer;
+		default:
+			throw new Error("Invalid rederer");
+	}
+}
+
+export {getRendererClass};
