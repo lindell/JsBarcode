@@ -1,1 +1,0 @@
-../../smenu/dist/smenu.js
