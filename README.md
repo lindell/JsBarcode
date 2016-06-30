@@ -135,6 +135,9 @@ Include the script in your code:
 <script src="JsBarcode.all.min.js"></script>
 ````
 
+### Step 3:
+You are done! Go generate some barcodes :smile:
+
 Bower:
 ----
 You can also use [Bower](http://bower.io) to install and manage the library.
