@@ -226,6 +226,9 @@ code {
   .footer a:hover {
     text-decoration: underline; }
 
+.hljs {
+  display: block; }
+
 @media (max-width: 1400px) {
   .get-started div {
     width: 100%; } }
