@@ -14,7 +14,7 @@
 
 	  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
-	  <link href='//fonts.googleapis.com/css?family=Roboto:400,700,300|Roboto+Slab:400|Roboto+Mono' rel='stylesheet' type='text/css'>
+	  <link href='//fonts.googleapis.com/css?family=Roboto:400,700,300%7CRoboto+Slab:400%7CRoboto+Mono' rel='stylesheet' type='text/css'>
 	</noscript>
 </head>
 
@@ -75,7 +75,7 @@
       </span>
       <br>
       <span>
-        Generate with JsBarcode:</br>
+        Generate with JsBarcode:<br>
         <pre><code class="javascript">JsBarcode("#barcode", "Hi!");</code></pre>
       </span>
     </div><!--
@@ -102,7 +102,7 @@
 
           <h3>Result:</h3>
           <svg class="barcode"
-            jsbarcode-value="Hi world!">
+            data-value="Hi world!">
           </svg>
         </div>
       </div>
@@ -124,11 +124,11 @@
 
           <h3>Result:</h3>
           <svg class="barcode"
-            jsbarcode-value="1234"
-            jsbarcode-linecolor="#0aa"
-            jsbarcode-width="4"
-            jsbarcode-height="40"
-            jsbarcode-displayvalue="false">
+            data-value="1234"
+            data-linecolor="#0aa"
+            data-width="4"
+            data-height="40"
+            data-displayvalue="false">
           </svg>
         </div>
       </div>
@@ -149,10 +149,10 @@
 
           <h3>Result:</h3>
           <svg class="barcode"
-            jsbarcode-format="upc"
-            jsbarcode-value="123456789012"
-            jsbarcode-textmargin="0"
-            jsbarcode-fontoptions="bold">
+            data-format="upc"
+            data-value="123456789012"
+            data-textmargin="0"
+            data-fontoptions="bold">
           </svg>
         </div>
       </div>
@@ -160,7 +160,7 @@
   </div>
 
   <div class="container download">
-    <a name="download"></a><a name="cdn"></a>
+    <a id="download"></a><a id="cdn"></a>
     <h2><i class="fa fa-download" aria-hidden="true"></i> Download / CDN links</h2>
     <table>
       <thead>
@@ -226,7 +226,7 @@
 
 
   <div class="container options">
-    <a name="options"></a>
+    <a id="options"></a>
     <h2><i class="fa fa-cogs" aria-hidden="true"></i> Options</h2>
 
     <table>
