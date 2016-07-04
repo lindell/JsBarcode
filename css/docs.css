@@ -29,7 +29,7 @@ body {
     text-align: left;
     width: 240px; }
   .menu header {
-    font-family: 'Roboto Slab', serif;
+    font-family: 'Roboto Slab', sans-serif;
     text-align: center; }
     .menu header h1 {
       font-size: 42px;

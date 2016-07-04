@@ -7,18 +7,16 @@
   <meta name="author" content="Johan Lindell">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <script src="https://cdn.jsdelivr.net/jsbarcode/3.3.7/JsBarcode.all.min.js"></script>
+	<noscript id="deferred-styles">
+	  <link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.4.0/styles/github.min.css">
 
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/9.4.0/styles/github.min.css">
-  <script src="//cdn.jsdelivr.net/highlight.js/9.4.0/highlight.min.js"></script>
-  <script>hljs.initHighlightingOnLoad();</script>
+	  <link rel="stylesheet" href="css/styles.css">
+	  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-
-  <link href='//fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
-  <link href='//fonts.googleapis.com/css?family=Roboto+Slab:400' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Roboto+Mono' rel='stylesheet' type='text/css'>
+	  <link href='//fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+	  <link href='//fonts.googleapis.com/css?family=Roboto+Slab:400' rel='stylesheet' type='text/css'>
+	  <link href='https://fonts.googleapis.com/css?family=Roboto+Mono' rel='stylesheet' type='text/css'>
+	</noscript>
 </head>
 
 <body>
@@ -348,19 +346,36 @@
     </span>
   </div>
 
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-80112650-1', 'auto');
+		ga('send', 'pageview');
+
+	</script>
+
+	<script>
+		var loadDeferredStyles = function() {
+			var addStylesNode = document.getElementById("deferred-styles");
+			var replacement = document.createElement("div");
+			replacement.innerHTML = addStylesNode.textContent;
+			document.body.appendChild(replacement)
+			addStylesNode.parentElement.removeChild(addStylesNode);
+		};
+		var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+				webkitRequestAnimationFrame || msRequestAnimationFrame;
+		if (raf) raf(function() { window.setTimeout(loadDeferredStyles, 0); });
+		else window.addEventListener('load', loadDeferredStyles);
+	</script>
+
+	<script src="//cdn.jsdelivr.net/highlight.js/9.4.0/highlight.min.js"></script>
+	<script id="jsbarcode-script" src="https://cdn.jsdelivr.net/jsbarcode/3.3.7/JsBarcode.all.min.js"></script>
 
   <script src="js/script.js"></script>
   <script src="js/badges.js"></script>
-	
-	<script>
-	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-	  ga('create', 'UA-80112650-1', 'auto');
-	  ga('send', 'pageview');
-
-	</script>
+	<script>hljs.initHighlightingOnLoad();</script>
 </body>
 </html>
