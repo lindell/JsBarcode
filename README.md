@@ -1,4 +1,4 @@
-# JsBarcode
+# [JsBarcode](http://lindell.me/JsBarcode)
 
 [![Join the chat at https://gitter.im/lindell/JsBarcode](https://badges.gitter.im/lindell/JsBarcode.svg)](https://gitter.im/lindell/JsBarcode?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://secure.travis-ci.org/lindell/JsBarcode.svg)](http://travis-ci.org/lindell/JsBarcode)
