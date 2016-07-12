@@ -8,7 +8,8 @@ var browserSync = require('browser-sync').create();
 
 var paths = {
 	html: '*.html',
-	js: 'js/*.js'
+	js: 'js/*.js',
+	fonts: 'fonts/**/*'
 };
 
 gulp.task('default', ['watch']);
@@ -41,7 +42,7 @@ gulp.task('inject', function(){
       .pipe(gulp.dest('./dist'));
 });
 
-gulp.task('move', ['move-html', 'move-js']);
+gulp.task('move', ['move-html', 'move-js', 'move-fonts']);
 
 gulp.task('move-html', function(){
   gulp.src([paths.html])
@@ -51,6 +52,11 @@ gulp.task('move-html', function(){
 gulp.task('move-js', function(){
   gulp.src([paths.js])
   .pipe(gulp.dest('dist/js'));
+});
+
+gulp.task('move-fonts', function(){
+  gulp.src([paths.fonts])
+  .pipe(gulp.dest('dist/fonts'));
 });
 
 gulp.task('release', function(cb){
