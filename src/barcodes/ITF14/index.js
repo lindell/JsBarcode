@@ -67,7 +67,7 @@ class ITF14{
 			result += parseInt(this.string[i]) * (3 - (i % 2) * 2);
 		}
 
-		return 10 - (result % 10);
+		return Math.ceil(result / 10) * 10 - result;
 	}
 }
 
