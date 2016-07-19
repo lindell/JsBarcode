@@ -117,14 +117,14 @@ Download or get the CDN link to the script:
 
 | Name | Supported barcodes | Size (gzip) | CDN / Download |
 |------|--------------------|:-----------:|---------------:|
-|  *All*  |  *All the barcodes!*  |  *7 kB*  |  *[JsBarcode.all.min.js][1]*  |
-|  CODE128  |  CODE128 (auto and force mode)  |  4.6 kB  |  [JsBarcode.code128.min.js][2]  |
-|  CODE39  |  CODE39  |  3.7 kB  |  [JsBarcode.code39.min.js][3]  |
-|  EAN / UPC  |  EAN-13, EAN-8, EAN-5, EAN-2, UPC (A)  |  4.2 kB  |  [JsBarcode.ean-upc.min.js][4]  |
-|  ITF-14  |  ITF-14  |  3.4 kB  |  [JsBarcode.itf-14.min.js][5]  |
-|  ITF  |  ITF  |  3.4 kB  |  [JsBarcode.itf.min.js][6]  |
-|  MSI  |  MSI, MSI10, MSI11, MSI1010, MSI1110  |  3.8 kB  |  [JsBarcode.msi.min.js][7]  |
-|  Pharmacode  |  Pharmacode  |  3.3 kB  |  [JsBarcode.pharmacode.min.js][8]  |
+|  *All*  |  *All the barcodes!*  |  *7.3 kB*  |  *[JsBarcode.all.min.js][1]*  |
+|  CODE128  |  CODE128 (auto and force mode)  |  5 kB  |  [JsBarcode.code128.min.js][2]  |
+|  CODE39  |  CODE39  |  4.1 kB  |  [JsBarcode.code39.min.js][3]  |
+|  EAN / UPC  |  EAN-13, EAN-8, EAN-5, EAN-2, UPC (A)  |  4.6 kB  |  [JsBarcode.ean-upc.min.js][4]  |
+|  ITF-14  |  ITF-14  |  3.8 kB  |  [JsBarcode.itf-14.min.js][5]  |
+|  ITF  |  ITF  |  3.7 kB  |  [JsBarcode.itf.min.js][6]  |
+|  MSI  |  MSI, MSI10, MSI11, MSI1010, MSI1110  |  4.2 kB  |  [JsBarcode.msi.min.js][7]  |
+|  Pharmacode  |  Pharmacode  |  3.6 kB  |  [JsBarcode.pharmacode.min.js][8]  |
 
 ### Step 2:
 Include the script in your code:

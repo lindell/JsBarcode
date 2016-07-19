@@ -23,9 +23,6 @@ var CODE128AUTO = function (_CODE) {
 		_classCallCheck(this, CODE128AUTO);
 
 		// ASCII value ranges 0-127, 200-211
-
-		var _this = _possibleConstructorReturn(this, _CODE.call(this, string));
-
 		if (string.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1) {
 			var _this = _possibleConstructorReturn(this, _CODE.call(this, autoSelectModes(string)));
 		} else {

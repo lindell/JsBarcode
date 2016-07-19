@@ -60,8 +60,8 @@ var CODE39 = function () {
 		// Calculate mod43 checksum if enabled
 		if (this.mod43Enabled) {
 			var checksum = 0;
-			for (var i = 0; i < this.string.length; i++) {
-				checksum += this.characterValue(this.string[i]);
+			for (var _i = 0; _i < this.string.length; _i++) {
+				checksum += this.characterValue(this.string[_i]);
 			}
 
 			checksum = checksum % 43;

@@ -1,7 +1,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
 exports.default = linearizeEncodings;
 
@@ -9,19 +9,19 @@ exports.default = linearizeEncodings;
 // Convert to [1-1, 1-2, 2, 3-1, 3-2]
 
 function linearizeEncodings(encodings) {
-  var linearEncodings = [];
-  function nextLevel(encoded) {
-    if (Array.isArray(encoded)) {
-      for (var i = 0; i < encoded.length; i++) {
-        nextLevel(encoded[i]);
-      }
-    } else {
-      encoded.text = encoded.text || "";
-      encoded.data = encoded.data || "";
-      linearEncodings.push(encoded);
-    }
-  }
-  nextLevel(encodings);
+	var linearEncodings = [];
+	function nextLevel(encoded) {
+		if (Array.isArray(encoded)) {
+			for (var i = 0; i < encoded.length; i++) {
+				nextLevel(encoded[i]);
+			}
+		} else {
+			encoded.text = encoded.text || "";
+			encoded.data = encoded.data || "";
+			linearEncodings.push(encoded);
+		}
+	}
+	nextLevel(encodings);
 
-  return linearEncodings;
+	return linearEncodings;
 }
