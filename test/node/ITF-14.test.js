@@ -40,5 +40,24 @@ describe('ITF-14', function() {
 
     var enc = new ITF14("9876543210921");
     assert.equal(true, enc.valid());
+    
+    // Edge cases for check digit of zero
+    var enc = new ITF14("00847280031740");
+    assert.equal(true, enc.valid());
+    
+    var enc = new ITF14("00847280031900");
+    assert.equal(true, enc.valid());
+    
+    var enc = new ITF14("00847280032020");
+    assert.equal(true, enc.valid());
+    
+    var enc = new ITF14("00847280031870");
+    assert.equal(true, enc.valid());
+    
+    var enc = new ITF14("00847280031450");
+    assert.equal(true, enc.valid());
+    
+    var enc = new ITF14("00847280031320");
+    assert.equal(true, enc.valid());
   });
 });
