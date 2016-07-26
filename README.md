@@ -137,11 +137,14 @@ Include the script in your code:
 ### Step 3:
 You are done! Go generate some barcodes :smile:
 
-Bower:
+Bower and npm:
 ----
-You can also use [Bower](http://bower.io) to install and manage the library.
+You can also use [Bower](http://bower.io) or [npm](https://www.npmjs.com) to install and manage the library.
 ````
 bower install jsbarcode --save
+````
+````
+npm install jsbarcode --save
 ````
 
 Node.js:
