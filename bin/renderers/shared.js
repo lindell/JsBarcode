@@ -12,7 +12,7 @@ var _merge2 = _interopRequireDefault(_merge);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function getEncodingHeight(encoding, options) {
-	return options.height + (options.displayValue && encoding.text.length > 0 ? options.fontSize : 0) + options.textMargin + options.marginTop + options.marginBottom;
+	return options.height + (options.displayValue && encoding.text.length > 0 ? options.fontSize + options.textMargin : 0) + options.marginTop + options.marginBottom;
 }
 
 function getBarcodePadding(textWidth, barcodeWidth, options) {
