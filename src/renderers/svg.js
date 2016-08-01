@@ -32,7 +32,7 @@ class SVGRenderer{
 	prepareSVG(){
 		// Clear the SVG
 		while (this.svg.firstChild) {
-			this.svg.removeChild(this.firstChild);
+			this.svg.removeChild(this.svg.firstChild);
 		}
 
 		calculateEncodingAttributes(this.encodings, this.options);
