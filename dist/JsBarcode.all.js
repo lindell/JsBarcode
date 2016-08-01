@@ -2505,7 +2505,7 @@ var SVGRenderer = function () {
 	SVGRenderer.prototype.prepareSVG = function prepareSVG() {
 		// Clear the SVG
 		while (this.svg.firstChild) {
-			this.svg.removeChild(this.firstChild);
+			this.svg.removeChild(this.svg.firstChild);
 		}
 
 		(0, _shared.calculateEncodingAttributes)(this.encodings, this.options);
