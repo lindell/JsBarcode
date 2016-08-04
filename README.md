@@ -194,6 +194,15 @@ For information about how to use the options, see [the wiki page](https://github
 | [`marginRight`](https://github.com/lindell/JsBarcode/wiki/Options#margins) | `undefined` | `Number` |
 | [`valid`](https://github.com/lindell/JsBarcode/wiki/Options#valid) | `function(valid){}` | `Function` |
 
+Contributions and feedback:
+----
+We :heart: contributions and feedback.
+
+If you want to contribute, please check out the [CONTRIBUTING.md](https://github.com/lindell/JsBarcode/blob/master/CONTRIBUTING.md) file.
+
+If you have any question or suggestion [create an issue](https://github.com/lindell/JsBarcode/issues/new) or ask about it in the [gitter chat](https://gitter.im/lindell/JsBarcode).
+
+Bug reports should always be done with a [new issue](https://github.com/lindell/JsBarcode/issues/new).
 
 
 [1]: https://cdn.jsdelivr.net/jsbarcode/3.3.16/JsBarcode.all.min.js "jsdelivr all barcodes"
