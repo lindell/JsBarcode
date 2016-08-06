@@ -10,6 +10,8 @@ var _getOptionsFromElement2 = _interopRequireDefault(_getOptionsFromElement);
 
 var _renderers = require("../renderers");
 
+var _exceptions = require("../exceptions/exceptions.js");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Takes an element and returns an object with information about how
@@ -22,10 +24,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //     completed, calls afterRender (function)
 //   options (optional): Options that can be defined in the element
 // }
-
-/* global HTMLImageElement */
-/* global HTMLCanvasElement */
-/* global SVGElement */
 
 function getRenderProperties(element) {
 	// If the element is a string, query select call again
@@ -67,14 +65,16 @@ function getRenderProperties(element) {
 								renderer: (0, _renderers.getRendererClass)("canvas")
 							};
 						} else {
-							throw new Error("Not supported type to render on.");
+							throw new _exceptions.InvalidElementException();
 						}
-}
+} /* global HTMLImageElement */
+/* global HTMLCanvasElement */
+/* global SVGElement */
 
 function querySelectedRenderProperties(string) {
 	var selector = document.querySelectorAll(string);
 	if (selector.length === 0) {
-		throw new Error("No element found");
+		throw new _exceptions.NoElementException();
 	} else {
 		var returnArray = [];
 		for (var i = 0; i < selector.length; i++) {

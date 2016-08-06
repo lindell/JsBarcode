@@ -8,7 +8,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 // This is the master class, it does require the start code to be
 // included in the string
-
 var CODE128 = function () {
 	function CODE128(string) {
 		_classCallCheck(this, CODE128);

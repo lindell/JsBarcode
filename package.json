@@ -1,6 +1,6 @@
 {
   "name": "jsbarcode",
-  "version": "3.3.18",
+  "version": "3.3.20",
   "description": "JsBarcode is a simple and powerfull way to create different types of 1d barcodes.",
   "main": "./bin/JsBarcode.js",
   "directories": {
@@ -43,6 +43,7 @@
     "babel-plugin-transform-runtime": "^6.6.0",
     "babel-preset-es2015": "^6.6.0",
     "blanket": "^1.2.3",
+    "canvas": "^1.0.0",
     "coveralls": "^2.11.6",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
@@ -60,8 +61,7 @@
     "request": "^2.72.0",
     "run-sequence": "^1.1.5",
     "webpack": "^2.1.0-beta.5",
-    "webpack-stream": "^3.1.0",
-    "canvas": "^1.0.0"
+    "webpack-stream": "^3.1.0"
   },
   "config": {
     "blanket": {

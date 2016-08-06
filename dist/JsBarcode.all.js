@@ -45,6 +45,15 @@
 /******/ 		});
 /******/ 	};
 
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 
@@ -52,7 +61,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 37);
+/******/ 	return __webpack_require__(__webpack_require__.s = 39);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -229,7 +238,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 // This is the master class, it does require the start code to be
 // included in the string
-
 var CODE128 = function () {
 	function CODE128(string) {
 		_classCallCheck(this, CODE128);
@@ -511,6 +519,79 @@ exports.default = defaults;
 
 /***/ },
 /* 6 */
+/***/ function(module, exports) {
+
+"use strict";
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var InvalidInputException = function (_Error) {
+	_inherits(InvalidInputException, _Error);
+
+	function InvalidInputException(symbology, input) {
+		_classCallCheck(this, InvalidInputException);
+
+		var _this = _possibleConstructorReturn(this, _Error.call(this));
+
+		_this.name = "InvalidInputException";
+
+		_this.symbology = symbology;
+		_this.input = input;
+
+		_this.message = '"' + _this.input + '" is not a valid input for ' + _this.symbology;
+		return _this;
+	}
+
+	return InvalidInputException;
+}(Error);
+
+var InvalidElementException = function (_Error2) {
+	_inherits(InvalidElementException, _Error2);
+
+	function InvalidElementException() {
+		_classCallCheck(this, InvalidElementException);
+
+		var _this2 = _possibleConstructorReturn(this, _Error2.call(this));
+
+		_this2.name = "InvalidElementException";
+		_this2.message = "Not supported type to render on";
+		return _this2;
+	}
+
+	return InvalidElementException;
+}(Error);
+
+var NoElementException = function (_Error3) {
+	_inherits(NoElementException, _Error3);
+
+	function NoElementException() {
+		_classCallCheck(this, NoElementException);
+
+		var _this3 = _possibleConstructorReturn(this, _Error3.call(this));
+
+		_this3.name = "NoElementException";
+		_this3.message = "No element to render on.";
+		return _this3;
+	}
+
+	return NoElementException;
+}(Error);
+
+exports.InvalidInputException = InvalidInputException;
+exports.InvalidElementException = InvalidElementException;
+exports.NoElementException = NoElementException;
+
+/***/ },
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -601,7 +682,7 @@ exports.calculateEncodingAttributes = calculateEncodingAttributes;
 exports.getTotalWidthOfEncodings = getTotalWidthOfEncodings;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -611,21 +692,21 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _CODE = __webpack_require__(16);
+var _CODE = __webpack_require__(18);
 
-var _CODE2 = __webpack_require__(15);
+var _CODE2 = __webpack_require__(17);
 
-var _EAN_UPC = __webpack_require__(22);
+var _EAN_UPC = __webpack_require__(24);
 
-var _ITF = __webpack_require__(25);
+var _ITF = __webpack_require__(27);
 
-var _ITF2 = __webpack_require__(24);
+var _ITF2 = __webpack_require__(26);
 
-var _MSI = __webpack_require__(30);
+var _MSI = __webpack_require__(32);
 
-var _pharmacode = __webpack_require__(31);
+var _pharmacode = __webpack_require__(33);
 
-var _GenericBarcode = __webpack_require__(23);
+var _GenericBarcode = __webpack_require__(25);
 
 exports.default = {
 	CODE39: _CODE.CODE39,
@@ -639,7 +720,61 @@ exports.default = {
 };
 
 /***/ },
-/* 8 */
+/* 9 */
+/***/ function(module, exports) {
+
+"use strict";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/*eslint no-console: 0 */
+
+var ErrorHandler = function () {
+	function ErrorHandler(api) {
+		_classCallCheck(this, ErrorHandler);
+
+		this.api = api;
+	}
+
+	ErrorHandler.prototype.handleCatch = function handleCatch(e) {
+		// If babel supported extending of Error in a correct way instanceof would be used here
+		if (e.name === "InvalidInputException") {
+			if (this.api._options.valid !== this.api._defaults.valid) {
+				this.api._options.valid(false);
+			} else {
+				throw e.message;
+			}
+		} else {
+			throw e;
+		}
+
+		this.api.render = function () {};
+	};
+
+	ErrorHandler.prototype.wrapBarcodeCall = function wrapBarcodeCall(func) {
+		try {
+			var result = func.apply(undefined, arguments);
+			this.api._options.valid(true);
+			return result;
+		} catch (e) {
+			this.handleCatch(e);
+
+			return this.api;
+		}
+	};
+
+	return ErrorHandler;
+}();
+
+exports.default = ErrorHandler;
+
+/***/ },
+/* 10 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -662,7 +797,7 @@ function fixOptions(options) {
 }
 
 /***/ },
-/* 9 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -672,11 +807,13 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _getOptionsFromElement = __webpack_require__(32);
+var _getOptionsFromElement = __webpack_require__(34);
 
 var _getOptionsFromElement2 = _interopRequireDefault(_getOptionsFromElement);
 
-var _renderers = __webpack_require__(35);
+var _renderers = __webpack_require__(37);
+
+var _exceptions = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -690,10 +827,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //     completed, calls afterRender (function)
 //   options (optional): Options that can be defined in the element
 // }
-
-/* global HTMLImageElement */
-/* global HTMLCanvasElement */
-/* global SVGElement */
 
 function getRenderProperties(element) {
 	// If the element is a string, query select call again
@@ -735,14 +868,16 @@ function getRenderProperties(element) {
 								renderer: (0, _renderers.getRendererClass)("canvas")
 							};
 						} else {
-							throw new Error("Not supported type to render on.");
+							throw new _exceptions.InvalidElementException();
 						}
-}
+} /* global HTMLImageElement */
+/* global HTMLCanvasElement */
+/* global SVGElement */
 
 function querySelectedRenderProperties(string) {
 	var selector = document.querySelectorAll(string);
 	if (selector.length === 0) {
-		throw new Error("No element found");
+		throw new _exceptions.NoElementException();
 	} else {
 		var returnArray = [];
 		for (var i = 0; i < selector.length; i++) {
@@ -767,7 +902,7 @@ function newCanvasRenderProperties(imgElement) {
 exports.default = getRenderProperties;
 
 /***/ },
-/* 10 */
+/* 12 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -800,7 +935,7 @@ function linearizeEncodings(encodings) {
 }
 
 /***/ },
-/* 11 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -841,7 +976,7 @@ var CODE128A = function (_CODE) {
 exports.default = CODE128A;
 
 /***/ },
-/* 12 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -882,7 +1017,7 @@ var CODE128B = function (_CODE) {
 exports.default = CODE128B;
 
 /***/ },
-/* 13 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -923,7 +1058,7 @@ var CODE128C = function (_CODE) {
 exports.default = CODE128C;
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1043,7 +1178,7 @@ function autoSelectFromC(string) {
 exports.default = CODE128AUTO;
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1054,19 +1189,19 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CODE128C = exports.CODE128B = exports.CODE128A = exports.CODE128 = undefined;
 
-var _CODE128_AUTO = __webpack_require__(14);
+var _CODE128_AUTO = __webpack_require__(16);
 
 var _CODE128_AUTO2 = _interopRequireDefault(_CODE128_AUTO);
 
-var _CODE128A = __webpack_require__(11);
+var _CODE128A = __webpack_require__(13);
 
 var _CODE128A2 = _interopRequireDefault(_CODE128A);
 
-var _CODE128B = __webpack_require__(12);
+var _CODE128B = __webpack_require__(14);
 
 var _CODE128B2 = _interopRequireDefault(_CODE128B);
 
-var _CODE128C = __webpack_require__(13);
+var _CODE128C = __webpack_require__(15);
 
 var _CODE128C2 = _interopRequireDefault(_CODE128C);
 
@@ -1078,7 +1213,7 @@ exports.CODE128B = _CODE128B2.default;
 exports.CODE128C = _CODE128C2.default;
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -1173,7 +1308,7 @@ var CODE39 = function () {
 exports.CODE39 = CODE39;
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1316,7 +1451,7 @@ var EAN13 = function () {
 exports.default = EAN13;
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1372,7 +1507,7 @@ var EAN2 = function () {
 exports.default = EAN2;
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1439,7 +1574,7 @@ var EAN5 = function () {
 exports.default = EAN5;
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1531,7 +1666,7 @@ var EAN8 = function () {
 exports.default = EAN8;
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1659,7 +1794,7 @@ var UPC = function () {
 exports.default = UPC;
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1670,23 +1805,23 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.UPC = exports.EAN2 = exports.EAN5 = exports.EAN8 = exports.EAN13 = undefined;
 
-var _EAN = __webpack_require__(17);
+var _EAN = __webpack_require__(19);
 
 var _EAN2 = _interopRequireDefault(_EAN);
 
-var _EAN3 = __webpack_require__(20);
+var _EAN3 = __webpack_require__(22);
 
 var _EAN4 = _interopRequireDefault(_EAN3);
 
-var _EAN5 = __webpack_require__(19);
+var _EAN5 = __webpack_require__(21);
 
 var _EAN6 = _interopRequireDefault(_EAN5);
 
-var _EAN7 = __webpack_require__(18);
+var _EAN7 = __webpack_require__(20);
 
 var _EAN8 = _interopRequireDefault(_EAN7);
 
-var _UPC = __webpack_require__(21);
+var _UPC = __webpack_require__(23);
 
 var _UPC2 = _interopRequireDefault(_UPC);
 
@@ -1699,7 +1834,7 @@ exports.EAN2 = _EAN8.default;
 exports.UPC = _UPC2.default;
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -1741,7 +1876,7 @@ var GenericBarcode = function () {
 exports.GenericBarcode = GenericBarcode;
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -1819,7 +1954,7 @@ var ITF = function () {
 exports.ITF = ITF;
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -1914,7 +2049,7 @@ var ITF14 = function () {
 exports.ITF14 = ITF14;
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1956,7 +2091,7 @@ var MSI10 = function (_MSI) {
 exports.default = MSI10;
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1999,7 +2134,7 @@ var MSI1010 = function (_MSI) {
 exports.default = MSI1010;
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2041,7 +2176,7 @@ var MSI11 = function (_MSI) {
 exports.default = MSI11;
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2084,7 +2219,7 @@ var MSI1110 = function (_MSI) {
 exports.default = MSI1110;
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2099,19 +2234,19 @@ var _MSI = __webpack_require__(1);
 
 var _MSI2 = _interopRequireDefault(_MSI);
 
-var _MSI3 = __webpack_require__(26);
+var _MSI3 = __webpack_require__(28);
 
 var _MSI4 = _interopRequireDefault(_MSI3);
 
-var _MSI5 = __webpack_require__(28);
+var _MSI5 = __webpack_require__(30);
 
 var _MSI6 = _interopRequireDefault(_MSI5);
 
-var _MSI7 = __webpack_require__(27);
+var _MSI7 = __webpack_require__(29);
 
 var _MSI8 = _interopRequireDefault(_MSI7);
 
-var _MSI9 = __webpack_require__(29);
+var _MSI9 = __webpack_require__(31);
 
 var _MSI10 = _interopRequireDefault(_MSI9);
 
@@ -2124,7 +2259,7 @@ exports.MSI1010 = _MSI8.default;
 exports.MSI1110 = _MSI10.default;
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -2183,7 +2318,7 @@ var pharmacode = function () {
 exports.pharmacode = pharmacode;
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2193,7 +2328,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _optionsFromStrings = __webpack_require__(33);
+var _optionsFromStrings = __webpack_require__(35);
 
 var _optionsFromStrings2 = _interopRequireDefault(_optionsFromStrings);
 
@@ -2230,7 +2365,7 @@ function getOptionsFromElement(element) {
 exports.default = getOptionsFromElement;
 
 /***/ },
-/* 33 */
+/* 35 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -2263,7 +2398,7 @@ function optionsFromStrings(options) {
 }
 
 /***/ },
-/* 34 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2277,7 +2412,7 @@ var _merge = __webpack_require__(2);
 
 var _merge2 = _interopRequireDefault(_merge);
 
-var _shared = __webpack_require__(6);
+var _shared = __webpack_require__(7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2417,7 +2552,7 @@ var CanvasRenderer = function () {
 exports.default = CanvasRenderer;
 
 /***/ },
-/* 35 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2428,11 +2563,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getRendererClass = undefined;
 
-var _canvas = __webpack_require__(34);
+var _canvas = __webpack_require__(36);
 
 var _canvas2 = _interopRequireDefault(_canvas);
 
-var _svg = __webpack_require__(36);
+var _svg = __webpack_require__(38);
 
 var _svg2 = _interopRequireDefault(_svg);
 
@@ -2452,7 +2587,7 @@ function getRendererClass(name) {
 exports.getRendererClass = getRendererClass;
 
 /***/ },
-/* 36 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2466,7 +2601,7 @@ var _merge = __webpack_require__(2);
 
 var _merge2 = _interopRequireDefault(_merge);
 
-var _shared = __webpack_require__(6);
+var _shared = __webpack_require__(7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2633,13 +2768,13 @@ function drawLine(x, y, width, height, parent) {
 exports.default = SVGRenderer;
 
 /***/ },
-/* 37 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 'use strict';
 
-var _barcodes = __webpack_require__(7);
+var _barcodes = __webpack_require__(8);
 
 var _barcodes2 = _interopRequireDefault(_barcodes);
 
@@ -2647,17 +2782,23 @@ var _merge = __webpack_require__(2);
 
 var _merge2 = _interopRequireDefault(_merge);
 
-var _linearizeEncodings = __webpack_require__(10);
+var _linearizeEncodings = __webpack_require__(12);
 
 var _linearizeEncodings2 = _interopRequireDefault(_linearizeEncodings);
 
-var _fixOptions = __webpack_require__(8);
+var _fixOptions = __webpack_require__(10);
 
 var _fixOptions2 = _interopRequireDefault(_fixOptions);
 
-var _getRenderProperties = __webpack_require__(9);
+var _getRenderProperties = __webpack_require__(11);
 
 var _getRenderProperties2 = _interopRequireDefault(_getRenderProperties);
+
+var _ErrorHandler = __webpack_require__(9);
+
+var _ErrorHandler2 = _interopRequireDefault(_ErrorHandler);
+
+var _exceptions = __webpack_require__(6);
 
 var _defaults = __webpack_require__(5);
 
@@ -2677,6 +2818,9 @@ var API = function API() {};
 // Default values
 
 
+// Exceptions
+
+
 // Help functions
 var JsBarcode = function JsBarcode(element, text, options) {
 	var api = new API();
@@ -2689,6 +2833,7 @@ var JsBarcode = function JsBarcode(element, text, options) {
 	api._renderProperties = (0, _getRenderProperties2.default)(element);
 	api._encodings = [];
 	api._options = _defaults2.default;
+	api._errorHandler = new _ErrorHandler2.default(api);
 
 	// If text is set, use the simple syntax (render the barcode directly)
 	if (typeof text !== "undefined") {
@@ -2698,9 +2843,7 @@ var JsBarcode = function JsBarcode(element, text, options) {
 			options.format = autoSelectBarcode();
 		}
 
-		api.options(options);
-		api[options.format](text, options);
-		api.render();
+		api.options(options)[options.format](text, options).render();
 	}
 
 	return api;
@@ -2720,12 +2863,15 @@ for (var name in _barcodes2.default) {
 }
 function registerBarcode(barcodes, name) {
 	API.prototype[name] = API.prototype[name.toUpperCase()] = API.prototype[name.toLowerCase()] = function (text, options) {
-		var newOptions = (0, _merge2.default)(this._options, options);
-		var Encoder = barcodes[name];
-		var encoded = encode(text, Encoder, newOptions);
-		this._encodings.push(encoded);
+		var api = this;
+		return api._errorHandler.wrapBarcodeCall(function () {
+			var newOptions = (0, _merge2.default)(api._options, options);
+			var Encoder = barcodes[name];
+			var encoded = encode(text, Encoder, newOptions);
+			api._encodings.push(encoded);
 
-		return this;
+			return api;
+		});
 	};
 }
 
@@ -2739,11 +2885,7 @@ function encode(text, Encoder, options) {
 	// If the input is not valid for the encoder, throw error.
 	// If the valid callback option is set, call it instead of throwing error
 	if (!encoder.valid()) {
-		if (options.valid === _defaults2.default.valid) {
-			throw new Error('"' + text + '" is not a valid input.');
-		} else {
-			options.valid(false);
-		}
+		throw new _exceptions.InvalidInputException(encoder.constructor.name, text);
 	}
 
 	// Make a request for the binary data (and other infromation) that should be rendered
@@ -2821,10 +2963,10 @@ API.prototype.render = function () {
 		render(this._renderProperties, this._encodings, this._options);
 	}
 
-	this._options.valid(true);
-
 	return this;
 };
+
+API.prototype._defaults = _defaults2.default;
 
 // Prepares the encodings and calls the renderer
 function render(renderProperties, encodings, options) {
