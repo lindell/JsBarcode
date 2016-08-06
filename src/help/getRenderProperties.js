@@ -5,6 +5,8 @@
 import getOptionsFromElement from "./getOptionsFromElement.js";
 import {getRendererClass} from "../renderers";
 
+import {InvalidElementException, NoElementException} from "../exceptions/exceptions.js";
+
 // Takes an element and returns an object with information about how
 // it should be rendered
 // This could also return an array with these objects
@@ -57,7 +59,7 @@ function getRenderProperties(element){
 		};
 	}
 	else{
-		throw new Error("Not supported type to render on.");
+		throw new InvalidElementException();
 	}
 }
 
@@ -65,7 +67,7 @@ function getRenderProperties(element){
 function querySelectedRenderProperties(string){
 	var selector = document.querySelectorAll(string);
 	if(selector.length === 0){
-		throw new Error("No element found");
+		throw new NoElementException();
 	}
 	else{
 		let returnArray = [];

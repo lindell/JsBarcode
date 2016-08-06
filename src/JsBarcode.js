@@ -7,6 +7,10 @@ import linearizeEncodings from './help/linearizeEncodings.js';
 import fixOptions from './help/fixOptions.js';
 import getRenderProperties from './help/getRenderProperties.js';
 
+// Exceptions
+import ErrorHandler from './exceptions/ErrorHandler.js';
+import {InvalidInputException} from './exceptions/exceptions.js';
+
 // Default values
 import defaults from './defaults/defaults.js';
 
@@ -27,6 +31,7 @@ let JsBarcode = function(element, text, options){
 	api._renderProperties = getRenderProperties(element);
 	api._encodings = [];
 	api._options = defaults;
+	api._errorHandler = new ErrorHandler(api);
 
 	// If text is set, use the simple syntax (render the barcode directly)
 	if(typeof text !== "undefined"){
@@ -36,9 +41,7 @@ let JsBarcode = function(element, text, options){
 			options.format = autoSelectBarcode();
 		}
 
-		api.options(options);
-		api[options.format](text, options);
-		api.render();
+		api.options(options)[options.format](text, options).render();
 	}
 
 	return api;
@@ -59,14 +62,17 @@ function registerBarcode(barcodes, name){
 	API.prototype[name] =
 	API.prototype[name.toUpperCase()] =
 	API.prototype[name.toLowerCase()] =
-	function(text, options){
-		var newOptions = merge(this._options, options);
-		var Encoder = barcodes[name];
-		var encoded = encode(text, Encoder, newOptions);
-		this._encodings.push(encoded);
+		function(text, options){
+			var api = this;
+			return api._errorHandler.wrapBarcodeCall(function(){
+				var newOptions = merge(api._options, options);
+				var Encoder = barcodes[name];
+				var encoded = encode(text, Encoder, newOptions);
+				api._encodings.push(encoded);
 
-		return this;
-	};
+				return api;
+			});
+		};
 }
 
 // encode() handles the Encoder call and builds the binary string to be rendered
@@ -79,12 +85,7 @@ function encode(text, Encoder, options){
 	// If the input is not valid for the encoder, throw error.
 	// If the valid callback option is set, call it instead of throwing error
 	if(!encoder.valid()){
-		if(options.valid === defaults.valid){
-			throw new Error('"' + text + '" is not a valid input.');
-		}
-		else{
-			options.valid(false);
-		}
+		throw new InvalidInputException(encoder.constructor.name, text);
 	}
 
 	// Make a request for the binary data (and other infromation) that should be rendered
@@ -164,10 +165,10 @@ API.prototype.render = function(){
 		render(this._renderProperties, this._encodings, this._options);
 	}
 
-	this._options.valid(true);
-
 	return this;
 };
+
+API.prototype._defaults = defaults;
 
 // Prepares the encodings and calls the renderer
 function render(renderProperties, encodings, options){
