@@ -72,13 +72,7 @@ class CODE39 {
 
 		// Calculate mod43 checksum if enabled
 		if(this.mod43Enabled){
-			var checksum = 0;
-			for(let i = 0; i < this.string.length; i++){
-				checksum += this.characterValue(this.string[i]);
-			}
-
-			checksum = checksum % 43;
-
+			var checksum = this.mod43checksum();
 			result += this.getBinary(checksum) + "0";
 			string += this.getCharacter(checksum);
 		}
@@ -94,6 +88,16 @@ class CODE39 {
 
 	valid(){
 		return this.string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
+	}
+
+	mod43checksum(){
+		var checksum = 0;
+		for(let i = 0; i < this.string.length; i++){
+			checksum += this.characterValue(this.string[i]);
+		}
+
+		checksum = checksum % 43;
+		return checksum;
 	}
 }
 
