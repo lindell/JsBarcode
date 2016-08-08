@@ -13,6 +13,8 @@
     "semi": [1, "always"],
     "no-console": 2,
     "no-control-regex": 0,
-    "indent": [1, "tab", {"SwitchCase": 1}]
+    "indent": [1, "tab", {"SwitchCase": 1}],
+    "space-infix-ops": ["error"],
+    "comma-spacing": ["error"]
   }
 }

@@ -50,6 +50,7 @@
     "gulp-bump": "^2.1.0",
     "gulp-clean": "^0.3.2",
     "gulp-concat": "^2.6.0",
+    "gulp-eslint": "^3.0.1",
     "gulp-git": "^1.7.1",
     "gulp-header": "^1.7.1",
     "gulp-rename": "^1.2.2",

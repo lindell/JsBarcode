@@ -13,12 +13,21 @@ var gulpWebpack = require('webpack-stream');
 var webpack = require('webpack');
 var gzipSize = require('gzip-size');
 var request = require('request');
+var eslint = require('gulp-eslint');
+
 
 var fs = require('fs');
 
 gulp.task("clean", function(){
 	return gulp.src(["bin/", "dist/"], {read: false})
-.pipe(clean());
+		.pipe(clean());
+});
+
+gulp.task("lint", function () {
+	return gulp.src(['src/**/*.js'])
+		.pipe(eslint())
+		.pipe(eslint.format())
+		.pipe(eslint.failAfterError());
 });
 
 gulp.task("babel", function () {
@@ -257,38 +266,38 @@ gulp.task('compile', ['babel']);
 
 gulp.task('compile-web', ['webpack']);
 
-gulp.task('release', function(callback){
+gulp.task('release', ['lint'], function(callback){
 	runSequence(
-'git-release',
-'wait',
-'github-release',
-'npm',
-callback
-);
+		'git-release',
+		'wait',
+		'github-release',
+		'npm',
+		callback
+	);
 });
 
 gulp.task('patch', function(){
 	runSequence(
-'bump-patch',
-'release',
-done
-);
+		'bump-patch',
+		'release',
+		done
+	);
 });
 
 gulp.task('minor', function(){
 	runSequence(
-'bump-minor',
-'release',
-done
-);
+		'bump-minor',
+		'release',
+		done
+	);
 });
 
 gulp.task('major', function(){
 	runSequence(
-'bump-major',
-'release',
-done
-);
+		'bump-major',
+		'release',
+		done
+	);
 });
 
 // Util functions

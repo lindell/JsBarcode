@@ -20,6 +20,8 @@ gulp compress # Compiles and compresses all individual barcode files
 
 gulp watch # Listens to file changes and re-compiles automatically
 gulp watch-web # Listens to file changes and re-compiles to JsBarcode.all.js automatically
+
+gulp lint # Checking the code according to the code style specified in .eslintrc
 ````
 
 Testing
@@ -58,7 +60,7 @@ class GenericBarcode{
 }
 ````
 
-It might be a good idea to check one of the already implemented barcodes (such as [ITF14](https://github.com/lindell/JsBarcode/blob/master/src/barcodes/ITF14/index.js)) for inspiration. 
+It might be a good idea to check one of the already implemented barcodes (such as [ITF14](https://github.com/lindell/JsBarcode/blob/master/src/barcodes/ITF14/index.js)) for inspiration.
 
 ### The Core / Renderers
 The core part handles the API requests and calls the renderers. If you want to do any structural changes please [create an issue](https://github.com/lindell/JsBarcode/issues/new) or ask about it in the [gitter chat](https://gitter.im/lindell/JsBarcode) first.
@@ -71,5 +73,5 @@ So you are ready to make a PR? Great! :smile:
 
 But first make sure you have checked some things.
 
-* Your code should follow the code style guide provided by [.eslintrc](https://github.com/lindell/JsBarcode/blob/master/.eslintrc)
+* Your code should follow the code style guide provided by [.eslintrc](https://github.com/lindell/JsBarcode/blob/master/.eslintrc) by running ``gulp lint``
 * If you implemented a new symbology, make sure you have tests for it
