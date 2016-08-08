@@ -11,6 +11,6 @@ install:
 after_success: npm run coveralls
 node_js:
   - "node"
-  - "6.0.x"
-  - "4.1"
-  - "4.0"
+  - "6"
+  - "5"
+  - "4"
