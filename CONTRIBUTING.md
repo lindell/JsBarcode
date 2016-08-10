@@ -75,3 +75,4 @@ But first make sure you have checked some things.
 
 * Your code should follow the code style guide provided by [.eslintrc](https://github.com/lindell/JsBarcode/blob/master/.eslintrc) by running ``gulp lint``
 * If you implemented a new symbology, make sure you have tests for it
+* Don't commit build changes. No `dist/` or `bin/` changes in the PR. 
