@@ -204,6 +204,11 @@ If you have any question or suggestion [create an issue](https://github.com/lind
 
 Bug reports should always be done with a [new issue](https://github.com/lindell/JsBarcode/issues/new).
 
+License:
+----
+JsBarcode is shared under the [MIT license](https://github.com/lindell/JsBarcode/blob/master/MIT-LICENSE.txt). This means you can modify and use it however you want, even for comercial use. But please give this the Github repo a :star: and write a small comment of how you are using JsBarcode in the [gitter chat](https://gitter.im/lindell/JsBarcode).
+
+
 
 [1]: https://cdn.jsdelivr.net/jsbarcode/3.3.16/JsBarcode.all.min.js "jsdelivr all barcodes"
 [2]: https://cdn.jsdelivr.net/jsbarcode/3.3.16/barcodes/JsBarcode.code128.min.js "jsdelivr code128"
