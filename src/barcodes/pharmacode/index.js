@@ -2,8 +2,9 @@
 // http://www.gomaro.ch/ftproot/Laetus_PHARMA-CODE.pdf
 
 class pharmacode{
-	constructor(string){
+	constructor(string, options){
 		this.number = parseInt(string, 10);
+		this.text = options.text || this.number + "";
 	}
 
 	encode(){
@@ -28,7 +29,7 @@ class pharmacode{
 
 		return {
 			data: result,
-			text: this.number + ""
+			text: this.text
 		};
 	}
 

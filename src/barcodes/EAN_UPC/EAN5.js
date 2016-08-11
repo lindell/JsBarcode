@@ -4,8 +4,9 @@
 import EANencoder from './ean_encoder.js';
 
 class EAN5{
-	constructor(string){
+	constructor(string, options){
 		this.string = string;
+		this.text = options.text || this.text;
 
 		// Define the EAN-13 structure
 		this.structure = [
@@ -38,10 +39,10 @@ class EAN5{
 
 		return {
 			data: result,
-			text: this.string
+			text: this.text
 		};
 	}
-	
+
 	checksum(){
 		var result = 0;
 

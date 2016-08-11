@@ -12,7 +12,7 @@ import ErrorHandler from './exceptions/ErrorHandler.js';
 import {InvalidInputException} from './exceptions/exceptions.js';
 
 // Default values
-import defaults from './defaults/defaults.js';
+import defaults from './options/defaults.js';
 
 // The protype of the object returned from the JsBarcode() call
 let API = function(){};

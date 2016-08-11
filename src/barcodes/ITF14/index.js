@@ -1,6 +1,7 @@
 class ITF14{
-	constructor(string){
+	constructor(string, options){
 		this.string = string;
+		this.text = options.text;
 
 		// Add checksum if it does not exist
 		if(string.search(/^[0-9]{13}$/) !== -1){
@@ -39,7 +40,7 @@ class ITF14{
 
 		return {
 			data: result,
-			text: this.string
+			text: this.text || this.string
 		};
 	}
 

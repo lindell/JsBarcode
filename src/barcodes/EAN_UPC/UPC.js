@@ -13,6 +13,8 @@ class UPC{
 			this.string = string;
 		}
 
+		this.text = options.text || this.string;
+
 		this.displayValue = options.displayValue;
 
 		// Make sure the font is not bigger than the space between the guard bars
@@ -40,7 +42,7 @@ class UPC{
 		if(this.displayValue){
 			result.push({
 				data: "00000000",
-				text: this.string[0],
+				text: this.text.substr(0, 1),
 				options: {textAlign: "left", fontSize: this.fontSize}
 			});
 		}
@@ -54,7 +56,7 @@ class UPC{
 		// Add the left side
 		result.push({
 			data: encoder.encode(this.string.substr(1, 5), "LLLLL"),
-			text: this.string.substr(1, 5),
+			text: this.text.substr(1, 5),
 			options: {fontSize: this.fontSize}
 		});
 
@@ -67,7 +69,7 @@ class UPC{
 		// Add the right side
 		result.push({
 			data: encoder.encode(this.string.substr(6, 5), "RRRRR"),
-			text: this.string.substr(6, 5),
+			text: this.text.substr(6, 5),
 			options: {fontSize: this.fontSize}
 		});
 
@@ -81,7 +83,7 @@ class UPC{
 		if(this.displayValue){
 			result.push({
 				data: "00000000",
-				text: this.string[11],
+				text: this.text.substr(11, 1),
 				options: {textAlign: "right", fontSize: this.fontSize}
 			});
 		}

@@ -114,7 +114,7 @@ describe('Text printing', function() {
 
 describe('Generic barcode', function() {
   it('should not fail generic barcode', function () {
-    var enc = new GENERIC("1234");
+    var enc = new GENERIC("1234", {});
     assert.equal(enc.valid(), true);
     assert.equal(enc.encode().text, "1234");
   });

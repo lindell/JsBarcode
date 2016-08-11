@@ -2,8 +2,9 @@
 // https://en.wikipedia.org/wiki/MSI_Barcode#Character_set_and_binary_lookup
 
 class MSI{
-	constructor(string){
+	constructor(string, options){
 		this.string = string;
+		this.text = options.text;
 	}
 
 	encode(){
@@ -27,7 +28,7 @@ class MSI{
 
 		return {
 			data: ret,
-			text: this.string
+			text: this.text || this.string
 		};
 	}
 

@@ -13,6 +13,8 @@ class EAN13{
 			this.string = string;
 		}
 
+		this.text = options.text || this.string;
+
 		this.displayValue = options.displayValue;
 
 		// Define the EAN-13 structure
@@ -65,7 +67,7 @@ class EAN13{
 		if(this.displayValue){
 			result.push({
 				data: "000000000000",
-				text: this.string[0],
+				text: this.text.substr(0, 1),
 				options: {textAlign: "left", fontSize: this.fontSize}
 			});
 		}
@@ -79,7 +81,7 @@ class EAN13{
 		// Add the left side
 		result.push({
 			data: encoder.encode(leftSide, structure),
-			text: leftSide,
+			text: this.text.substr(1, 6),
 			options: {fontSize: this.fontSize}
 		});
 
@@ -92,7 +94,7 @@ class EAN13{
 		// Add the right side
 		result.push({
 			data: encoder.encode(rightSide, "RRRRRR"),
-			text: rightSide,
+			text: this.text.substr(7, 6),
 			options: {fontSize: this.fontSize}
 		});
 

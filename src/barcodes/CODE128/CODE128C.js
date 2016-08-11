@@ -1,8 +1,8 @@
 import CODE128 from './CODE128.js';
 
 class CODE128C extends CODE128{
-	constructor(string){
-		super(String.fromCharCode(210) + string);
+	constructor(string, options){
+		super(String.fromCharCode(210) + string, options);
 	}
 
 	valid(){

@@ -4,7 +4,7 @@
 import EANencoder from './ean_encoder.js';
 
 class EAN8{
-	constructor(string){
+	constructor(string, options){
 		// Add checksum if it does not exist
 		if(string.search(/^[0-9]{7}$/) !== -1){
 			this.string = string + this.checksum(string);
@@ -12,6 +12,8 @@ class EAN8{
 		else{
 			this.string = string;
 		}
+
+		this.text = options.text || this.string;
 	}
 
 	valid(){
@@ -48,7 +50,7 @@ class EAN8{
 
 		return {
 			data: result,
-			text: this.string
+			text: this.text
 		};
 	}
 

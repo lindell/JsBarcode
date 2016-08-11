@@ -59,14 +59,14 @@ describe('EAN-8', function() {
   });
 
   it('should be able to encode normal text', function () {
-    var enc = new EAN8("96385074");
+    var enc = new EAN8("96385074", {});
     assert.equal(true, enc.valid());
     assert.equal("1010001011010111101111010110111010101001110111001010001001011100101"
       , enc.encode().data);
   });
 
   it('should auto include the checksum if missing', function () {
-    var enc = new EAN8("9638507");
+    var enc = new EAN8("9638507", {});
 
     assert.equal(true, enc.valid());
     assert.equal("96385074", enc.encode().text);
@@ -75,10 +75,10 @@ describe('EAN-8', function() {
   });
 
   it('should warn with invalid text', function () {
-    var enc = new EAN8("12345");
+    var enc = new EAN8("12345", {});
     assert.equal(false, enc.valid());
 
-    var enc = new EAN8("96385073");
+    var enc = new EAN8("96385073", {});
     assert.equal(false, enc.valid());
   });
 });
@@ -89,22 +89,22 @@ describe('EAN-5', function() {
   });
 
   it('should be able to encode normal text', function () {
-    var enc = new EAN5("54495");
+    var enc = new EAN5("54495", {});
     assert.equal(true, enc.valid());
     assert.equal("10110110001010100011010011101010001011010111001"
       , enc.encode().data);
 
-    var enc = new EAN5("12345");
+    var enc = new EAN5("12345", {});
     assert.equal(true, enc.valid());
     assert.equal("10110110011010010011010100001010100011010110001"
       , enc.encode().data);
   });
 
   it('should warn with invalid text', function () {
-    var enc = new EAN5("1234");
+    var enc = new EAN5("1234", {});
     assert.equal(false, enc.valid());
 
-    var enc = new EAN5("123a5");
+    var enc = new EAN5("123a5", {});
     assert.equal(false, enc.valid());
   });
 });
@@ -115,22 +115,22 @@ describe('EAN-2', function() {
   });
 
   it('should be able to encode normal text', function () {
-    var enc = new EAN2("53");
+    var enc = new EAN2("53", {});
     assert.equal(true, enc.valid());
     assert.equal("10110110001010100001"
       , enc.encode().data);
 
-    var enc = new EAN2("12");
+    var enc = new EAN2("12", {});
     assert.equal(true, enc.valid());
     assert.equal("10110011001010010011"
       , enc.encode().data);
   });
 
   it('should warn with invalid text', function () {
-    var enc = new EAN2("1");
+    var enc = new EAN2("1", {});
     assert.equal(false, enc.valid());
 
-    var enc = new EAN2("a2");
+    var enc = new EAN2("a2", {});
     assert.equal(false, enc.valid());
   });
 });

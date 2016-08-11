@@ -1,12 +1,14 @@
 // This is the master class, it does require the start code to be
 // included in the string
 class CODE128{
-	constructor(string){
+	constructor(string, options){
 		// Fill the bytes variable with the ascii codes of string
 		this.bytes = [];
 		for (var i = 0; i < string.length; ++i) {
 			this.bytes.push(string.charCodeAt(i));
 		}
+
+		this.text = options.text;
 
 		// First element should be startcode, remove that
 		this.string = string.substring(1);
@@ -47,7 +49,7 @@ class CODE128{
 		}
 
 		return {
-			text: this.string.replace(/[^\x20-\x7E]/g, ""),
+			text: this.text || this.string.replace(/[^\x20-\x7E]/g, ""),
 			data:
 			// Add the start bits
 			this.getEncoding(startIndex) +

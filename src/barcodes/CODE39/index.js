@@ -2,8 +2,9 @@
 // https://en.wikipedia.org/wiki/Code_39#Encoding
 
 class CODE39 {
-	constructor(string, options){
-		this.string = string.toUpperCase();
+	constructor(value, options){
+		this.value = value.toUpperCase();
+		this.text = options.text;
 
 		// Enable mod43 checksum?
 		this.mod43Enabled = options.mod43 || false;
@@ -60,21 +61,21 @@ class CODE39 {
 
 
 	encode(){
-		var string = this.string;
+		var value = this.value;
 
 		// First character is always a *
 		var result = this.getEncoding("*");
 
 		// Take every character and add the binary representation to the result
-		for(let i = 0; i < this.string.length; i++){
-			result += this.getEncoding(this.string[i]) + "0";
+		for(let i = 0; i < this.value.length; i++){
+			result += this.getEncoding(this.value[i]) + "0";
 		}
 
 		// Calculate mod43 checksum if enabled
 		if(this.mod43Enabled){
 			var checksum = this.mod43checksum();
 			result += this.getBinary(checksum) + "0";
-			string += this.getCharacter(checksum);
+			value += this.getCharacter(checksum);
 		}
 
 		// Last character is always a *
@@ -82,18 +83,18 @@ class CODE39 {
 
 		return {
 			data: result,
-			text: string
+			text: this.text || value
 		};
 	}
 
 	valid(){
-		return this.string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
+		return this.value.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
 	}
 
 	mod43checksum(){
 		var checksum = 0;
-		for(let i = 0; i < this.string.length; i++){
-			checksum += this.characterValue(this.string[i]);
+		for(let i = 0; i < this.value.length; i++){
+			checksum += this.characterValue(this.value[i]);
 		}
 
 		checksum = checksum % 43;

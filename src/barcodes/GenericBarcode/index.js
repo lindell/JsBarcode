@@ -1,13 +1,14 @@
 class GenericBarcode{
-	constructor(string){
+	constructor(string, options){
 		this.string = string;
+		this.text = options.text || string;
 	}
 
 	// Return the corresponding binary numbers for the data provided
 	encode(){
 		return {
 			data: "10101010101010101010101010101010101010101",
-			text: this.string
+			text: this.text
 		};
 	}
 

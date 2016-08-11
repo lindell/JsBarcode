@@ -4,8 +4,9 @@
 import EANencoder from './ean_encoder.js';
 
 class EAN2{
-	constructor(string){
+	constructor(string, options){
 		this.string = string;
+		this.text = options.text | this.text;
 
 		this.structure = ["LL", "LG", "GL", "GG"];
 	}
@@ -28,7 +29,7 @@ class EAN2{
 
 		return {
 			data: result,
-			text: this.string
+			text: this.text
 		};
 	}
 }

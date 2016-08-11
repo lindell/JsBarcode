@@ -1,6 +1,7 @@
 class ITF{
-	constructor(string){
+	constructor(string, options){
 		this.string = string;
+		this.text = options.text || string;
 
 		this.binaryRepresentation = {
 			"0":"00110",
@@ -34,7 +35,7 @@ class ITF{
 
 		return {
 			data: result,
-			text: this.string
+			text: this.text
 		};
 	}
 
