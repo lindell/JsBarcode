@@ -1,5 +1,5 @@
 import optionsFromStrings from "./optionsFromStrings.js";
-import defaults from "../defaults/defaults.js";
+import defaults from "../options/defaults.js";
 
 function getOptionsFromElement(element){
 	var options = {};
