@@ -112,12 +112,14 @@ describe('Text printing', function() {
   });
 });
 
-describe('Works with extended Arrays', function() {
-  Array.prototype.test = function(){};
-  it('should not fail generic barcode', function () {
-    var enc = new CODE128("1234");
-    assert.equal(enc.valid(), true);
-    assert.equal(enc.encode().text, "1234");
+describe('Extended Arrays', function() {
+  it('should work with extended arrays', function () {
+    Array.prototype.test = function(){};
+    Array.prototype._test = "test";
+
+    var canvas = new Canvas();
+    JsBarcode(canvas, "Hello");
+    JsBarcode(canvas, "HI", {format: "CODE39"});
   });
 });
 
