@@ -112,6 +112,17 @@ describe('Text printing', function() {
   });
 });
 
+describe('Extended Arrays', function() {
+  it('should work with extended arrays', function () {
+    Array.prototype.test = function(){};
+    Array.prototype._test = "test";
+
+    var canvas = new Canvas();
+    JsBarcode(canvas, "Hello");
+    JsBarcode(canvas, "HI", {format: "CODE39"});
+  });
+});
+
 describe('Generic barcode', function() {
   it('should not fail generic barcode', function () {
     var enc = new GENERIC("1234");
