@@ -5,6 +5,7 @@ import {ITF14} from './ITF14/';
 import {ITF} from './ITF/';
 import {MSI, MSI10, MSI11, MSI1010, MSI1110} from './MSI/';
 import {pharmacode} from './pharmacode/';
+import {codabar} from './codabar';
 import {GenericBarcode} from './GenericBarcode/';
 
 export default {
@@ -15,5 +16,6 @@ export default {
 	ITF,
 	MSI, MSI10, MSI11, MSI1010, MSI1110,
 	pharmacode,
+	codabar,
 	GenericBarcode
 };
