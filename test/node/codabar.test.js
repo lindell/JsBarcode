@@ -31,12 +31,12 @@ describe('Codabar', function() {
   });
 
   it('should warn with only a start character', function () {
-    var enc = new Codabar("X12345");
+    var enc = new Codabar("A12345");
     assert.equal(false, enc.valid());
   });
 
   it('should warn with only a stop character', function () {
-    var enc = new Codabar("12345X");
+    var enc = new Codabar("12345A");
     assert.equal(false, enc.valid());
   });
 
