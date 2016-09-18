@@ -35,8 +35,33 @@ describe('Codabar', function() {
     assert.equal(false, enc.valid());
   });
 
+  it('should warn with only an invalid start character', function () {
+    var enc = new Codabar("X12345");
+    assert.equal(false, enc.valid());
+  });
+
   it('should warn with only a stop character', function () {
     var enc = new Codabar("12345A");
+    assert.equal(false, enc.valid());
+  });
+
+  it('should warn with only an invalid stop character', function () {
+    var enc = new Codabar("12345X");
+    assert.equal(false, enc.valid());
+  });
+
+  it('should warn with only start and stop characters', function() {
+    var enc = new Codabar("AA")
+    assert.equal(false, enc.valid());
+  });
+
+  it('should warn with only start and stop characters', function() {
+    var enc = new Codabar("AA")
+    assert.equal(false, enc.valid());
+  });
+
+  it('should warn with an empty string', function() {
+    var enc = new Codabar("")
     assert.equal(false, enc.valid());
   });
 
