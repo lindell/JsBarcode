@@ -36,6 +36,7 @@ Supported barcodes:
   * MSI1010
   * MSI1110
 * [Pharmacode](https://github.com/lindell/JsBarcode/wiki/pharmacode)
+* [Codabar](https://github.com/lindell/JsBarcode/wiki/codabar)
 
 Examples for browsers:
 ----
