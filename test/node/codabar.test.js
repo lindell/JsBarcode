@@ -55,11 +55,6 @@ describe('Codabar', function() {
     assert.equal(false, enc.valid());
   });
 
-  it('should warn with only start and stop characters', function() {
-    var enc = new Codabar("AA")
-    assert.equal(false, enc.valid());
-  });
-
   it('should warn with an empty string', function() {
     var enc = new Codabar("")
     assert.equal(false, enc.valid());
