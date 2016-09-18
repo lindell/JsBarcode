@@ -118,7 +118,7 @@ Download or get the CDN link to the script:
 
 | Name | Supported barcodes | Size (gzip) | CDN / Download |
 |------|--------------------|:-----------:|---------------:|
-|  *All*  |  *All the barcodes!*  |  *7.7 kB*  |  *[JsBarcode.all.min.js][1]*  |
+|  *All*  |  *All the barcodes!*  |  *7.9 kB*  |  *[JsBarcode.all.min.js][1]*  |
 |  CODE128  |  CODE128 (auto and force mode)  |  5.3 kB  |  [JsBarcode.code128.min.js][2]  |
 |  CODE39  |  CODE39  |  4.6 kB  |  [JsBarcode.code39.min.js][3]  |
 |  EAN / UPC  |  EAN-13, EAN-8, EAN-5, EAN-2, UPC (A)  |  5.1 kB  |  [JsBarcode.ean-upc.min.js][4]  |
