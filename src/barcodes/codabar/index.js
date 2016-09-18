@@ -5,7 +5,7 @@ class codabar{
 	constructor(string){
 		this.string = string.toUpperCase();
 
-		if (this.string.search(/^[0-9\-\$\:\.\+\/]*$/) === 0) {
+		if (this.string.search(/^[0-9\-\$\:\.\+\/]+$/) === 0) {
 			this.string = "A" + this.string + "A";
 		}
 
@@ -34,7 +34,7 @@ class codabar{
 	}
 
 	valid(){
-		return this.string.search(/^[A-D]?[0-9\-\$\:\.\+\/]*[A-D]$/) !== -1;
+		return this.string.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
 	}
 
 	encode(){
