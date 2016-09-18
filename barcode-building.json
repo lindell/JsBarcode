@@ -33,5 +33,10 @@
     "filename": "JsBarcode.pharmacode.min.js",
     "names": "pharmacode",
     "barcodeFile": "./pharmacode"
+  },
+  {
+    "filename": "JsBarcode.codabar.min.js",
+    "names": "codabar",
+    "barcodeFile": "./codabar"
   }
 ]
