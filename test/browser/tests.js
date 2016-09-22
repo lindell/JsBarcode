@@ -17,6 +17,9 @@ function createTests(newTest){
   newTest("12345", {format: "pharmacode", width: 1});
   newTest("133742", {format: "CODE128C", width: 1});
   newTest("12345674", {format: "MSI", width: 1});
+  newTest("1234567890", {format: "codabar", width: 1});
+  newTest("A1234567890A", {format: "codabar", width: 1});
+  newTest("C1234567890D", {format: "codabar", width: 1});
   newTest("12345674", {format: "GenericBarcode", width: 1});
   newTest("Such customize!", {
     width: 1,

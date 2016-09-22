@@ -18,6 +18,8 @@ var _MSI = require('./MSI/');
 
 var _pharmacode = require('./pharmacode/');
 
+var _codabar = require('./codabar');
+
 var _GenericBarcode = require('./GenericBarcode/');
 
 exports.default = {
@@ -28,5 +30,6 @@ exports.default = {
 	ITF: _ITF2.ITF,
 	MSI: _MSI.MSI, MSI10: _MSI.MSI10, MSI11: _MSI.MSI11, MSI1010: _MSI.MSI1010, MSI1110: _MSI.MSI1110,
 	pharmacode: _pharmacode.pharmacode,
+	codabar: _codabar.codabar,
 	GenericBarcode: _GenericBarcode.GenericBarcode
 };

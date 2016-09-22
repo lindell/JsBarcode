@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 39);
+/******/ 	return __webpack_require__(__webpack_require__.s = 40);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -704,7 +704,9 @@ var _ITF2 = __webpack_require__(26);
 
 var _MSI = __webpack_require__(32);
 
-var _pharmacode = __webpack_require__(33);
+var _pharmacode = __webpack_require__(34);
+
+var _codabar = __webpack_require__(33);
 
 var _GenericBarcode = __webpack_require__(25);
 
@@ -716,6 +718,7 @@ exports.default = {
 	ITF: _ITF2.ITF,
 	MSI: _MSI.MSI, MSI10: _MSI.MSI10, MSI11: _MSI.MSI11, MSI1010: _MSI.MSI1010, MSI1110: _MSI.MSI1110,
 	pharmacode: _pharmacode.pharmacode,
+	codabar: _codabar.codabar,
 	GenericBarcode: _GenericBarcode.GenericBarcode
 };
 
@@ -807,11 +810,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _getOptionsFromElement = __webpack_require__(34);
+var _getOptionsFromElement = __webpack_require__(35);
 
 var _getOptionsFromElement2 = _interopRequireDefault(_getOptionsFromElement);
 
-var _renderers = __webpack_require__(37);
+var _renderers = __webpack_require__(38);
 
 var _exceptions = __webpack_require__(6);
 
@@ -1278,13 +1281,7 @@ var CODE39 = function () {
 
 		// Calculate mod43 checksum if enabled
 		if (this.mod43Enabled) {
-			var checksum = 0;
-			for (var _i = 0; _i < this.string.length; _i++) {
-				checksum += this.characterValue(this.string[_i]);
-			}
-
-			checksum = checksum % 43;
-
+			var checksum = this.mod43checksum();
 			result += this.getBinary(checksum) + "0";
 			string += this.getCharacter(checksum);
 		}
@@ -1300,6 +1297,16 @@ var CODE39 = function () {
 
 	CODE39.prototype.valid = function valid() {
 		return this.string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
+	};
+
+	CODE39.prototype.mod43checksum = function mod43checksum() {
+		var checksum = 0;
+		for (var i = 0; i < this.string.length; i++) {
+			checksum += this.characterValue(this.string[i]);
+		}
+
+		checksum = checksum % 43;
+		return checksum;
 	};
 
 	return CODE39;
@@ -2271,6 +2278,80 @@ Object.defineProperty(exports, "__esModule", {
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+// Encoding specification:
+// http://www.barcodeisland.com/codabar.phtml
+
+var codabar = function () {
+	function codabar(string) {
+		_classCallCheck(this, codabar);
+
+		this.string = string.toUpperCase();
+
+		if (this.string.search(/^[0-9\-\$\:\.\+\/]+$/) === 0) {
+			this.string = "A" + this.string + "A";
+		}
+
+		this.encodings = {
+			"0": "101010011",
+			"1": "101011001",
+			"2": "101001011",
+			"3": "110010101",
+			"4": "101101001",
+			"5": "110101001",
+			"6": "100101011",
+			"7": "100101101",
+			"8": "100110101",
+			"9": "110100101",
+			"-": "101001101",
+			"$": "101100101",
+			":": "1101011011",
+			"/": "1101101011",
+			".": "1101101101",
+			"+": "101100110011",
+			"A": "1011001001",
+			"B": "1010010011",
+			"C": "1001001011",
+			"D": "1010011001"
+		};
+	}
+
+	codabar.prototype.valid = function valid() {
+		return this.string.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
+	};
+
+	codabar.prototype.encode = function encode() {
+		var result = [];
+		for (var i = 0; i < this.string.length; i++) {
+			result.push(this.encodings[this.string.charAt(i)]);
+			// for all characters except the last, append a narrow-space ("0")
+			if (i !== this.string.length - 1) {
+				result.push("0");
+			}
+		}
+		return {
+			text: this.string.replace(/[A-D]/g, ''),
+			data: result.join('')
+		};
+	};
+
+	return codabar;
+}();
+
+exports.codabar = codabar;
+
+/***/ },
+/* 34 */
+/***/ function(module, exports) {
+
+"use strict";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 // Encoding documentation
 // http://www.gomaro.ch/ftproot/Laetus_PHARMA-CODE.pdf
 
@@ -2318,7 +2399,7 @@ var pharmacode = function () {
 exports.pharmacode = pharmacode;
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2328,7 +2409,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _optionsFromStrings = __webpack_require__(35);
+var _optionsFromStrings = __webpack_require__(36);
 
 var _optionsFromStrings2 = _interopRequireDefault(_optionsFromStrings);
 
@@ -2365,7 +2446,7 @@ function getOptionsFromElement(element) {
 exports.default = getOptionsFromElement;
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -2398,7 +2479,7 @@ function optionsFromStrings(options) {
 }
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2552,7 +2633,7 @@ var CanvasRenderer = function () {
 exports.default = CanvasRenderer;
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2563,11 +2644,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getRendererClass = undefined;
 
-var _canvas = __webpack_require__(36);
+var _canvas = __webpack_require__(37);
 
 var _canvas2 = _interopRequireDefault(_canvas);
 
-var _svg = __webpack_require__(38);
+var _svg = __webpack_require__(39);
 
 var _svg2 = _interopRequireDefault(_svg);
 
@@ -2587,7 +2668,7 @@ function getRendererClass(name) {
 exports.getRendererClass = getRendererClass;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2768,7 +2849,7 @@ function drawLine(x, y, width, height, parent) {
 exports.default = SVGRenderer;
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2956,7 +3037,7 @@ API.prototype.init = function () {
 // The render API call. Calls the real render function.
 API.prototype.render = function () {
 	if (Array.isArray(this._renderProperties)) {
-		for (var i in this._renderProperties) {
+		for (var i = 0; i < this._renderProperties.length; i++) {
 			render(this._renderProperties[i], this._encodings, this._options);
 		}
 	} else {

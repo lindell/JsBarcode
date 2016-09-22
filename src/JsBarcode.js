@@ -157,7 +157,7 @@ API.prototype.init = function(){
 // The render API call. Calls the real render function.
 API.prototype.render = function(){
 	if(Array.isArray(this._renderProperties)){
-		for(let i in this._renderProperties){
+		for(var i = 0; i < this._renderProperties.length; i++){
 			render(this._renderProperties[i], this._encodings, this._options);
 		}
 	}

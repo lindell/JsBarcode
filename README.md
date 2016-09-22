@@ -9,7 +9,7 @@
 
 Introduction
 ----
-**JsBarcode** is a **barcode generator** written in JavaScript. It supports multiple barcode formats and works in browsers and on the server (with *Node.js*). It has *no dependencies* when it is used for the web but works with *jQuery* if you are into that.
+**JsBarcode** is a **barcode generator** written in JavaScript. It supports multiple barcode formats and works in browsers and with *Node.js*. It has *no dependencies* when it is used for the web but works with *jQuery* if you are into that.
 
 Demo
 ----
@@ -36,6 +36,7 @@ Supported barcodes:
   * MSI1010
   * MSI1110
 * [Pharmacode](https://github.com/lindell/JsBarcode/wiki/pharmacode)
+* [Codabar](https://github.com/lindell/JsBarcode/wiki/codabar)
 
 Examples for browsers:
 ----
@@ -117,7 +118,7 @@ Download or get the CDN link to the script:
 
 | Name | Supported barcodes | Size (gzip) | CDN / Download |
 |------|--------------------|:-----------:|---------------:|
-|  *All*  |  *All the barcodes!*  |  *7.7 kB*  |  *[JsBarcode.all.min.js][1]*  |
+|  *All*  |  *All the barcodes!*  |  *7.9 kB*  |  *[JsBarcode.all.min.js][1]*  |
 |  CODE128  |  CODE128 (auto and force mode)  |  5.3 kB  |  [JsBarcode.code128.min.js][2]  |
 |  CODE39  |  CODE39  |  4.6 kB  |  [JsBarcode.code39.min.js][3]  |
 |  EAN / UPC  |  EAN-13, EAN-8, EAN-5, EAN-2, UPC (A)  |  5.1 kB  |  [JsBarcode.ean-upc.min.js][4]  |
@@ -203,6 +204,11 @@ If you want to contribute, please check out the [CONTRIBUTING.md](https://github
 If you have any question or suggestion [create an issue](https://github.com/lindell/JsBarcode/issues/new) or ask about it in the [gitter chat](https://gitter.im/lindell/JsBarcode).
 
 Bug reports should always be done with a [new issue](https://github.com/lindell/JsBarcode/issues/new).
+
+License:
+----
+JsBarcode is shared under the [MIT license](https://github.com/lindell/JsBarcode/blob/master/MIT-LICENSE.txt). This means you can modify and use it however you want, even for comercial use. But please give this the Github repo a :star: and write a small comment of how you are using JsBarcode in the [gitter chat](https://gitter.im/lindell/JsBarcode).
+
 
 
 [1]: https://cdn.jsdelivr.net/jsbarcode/3.3.16/JsBarcode.all.min.js "jsdelivr all barcodes"

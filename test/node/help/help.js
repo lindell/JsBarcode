@@ -23,7 +23,7 @@ function mergeToText(encodeData){
 function mergeToBin(encodeData){
   if(Array.isArray(encodeData)){
     var ret = "";
-    for(var i in encodeData){
+    for(var i = 0; i < encodeData.length; i++){
       ret += toBin(encodeData[i].data);
     }
     return ret;
