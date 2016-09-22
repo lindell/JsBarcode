@@ -69,4 +69,9 @@ describe('MSI', function() {
     var enc = new MSI("12345AB675", {});
     assert.equal(false, enc.valid());
   });
+
+  it('should work with text option', function () {
+    var enc = new MSI("12345674", {text: "THISISTEXT"});
+    assert.equal("THISISTEXT", enc.encode().text);
+  });
 });

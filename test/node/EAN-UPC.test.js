@@ -94,6 +94,11 @@ describe('EAN-8', function() {
     var enc = new EAN8("96385073", {});
     assert.equal(false, enc.valid());
   });
+
+  it('should work with text option', function () {
+    var enc = new EAN8("96385074", help.merge(options, {text: "THISISTEXT"}));
+    assert.equal("THISISTEXT", help.fixText(enc.encode()));
+  });
 });
 
 describe('EAN-5', function() {
@@ -120,6 +125,11 @@ describe('EAN-5', function() {
     var enc = new EAN5("123a5", {});
     assert.equal(false, enc.valid());
   });
+
+  it('should work with text option', function () {
+    var enc = new EAN5("12345", help.merge(options, {text: "THISISTEXT"}));
+    assert.equal("THISISTEXT", help.fixText(enc.encode()));
+  });
 });
 
 describe('EAN-2', function() {
@@ -145,5 +155,10 @@ describe('EAN-2', function() {
 
     var enc = new EAN2("a2", {});
     assert.equal(false, enc.valid());
+  });
+
+  it('should work with text option', function () {
+    var enc = new EAN2("12", help.merge(options, {text: "THISISTEXT"}));
+    assert.equal("THISISTEXT", help.fixText(enc.encode()));
   });
 });

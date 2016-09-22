@@ -65,4 +65,9 @@ describe('Codabar', function() {
     assert.equal(false, enc.valid());
   });
 
+  it('should work with text option', function () {
+    var enc = new Codabar("A1234OOPS56A", {text: "THISISATEXT"});
+    assert.equal("THISISATEXT", enc.encode().text);
+  });
+
 });

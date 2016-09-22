@@ -95,4 +95,9 @@ describe('CODE128', function() {
     var enc = new CODE128C("123456", {});
     assert.equal(true, enc.valid());
   });
+
+  it('should work with text option', function () {
+    var enc = new CODE128("AB12", {text: "THISISTEXT"});
+    assert.equal("THISISTEXT", enc.encode().text);
+  });
 });

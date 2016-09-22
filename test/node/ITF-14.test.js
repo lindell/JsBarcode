@@ -60,4 +60,9 @@ describe('ITF-14', function() {
     var enc = new ITF14("00847280031320", {});
     assert.equal(true, enc.valid());
   });
+
+  it('should work with text option', function () {
+    var enc = new ITF14("00847280031450", {text: "THISISTEXT"});
+    assert.equal("THISISTEXT", enc.encode().text);
+  });
 });

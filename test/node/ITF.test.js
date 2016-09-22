@@ -26,4 +26,9 @@ describe('ITF', function() {
     var enc = new ITF("1234AB", {});
     assert.equal(false, enc.valid());
   });
+
+  it('should work with text option', function () {
+    var enc = new ITF("123456", {text: "THISISTEXT"});
+    assert.equal("THISISTEXT", enc.encode().text);
+  });
 });

@@ -29,4 +29,9 @@ describe('Pharmacode', function() {
     var enc = new Pharmacode("12345678", {});
     assert.equal(false, enc.valid());
   });
+
+  it('should work with text option', function () {
+    var enc = new Pharmacode("12345678", {text: "THISISTEXT"});
+    assert.equal("THISISTEXT", enc.encode().text);
+  });
 });
