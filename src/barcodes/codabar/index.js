@@ -11,6 +11,8 @@ class codabar extends Barcode{
 
 		super(data.toUpperCase(), options);
 
+		this.text = this.options.text || this.text.replace(/[A-D]/g, '');
+
 		this.encodings = {
 			"0": "101010011",
 			"1": "101011001",
@@ -49,7 +51,7 @@ class codabar extends Barcode{
 			}
 		}
 		return {
-			text: this.text.replace(/[A-D]/g, ''),
+			text: this.text,
 			data: result.join('')
 		};
 	}
