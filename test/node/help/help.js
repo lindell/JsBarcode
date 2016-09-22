@@ -1,6 +1,7 @@
 module.exports.toBin = mergeToBin;
 module.exports.stripZero = stripZero;
 module.exports.fixText = mergeToText;
+module.exports.merge = merge;
 module.exports.clone = clone;
 
 module.exports.fixBin = function(a){

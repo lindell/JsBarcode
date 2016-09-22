@@ -26,6 +26,11 @@ describe('UPC', function() {
     var enc = new UPC("12345678999", clone(options));
     assert.equal("123456789999", help.fixText(enc.encode()));
   });
+
+  it('should work with text option', function () {
+    var enc = new UPC("12345678999", help.merge(options, {text: "THISISTEXT"}));
+    assert.equal("THISISTEXT", help.fixText(enc.encode()));
+  });
 });
 
 describe('EAN', function() {
@@ -53,6 +58,11 @@ describe('EAN', function() {
   it('should auto include the checksum if missing', function () {
     var enc = new EAN("590123412345", clone(options));
     assert.equal("5901234123457", help.fixText(enc.encode()));
+  });
+
+  it('should work with text option', function () {
+    var enc = new EAN("12345678999", help.merge(options, {text: "THISISTEXT"}));
+    assert.equal("THISISTEXT", help.fixText(enc.encode()));
   });
 });
 
