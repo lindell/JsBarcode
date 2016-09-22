@@ -2,8 +2,9 @@ var assert = require('assert');
 var JsBarcode = require('../../bin/JsBarcode.js');
 var Canvas = require("canvas");
 var help = require("./help/help");
+var clone = help.clone;
 
-var options = {height: 100, displayValue: true};
+var options = {height: 100, displayValue: true, fontSize: 20, textMargin: 2, width: 2};
 
 describe('UPC', function() {
   it('should be able to include the encoder(s)', function () {
@@ -11,18 +12,18 @@ describe('UPC', function() {
   });
 
   it('should be able to encode normal text', function () {
-    var enc = new UPC("123456789999", options);
+    var enc = new UPC("123456789999", clone(options));
     assert.equal("10100110010010011011110101000110110001010111101010100010010010001110100111010011101001110100101"
       , help.fixBin(enc.encode()));
   });
 
   it('should warn with invalid text', function () {
-    var enc = new UPC("12345", options);
+    var enc = new UPC("12345", clone(options));
     assert.equal(false, enc.valid());
   });
 
   it('should auto include the checksum if missing', function () {
-    var enc = new UPC("12345678999", options);
+    var enc = new UPC("12345678999", clone(options));
     assert.equal("123456789999", help.fixText(enc.encode()));
   });
 });
@@ -33,22 +34,24 @@ describe('EAN', function() {
   });
 
   it('should be able to encode normal text', function () {
-    var enc = new EAN("5901234123457", options);
+    var enc = new EAN("5901234123457", clone(options));
     assert.equal(true, enc.valid());
     assert.equal("10100010110100111011001100100110111101001110101010110011011011001000010101110010011101000100101"
       , help.fixBin(enc.encode()));
+      console.log(enc.encode());
+    assert.equal("5901234123457", help.fixText(enc.encode()));
   });
 
   it('should warn with invalid text', function () {
-    var enc = new EAN("12345", options);
+    var enc = new EAN("12345", {});
     assert.equal(false, enc.valid());
 
-    var enc = new EAN("5901234123456  ", options);
+    var enc = new EAN("5901234123456  ", {});
     assert.equal(false, enc.valid());
   });
 
   it('should auto include the checksum if missing', function () {
-    var enc = new EAN("590123412345", options);
+    var enc = new EAN("590123412345", clone(options));
     assert.equal("5901234123457", help.fixText(enc.encode()));
   });
 });

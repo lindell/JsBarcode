@@ -1,10 +1,12 @@
 // Encoding documentation
 // http://www.gomaro.ch/ftproot/Laetus_PHARMA-CODE.pdf
 
-class pharmacode{
-	constructor(string, options){
-		this.number = parseInt(string, 10);
-		this.text = options.text || this.number + "";
+import Barcode from "../Barcode.js";
+
+class pharmacode extends Barcode{
+	constructor(data, options){
+		super(data, options);
+		this.number = parseInt(data, 10);
 	}
 
 	encode(){

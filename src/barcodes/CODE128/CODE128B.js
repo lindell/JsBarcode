@@ -6,7 +6,7 @@ class CODE128B extends CODE128{
 	}
 
 	valid(){
-		return this.string.search(/^[\x20-\x7F\xC8-\xCF]+$/) !== -1;
+		return this.data.search(/^[\x20-\x7F\xC8-\xCF]+$/) !== -1;
 	}
 }
 
