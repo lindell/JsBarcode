@@ -1,15 +1,17 @@
 // This is the master class, it does require the start code to be
 // included in the string
-class CODE128{
-	constructor(string){
+
+import Barcode from "../Barcode.js";
+
+class CODE128 extends Barcode{
+	constructor(data, options){
+		super(data.substring(1), options);
+
 		// Fill the bytes variable with the ascii codes of string
 		this.bytes = [];
-		for (var i = 0; i < string.length; ++i) {
-			this.bytes.push(string.charCodeAt(i));
+		for (var i = 0; i < data.length; ++i) {
+			this.bytes.push(data.charCodeAt(i));
 		}
-
-		// First element should be startcode, remove that
-		this.string = string.substring(1);
 
 		// Data for each character, the last characters will not be encoded but are used for error correction
 		// Numbers encode to (n + 1000) -> binary; 740 -> (740 + 1000).toString(2) -> "11011001100"
@@ -47,7 +49,7 @@ class CODE128{
 		}
 
 		return {
-			text: this.string.replace(/[^\x20-\x7E]/g, ""),
+			text: this.text.replace(/[^\x20-\x7E]/g, ""),
 			data:
 			// Add the start bits
 			this.getEncoding(startIndex) +
@@ -67,7 +69,7 @@ class CODE128{
 	// Use the regexp variable for validation
 	valid() {
     // ASCII value ranges 0-127, 200-211
-		return this.string.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1;
+		return this.data.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1;
 	}
 
 	nextA(bytes, depth){

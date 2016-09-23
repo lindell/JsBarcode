@@ -1,6 +1,7 @@
 function createTests(newTest){
   newTest("This has a \nnewline", {width: 1});
   newTest("\tHi\nHI", {width: 1});
+  newTest("Not valid", {width: 1, text: "Valid"});
   newTest("A little test!", {format: "CODE128", width: 1});
   newTest("ABCDEFG", {format: "CODE39", width: 1, mod43: true});
   newTest("A little test", {format: "CODE39", width: 1});

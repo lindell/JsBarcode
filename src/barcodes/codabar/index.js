@@ -1,13 +1,17 @@
 // Encoding specification:
 // http://www.barcodeisland.com/codabar.phtml
 
-class codabar{
-	constructor(string){
-		this.string = string.toUpperCase();
+import Barcode from "../Barcode.js";
 
-		if (this.string.search(/^[0-9\-\$\:\.\+\/]+$/) === 0) {
-			this.string = "A" + this.string + "A";
+class codabar extends Barcode{
+	constructor(data, options){
+		if (data.search(/^[0-9\-\$\:\.\+\/]+$/) === 0) {
+			data = "A" + data + "A";
 		}
+
+		super(data.toUpperCase(), options);
+
+		this.text = this.options.text || this.text.replace(/[A-D]/g, '');
 
 		this.encodings = {
 			"0": "101010011",
@@ -34,20 +38,20 @@ class codabar{
 	}
 
 	valid(){
-		return this.string.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
+		return this.data.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
 	}
 
 	encode(){
 		var result = [];
-		for(var i = 0; i < this.string.length; i++){
-			result.push(this.encodings[this.string.charAt(i)]);
+		for(var i = 0; i < this.data.length; i++){
+			result.push(this.encodings[this.data.charAt(i)]);
 			// for all characters except the last, append a narrow-space ("0")
-			if (i !== this.string.length - 1) {
+			if (i !== this.data.length - 1) {
 				result.push("0");
 			}
 		}
 		return {
-			text: this.string.replace(/[A-D]/g, ''),
+			text: this.text,
 			data: result.join('')
 		};
 	}

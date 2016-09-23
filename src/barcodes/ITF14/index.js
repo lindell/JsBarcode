@@ -1,11 +1,13 @@
-class ITF14{
-	constructor(string){
-		this.string = string;
+import Barcode from "../Barcode.js";
 
+class ITF14 extends Barcode{
+	constructor(data, options){
 		// Add checksum if it does not exist
-		if(string.search(/^[0-9]{13}$/) !== -1){
-			this.string += this.checksum(string);
+		if(data.search(/^[0-9]{13}$/) !== -1){
+			data += checksum(data);
 		}
+
+		super(data, options);
 
 		this.binaryRepresentation = {
 			"0":"00110",
@@ -22,8 +24,8 @@ class ITF14{
 	}
 
 	valid(){
-		return this.string.search(/^[0-9]{14}$/) !== -1 &&
-			this.string[13] == this.checksum();
+		return this.data.search(/^[0-9]{14}$/) !== -1 &&
+			this.data[13] == checksum(this.data);
 	}
 
 	encode(){
@@ -31,7 +33,7 @@ class ITF14{
 
 		// Calculate all the digit pairs
 		for(var i = 0; i < 14; i += 2){
-			result += this.calculatePair(this.string.substr(i, 2));
+			result += this.calculatePair(this.data.substr(i, 2));
 		}
 
 		// Always add the same end bits
@@ -39,7 +41,7 @@ class ITF14{
 
 		return {
 			data: result,
-			text: this.string
+			text: this.text
 		};
 	}
 
@@ -58,17 +60,17 @@ class ITF14{
 
 		return result;
 	}
+}
 
-	// Calulate the checksum digit
-	checksum(){
-		var result = 0;
+// Calulate the checksum digit
+function checksum(data){
+	var result = 0;
 
-		for(var i = 0; i < 13; i++){
-			result += parseInt(this.string[i]) * (3 - (i % 2) * 2);
-		}
-
-		return Math.ceil(result / 10) * 10 - result;
+	for(var i = 0; i < 13; i++){
+		result += parseInt(data[i]) * (3 - (i % 2) * 2);
 	}
+
+	return Math.ceil(result / 10) * 10 - result;
 }
 
 export {ITF14};

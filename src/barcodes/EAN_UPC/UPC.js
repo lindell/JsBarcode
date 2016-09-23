@@ -2,16 +2,16 @@
 // https://en.wikipedia.org/wiki/Universal_Product_Code#Encoding
 
 import EANencoder from './ean_encoder.js';
+import Barcode from "../Barcode.js";
 
-class UPC{
-	constructor(string, options){
+class UPC extends Barcode{
+	constructor(data, options){
 		// Add checksum if it does not exist
-		if(string.search(/^[0-9]{11}$/) !== -1){
-			this.string = string + this.checksum(string);
+		if(data.search(/^[0-9]{11}$/) !== -1){
+			data += checksum(data);
 		}
-		else{
-			this.string = string;
-		}
+
+		super(data, options);
 
 		this.displayValue = options.displayValue;
 
@@ -28,8 +28,8 @@ class UPC{
 	}
 
 	valid(){
-		return this.string.search(/^[0-9]{12}$/) !== -1 &&
-			this.string[11] == this.checksum(this.string);
+		return this.data.search(/^[0-9]{12}$/) !== -1 &&
+			this.data[11] == checksum(this.data);
 	}
 
 	encode(){
@@ -40,21 +40,21 @@ class UPC{
 		if(this.displayValue){
 			result.push({
 				data: "00000000",
-				text: this.string[0],
+				text: this.text.substr(0, 1),
 				options: {textAlign: "left", fontSize: this.fontSize}
 			});
 		}
 
 		// Add the guard bars
 		result.push({
-			data: "101" + encoder.encode(this.string[0], "L"),
+			data: "101" + encoder.encode(this.data[0], "L"),
 			options: {height: this.guardHeight}
 		});
 
 		// Add the left side
 		result.push({
-			data: encoder.encode(this.string.substr(1, 5), "LLLLL"),
-			text: this.string.substr(1, 5),
+			data: encoder.encode(this.data.substr(1, 5), "LLLLL"),
+			text: this.text.substr(1, 5),
 			options: {fontSize: this.fontSize}
 		});
 
@@ -66,14 +66,14 @@ class UPC{
 
 		// Add the right side
 		result.push({
-			data: encoder.encode(this.string.substr(6, 5), "RRRRR"),
-			text: this.string.substr(6, 5),
+			data: encoder.encode(this.data.substr(6, 5), "RRRRR"),
+			text: this.text.substr(6, 5),
 			options: {fontSize: this.fontSize}
 		});
 
 		// Add the end bits
 		result.push({
-			data: encoder.encode(this.string[11], "R") + "101",
+			data: encoder.encode(this.data[11], "R") + "101",
 			options: {height: this.guardHeight}
 		});
 
@@ -81,29 +81,29 @@ class UPC{
 		if(this.displayValue){
 			result.push({
 				data: "00000000",
-				text: this.string[11],
+				text: this.text.substr(11, 1),
 				options: {textAlign: "right", fontSize: this.fontSize}
 			});
 		}
 
 		return result;
 	}
+}
 
-	// Calulate the checksum digit
-	// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
-	checksum(number){
-		var result = 0;
+// Calulate the checksum digit
+// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
+function checksum(number){
+	var result = 0;
 
-		var i;
-		for(i = 1; i < 11; i += 2){
-			result += parseInt(number[i]);
-		}
-		for(i = 0; i < 11; i += 2){
-			result += parseInt(number[i]) * 3;
-		}
-
-		return (10 - (result % 10)) % 10;
+	var i;
+	for(i = 1; i < 11; i += 2){
+		result += parseInt(number[i]);
 	}
+	for(i = 0; i < 11; i += 2){
+		result += parseInt(number[i]) * 3;
+	}
+
+	return (10 - (result % 10)) % 10;
 }
 
 export default UPC;

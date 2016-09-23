@@ -1,18 +1,20 @@
 // Encoding documentation
 // https://en.wikipedia.org/wiki/MSI_Barcode#Character_set_and_binary_lookup
 
-class MSI{
-	constructor(string){
-		this.string = string;
+import Barcode from "../Barcode.js";
+
+class MSI extends Barcode{
+	constructor(data, options){
+		super(data, options);
 	}
 
 	encode(){
 		// Start bits
 		var ret = "110";
 
-		for(var i = 0; i < this.string.length; i++){
+		for(var i = 0; i < this.data.length; i++){
 			// Convert the character to binary (always 4 binary digits)
-			var digit = parseInt(this.string[i]);
+			var digit = parseInt(this.data[i]);
 			var bin = digit.toString(2);
 			bin = addZeroes(bin, 4 - bin.length);
 
@@ -27,12 +29,12 @@ class MSI{
 
 		return {
 			data: ret,
-			text: this.string
+			text: this.text
 		};
 	}
 
 	valid(){
-		return this.string.search(/^[0-9]+$/) !== -1;
+		return this.data.search(/^[0-9]+$/) !== -1;
 	}
 }
 

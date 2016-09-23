@@ -1,6 +1,8 @@
-class ITF{
-	constructor(string){
-		this.string = string;
+import Barcode from "../Barcode.js";
+
+class ITF extends Barcode{
+	constructor(data, options){
+		super(data, options);
 
 		this.binaryRepresentation = {
 			"0":"00110",
@@ -17,7 +19,7 @@ class ITF{
 	}
 
 	valid(){
-		return this.string.search(/^([0-9]{2})+$/) !== -1;
+		return this.data.search(/^([0-9]{2})+$/) !== -1;
 	}
 
 	encode(){
@@ -25,8 +27,8 @@ class ITF{
 		var result = "1010";
 
 		// Calculate all the digit pairs
-		for(var i = 0; i < this.string.length; i += 2){
-			result += this.calculatePair(this.string.substr(i, 2));
+		for(var i = 0; i < this.data.length; i += 2){
+			result += this.calculatePair(this.data.substr(i, 2));
 		}
 
 		// Always add the same end bits
@@ -34,7 +36,7 @@ class ITF{
 
 		return {
 			data: result,
-			text: this.string
+			text: this.text
 		};
 	}
 

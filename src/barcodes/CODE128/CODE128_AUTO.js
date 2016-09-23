@@ -1,13 +1,13 @@
 import CODE128 from './CODE128.js';
 
 class CODE128AUTO extends CODE128{
-	constructor(string){
+	constructor(data, options){
     // ASCII value ranges 0-127, 200-211
-		if(string.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1){
-			super(autoSelectModes(string));
+		if(data.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1){
+			super(autoSelectModes(data), options);
 		}
 		else{
-			super(string);
+			super(data, options);
 		}
 	}
 }

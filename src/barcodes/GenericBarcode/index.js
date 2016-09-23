@@ -1,13 +1,15 @@
-class GenericBarcode{
-	constructor(string){
-		this.string = string;
+import Barcode from "../Barcode.js";
+
+class GenericBarcode extends Barcode{
+	constructor(data, options){
+		super(data, options); // Sets this.data and this.text
 	}
 
 	// Return the corresponding binary numbers for the data provided
 	encode(){
 		return {
 			data: "10101010101010101010101010101010101010101",
-			text: this.string
+			text: this.text
 		};
 	}
 

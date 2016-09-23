@@ -5,6 +5,7 @@ var defaults = {
 	displayValue: true,
 	fontOptions: "",
 	font: "monospace",
+	text: undefined,
 	textAlign: "center",
 	textPosition: "bottom",
 	textMargin: 2,
