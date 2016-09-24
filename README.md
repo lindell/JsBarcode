@@ -180,6 +180,7 @@ For information about how to use the options, see [the wiki page](https://github
 | [`width`](https://github.com/lindell/JsBarcode/wiki/Options#width) | `2` | `Number` |
 | [`height`](https://github.com/lindell/JsBarcode/wiki/Options#height) | `100` | `Number` |
 | [`displayValue`](https://github.com/lindell/JsBarcode/wiki/Options#display-value) | `true` | `Boolean` |
+| [`text`](https://github.com/lindell/JsBarcode/wiki/Options#text) | `undefined` | `String` |
 | [`fontOptions`](https://github.com/lindell/JsBarcode/wiki/Options#font-options) | `""` | `String` |
 | [`font`](https://github.com/lindell/JsBarcode/wiki/Options#font) | `"monospace"` | `String` |
 | [`textAlign`](https://github.com/lindell/JsBarcode/wiki/Options#text-align) | `"center"` | `String` |
