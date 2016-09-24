@@ -8,62 +8,71 @@ var _ean_encoder = require("./ean_encoder.js");
 
 var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
+var _Barcode2 = require("../Barcode.js");
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // Encoding documentation:
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding documentation:
 // https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Binary_encoding_of_data_digits_into_EAN-13_barcode
 
-var EAN13 = function () {
-	function EAN13(string, options) {
+var EAN13 = function (_Barcode) {
+	_inherits(EAN13, _Barcode);
+
+	function EAN13(data, options) {
 		_classCallCheck(this, EAN13);
 
 		// Add checksum if it does not exist
-		if (string.search(/^[0-9]{12}$/) !== -1) {
-			this.string = string + this.checksum(string);
-		} else {
-			this.string = string;
+		if (data.search(/^[0-9]{12}$/) !== -1) {
+			data += checksum(data);
 		}
 
-		this.displayValue = options.displayValue;
-
 		// Define the EAN-13 structure
-		this.structure = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
+		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
+
+		_this.structure = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
 
 		// Make sure the font is not bigger than the space between the guard bars
 		if (options.fontSize > options.width * 10) {
-			this.fontSize = options.width * 10;
+			_this.fontSize = options.width * 10;
 		} else {
-			this.fontSize = options.fontSize;
+			_this.fontSize = options.fontSize;
 		}
 
 		// Make the guard bars go down half the way of the text
-		this.guardHeight = options.height + this.fontSize / 2 + options.textMargin;
+		_this.guardHeight = options.height + _this.fontSize / 2 + options.textMargin;
 
 		// Adds a last character to the end of the barcode
-		this.lastChar = options.lastChar;
+		_this.lastChar = options.lastChar;
+		return _this;
 	}
 
 	EAN13.prototype.valid = function valid() {
-		return this.string.search(/^[0-9]{13}$/) !== -1 && this.string[12] == this.checksum(this.string);
+		return this.data.search(/^[0-9]{13}$/) !== -1 && this.data[12] == checksum(this.data);
 	};
 
 	EAN13.prototype.encode = function encode() {
 		var encoder = new _ean_encoder2.default();
 		var result = [];
 
-		var structure = this.structure[this.string[0]];
+		var structure = this.structure[this.data[0]];
 
 		// Get the string to be encoded on the left side of the EAN code
-		var leftSide = this.string.substr(1, 6);
+		var leftSide = this.data.substr(1, 6);
 
 		// Get the string to be encoded on the right side of the EAN code
-		var rightSide = this.string.substr(7, 6);
+		var rightSide = this.data.substr(7, 6);
 
 		// Add the first digigt
-		if (this.displayValue) {
+		if (this.options.displayValue) {
 			result.push({
 				data: "000000000000",
-				text: this.string[0],
+				text: this.text.substr(0, 1),
 				options: { textAlign: "left", fontSize: this.fontSize }
 			});
 		}
@@ -77,7 +86,7 @@ var EAN13 = function () {
 		// Add the left side
 		result.push({
 			data: encoder.encode(leftSide, structure),
-			text: leftSide,
+			text: this.text.substr(1, 6),
 			options: { fontSize: this.fontSize }
 		});
 
@@ -90,7 +99,7 @@ var EAN13 = function () {
 		// Add the right side
 		result.push({
 			data: encoder.encode(rightSide, "RRRRRR"),
-			text: rightSide,
+			text: this.text.substr(7, 6),
 			options: { fontSize: this.fontSize }
 		});
 
@@ -100,12 +109,12 @@ var EAN13 = function () {
 			options: { height: this.guardHeight }
 		});
 
-		if (this.lastChar && this.displayValue) {
+		if (this.options.lastChar && this.options.displayValue) {
 			result.push({ data: "00" });
 
 			result.push({
 				data: "00000",
-				text: this.lastChar,
+				text: this.options.lastChar,
 				options: { fontSize: this.fontSize }
 			});
 		}
@@ -113,25 +122,25 @@ var EAN13 = function () {
 		return result;
 	};
 
-	// Calulate the checksum digit
-	// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
-
-
-	EAN13.prototype.checksum = function checksum(number) {
-		var result = 0;
-
-		var i;
-		for (i = 0; i < 12; i += 2) {
-			result += parseInt(number[i]);
-		}
-		for (i = 1; i < 12; i += 2) {
-			result += parseInt(number[i]) * 3;
-		}
-
-		return (10 - result % 10) % 10;
-	};
-
 	return EAN13;
-}();
+}(_Barcode3.default);
+
+// Calulate the checksum digit
+// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
+
+
+function checksum(number) {
+	var result = 0;
+
+	var i;
+	for (i = 0; i < 12; i += 2) {
+		result += parseInt(number[i]);
+	}
+	for (i = 1; i < 12; i += 2) {
+		result += parseInt(number[i]) * 3;
+	}
+
+	return (10 - result % 10) % 10;
+}
 
 exports.default = EAN13;

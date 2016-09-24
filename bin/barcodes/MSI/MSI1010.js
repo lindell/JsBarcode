@@ -21,14 +21,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var MSI1010 = function (_MSI) {
 	_inherits(MSI1010, _MSI);
 
-	function MSI1010(string) {
+	function MSI1010(data, options) {
 		_classCallCheck(this, MSI1010);
 
-		var _this = _possibleConstructorReturn(this, _MSI.call(this, string));
-
-		_this.string += (0, _checksums.mod10)(_this.string);
-		_this.string += (0, _checksums.mod10)(_this.string);
-		return _this;
+		data += (0, _checksums.mod10)(data);
+		data += (0, _checksums.mod10)(data);
+		return _possibleConstructorReturn(this, _MSI.call(this, data, options));
 	}
 
 	return MSI1010;

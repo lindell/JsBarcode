@@ -61,11 +61,34 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 40);
+/******/ 	return __webpack_require__(__webpack_require__.s = 41);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ function(module, exports) {
+
+"use strict";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Barcode = function Barcode(data, options) {
+	_classCallCheck(this, Barcode);
+
+	this.data = data;
+	this.text = options.text || data;
+	this.options = options;
+};
+
+exports.default = Barcode;
+
+/***/ },
+/* 1 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -131,8 +154,8 @@ var EANencoder = function () {
 exports.default = EANencoder;
 
 /***/ },
-/* 1 */
-/***/ function(module, exports) {
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 "use strict";
@@ -141,25 +164,35 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _Barcode2 = __webpack_require__(0);
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// Encoding documentation
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding documentation
 // https://en.wikipedia.org/wiki/MSI_Barcode#Character_set_and_binary_lookup
 
-var MSI = function () {
-	function MSI(string) {
+var MSI = function (_Barcode) {
+	_inherits(MSI, _Barcode);
+
+	function MSI(data, options) {
 		_classCallCheck(this, MSI);
 
-		this.string = string;
+		return _possibleConstructorReturn(this, _Barcode.call(this, data, options));
 	}
 
 	MSI.prototype.encode = function encode() {
 		// Start bits
 		var ret = "110";
 
-		for (var i = 0; i < this.string.length; i++) {
+		for (var i = 0; i < this.data.length; i++) {
 			// Convert the character to binary (always 4 binary digits)
-			var digit = parseInt(this.string[i]);
+			var digit = parseInt(this.data[i]);
 			var bin = digit.toString(2);
 			bin = addZeroes(bin, 4 - bin.length);
 
@@ -174,16 +207,16 @@ var MSI = function () {
 
 		return {
 			data: ret,
-			text: this.string
+			text: this.text
 		};
 	};
 
 	MSI.prototype.valid = function valid() {
-		return this.string.search(/^[0-9]+$/) !== -1;
+		return this.data.search(/^[0-9]+$/) !== -1;
 	};
 
 	return MSI;
-}();
+}(_Barcode3.default);
 
 function addZeroes(number, n) {
 	for (var i = 0; i < n; i++) {
@@ -195,7 +228,7 @@ function addZeroes(number, n) {
 exports.default = MSI;
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -224,8 +257,8 @@ function merge(old, replaceObj) {
 }
 
 /***/ },
-/* 3 */
-/***/ function(module, exports) {
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 "use strict";
@@ -234,27 +267,38 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _Barcode2 = __webpack_require__(0);
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// This is the master class, it does require the start code to be
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // This is the master class, it does require the start code to be
 // included in the string
-var CODE128 = function () {
-	function CODE128(string) {
+
+var CODE128 = function (_Barcode) {
+	_inherits(CODE128, _Barcode);
+
+	function CODE128(data, options) {
 		_classCallCheck(this, CODE128);
 
 		// Fill the bytes variable with the ascii codes of string
-		this.bytes = [];
-		for (var i = 0; i < string.length; ++i) {
-			this.bytes.push(string.charCodeAt(i));
-		}
+		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data.substring(1), options));
 
-		// First element should be startcode, remove that
-		this.string = string.substring(1);
+		_this.bytes = [];
+		for (var i = 0; i < data.length; ++i) {
+			_this.bytes.push(data.charCodeAt(i));
+		}
 
 		// Data for each character, the last characters will not be encoded but are used for error correction
 		// Numbers encode to (n + 1000) -> binary; 740 -> (740 + 1000).toString(2) -> "11011001100"
-		this.encodings = [// + 1000
+		_this.encodings = [// + 1000
 		740, 644, 638, 176, 164, 100, 224, 220, 124, 608, 604, 572, 436, 244, 230, 484, 260, 254, 650, 628, 614, 764, 652, 902, 868, 836, 830, 892, 844, 842, 752, 734, 590, 304, 112, 94, 416, 128, 122, 672, 576, 570, 464, 422, 134, 496, 478, 142, 910, 678, 582, 768, 762, 774, 880, 862, 814, 896, 890, 818, 914, 602, 930, 328, 292, 200, 158, 68, 62, 424, 412, 232, 218, 76, 74, 554, 616, 978, 556, 146, 340, 212, 182, 508, 268, 266, 956, 940, 938, 758, 782, 974, 400, 310, 118, 512, 506, 960, 954, 502, 518, 886, 966, /* Start codes */668, 680, 692, 5379];
+		return _this;
 	}
 
 	// The public encoding function
@@ -276,7 +320,7 @@ var CODE128 = function () {
 		}
 
 		return {
-			text: this.string.replace(/[^\x20-\x7E]/g, ""),
+			text: this.text.replace(/[^\x20-\x7E]/g, ""),
 			data:
 			// Add the start bits
 			this.getEncoding(startIndex) +
@@ -298,7 +342,7 @@ var CODE128 = function () {
 
 	CODE128.prototype.valid = function valid() {
 		// ASCII value ranges 0-127, 200-211
-		return this.string.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1;
+		return this.data.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1;
 	};
 
 	CODE128.prototype.nextA = function nextA(bytes, depth) {
@@ -445,12 +489,12 @@ var CODE128 = function () {
 	};
 
 	return CODE128;
-}();
+}(_Barcode3.default);
 
 exports.default = CODE128;
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -483,39 +527,6 @@ function mod11(number) {
 	}
 	return (11 - sum % 11) % 11;
 }
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-"use strict";
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-var defaults = {
-	width: 2,
-	height: 100,
-	format: "auto",
-	displayValue: true,
-	fontOptions: "",
-	font: "monospace",
-	textAlign: "center",
-	textPosition: "bottom",
-	textMargin: 2,
-	fontSize: 20,
-	background: "#ffffff",
-	lineColor: "#000000",
-	margin: 10,
-	marginTop: undefined,
-	marginBottom: undefined,
-	marginLeft: undefined,
-	marginRight: undefined,
-	valid: function valid() {}
-};
-
-exports.default = defaults;
 
 /***/ },
 /* 6 */
@@ -592,6 +603,40 @@ exports.NoElementException = NoElementException;
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+"use strict";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var defaults = {
+	width: 2,
+	height: 100,
+	format: "auto",
+	displayValue: true,
+	fontOptions: "",
+	font: "monospace",
+	text: undefined,
+	textAlign: "center",
+	textPosition: "bottom",
+	textMargin: 2,
+	fontSize: 20,
+	background: "#ffffff",
+	lineColor: "#000000",
+	margin: 10,
+	marginTop: undefined,
+	marginBottom: undefined,
+	marginLeft: undefined,
+	marginRight: undefined,
+	valid: function valid() {}
+};
+
+exports.default = defaults;
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -602,7 +647,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getTotalWidthOfEncodings = exports.calculateEncodingAttributes = exports.getBarcodePadding = exports.getEncodingHeight = exports.getMaximumHeightOfEncodings = undefined;
 
-var _merge = __webpack_require__(2);
+var _merge = __webpack_require__(3);
 
 var _merge2 = _interopRequireDefault(_merge);
 
@@ -682,7 +727,7 @@ exports.calculateEncodingAttributes = calculateEncodingAttributes;
 exports.getTotalWidthOfEncodings = getTotalWidthOfEncodings;
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -692,23 +737,23 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _CODE = __webpack_require__(18);
+var _CODE = __webpack_require__(19);
 
-var _CODE2 = __webpack_require__(17);
+var _CODE2 = __webpack_require__(18);
 
-var _EAN_UPC = __webpack_require__(24);
+var _EAN_UPC = __webpack_require__(25);
 
-var _ITF = __webpack_require__(27);
+var _ITF = __webpack_require__(28);
 
-var _ITF2 = __webpack_require__(26);
+var _ITF2 = __webpack_require__(27);
 
-var _MSI = __webpack_require__(32);
+var _MSI = __webpack_require__(33);
 
-var _pharmacode = __webpack_require__(34);
+var _pharmacode = __webpack_require__(35);
 
-var _codabar = __webpack_require__(33);
+var _codabar = __webpack_require__(34);
 
-var _GenericBarcode = __webpack_require__(25);
+var _GenericBarcode = __webpack_require__(26);
 
 exports.default = {
 	CODE39: _CODE.CODE39,
@@ -723,7 +768,7 @@ exports.default = {
 };
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -777,7 +822,7 @@ var ErrorHandler = function () {
 exports.default = ErrorHandler;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -800,7 +845,7 @@ function fixOptions(options) {
 }
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -810,11 +855,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _getOptionsFromElement = __webpack_require__(35);
+var _getOptionsFromElement = __webpack_require__(36);
 
 var _getOptionsFromElement2 = _interopRequireDefault(_getOptionsFromElement);
 
-var _renderers = __webpack_require__(38);
+var _renderers = __webpack_require__(39);
 
 var _exceptions = __webpack_require__(6);
 
@@ -905,7 +950,7 @@ function newCanvasRenderProperties(imgElement) {
 exports.default = getRenderProperties;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -938,7 +983,7 @@ function linearizeEncodings(encodings) {
 }
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -948,7 +993,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _CODE2 = __webpack_require__(3);
+var _CODE2 = __webpack_require__(4);
 
 var _CODE3 = _interopRequireDefault(_CODE2);
 
@@ -963,14 +1008,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var CODE128A = function (_CODE) {
 	_inherits(CODE128A, _CODE);
 
-	function CODE128A(string) {
+	function CODE128A(string, options) {
 		_classCallCheck(this, CODE128A);
 
-		return _possibleConstructorReturn(this, _CODE.call(this, String.fromCharCode(208) + string));
+		return _possibleConstructorReturn(this, _CODE.call(this, String.fromCharCode(208) + string, options));
 	}
 
 	CODE128A.prototype.valid = function valid() {
-		return this.string.search(/^[\x00-\x5F\xC8-\xCF]+$/) !== -1;
+		return this.data.search(/^[\x00-\x5F\xC8-\xCF]+$/) !== -1;
 	};
 
 	return CODE128A;
@@ -979,7 +1024,7 @@ var CODE128A = function (_CODE) {
 exports.default = CODE128A;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -989,7 +1034,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _CODE2 = __webpack_require__(3);
+var _CODE2 = __webpack_require__(4);
 
 var _CODE3 = _interopRequireDefault(_CODE2);
 
@@ -1004,14 +1049,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var CODE128B = function (_CODE) {
 	_inherits(CODE128B, _CODE);
 
-	function CODE128B(string) {
+	function CODE128B(string, options) {
 		_classCallCheck(this, CODE128B);
 
-		return _possibleConstructorReturn(this, _CODE.call(this, String.fromCharCode(209) + string));
+		return _possibleConstructorReturn(this, _CODE.call(this, String.fromCharCode(209) + string, options));
 	}
 
 	CODE128B.prototype.valid = function valid() {
-		return this.string.search(/^[\x20-\x7F\xC8-\xCF]+$/) !== -1;
+		return this.data.search(/^[\x20-\x7F\xC8-\xCF]+$/) !== -1;
 	};
 
 	return CODE128B;
@@ -1020,7 +1065,7 @@ var CODE128B = function (_CODE) {
 exports.default = CODE128B;
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1030,7 +1075,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _CODE2 = __webpack_require__(3);
+var _CODE2 = __webpack_require__(4);
 
 var _CODE3 = _interopRequireDefault(_CODE2);
 
@@ -1045,14 +1090,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var CODE128C = function (_CODE) {
 	_inherits(CODE128C, _CODE);
 
-	function CODE128C(string) {
+	function CODE128C(string, options) {
 		_classCallCheck(this, CODE128C);
 
-		return _possibleConstructorReturn(this, _CODE.call(this, String.fromCharCode(210) + string));
+		return _possibleConstructorReturn(this, _CODE.call(this, String.fromCharCode(210) + string, options));
 	}
 
 	CODE128C.prototype.valid = function valid() {
-		return this.string.search(/^(\xCF*[0-9]{2}\xCF*)+$/) !== -1;
+		return this.data.search(/^(\xCF*[0-9]{2}\xCF*)+$/) !== -1;
 	};
 
 	return CODE128C;
@@ -1061,7 +1106,7 @@ var CODE128C = function (_CODE) {
 exports.default = CODE128C;
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1071,7 +1116,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _CODE2 = __webpack_require__(3);
+var _CODE2 = __webpack_require__(4);
 
 var _CODE3 = _interopRequireDefault(_CODE2);
 
@@ -1086,14 +1131,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var CODE128AUTO = function (_CODE) {
 	_inherits(CODE128AUTO, _CODE);
 
-	function CODE128AUTO(string) {
+	function CODE128AUTO(data, options) {
 		_classCallCheck(this, CODE128AUTO);
 
 		// ASCII value ranges 0-127, 200-211
-		if (string.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1) {
-			var _this = _possibleConstructorReturn(this, _CODE.call(this, autoSelectModes(string)));
+		if (data.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1) {
+			var _this = _possibleConstructorReturn(this, _CODE.call(this, autoSelectModes(data), options));
 		} else {
-			var _this = _possibleConstructorReturn(this, _CODE.call(this, string));
+			var _this = _possibleConstructorReturn(this, _CODE.call(this, data, options));
 		}
 		return _possibleConstructorReturn(_this);
 	}
@@ -1181,7 +1226,7 @@ function autoSelectFromC(string) {
 exports.default = CODE128AUTO;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1192,19 +1237,19 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CODE128C = exports.CODE128B = exports.CODE128A = exports.CODE128 = undefined;
 
-var _CODE128_AUTO = __webpack_require__(16);
+var _CODE128_AUTO = __webpack_require__(17);
 
 var _CODE128_AUTO2 = _interopRequireDefault(_CODE128_AUTO);
 
-var _CODE128A = __webpack_require__(13);
+var _CODE128A = __webpack_require__(14);
 
 var _CODE128A2 = _interopRequireDefault(_CODE128A);
 
-var _CODE128B = __webpack_require__(14);
+var _CODE128B = __webpack_require__(15);
 
 var _CODE128B2 = _interopRequireDefault(_CODE128B);
 
-var _CODE128C = __webpack_require__(15);
+var _CODE128C = __webpack_require__(16);
 
 var _CODE128C2 = _interopRequireDefault(_CODE128C);
 
@@ -1216,105 +1261,6 @@ exports.CODE128B = _CODE128B2.default;
 exports.CODE128C = _CODE128C2.default;
 
 /***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-"use strict";
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-// Encoding documentation:
-// https://en.wikipedia.org/wiki/Code_39#Encoding
-
-var CODE39 = function () {
-	function CODE39(string, options) {
-		_classCallCheck(this, CODE39);
-
-		this.string = string.toUpperCase();
-
-		// Enable mod43 checksum?
-		this.mod43Enabled = options.mod43 || false;
-
-		// All characters. The position in the array is the (checksum) value
-		this.characters = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "-", ".", " ", "$", "/", "+", "%", "*"];
-
-		// The decimal representation of the characters, is converted to the
-		// corresponding binary with the getEncoding function
-		this.encodings = [20957, 29783, 23639, 30485, 20951, 29813, 23669, 20855, 29789, 23645, 29975, 23831, 30533, 22295, 30149, 24005, 21623, 29981, 23837, 22301, 30023, 23879, 30545, 22343, 30161, 24017, 21959, 30065, 23921, 22385, 29015, 18263, 29141, 17879, 29045, 18293, 17783, 29021, 18269, 17477, 17489, 17681, 20753, 35770];
-	}
-
-	// Get the binary representation of a character by converting the encodings
-	// from decimal to binary
-
-
-	CODE39.prototype.getEncoding = function getEncoding(character) {
-		return this.getBinary(this.characterValue(character));
-	};
-
-	CODE39.prototype.getBinary = function getBinary(characterValue) {
-		return this.encodings[characterValue].toString(2);
-	};
-
-	CODE39.prototype.getCharacter = function getCharacter(characterValue) {
-		return this.characters[characterValue];
-	};
-
-	CODE39.prototype.characterValue = function characterValue(character) {
-		return this.characters.indexOf(character);
-	};
-
-	CODE39.prototype.encode = function encode() {
-		var string = this.string;
-
-		// First character is always a *
-		var result = this.getEncoding("*");
-
-		// Take every character and add the binary representation to the result
-		for (var i = 0; i < this.string.length; i++) {
-			result += this.getEncoding(this.string[i]) + "0";
-		}
-
-		// Calculate mod43 checksum if enabled
-		if (this.mod43Enabled) {
-			var checksum = this.mod43checksum();
-			result += this.getBinary(checksum) + "0";
-			string += this.getCharacter(checksum);
-		}
-
-		// Last character is always a *
-		result += this.getEncoding("*");
-
-		return {
-			data: result,
-			text: string
-		};
-	};
-
-	CODE39.prototype.valid = function valid() {
-		return this.string.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
-	};
-
-	CODE39.prototype.mod43checksum = function mod43checksum() {
-		var checksum = 0;
-		for (var i = 0; i < this.string.length; i++) {
-			checksum += this.characterValue(this.string[i]);
-		}
-
-		checksum = checksum % 43;
-		return checksum;
-	};
-
-	return CODE39;
-}();
-
-exports.CODE39 = CODE39;
-
-/***/ },
 /* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -1324,67 +1270,181 @@ exports.CODE39 = CODE39;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.CODE39 = undefined;
 
-var _ean_encoder = __webpack_require__(0);
+var _Barcode2 = __webpack_require__(0);
 
-var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
+var _Barcode3 = _interopRequireDefault(_Barcode2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // Encoding documentation:
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding documentation:
+// https://en.wikipedia.org/wiki/Code_39#Encoding
+
+var CODE39 = function (_Barcode) {
+	_inherits(CODE39, _Barcode);
+
+	function CODE39(data, options) {
+		_classCallCheck(this, CODE39);
+
+		data = data.toUpperCase();
+
+		// Calculate mod43 checksum if enabled
+		if (options.mod43) {
+			data += getCharacter(mod43checksum(data));
+		}
+
+		return _possibleConstructorReturn(this, _Barcode.call(this, data, options));
+	}
+
+	CODE39.prototype.encode = function encode() {
+		// First character is always a *
+		var result = getEncoding("*");
+
+		// Take every character and add the binary representation to the result
+		for (var i = 0; i < this.data.length; i++) {
+			result += getEncoding(this.data[i]) + "0";
+		}
+
+		// Last character is always a *
+		result += getEncoding("*");
+
+		return {
+			data: result,
+			text: this.text
+		};
+	};
+
+	CODE39.prototype.valid = function valid() {
+		return this.data.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
+	};
+
+	return CODE39;
+}(_Barcode3.default);
+
+// All characters. The position in the array is the (checksum) value
+
+
+var characters = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "-", ".", " ", "$", "/", "+", "%", "*"];
+
+// The decimal representation of the characters, is converted to the
+// corresponding binary with the getEncoding function
+var encodings = [20957, 29783, 23639, 30485, 20951, 29813, 23669, 20855, 29789, 23645, 29975, 23831, 30533, 22295, 30149, 24005, 21623, 29981, 23837, 22301, 30023, 23879, 30545, 22343, 30161, 24017, 21959, 30065, 23921, 22385, 29015, 18263, 29141, 17879, 29045, 18293, 17783, 29021, 18269, 17477, 17489, 17681, 20753, 35770];
+
+// Get the binary representation of a character by converting the encodings
+// from decimal to binary
+function getEncoding(character) {
+	return getBinary(characterValue(character));
+}
+
+function getBinary(characterValue) {
+	return encodings[characterValue].toString(2);
+}
+
+function getCharacter(characterValue) {
+	return characters[characterValue];
+}
+
+function characterValue(character) {
+	return characters.indexOf(character);
+}
+
+function mod43checksum(data) {
+	var checksum = 0;
+	for (var i = 0; i < data.length; i++) {
+		checksum += characterValue(data[i]);
+	}
+
+	checksum = checksum % 43;
+	return checksum;
+}
+
+exports.CODE39 = CODE39;
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _ean_encoder = __webpack_require__(1);
+
+var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
+
+var _Barcode2 = __webpack_require__(0);
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding documentation:
 // https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Binary_encoding_of_data_digits_into_EAN-13_barcode
 
-var EAN13 = function () {
-	function EAN13(string, options) {
+var EAN13 = function (_Barcode) {
+	_inherits(EAN13, _Barcode);
+
+	function EAN13(data, options) {
 		_classCallCheck(this, EAN13);
 
 		// Add checksum if it does not exist
-		if (string.search(/^[0-9]{12}$/) !== -1) {
-			this.string = string + this.checksum(string);
-		} else {
-			this.string = string;
+		if (data.search(/^[0-9]{12}$/) !== -1) {
+			data += checksum(data);
 		}
 
-		this.displayValue = options.displayValue;
-
 		// Define the EAN-13 structure
-		this.structure = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
+		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
+
+		_this.structure = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
 
 		// Make sure the font is not bigger than the space between the guard bars
 		if (options.fontSize > options.width * 10) {
-			this.fontSize = options.width * 10;
+			_this.fontSize = options.width * 10;
 		} else {
-			this.fontSize = options.fontSize;
+			_this.fontSize = options.fontSize;
 		}
 
 		// Make the guard bars go down half the way of the text
-		this.guardHeight = options.height + this.fontSize / 2 + options.textMargin;
+		_this.guardHeight = options.height + _this.fontSize / 2 + options.textMargin;
 
 		// Adds a last character to the end of the barcode
-		this.lastChar = options.lastChar;
+		_this.lastChar = options.lastChar;
+		return _this;
 	}
 
 	EAN13.prototype.valid = function valid() {
-		return this.string.search(/^[0-9]{13}$/) !== -1 && this.string[12] == this.checksum(this.string);
+		return this.data.search(/^[0-9]{13}$/) !== -1 && this.data[12] == checksum(this.data);
 	};
 
 	EAN13.prototype.encode = function encode() {
 		var encoder = new _ean_encoder2.default();
 		var result = [];
 
-		var structure = this.structure[this.string[0]];
+		var structure = this.structure[this.data[0]];
 
 		// Get the string to be encoded on the left side of the EAN code
-		var leftSide = this.string.substr(1, 6);
+		var leftSide = this.data.substr(1, 6);
 
 		// Get the string to be encoded on the right side of the EAN code
-		var rightSide = this.string.substr(7, 6);
+		var rightSide = this.data.substr(7, 6);
 
 		// Add the first digigt
-		if (this.displayValue) {
+		if (this.options.displayValue) {
 			result.push({
 				data: "000000000000",
-				text: this.string[0],
+				text: this.text.substr(0, 1),
 				options: { textAlign: "left", fontSize: this.fontSize }
 			});
 		}
@@ -1398,7 +1458,7 @@ var EAN13 = function () {
 		// Add the left side
 		result.push({
 			data: encoder.encode(leftSide, structure),
-			text: leftSide,
+			text: this.text.substr(1, 6),
 			options: { fontSize: this.fontSize }
 		});
 
@@ -1411,7 +1471,7 @@ var EAN13 = function () {
 		// Add the right side
 		result.push({
 			data: encoder.encode(rightSide, "RRRRRR"),
-			text: rightSide,
+			text: this.text.substr(7, 6),
 			options: { fontSize: this.fontSize }
 		});
 
@@ -1421,12 +1481,12 @@ var EAN13 = function () {
 			options: { height: this.guardHeight }
 		});
 
-		if (this.lastChar && this.displayValue) {
+		if (this.options.lastChar && this.options.displayValue) {
 			result.push({ data: "00" });
 
 			result.push({
 				data: "00000",
-				text: this.lastChar,
+				text: this.options.lastChar,
 				options: { fontSize: this.fontSize }
 			});
 		}
@@ -1434,84 +1494,28 @@ var EAN13 = function () {
 		return result;
 	};
 
-	// Calulate the checksum digit
-	// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
-
-
-	EAN13.prototype.checksum = function checksum(number) {
-		var result = 0;
-
-		var i;
-		for (i = 0; i < 12; i += 2) {
-			result += parseInt(number[i]);
-		}
-		for (i = 1; i < 12; i += 2) {
-			result += parseInt(number[i]) * 3;
-		}
-
-		return (10 - result % 10) % 10;
-	};
-
 	return EAN13;
-}();
+}(_Barcode3.default);
 
-exports.default = EAN13;
+// Calulate the checksum digit
+// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
 
-/***/ },
-/* 20 */
-/***/ function(module, exports, __webpack_require__) {
 
-"use strict";
-"use strict";
+function checksum(number) {
+	var result = 0;
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-var _ean_encoder = __webpack_require__(0);
-
-var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // Encoding documentation:
-// https://en.wikipedia.org/wiki/EAN_2#Encoding
-
-var EAN2 = function () {
-	function EAN2(string) {
-		_classCallCheck(this, EAN2);
-
-		this.string = string;
-
-		this.structure = ["LL", "LG", "GL", "GG"];
+	var i;
+	for (i = 0; i < 12; i += 2) {
+		result += parseInt(number[i]);
+	}
+	for (i = 1; i < 12; i += 2) {
+		result += parseInt(number[i]) * 3;
 	}
 
-	EAN2.prototype.valid = function valid() {
-		return this.string.search(/^[0-9]{2}$/) !== -1;
-	};
+	return (10 - result % 10) % 10;
+}
 
-	EAN2.prototype.encode = function encode() {
-		var encoder = new _ean_encoder2.default();
-
-		// Choose the structure based on the number mod 4
-		var structure = this.structure[parseInt(this.string) % 4];
-
-		// Start bits
-		var result = "1011";
-
-		// Encode the two digits with 01 in between
-		result += encoder.encode(this.string, structure, "01");
-
-		return {
-			data: result,
-			text: this.string
-		};
-	};
-
-	return EAN2;
-}();
-
-exports.default = EAN2;
+exports.default = EAN13;
 
 /***/ },
 /* 21 */
@@ -1524,61 +1528,61 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _ean_encoder = __webpack_require__(0);
+var _ean_encoder = __webpack_require__(1);
 
 var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
+var _Barcode2 = __webpack_require__(0);
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // Encoding documentation:
-// https://en.wikipedia.org/wiki/EAN_5#Encoding
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var EAN5 = function () {
-	function EAN5(string) {
-		_classCallCheck(this, EAN5);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-		this.string = string;
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding documentation:
+// https://en.wikipedia.org/wiki/EAN_2#Encoding
 
-		// Define the EAN-13 structure
-		this.structure = ["GGLLL", "GLGLL", "GLLGL", "GLLLG", "LGGLL", "LLGGL", "LLLGG", "LGLGL", "LGLLG", "LLGLG"];
+var EAN2 = function (_Barcode) {
+	_inherits(EAN2, _Barcode);
+
+	function EAN2(data, options) {
+		_classCallCheck(this, EAN2);
+
+		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
+
+		_this.structure = ["LL", "LG", "GL", "GG"];
+		return _this;
 	}
 
-	EAN5.prototype.valid = function valid() {
-		return this.string.search(/^[0-9]{5}$/) !== -1;
+	EAN2.prototype.valid = function valid() {
+		return this.data.search(/^[0-9]{2}$/) !== -1;
 	};
 
-	EAN5.prototype.encode = function encode() {
+	EAN2.prototype.encode = function encode() {
 		var encoder = new _ean_encoder2.default();
-		var checksum = this.checksum();
+
+		// Choose the structure based on the number mod 4
+		var structure = this.structure[parseInt(this.data) % 4];
 
 		// Start bits
 		var result = "1011";
 
-		// Use normal ean encoding with 01 in between all digits
-		result += encoder.encode(this.string, this.structure[checksum], "01");
+		// Encode the two digits with 01 in between
+		result += encoder.encode(this.data, structure, "01");
 
 		return {
 			data: result,
-			text: this.string
+			text: this.text
 		};
 	};
 
-	EAN5.prototype.checksum = function checksum() {
-		var result = 0;
+	return EAN2;
+}(_Barcode3.default);
 
-		result += parseInt(this.string[0]) * 3;
-		result += parseInt(this.string[1]) * 9;
-		result += parseInt(this.string[2]) * 3;
-		result += parseInt(this.string[3]) * 9;
-		result += parseInt(this.string[4]) * 3;
-
-		return result % 10;
-	};
-
-	return EAN5;
-}();
-
-exports.default = EAN5;
+exports.default = EAN2;
 
 /***/ },
 /* 22 */
@@ -1591,29 +1595,117 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _ean_encoder = __webpack_require__(0);
+var _ean_encoder = __webpack_require__(1);
 
 var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
+var _Barcode2 = __webpack_require__(0);
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // Encoding documentation:
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding documentation:
+// https://en.wikipedia.org/wiki/EAN_5#Encoding
+
+var EAN5 = function (_Barcode) {
+	_inherits(EAN5, _Barcode);
+
+	function EAN5(data, options) {
+		_classCallCheck(this, EAN5);
+
+		// Define the EAN-13 structure
+		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
+
+		_this.structure = ["GGLLL", "GLGLL", "GLLGL", "GLLLG", "LGGLL", "LLGGL", "LLLGG", "LGLGL", "LGLLG", "LLGLG"];
+		return _this;
+	}
+
+	EAN5.prototype.valid = function valid() {
+		return this.data.search(/^[0-9]{5}$/) !== -1;
+	};
+
+	EAN5.prototype.encode = function encode() {
+		var encoder = new _ean_encoder2.default();
+		var checksum = this.checksum();
+
+		// Start bits
+		var result = "1011";
+
+		// Use normal ean encoding with 01 in between all digits
+		result += encoder.encode(this.data, this.structure[checksum], "01");
+
+		return {
+			data: result,
+			text: this.text
+		};
+	};
+
+	EAN5.prototype.checksum = function checksum() {
+		var result = 0;
+
+		result += parseInt(this.data[0]) * 3;
+		result += parseInt(this.data[1]) * 9;
+		result += parseInt(this.data[2]) * 3;
+		result += parseInt(this.data[3]) * 9;
+		result += parseInt(this.data[4]) * 3;
+
+		return result % 10;
+	};
+
+	return EAN5;
+}(_Barcode3.default);
+
+exports.default = EAN5;
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _ean_encoder = __webpack_require__(1);
+
+var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
+
+var _Barcode2 = __webpack_require__(0);
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding documentation:
 // http://www.barcodeisland.com/ean8.phtml
 
-var EAN8 = function () {
-	function EAN8(string) {
+var EAN8 = function (_Barcode) {
+	_inherits(EAN8, _Barcode);
+
+	function EAN8(data, options) {
 		_classCallCheck(this, EAN8);
 
 		// Add checksum if it does not exist
-		if (string.search(/^[0-9]{7}$/) !== -1) {
-			this.string = string + this.checksum(string);
-		} else {
-			this.string = string;
+		if (data.search(/^[0-9]{7}$/) !== -1) {
+			data += checksum(data);
 		}
+
+		return _possibleConstructorReturn(this, _Barcode.call(this, data, options));
 	}
 
 	EAN8.prototype.valid = function valid() {
-		return this.string.search(/^[0-9]{8}$/) !== -1 && this.string[7] == this.checksum(this.string);
+		return this.data.search(/^[0-9]{8}$/) !== -1 && this.data[7] == checksum(this.data);
 	};
 
 	EAN8.prototype.encode = function encode() {
@@ -1623,10 +1715,10 @@ var EAN8 = function () {
 		var result = "";
 
 		// Get the number to be encoded on the left side of the EAN code
-		var leftSide = this.string.substr(0, 4);
+		var leftSide = this.data.substr(0, 4);
 
 		// Get the number to be encoded on the right side of the EAN code
-		var rightSide = this.string.substr(4, 4);
+		var rightSide = this.data.substr(4, 4);
 
 		// Add the start bits
 		result += encoder.startBin;
@@ -1645,35 +1737,35 @@ var EAN8 = function () {
 
 		return {
 			data: result,
-			text: this.string
+			text: this.text
 		};
 	};
 
-	// Calulate the checksum digit
-
-
-	EAN8.prototype.checksum = function checksum(number) {
-		var result = 0;
-
-		var i;
-		for (i = 0; i < 7; i += 2) {
-			result += parseInt(number[i]) * 3;
-		}
-
-		for (i = 1; i < 7; i += 2) {
-			result += parseInt(number[i]);
-		}
-
-		return (10 - result % 10) % 10;
-	};
-
 	return EAN8;
-}();
+}(_Barcode3.default);
+
+// Calulate the checksum digit
+
+
+function checksum(number) {
+	var result = 0;
+
+	var i;
+	for (i = 0; i < 7; i += 2) {
+		result += parseInt(number[i]) * 3;
+	}
+
+	for (i = 1; i < 7; i += 2) {
+		result += parseInt(number[i]);
+	}
+
+	return (10 - result % 10) % 10;
+}
 
 exports.default = EAN8;
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1683,41 +1775,52 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _ean_encoder = __webpack_require__(0);
+var _ean_encoder = __webpack_require__(1);
 
 var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
+var _Barcode2 = __webpack_require__(0);
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } } // Encoding documentation:
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding documentation:
 // https://en.wikipedia.org/wiki/Universal_Product_Code#Encoding
 
-var UPC = function () {
-	function UPC(string, options) {
+var UPC = function (_Barcode) {
+	_inherits(UPC, _Barcode);
+
+	function UPC(data, options) {
 		_classCallCheck(this, UPC);
 
 		// Add checksum if it does not exist
-		if (string.search(/^[0-9]{11}$/) !== -1) {
-			this.string = string + this.checksum(string);
-		} else {
-			this.string = string;
+		if (data.search(/^[0-9]{11}$/) !== -1) {
+			data += checksum(data);
 		}
 
-		this.displayValue = options.displayValue;
+		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
+
+		_this.displayValue = options.displayValue;
 
 		// Make sure the font is not bigger than the space between the guard bars
 		if (options.fontSize > options.width * 10) {
-			this.fontSize = options.width * 10;
+			_this.fontSize = options.width * 10;
 		} else {
-			this.fontSize = options.fontSize;
+			_this.fontSize = options.fontSize;
 		}
 
 		// Make the guard bars go down half the way of the text
-		this.guardHeight = options.height + this.fontSize / 2 + options.textMargin;
+		_this.guardHeight = options.height + _this.fontSize / 2 + options.textMargin;
+		return _this;
 	}
 
 	UPC.prototype.valid = function valid() {
-		return this.string.search(/^[0-9]{12}$/) !== -1 && this.string[11] == this.checksum(this.string);
+		return this.data.search(/^[0-9]{12}$/) !== -1 && this.data[11] == checksum(this.data);
 	};
 
 	UPC.prototype.encode = function encode() {
@@ -1728,21 +1831,21 @@ var UPC = function () {
 		if (this.displayValue) {
 			result.push({
 				data: "00000000",
-				text: this.string[0],
+				text: this.text.substr(0, 1),
 				options: { textAlign: "left", fontSize: this.fontSize }
 			});
 		}
 
 		// Add the guard bars
 		result.push({
-			data: "101" + encoder.encode(this.string[0], "L"),
+			data: "101" + encoder.encode(this.data[0], "L"),
 			options: { height: this.guardHeight }
 		});
 
 		// Add the left side
 		result.push({
-			data: encoder.encode(this.string.substr(1, 5), "LLLLL"),
-			text: this.string.substr(1, 5),
+			data: encoder.encode(this.data.substr(1, 5), "LLLLL"),
+			text: this.text.substr(1, 5),
 			options: { fontSize: this.fontSize }
 		});
 
@@ -1754,14 +1857,14 @@ var UPC = function () {
 
 		// Add the right side
 		result.push({
-			data: encoder.encode(this.string.substr(6, 5), "RRRRR"),
-			text: this.string.substr(6, 5),
+			data: encoder.encode(this.data.substr(6, 5), "RRRRR"),
+			text: this.text.substr(6, 5),
 			options: { fontSize: this.fontSize }
 		});
 
 		// Add the end bits
 		result.push({
-			data: encoder.encode(this.string[11], "R") + "101",
+			data: encoder.encode(this.data[11], "R") + "101",
 			options: { height: this.guardHeight }
 		});
 
@@ -1769,7 +1872,7 @@ var UPC = function () {
 		if (this.displayValue) {
 			result.push({
 				data: "00000000",
-				text: this.string[11],
+				text: this.text.substr(11, 1),
 				options: { textAlign: "right", fontSize: this.fontSize }
 			});
 		}
@@ -1777,31 +1880,31 @@ var UPC = function () {
 		return result;
 	};
 
-	// Calulate the checksum digit
-	// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
-
-
-	UPC.prototype.checksum = function checksum(number) {
-		var result = 0;
-
-		var i;
-		for (i = 1; i < 11; i += 2) {
-			result += parseInt(number[i]);
-		}
-		for (i = 0; i < 11; i += 2) {
-			result += parseInt(number[i]) * 3;
-		}
-
-		return (10 - result % 10) % 10;
-	};
-
 	return UPC;
-}();
+}(_Barcode3.default);
+
+// Calulate the checksum digit
+// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
+
+
+function checksum(number) {
+	var result = 0;
+
+	var i;
+	for (i = 1; i < 11; i += 2) {
+		result += parseInt(number[i]);
+	}
+	for (i = 0; i < 11; i += 2) {
+		result += parseInt(number[i]) * 3;
+	}
+
+	return (10 - result % 10) % 10;
+}
 
 exports.default = UPC;
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1812,23 +1915,23 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.UPC = exports.EAN2 = exports.EAN5 = exports.EAN8 = exports.EAN13 = undefined;
 
-var _EAN = __webpack_require__(19);
+var _EAN = __webpack_require__(20);
 
 var _EAN2 = _interopRequireDefault(_EAN);
 
-var _EAN3 = __webpack_require__(22);
+var _EAN3 = __webpack_require__(23);
 
 var _EAN4 = _interopRequireDefault(_EAN3);
 
-var _EAN5 = __webpack_require__(21);
+var _EAN5 = __webpack_require__(22);
 
 var _EAN6 = _interopRequireDefault(_EAN5);
 
-var _EAN7 = __webpack_require__(20);
+var _EAN7 = __webpack_require__(21);
 
 var _EAN8 = _interopRequireDefault(_EAN7);
 
-var _UPC = __webpack_require__(23);
+var _UPC = __webpack_require__(24);
 
 var _UPC2 = _interopRequireDefault(_UPC);
 
@@ -1841,8 +1944,8 @@ exports.EAN2 = _EAN8.default;
 exports.UPC = _UPC2.default;
 
 /***/ },
-/* 25 */
-/***/ function(module, exports) {
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 "use strict";
@@ -1850,14 +1953,27 @@ exports.UPC = _UPC2.default;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.GenericBarcode = undefined;
+
+var _Barcode2 = __webpack_require__(0);
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var GenericBarcode = function () {
-	function GenericBarcode(string) {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var GenericBarcode = function (_Barcode) {
+	_inherits(GenericBarcode, _Barcode);
+
+	function GenericBarcode(data, options) {
 		_classCallCheck(this, GenericBarcode);
 
-		this.string = string;
+		return _possibleConstructorReturn(this, _Barcode.call(this, data, options)); // Sets this.data and this.text
 	}
 
 	// Return the corresponding binary numbers for the data provided
@@ -1866,7 +1982,7 @@ var GenericBarcode = function () {
 	GenericBarcode.prototype.encode = function encode() {
 		return {
 			data: "10101010101010101010101010101010101010101",
-			text: this.string
+			text: this.text
 		};
 	};
 
@@ -1878,13 +1994,13 @@ var GenericBarcode = function () {
 	};
 
 	return GenericBarcode;
-}();
+}(_Barcode3.default);
 
 exports.GenericBarcode = GenericBarcode;
 
 /***/ },
-/* 26 */
-/***/ function(module, exports) {
+/* 27 */
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 "use strict";
@@ -1892,16 +2008,29 @@ exports.GenericBarcode = GenericBarcode;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.ITF = undefined;
+
+var _Barcode2 = __webpack_require__(0);
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ITF = function () {
-	function ITF(string) {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ITF = function (_Barcode) {
+	_inherits(ITF, _Barcode);
+
+	function ITF(data, options) {
 		_classCallCheck(this, ITF);
 
-		this.string = string;
+		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
 
-		this.binaryRepresentation = {
+		_this.binaryRepresentation = {
 			"0": "00110",
 			"1": "10001",
 			"2": "01001",
@@ -1913,10 +2042,11 @@ var ITF = function () {
 			"8": "10010",
 			"9": "01010"
 		};
+		return _this;
 	}
 
 	ITF.prototype.valid = function valid() {
-		return this.string.search(/^([0-9]{2})+$/) !== -1;
+		return this.data.search(/^([0-9]{2})+$/) !== -1;
 	};
 
 	ITF.prototype.encode = function encode() {
@@ -1924,8 +2054,8 @@ var ITF = function () {
 		var result = "1010";
 
 		// Calculate all the digit pairs
-		for (var i = 0; i < this.string.length; i += 2) {
-			result += this.calculatePair(this.string.substr(i, 2));
+		for (var i = 0; i < this.data.length; i += 2) {
+			result += this.calculatePair(this.data.substr(i, 2));
 		}
 
 		// Always add the same end bits
@@ -1933,7 +2063,7 @@ var ITF = function () {
 
 		return {
 			data: result,
-			text: this.string
+			text: this.text
 		};
 	};
 
@@ -1956,13 +2086,13 @@ var ITF = function () {
 	};
 
 	return ITF;
-}();
+}(_Barcode3.default);
 
 exports.ITF = ITF;
 
 /***/ },
-/* 27 */
-/***/ function(module, exports) {
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 "use strict";
@@ -1970,21 +2100,34 @@ exports.ITF = ITF;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.ITF14 = undefined;
+
+var _Barcode2 = __webpack_require__(0);
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ITF14 = function () {
-	function ITF14(string) {
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ITF14 = function (_Barcode) {
+	_inherits(ITF14, _Barcode);
+
+	function ITF14(data, options) {
 		_classCallCheck(this, ITF14);
 
-		this.string = string;
-
 		// Add checksum if it does not exist
-		if (string.search(/^[0-9]{13}$/) !== -1) {
-			this.string += this.checksum(string);
+		if (data.search(/^[0-9]{13}$/) !== -1) {
+			data += checksum(data);
 		}
 
-		this.binaryRepresentation = {
+		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
+
+		_this.binaryRepresentation = {
 			"0": "00110",
 			"1": "10001",
 			"2": "01001",
@@ -1996,10 +2139,11 @@ var ITF14 = function () {
 			"8": "10010",
 			"9": "01010"
 		};
+		return _this;
 	}
 
 	ITF14.prototype.valid = function valid() {
-		return this.string.search(/^[0-9]{14}$/) !== -1 && this.string[13] == this.checksum();
+		return this.data.search(/^[0-9]{14}$/) !== -1 && this.data[13] == checksum(this.data);
 	};
 
 	ITF14.prototype.encode = function encode() {
@@ -2007,7 +2151,7 @@ var ITF14 = function () {
 
 		// Calculate all the digit pairs
 		for (var i = 0; i < 14; i += 2) {
-			result += this.calculatePair(this.string.substr(i, 2));
+			result += this.calculatePair(this.data.substr(i, 2));
 		}
 
 		// Always add the same end bits
@@ -2015,7 +2159,7 @@ var ITF14 = function () {
 
 		return {
 			data: result,
-			text: this.string
+			text: this.text
 		};
 	};
 
@@ -2037,65 +2181,23 @@ var ITF14 = function () {
 		return result;
 	};
 
-	// Calulate the checksum digit
-
-
-	ITF14.prototype.checksum = function checksum() {
-		var result = 0;
-
-		for (var i = 0; i < 13; i++) {
-			result += parseInt(this.string[i]) * (3 - i % 2 * 2);
-		}
-
-		return Math.ceil(result / 10) * 10 - result;
-	};
-
 	return ITF14;
-}();
+}(_Barcode3.default);
 
-exports.ITF14 = ITF14;
+// Calulate the checksum digit
 
-/***/ },
-/* 28 */
-/***/ function(module, exports, __webpack_require__) {
 
-"use strict";
-'use strict';
+function checksum(data) {
+	var result = 0;
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-var _MSI2 = __webpack_require__(1);
-
-var _MSI3 = _interopRequireDefault(_MSI2);
-
-var _checksums = __webpack_require__(4);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var MSI10 = function (_MSI) {
-	_inherits(MSI10, _MSI);
-
-	function MSI10(string) {
-		_classCallCheck(this, MSI10);
-
-		var _this = _possibleConstructorReturn(this, _MSI.call(this, string));
-
-		_this.string += (0, _checksums.mod10)(_this.string);
-		return _this;
+	for (var i = 0; i < 13; i++) {
+		result += parseInt(data[i]) * (3 - i % 2 * 2);
 	}
 
-	return MSI10;
-}(_MSI3.default);
+	return Math.ceil(result / 10) * 10 - result;
+}
 
-exports.default = MSI10;
+exports.ITF14 = ITF14;
 
 /***/ },
 /* 29 */
@@ -2108,11 +2210,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _MSI2 = __webpack_require__(1);
+var _MSI2 = __webpack_require__(2);
 
 var _MSI3 = _interopRequireDefault(_MSI2);
 
-var _checksums = __webpack_require__(4);
+var _checksums = __webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2122,23 +2224,19 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var MSI1010 = function (_MSI) {
-	_inherits(MSI1010, _MSI);
+var MSI10 = function (_MSI) {
+	_inherits(MSI10, _MSI);
 
-	function MSI1010(string) {
-		_classCallCheck(this, MSI1010);
+	function MSI10(data, options) {
+		_classCallCheck(this, MSI10);
 
-		var _this = _possibleConstructorReturn(this, _MSI.call(this, string));
-
-		_this.string += (0, _checksums.mod10)(_this.string);
-		_this.string += (0, _checksums.mod10)(_this.string);
-		return _this;
+		return _possibleConstructorReturn(this, _MSI.call(this, data + (0, _checksums.mod10)(data), options));
 	}
 
-	return MSI1010;
+	return MSI10;
 }(_MSI3.default);
 
-exports.default = MSI1010;
+exports.default = MSI10;
 
 /***/ },
 /* 30 */
@@ -2151,11 +2249,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _MSI2 = __webpack_require__(1);
+var _MSI2 = __webpack_require__(2);
 
 var _MSI3 = _interopRequireDefault(_MSI2);
 
-var _checksums = __webpack_require__(4);
+var _checksums = __webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2165,22 +2263,21 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var MSI11 = function (_MSI) {
-	_inherits(MSI11, _MSI);
+var MSI1010 = function (_MSI) {
+	_inherits(MSI1010, _MSI);
 
-	function MSI11(string) {
-		_classCallCheck(this, MSI11);
+	function MSI1010(data, options) {
+		_classCallCheck(this, MSI1010);
 
-		var _this = _possibleConstructorReturn(this, _MSI.call(this, string));
-
-		_this.string += (0, _checksums.mod11)(_this.string);
-		return _this;
+		data += (0, _checksums.mod10)(data);
+		data += (0, _checksums.mod10)(data);
+		return _possibleConstructorReturn(this, _MSI.call(this, data, options));
 	}
 
-	return MSI11;
+	return MSI1010;
 }(_MSI3.default);
 
-exports.default = MSI11;
+exports.default = MSI1010;
 
 /***/ },
 /* 31 */
@@ -2193,11 +2290,50 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _MSI2 = __webpack_require__(1);
+var _MSI2 = __webpack_require__(2);
 
 var _MSI3 = _interopRequireDefault(_MSI2);
 
-var _checksums = __webpack_require__(4);
+var _checksums = __webpack_require__(5);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var MSI11 = function (_MSI) {
+	_inherits(MSI11, _MSI);
+
+	function MSI11(data, options) {
+		_classCallCheck(this, MSI11);
+
+		return _possibleConstructorReturn(this, _MSI.call(this, data + (0, _checksums.mod11)(data), options));
+	}
+
+	return MSI11;
+}(_MSI3.default);
+
+exports.default = MSI11;
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _MSI2 = __webpack_require__(2);
+
+var _MSI3 = _interopRequireDefault(_MSI2);
+
+var _checksums = __webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2210,14 +2346,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var MSI1110 = function (_MSI) {
 	_inherits(MSI1110, _MSI);
 
-	function MSI1110(string) {
+	function MSI1110(data, options) {
 		_classCallCheck(this, MSI1110);
 
-		var _this = _possibleConstructorReturn(this, _MSI.call(this, string));
-
-		_this.string += (0, _checksums.mod11)(_this.string);
-		_this.string += (0, _checksums.mod10)(_this.string);
-		return _this;
+		data += (0, _checksums.mod11)(data);
+		data += (0, _checksums.mod10)(data);
+		return _possibleConstructorReturn(this, _MSI.call(this, data, options));
 	}
 
 	return MSI1110;
@@ -2226,7 +2360,7 @@ var MSI1110 = function (_MSI) {
 exports.default = MSI1110;
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2237,23 +2371,23 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.MSI1110 = exports.MSI1010 = exports.MSI11 = exports.MSI10 = exports.MSI = undefined;
 
-var _MSI = __webpack_require__(1);
+var _MSI = __webpack_require__(2);
 
 var _MSI2 = _interopRequireDefault(_MSI);
 
-var _MSI3 = __webpack_require__(28);
+var _MSI3 = __webpack_require__(29);
 
 var _MSI4 = _interopRequireDefault(_MSI3);
 
-var _MSI5 = __webpack_require__(30);
+var _MSI5 = __webpack_require__(31);
 
 var _MSI6 = _interopRequireDefault(_MSI5);
 
-var _MSI7 = __webpack_require__(29);
+var _MSI7 = __webpack_require__(30);
 
 var _MSI8 = _interopRequireDefault(_MSI7);
 
-var _MSI9 = __webpack_require__(31);
+var _MSI9 = __webpack_require__(32);
 
 var _MSI10 = _interopRequireDefault(_MSI9);
 
@@ -2266,8 +2400,8 @@ exports.MSI1010 = _MSI8.default;
 exports.MSI1110 = _MSI10.default;
 
 /***/ },
-/* 33 */
-/***/ function(module, exports) {
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 "use strict";
@@ -2275,23 +2409,36 @@ exports.MSI1110 = _MSI10.default;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.codabar = undefined;
+
+var _Barcode2 = __webpack_require__(0);
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// Encoding specification:
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding specification:
 // http://www.barcodeisland.com/codabar.phtml
 
-var codabar = function () {
-	function codabar(string) {
+var codabar = function (_Barcode) {
+	_inherits(codabar, _Barcode);
+
+	function codabar(data, options) {
 		_classCallCheck(this, codabar);
 
-		this.string = string.toUpperCase();
-
-		if (this.string.search(/^[0-9\-\$\:\.\+\/]+$/) === 0) {
-			this.string = "A" + this.string + "A";
+		if (data.search(/^[0-9\-\$\:\.\+\/]+$/) === 0) {
+			data = "A" + data + "A";
 		}
 
-		this.encodings = {
+		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data.toUpperCase(), options));
+
+		_this.text = _this.options.text || _this.text.replace(/[A-D]/g, '');
+
+		_this.encodings = {
 			"0": "101010011",
 			"1": "101011001",
 			"2": "101001011",
@@ -2313,35 +2460,36 @@ var codabar = function () {
 			"C": "1001001011",
 			"D": "1010011001"
 		};
+		return _this;
 	}
 
 	codabar.prototype.valid = function valid() {
-		return this.string.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
+		return this.data.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
 	};
 
 	codabar.prototype.encode = function encode() {
 		var result = [];
-		for (var i = 0; i < this.string.length; i++) {
-			result.push(this.encodings[this.string.charAt(i)]);
+		for (var i = 0; i < this.data.length; i++) {
+			result.push(this.encodings[this.data.charAt(i)]);
 			// for all characters except the last, append a narrow-space ("0")
-			if (i !== this.string.length - 1) {
+			if (i !== this.data.length - 1) {
 				result.push("0");
 			}
 		}
 		return {
-			text: this.string.replace(/[A-D]/g, ''),
+			text: this.text,
 			data: result.join('')
 		};
 	};
 
 	return codabar;
-}();
+}(_Barcode3.default);
 
 exports.codabar = codabar;
 
 /***/ },
-/* 34 */
-/***/ function(module, exports) {
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 "use strict";
@@ -2349,17 +2497,31 @@ exports.codabar = codabar;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.pharmacode = undefined;
+
+var _Barcode2 = __webpack_require__(0);
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// Encoding documentation
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding documentation
 // http://www.gomaro.ch/ftproot/Laetus_PHARMA-CODE.pdf
 
-var pharmacode = function () {
-	function pharmacode(string) {
+var pharmacode = function (_Barcode) {
+	_inherits(pharmacode, _Barcode);
+
+	function pharmacode(data, options) {
 		_classCallCheck(this, pharmacode);
 
-		this.number = parseInt(string, 10);
+		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
+
+		_this.number = parseInt(data, 10);
+		return _this;
 	}
 
 	pharmacode.prototype.encode = function encode() {
@@ -2385,7 +2547,7 @@ var pharmacode = function () {
 
 		return {
 			data: result,
-			text: this.number + ""
+			text: this.text
 		};
 	};
 
@@ -2394,12 +2556,12 @@ var pharmacode = function () {
 	};
 
 	return pharmacode;
-}();
+}(_Barcode3.default);
 
 exports.pharmacode = pharmacode;
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2409,11 +2571,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _optionsFromStrings = __webpack_require__(36);
+var _optionsFromStrings = __webpack_require__(37);
 
 var _optionsFromStrings2 = _interopRequireDefault(_optionsFromStrings);
 
-var _defaults = __webpack_require__(5);
+var _defaults = __webpack_require__(7);
 
 var _defaults2 = _interopRequireDefault(_defaults);
 
@@ -2446,7 +2608,7 @@ function getOptionsFromElement(element) {
 exports.default = getOptionsFromElement;
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -2479,7 +2641,7 @@ function optionsFromStrings(options) {
 }
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2489,11 +2651,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _merge = __webpack_require__(2);
+var _merge = __webpack_require__(3);
 
 var _merge2 = _interopRequireDefault(_merge);
 
-var _shared = __webpack_require__(7);
+var _shared = __webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2633,7 +2795,7 @@ var CanvasRenderer = function () {
 exports.default = CanvasRenderer;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2644,11 +2806,11 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getRendererClass = undefined;
 
-var _canvas = __webpack_require__(37);
+var _canvas = __webpack_require__(38);
 
 var _canvas2 = _interopRequireDefault(_canvas);
 
-var _svg = __webpack_require__(39);
+var _svg = __webpack_require__(40);
 
 var _svg2 = _interopRequireDefault(_svg);
 
@@ -2668,7 +2830,7 @@ function getRendererClass(name) {
 exports.getRendererClass = getRendererClass;
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2678,11 +2840,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _merge = __webpack_require__(2);
+var _merge = __webpack_require__(3);
 
 var _merge2 = _interopRequireDefault(_merge);
 
-var _shared = __webpack_require__(7);
+var _shared = __webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2849,39 +3011,39 @@ function drawLine(x, y, width, height, parent) {
 exports.default = SVGRenderer;
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 'use strict';
 
-var _barcodes = __webpack_require__(8);
+var _barcodes = __webpack_require__(9);
 
 var _barcodes2 = _interopRequireDefault(_barcodes);
 
-var _merge = __webpack_require__(2);
+var _merge = __webpack_require__(3);
 
 var _merge2 = _interopRequireDefault(_merge);
 
-var _linearizeEncodings = __webpack_require__(12);
+var _linearizeEncodings = __webpack_require__(13);
 
 var _linearizeEncodings2 = _interopRequireDefault(_linearizeEncodings);
 
-var _fixOptions = __webpack_require__(10);
+var _fixOptions = __webpack_require__(11);
 
 var _fixOptions2 = _interopRequireDefault(_fixOptions);
 
-var _getRenderProperties = __webpack_require__(11);
+var _getRenderProperties = __webpack_require__(12);
 
 var _getRenderProperties2 = _interopRequireDefault(_getRenderProperties);
 
-var _ErrorHandler = __webpack_require__(9);
+var _ErrorHandler = __webpack_require__(10);
 
 var _ErrorHandler2 = _interopRequireDefault(_ErrorHandler);
 
 var _exceptions = __webpack_require__(6);
 
-var _defaults = __webpack_require__(5);
+var _defaults = __webpack_require__(7);
 
 var _defaults2 = _interopRequireDefault(_defaults);
 

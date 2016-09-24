@@ -19,14 +19,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var CODE128A = function (_CODE) {
 	_inherits(CODE128A, _CODE);
 
-	function CODE128A(string) {
+	function CODE128A(string, options) {
 		_classCallCheck(this, CODE128A);
 
-		return _possibleConstructorReturn(this, _CODE.call(this, String.fromCharCode(208) + string));
+		return _possibleConstructorReturn(this, _CODE.call(this, String.fromCharCode(208) + string, options));
 	}
 
 	CODE128A.prototype.valid = function valid() {
-		return this.string.search(/^[\x00-\x5F\xC8-\xCF]+$/) !== -1;
+		return this.data.search(/^[\x00-\x5F\xC8-\xCF]+$/) !== -1;
 	};
 
 	return CODE128A;

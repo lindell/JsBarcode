@@ -3,17 +3,31 @@
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.pharmacode = undefined;
+
+var _Barcode2 = require("../Barcode.js");
+
+var _Barcode3 = _interopRequireDefault(_Barcode2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-// Encoding documentation
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding documentation
 // http://www.gomaro.ch/ftproot/Laetus_PHARMA-CODE.pdf
 
-var pharmacode = function () {
-	function pharmacode(string) {
+var pharmacode = function (_Barcode) {
+	_inherits(pharmacode, _Barcode);
+
+	function pharmacode(data, options) {
 		_classCallCheck(this, pharmacode);
 
-		this.number = parseInt(string, 10);
+		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
+
+		_this.number = parseInt(data, 10);
+		return _this;
 	}
 
 	pharmacode.prototype.encode = function encode() {
@@ -39,7 +53,7 @@ var pharmacode = function () {
 
 		return {
 			data: result,
-			text: this.number + ""
+			text: this.text
 		};
 	};
 
@@ -48,6 +62,6 @@ var pharmacode = function () {
 	};
 
 	return pharmacode;
-}();
+}(_Barcode3.default);
 
 exports.pharmacode = pharmacode;

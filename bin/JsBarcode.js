@@ -26,7 +26,7 @@ var _ErrorHandler2 = _interopRequireDefault(_ErrorHandler);
 
 var _exceptions = require('./exceptions/exceptions.js');
 
-var _defaults = require('./defaults/defaults.js');
+var _defaults = require('./options/defaults.js');
 
 var _defaults2 = _interopRequireDefault(_defaults);
 

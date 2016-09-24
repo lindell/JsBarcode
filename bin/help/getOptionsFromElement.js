@@ -8,7 +8,7 @@ var _optionsFromStrings = require("./optionsFromStrings.js");
 
 var _optionsFromStrings2 = _interopRequireDefault(_optionsFromStrings);
 
-var _defaults = require("../defaults/defaults.js");
+var _defaults = require("../options/defaults.js");
 
 var _defaults2 = _interopRequireDefault(_defaults);
 

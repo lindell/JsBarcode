@@ -19,14 +19,14 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var CODE128AUTO = function (_CODE) {
 	_inherits(CODE128AUTO, _CODE);
 
-	function CODE128AUTO(string) {
+	function CODE128AUTO(data, options) {
 		_classCallCheck(this, CODE128AUTO);
 
 		// ASCII value ranges 0-127, 200-211
-		if (string.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1) {
-			var _this = _possibleConstructorReturn(this, _CODE.call(this, autoSelectModes(string)));
+		if (data.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1) {
+			var _this = _possibleConstructorReturn(this, _CODE.call(this, autoSelectModes(data), options));
 		} else {
-			var _this = _possibleConstructorReturn(this, _CODE.call(this, string));
+			var _this = _possibleConstructorReturn(this, _CODE.call(this, data, options));
 		}
 		return _possibleConstructorReturn(_this);
 	}
