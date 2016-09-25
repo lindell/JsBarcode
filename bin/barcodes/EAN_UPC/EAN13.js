@@ -38,7 +38,7 @@ var EAN13 = function (_Barcode) {
 		_this.structure = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
 
 		// Make sure the font is not bigger than the space between the guard bars
-		if (options.fontSize > options.width * 10) {
+		if (!options.flat && options.fontSize > options.width * 10) {
 			_this.fontSize = options.width * 10;
 		} else {
 			_this.fontSize = options.fontSize;
@@ -57,6 +57,17 @@ var EAN13 = function (_Barcode) {
 	};
 
 	EAN13.prototype.encode = function encode() {
+		if (this.options.flat) {
+			return this.flatEncoding();
+		} else {
+			return this.guardedEncoding();
+		}
+	};
+
+	// The "standard" way of printing EAN13 barcodes with guard bars
+
+
+	EAN13.prototype.guardedEncoding = function guardedEncoding() {
 		var encoder = new _ean_encoder2.default();
 		var result = [];
 
@@ -118,8 +129,25 @@ var EAN13 = function (_Barcode) {
 				options: { fontSize: this.fontSize }
 			});
 		}
-
 		return result;
+	};
+
+	EAN13.prototype.flatEncoding = function flatEncoding() {
+		var encoder = new _ean_encoder2.default();
+		var result = "";
+
+		var structure = this.structure[this.data[0]];
+
+		result += "101";
+		result += encoder.encode(this.data.substr(1, 6), structure);
+		result += "01010";
+		result += encoder.encode(this.data.substr(7, 6), "RRRRRR");
+		result += "101";
+
+		return {
+			data: result,
+			text: this.text
+		};
 	};
 
 	return EAN13;
