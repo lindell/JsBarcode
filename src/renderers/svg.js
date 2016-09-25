@@ -93,7 +93,7 @@ class SVGRenderer{
 				y = options.height + options.textMargin + options.fontSize;
 			}
 
-		// Draw the text in the correct X depending on the textAlign option
+			// Draw the text in the correct X depending on the textAlign option
 			if(options.textAlign == "left" || encoding.barcodePadding > 0){
 				x = 0;
 				textElem.setAttribute("text-anchor", "start");
@@ -102,8 +102,8 @@ class SVGRenderer{
 				x = encoding.width - 1;
 				textElem.setAttribute("text-anchor", "end");
 			}
-		// In all other cases, center the text
-		else{
+			// In all other cases, center the text
+			else{
 				x = encoding.width / 2;
 				textElem.setAttribute("text-anchor", "middle");
 			}

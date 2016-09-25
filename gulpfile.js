@@ -242,7 +242,7 @@ function updateReadmeFileSizes(){
 }
 
 function formatSize(bytes){
-	var kilobytes = Math.round(bytes/1024*10)/10;
+	var kilobytes = Math.round(bytes / 1024 * 10) / 10;
 
 	return kilobytes + " kB";
 }
@@ -302,6 +302,6 @@ gulp.task('major', function(){
 
 // Util functions
 
-RegExp.escape= function(s) {
+RegExp.escape = function(s) {
 	return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 };
