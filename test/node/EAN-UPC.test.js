@@ -43,7 +43,14 @@ describe('EAN', function() {
     assert.equal(true, enc.valid());
     assert.equal("10100010110100111011001100100110111101001110101010110011011011001000010101110010011101000100101"
       , help.fixBin(enc.encode()));
-      console.log(enc.encode());
+    assert.equal("5901234123457", help.fixText(enc.encode()));
+  });
+
+  it('should be able to encode normal text with flat option', function () {
+    var enc = new EAN("5901234123457", help.merge(options, {flat: true}));
+    assert.equal(true, enc.valid());
+    assert.equal("10100010110100111011001100100110111101001110101010110011011011001000010101110010011101000100101"
+      , enc.encode().data);
     assert.equal("5901234123457", help.fixText(enc.encode()));
   });
 

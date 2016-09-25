@@ -28,7 +28,7 @@ class EAN13 extends Barcode{
 		];
 
 		// Make sure the font is not bigger than the space between the guard bars
-		if(options.fontSize > options.width * 10){
+		if(!options.flat && options.fontSize > options.width * 10){
 			this.fontSize = options.width * 10;
 		}
 		else{
@@ -48,6 +48,17 @@ class EAN13 extends Barcode{
 	}
 
 	encode(){
+		if(this.options.flat){
+			return this.flatEncoding();
+		}
+		else{
+			return this.guardedEncoding();
+		}
+
+	}
+
+	// The "standard" way of printing EAN13 barcodes with guard bars
+	guardedEncoding(){
 		var encoder = new EANencoder();
 		var result = [];
 
@@ -109,8 +120,25 @@ class EAN13 extends Barcode{
 				options: {fontSize: this.fontSize}
 			});
 		}
-
 		return result;
+	}
+
+	flatEncoding(){
+		var encoder = new EANencoder();
+		var result = "";
+
+		var structure = this.structure[this.data[0]];
+
+		result += "101";
+		result += encoder.encode(this.data.substr(1, 6), structure);
+		result += "01010";
+		result += encoder.encode(this.data.substr(7, 6), "RRRRRR");
+		result += "101";
+
+		return {
+			data: result,
+			text: this.text
+		};
 	}
 }
 
