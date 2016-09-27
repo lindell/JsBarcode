@@ -74,7 +74,7 @@ function getRenderProperties(element) {
 function querySelectedRenderProperties(string) {
 	var selector = document.querySelectorAll(string);
 	if (selector.length === 0) {
-		throw new _exceptions.NoElementException();
+		return undefined;
 	} else {
 		var returnArray = [];
 		for (var i = 0; i < selector.length; i++) {

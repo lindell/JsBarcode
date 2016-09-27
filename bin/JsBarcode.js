@@ -155,6 +155,11 @@ API.prototype.blank = function (size) {
 
 // Initialize JsBarcode on all HTML elements defined.
 API.prototype.init = function () {
+	// Should do nothing if no elements where found
+	if (!this._renderProperties) {
+		return;
+	}
+
 	// Make sure renderProperies is an array
 	if (!Array.isArray(this._renderProperties)) {
 		this._renderProperties = [this._renderProperties];
@@ -181,6 +186,10 @@ API.prototype.init = function () {
 
 // The render API call. Calls the real render function.
 API.prototype.render = function () {
+	if (!this._renderProperties) {
+		throw new _exceptions.NoElementException();
+	}
+
 	if (Array.isArray(this._renderProperties)) {
 		for (var i = 0; i < this._renderProperties.length; i++) {
 			render(this._renderProperties[i], this._encodings, this._options);
