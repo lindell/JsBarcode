@@ -9,7 +9,7 @@ import getRenderProperties from './help/getRenderProperties.js';
 
 // Exceptions
 import ErrorHandler from './exceptions/ErrorHandler.js';
-import {InvalidInputException} from './exceptions/exceptions.js';
+import {InvalidInputException, NoElementException} from './exceptions/exceptions.js';
 
 // Default values
 import defaults from './options/defaults.js';
@@ -129,6 +129,11 @@ API.prototype.blank = function(size){
 
 // Initialize JsBarcode on all HTML elements defined.
 API.prototype.init = function(){
+	// Should do nothing if no elements where found
+	if(!this._renderProperties){
+		return;
+	}
+
 	// Make sure renderProperies is an array
 	if(!Array.isArray(this._renderProperties)){
 		this._renderProperties = [this._renderProperties];
@@ -156,6 +161,10 @@ API.prototype.init = function(){
 
 // The render API call. Calls the real render function.
 API.prototype.render = function(){
+	if(!this._renderProperties){
+		throw new NoElementException();
+	}
+
 	if(Array.isArray(this._renderProperties)){
 		for(var i = 0; i < this._renderProperties.length; i++){
 			render(this._renderProperties[i], this._encodings, this._options);

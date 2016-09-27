@@ -5,7 +5,7 @@
 import getOptionsFromElement from "./getOptionsFromElement.js";
 import {getRendererClass} from "../renderers";
 
-import {InvalidElementException, NoElementException} from "../exceptions/exceptions.js";
+import {InvalidElementException} from "../exceptions/exceptions.js";
 
 // Takes an element and returns an object with information about how
 // it should be rendered
@@ -67,7 +67,7 @@ function getRenderProperties(element){
 function querySelectedRenderProperties(string){
 	var selector = document.querySelectorAll(string);
 	if(selector.length === 0){
-		throw new NoElementException();
+		return undefined;
 	}
 	else{
 		let returnArray = [];
