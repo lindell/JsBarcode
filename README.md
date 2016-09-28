@@ -97,8 +97,8 @@ Use any `jsbarcode-*` or `data-*` as attributes where `*` is any option.
 <svg class="barcode"
   jsbarcode-format="upc"
   jsbarcode-value="123456789012"
-  jsbarcode-textmargin="0"
-  jsbarcode-fontoptions="bold">
+  jsbarcode-text-margin="0"
+  jsbarcode-font-options="bold">
 </svg>
 ````
 
