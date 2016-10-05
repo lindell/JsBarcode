@@ -123,9 +123,9 @@ Download or get the CDN link to the script:
 |  CODE39  |  CODE39  |  4.6 kB  |  [JsBarcode.code39.min.js][3]  |
 |  EAN / UPC  |  EAN-13, EAN-8, EAN-5, EAN-2, UPC (A)  |  5.3 kB  |  [JsBarcode.ean-upc.min.js][4]  |
 |  ITF-14  |  ITF-14  |  4.4 kB  |  [JsBarcode.itf-14.min.js][5]  |
-|  ITF  |  ITF  |  4.3 kB  |  [JsBarcode.itf.min.js][6]  |
+|  ITF  |  ITF  |  4.4 kB  |  [JsBarcode.itf.min.js][6]  |
 |  MSI  |  MSI, MSI10, MSI11, MSI1010, MSI1110  |  4.6 kB  |  [JsBarcode.msi.min.js][7]  |
-|  Pharmacode  |  Pharmacode  |  4.2 kB  |  [JsBarcode.pharmacode.min.js][8]  |
+|  Pharmacode  |  Pharmacode  |  4.3 kB  |  [JsBarcode.pharmacode.min.js][8]  |
 |  Codabar  |  Codabar  |  4.4 kB  |  [JsBarcode.codabar.min.js][9]  |
 
 ### Step 2:
