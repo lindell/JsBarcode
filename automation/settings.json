@@ -1,0 +1,6 @@
+{
+  "baseDir": "../",
+  "distDir": "./dist/",
+  "binDir": "./bin/",
+  "banner": "/*! JsBarcode v<%= version %> | (c) <%= author %> | <%= license %> license */\n"
+}
