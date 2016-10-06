@@ -33,6 +33,31 @@ class UPC extends Barcode{
 	}
 
 	encode(){
+		if(this.options.flat){
+			return this.flatEncoding();
+		}
+		else{
+			return this.guardedEncoding();
+		}
+	}
+
+	flatEncoding(){
+		var encoder = new EANencoder();
+		var result = "";
+
+		result += "101";
+		result += encoder.encode(this.data.substr(0, 6), "LLLLLL");
+		result += "01010";
+		result += encoder.encode(this.data.substr(6, 6), "RRRRRR");
+		result += "101";
+
+		return {
+			data: result,
+			text: this.text
+		};
+	}
+
+	guardedEncoding(){
 		var encoder = new EANencoder();
 		var result = [];
 

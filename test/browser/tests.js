@@ -8,10 +8,11 @@ function createTests(newTest){
   newTest("12345", {format: "EAN5", width: 1});
   newTest("52", {format: "EAN2", width: 1});
   newTest("423514346455", {format: "UPC", width: 2, textMargin: 0});
+  newTest("423514346455", {format: "UPC", width: 2, textMargin: 0, flat: true});
   newTest("5901234123457", {format: "EAN13", fontSize: 40, textMargin: 0, lastChar: ">"});
   newTest("590123412345", {format: "EAN13", width: 2, fontSize: 16});
   newTest("590123412345", {format: "EAN13", width: 3});
-  newTest("590123412345", {format: "EAN13", width: 3, flat: true, fontSize: 40});
+  newTest("590123412345", {format: "EAN13", flat: true});
   newTest("96385074", {format: "EAN8", width: 1});
   newTest("9638507", {format: "EAN8", width: 1});
   newTest("98765432109213", {format: "ITF14", width: 1});

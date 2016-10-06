@@ -31,6 +31,13 @@ describe('UPC', function() {
     var enc = new UPC("12345678999", help.merge(options, {text: "THISISTEXT"}));
     assert.equal("THISISTEXT", help.fixText(enc.encode()));
   });
+
+  it('should work with flat option', function () {
+    var enc = new UPC("123456789999", help.merge(options, {flat: true}));
+    assert.equal("10100110010010011011110101000110110001010111101010100010010010001110100111010011101001110100101"
+      , enc.encode().data);
+    assert.equal("123456789999", enc.encode().text);
+  });
 });
 
 describe('EAN', function() {
