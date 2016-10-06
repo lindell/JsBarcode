@@ -12,8 +12,30 @@ class codabar extends Barcode{
 		super(data.toUpperCase(), options);
 
 		this.text = this.options.text || this.text.replace(/[A-D]/g, '');
+	}
 
-		this.encodings = {
+	valid(){
+		return this.data.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
+	}
+
+	encode(){
+		var result = [];
+		var encodings = this.getEncodings();
+		for(var i = 0; i < this.data.length; i++){
+			result.push(encodings[this.data.charAt(i)]);
+			// for all characters except the last, append a narrow-space ("0")
+			if (i !== this.data.length - 1) {
+				result.push("0");
+			}
+		}
+		return {
+			text: this.text,
+			data: result.join('')
+		};
+	}
+
+	getEncodings(){
+		return {
 			"0": "101010011",
 			"1": "101011001",
 			"2": "101001011",
@@ -34,25 +56,6 @@ class codabar extends Barcode{
 			"B": "1010010011",
 			"C": "1001001011",
 			"D": "1010011001"
-		};
-	}
-
-	valid(){
-		return this.data.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
-	}
-
-	encode(){
-		var result = [];
-		for(var i = 0; i < this.data.length; i++){
-			result.push(this.encodings[this.data.charAt(i)]);
-			// for all characters except the last, append a narrow-space ("0")
-			if (i !== this.data.length - 1) {
-				result.push("0");
-			}
-		}
-		return {
-			text: this.text,
-			data: result.join('')
 		};
 	}
 }
