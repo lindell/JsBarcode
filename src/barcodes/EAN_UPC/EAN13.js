@@ -13,13 +13,8 @@ class EAN13 extends Barcode{
 
 		super(data, options);
 
-		// Make sure the font is not bigger than the space between the guard bars
-		if(!options.flat && options.fontSize > options.width * 10){
-			this.fontSize = options.width * 10;
-		}
-		else{
-			this.fontSize = options.fontSize;
-		}
+		// Make sure the font is not bigger than the space between the guard bars (not used when flat=true)
+		this.fontSize = options.width * 10;
 
 		// Make the guard bars go down half the way of the text
 		this.guardHeight = options.height + this.fontSize / 2 + options.textMargin;
@@ -40,7 +35,6 @@ class EAN13 extends Barcode{
 		else{
 			return this.guardedEncoding();
 		}
-
 	}
 
 	// Define the EAN-13 structure
