@@ -32,16 +32,11 @@ var EAN13 = function (_Barcode) {
 			data += checksum(data);
 		}
 
-		// Define the EAN-13 structure
+		// Make sure the font is not bigger than the space between the guard bars
 		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
 
-		_this.structure = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
-
-		// Make sure the font is not bigger than the space between the guard bars
-		if (!options.flat && options.fontSize > options.width * 10) {
+		if (options.fontSize > options.width * 10) {
 			_this.fontSize = options.width * 10;
-		} else {
-			_this.fontSize = options.fontSize;
 		}
 
 		// Make the guard bars go down half the way of the text
@@ -64,6 +59,13 @@ var EAN13 = function (_Barcode) {
 		}
 	};
 
+	// Define the EAN-13 structure
+
+
+	EAN13.prototype.getStructure = function getStructure() {
+		return ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
+	};
+
 	// The "standard" way of printing EAN13 barcodes with guard bars
 
 
@@ -71,7 +73,7 @@ var EAN13 = function (_Barcode) {
 		var encoder = new _ean_encoder2.default();
 		var result = [];
 
-		var structure = this.structure[this.data[0]];
+		var structure = this.getStructure()[this.data[0]];
 
 		// Get the string to be encoded on the left side of the EAN code
 		var leftSide = this.data.substr(1, 6);
@@ -136,7 +138,7 @@ var EAN13 = function (_Barcode) {
 		var encoder = new _ean_encoder2.default();
 		var result = "";
 
-		var structure = this.structure[this.data[0]];
+		var structure = this.getStructure()[this.data[0]];
 
 		result += "101";
 		result += encoder.encode(this.data.substr(1, 6), structure);

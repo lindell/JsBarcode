@@ -31,8 +31,31 @@ var codabar = function (_Barcode) {
 		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data.toUpperCase(), options));
 
 		_this.text = _this.options.text || _this.text.replace(/[A-D]/g, '');
+		return _this;
+	}
 
-		_this.encodings = {
+	codabar.prototype.valid = function valid() {
+		return this.data.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
+	};
+
+	codabar.prototype.encode = function encode() {
+		var result = [];
+		var encodings = this.getEncodings();
+		for (var i = 0; i < this.data.length; i++) {
+			result.push(encodings[this.data.charAt(i)]);
+			// for all characters except the last, append a narrow-space ("0")
+			if (i !== this.data.length - 1) {
+				result.push("0");
+			}
+		}
+		return {
+			text: this.text,
+			data: result.join('')
+		};
+	};
+
+	codabar.prototype.getEncodings = function getEncodings() {
+		return {
 			"0": "101010011",
 			"1": "101011001",
 			"2": "101001011",
@@ -53,26 +76,6 @@ var codabar = function (_Barcode) {
 			"B": "1010010011",
 			"C": "1001001011",
 			"D": "1010011001"
-		};
-		return _this;
-	}
-
-	codabar.prototype.valid = function valid() {
-		return this.data.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
-	};
-
-	codabar.prototype.encode = function encode() {
-		var result = [];
-		for (var i = 0; i < this.data.length; i++) {
-			result.push(this.encodings[this.data.charAt(i)]);
-			// for all characters except the last, append a narrow-space ("0")
-			if (i !== this.data.length - 1) {
-				result.push("0");
-			}
-		}
-		return {
-			text: this.text,
-			data: result.join('')
 		};
 	};
 

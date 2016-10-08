@@ -1404,16 +1404,11 @@ var EAN13 = function (_Barcode) {
 			data += checksum(data);
 		}
 
-		// Define the EAN-13 structure
+		// Make sure the font is not bigger than the space between the guard bars
 		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
 
-		_this.structure = ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
-
-		// Make sure the font is not bigger than the space between the guard bars
-		if (!options.flat && options.fontSize > options.width * 10) {
+		if (options.fontSize > options.width * 10) {
 			_this.fontSize = options.width * 10;
-		} else {
-			_this.fontSize = options.fontSize;
 		}
 
 		// Make the guard bars go down half the way of the text
@@ -1436,6 +1431,13 @@ var EAN13 = function (_Barcode) {
 		}
 	};
 
+	// Define the EAN-13 structure
+
+
+	EAN13.prototype.getStructure = function getStructure() {
+		return ["LLLLLL", "LLGLGG", "LLGGLG", "LLGGGL", "LGLLGG", "LGGLLG", "LGGGLL", "LGLGLG", "LGLGGL", "LGGLGL"];
+	};
+
 	// The "standard" way of printing EAN13 barcodes with guard bars
 
 
@@ -1443,7 +1445,7 @@ var EAN13 = function (_Barcode) {
 		var encoder = new _ean_encoder2.default();
 		var result = [];
 
-		var structure = this.structure[this.data[0]];
+		var structure = this.getStructure()[this.data[0]];
 
 		// Get the string to be encoded on the left side of the EAN code
 		var leftSide = this.data.substr(1, 6);
@@ -1508,7 +1510,7 @@ var EAN13 = function (_Barcode) {
 		var encoder = new _ean_encoder2.default();
 		var result = "";
 
-		var structure = this.structure[this.data[0]];
+		var structure = this.getStructure()[this.data[0]];
 
 		result += "101";
 		result += encoder.encode(this.data.substr(1, 6), structure);
@@ -1852,6 +1854,30 @@ var UPC = function (_Barcode) {
 	};
 
 	UPC.prototype.encode = function encode() {
+		if (this.options.flat) {
+			return this.flatEncoding();
+		} else {
+			return this.guardedEncoding();
+		}
+	};
+
+	UPC.prototype.flatEncoding = function flatEncoding() {
+		var encoder = new _ean_encoder2.default();
+		var result = "";
+
+		result += "101";
+		result += encoder.encode(this.data.substr(0, 6), "LLLLLL");
+		result += "01010";
+		result += encoder.encode(this.data.substr(6, 6), "RRRRRR");
+		result += "101";
+
+		return {
+			data: result,
+			text: this.text
+		};
+	};
+
+	UPC.prototype.guardedEncoding = function guardedEncoding() {
 		var encoder = new _ean_encoder2.default();
 		var result = [];
 
@@ -2465,8 +2491,31 @@ var codabar = function (_Barcode) {
 		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data.toUpperCase(), options));
 
 		_this.text = _this.options.text || _this.text.replace(/[A-D]/g, '');
+		return _this;
+	}
 
-		_this.encodings = {
+	codabar.prototype.valid = function valid() {
+		return this.data.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
+	};
+
+	codabar.prototype.encode = function encode() {
+		var result = [];
+		var encodings = this.getEncodings();
+		for (var i = 0; i < this.data.length; i++) {
+			result.push(encodings[this.data.charAt(i)]);
+			// for all characters except the last, append a narrow-space ("0")
+			if (i !== this.data.length - 1) {
+				result.push("0");
+			}
+		}
+		return {
+			text: this.text,
+			data: result.join('')
+		};
+	};
+
+	codabar.prototype.getEncodings = function getEncodings() {
+		return {
 			"0": "101010011",
 			"1": "101011001",
 			"2": "101001011",
@@ -2487,26 +2536,6 @@ var codabar = function (_Barcode) {
 			"B": "1010010011",
 			"C": "1001001011",
 			"D": "1010011001"
-		};
-		return _this;
-	}
-
-	codabar.prototype.valid = function valid() {
-		return this.data.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
-	};
-
-	codabar.prototype.encode = function encode() {
-		var result = [];
-		for (var i = 0; i < this.data.length; i++) {
-			result.push(this.encodings[this.data.charAt(i)]);
-			// for all characters except the last, append a narrow-space ("0")
-			if (i !== this.data.length - 1) {
-				result.push("0");
-			}
-		}
-		return {
-			text: this.text,
-			data: result.join('')
 		};
 	};
 

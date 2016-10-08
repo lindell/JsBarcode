@@ -53,6 +53,30 @@ var UPC = function (_Barcode) {
 	};
 
 	UPC.prototype.encode = function encode() {
+		if (this.options.flat) {
+			return this.flatEncoding();
+		} else {
+			return this.guardedEncoding();
+		}
+	};
+
+	UPC.prototype.flatEncoding = function flatEncoding() {
+		var encoder = new _ean_encoder2.default();
+		var result = "";
+
+		result += "101";
+		result += encoder.encode(this.data.substr(0, 6), "LLLLLL");
+		result += "01010";
+		result += encoder.encode(this.data.substr(6, 6), "RRRRRR");
+		result += "101";
+
+		return {
+			data: result,
+			text: this.text
+		};
+	};
+
+	UPC.prototype.guardedEncoding = function guardedEncoding() {
 		var encoder = new _ean_encoder2.default();
 		var result = [];
 
