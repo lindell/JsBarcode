@@ -72,7 +72,7 @@ gulp.task('github-release', function(done) {
 		repo: "JsBarcode",
 		tag: v,
 		name: name,
-		assets: [__dirname + settings.baseDir + "/dist/JsBarcode.all.min.js", __dirname + settings.baseDir + "/dist/JsBarcode.all.js"]
+		assets: [__dirname + "/" + settings.baseDir + "/dist/JsBarcode.all.min.js", __dirname + "/" + settings.baseDir + "/dist/JsBarcode.all.js"]
 	}, done);
 });
 
