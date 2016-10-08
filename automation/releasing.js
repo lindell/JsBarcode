@@ -17,7 +17,7 @@ var shared = require('./shared.js');
 gulp.task('git-release', ['compress'], function(cb){
 	var pkg = require(settings.baseDir + 'package.json');
 	var v = 'v' + pkg.version;
-	var message = 'Release ' + v;
+	var message = ':package: Release ' + v;
 
 	updateReadmeFileSizes();
 
