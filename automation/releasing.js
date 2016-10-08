@@ -124,8 +124,6 @@ function releaseDone (error) {
 }
 
 
-
-
 function updateReadmeFileSizes(){
 	var files = require('./barcode-building.json');
 	var readme = fs.readFileSync('README.md', "utf-8");
@@ -152,14 +150,14 @@ function updateReadmeFileSizes(){
 	fs.writeFileSync('README.md', readme, 'utf8');
 }
 
-function formatSize(bytes){
-	var kilobytes = Math.round(bytes / 1024 * 10) / 10;
-
-	return kilobytes + " kB";
-}
-
 
 // Util functions
 RegExp.escape = function(s) {
 	return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 };
+
+function formatSize(bytes){
+	var kilobytes = Math.round(bytes / 1024 * 10) / 10;
+
+	return kilobytes + " kB";
+}
