@@ -1,6 +1,6 @@
 <p align="center">
 
-<a href="http://lindell.me/JsBarcode"><img src="https://raw.githubusercontent.com/lindell/JsBarcode/other/logo.svg" alt="JsBarcode"/></a>
+<a href="http://lindell.me/JsBarcode"><img src="https://raw.githubusercontent.com/lindell/JsBarcode/master/other/logo.svg" alt="JsBarcode"/></a>
 <br><br>
 
 <a href="https://gitter.im/lindell/JsBarcode?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"><img src="https://badges.gitter.im/lindell/JsBarcode.svg" alt="Join the chat at https://gitter.im/lindell/JsBarcode"/></a>
