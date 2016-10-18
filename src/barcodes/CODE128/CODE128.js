@@ -49,7 +49,7 @@ class CODE128 extends Barcode{
 		}
 
 		return {
-			text: this.text.replace(/[^\x20-\x7E]/g, ""),
+			text: this.text == this.data ? this.text.replace(/[^\x20-\x7E]/g, "") : this.text,
 			data:
 			// Add the start bits
 			this.getEncoding(startIndex) +
