@@ -35,8 +35,10 @@ var EAN13 = function (_Barcode) {
 		// Make sure the font is not bigger than the space between the guard bars
 		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
 
-		if (options.fontSize > options.width * 10) {
+		if (!options.flat && options.fontSize > options.width * 10) {
 			_this.fontSize = options.width * 10;
+		} else {
+			_this.fontSize = options.fontSize;
 		}
 
 		// Make the guard bars go down half the way of the text
