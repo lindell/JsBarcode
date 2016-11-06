@@ -6,6 +6,7 @@ import merge from './help/merge.js';
 import linearizeEncodings from './help/linearizeEncodings.js';
 import fixOptions from './help/fixOptions.js';
 import getRenderProperties from './help/getRenderProperties.js';
+import optionsFromStrings from './help/optionsFromStrings.js';
 
 // Exceptions
 import ErrorHandler from './exceptions/ErrorHandler.js';
@@ -66,6 +67,7 @@ function registerBarcode(barcodes, name){
 			var api = this;
 			return api._errorHandler.wrapBarcodeCall(function(){
 				var newOptions = merge(api._options, options);
+				newOptions = optionsFromStrings(newOptions);
 				var Encoder = barcodes[name];
 				var encoded = encode(text, Encoder, newOptions);
 				api._encodings.push(encoded);
