@@ -20,6 +20,10 @@ var _getRenderProperties = require('./help/getRenderProperties.js');
 
 var _getRenderProperties2 = _interopRequireDefault(_getRenderProperties);
 
+var _optionsFromStrings = require('./help/optionsFromStrings.js');
+
+var _optionsFromStrings2 = _interopRequireDefault(_optionsFromStrings);
+
 var _ErrorHandler = require('./exceptions/ErrorHandler.js');
 
 var _ErrorHandler2 = _interopRequireDefault(_ErrorHandler);
@@ -33,7 +37,9 @@ var _defaults2 = _interopRequireDefault(_defaults);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // The protype of the object returned from the JsBarcode() call
-// Import all the barcodes
+
+
+// Help functions
 var API = function API() {};
 
 // The first call of the library API
@@ -45,9 +51,7 @@ var API = function API() {};
 
 
 // Exceptions
-
-
-// Help functions
+// Import all the barcodes
 var JsBarcode = function JsBarcode(element, text, options) {
 	var api = new API();
 
@@ -92,6 +96,7 @@ function registerBarcode(barcodes, name) {
 		var api = this;
 		return api._errorHandler.wrapBarcodeCall(function () {
 			var newOptions = (0, _merge2.default)(api._options, options);
+			newOptions = (0, _optionsFromStrings2.default)(newOptions);
 			var Encoder = barcodes[name];
 			var encoded = encode(text, Encoder, newOptions);
 			api._encodings.push(encoded);
