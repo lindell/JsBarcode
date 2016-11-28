@@ -56,6 +56,10 @@ var SVGRenderer = function () {
 
 		var width = totalWidth + this.options.marginLeft + this.options.marginRight;
 		this.setSvgAttributes(width, maxHeight);
+
+		if (this.options.background) {
+			drawRect(0, 0, width, maxHeight, this.svg).setAttribute("style", "fill:" + this.options.background + ";");
+		}
 	};
 
 	SVGRenderer.prototype.drawSvgBarcode = function drawSvgBarcode(parent, options, encoding) {
@@ -77,14 +81,14 @@ var SVGRenderer = function () {
 			if (binary[b] === "1") {
 				barWidth++;
 			} else if (barWidth > 0) {
-				drawLine(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
+				drawRect(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
 				barWidth = 0;
 			}
 		}
 
 		// Last draw is needed since the barcode ends with 1
 		if (barWidth > 0) {
-			drawLine(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
+			drawRect(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
 		}
 	};
 
@@ -138,10 +142,6 @@ var SVGRenderer = function () {
 		svg.setAttribute("version", "1.1");
 
 		svg.style.transform = "translate(0,0)";
-
-		if (this.options.background) {
-			svg.style.background = this.options.background;
-		}
 	};
 
 	return SVGRenderer;
@@ -161,15 +161,17 @@ function setGroupOptions(group, options) {
 	group.setAttribute("style", "fill:" + options.lineColor + ";");
 }
 
-function drawLine(x, y, width, height, parent) {
-	var line = document.createElementNS(svgns, 'rect');
+function drawRect(x, y, width, height, parent) {
+	var rect = document.createElementNS(svgns, 'rect');
 
-	line.setAttribute("x", x);
-	line.setAttribute("y", y);
-	line.setAttribute("width", width);
-	line.setAttribute("height", height);
+	rect.setAttribute("x", x);
+	rect.setAttribute("y", y);
+	rect.setAttribute("width", width);
+	rect.setAttribute("height", height);
 
-	parent.appendChild(line);
+	parent.appendChild(rect);
+
+	return rect;
 }
 
 exports.default = SVGRenderer;
