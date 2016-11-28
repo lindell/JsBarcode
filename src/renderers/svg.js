@@ -41,6 +41,12 @@ class SVGRenderer{
 
 		var width = totalWidth + this.options.marginLeft + this.options.marginRight;
 		this.setSvgAttributes(width, maxHeight);
+
+		if(this.options.background){
+			drawRect(0, 0, width, maxHeight, this.svg).setAttribute(
+				"style", "fill:" + this.options.background + ";"
+			);
+		}
 	}
 
 	drawSvgBarcode(parent, options, encoding){
@@ -64,14 +70,14 @@ class SVGRenderer{
 				barWidth++;
 			}
 			else if(barWidth > 0){
-				drawLine(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
+				drawRect(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
 				barWidth = 0;
 			}
 		}
 
 		// Last draw is needed since the barcode ends with 1
 		if(barWidth > 0){
-			drawLine(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
+			drawRect(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
 		}
 	}
 
@@ -130,10 +136,6 @@ class SVGRenderer{
 		svg.setAttribute("version", "1.1");
 
 		svg.style.transform = "translate(0,0)";
-
-		if(this.options.background){
-			svg.style.background = this.options.background;
-		}
 	}
 }
 
@@ -155,15 +157,17 @@ function setGroupOptions(group, options){
 	);
 }
 
-function drawLine(x, y, width, height, parent){
-	var line = document.createElementNS(svgns, 'rect');
+function drawRect(x, y, width, height, parent){
+	var rect = document.createElementNS(svgns, 'rect');
 
-	line.setAttribute("x", x);
-	line.setAttribute("y", y);
-	line.setAttribute("width", width);
-	line.setAttribute("height", height);
+	rect.setAttribute("x", x);
+	rect.setAttribute("y", y);
+	rect.setAttribute("width", width);
+	rect.setAttribute("height", height);
 
-	parent.appendChild(line);
+	parent.appendChild(rect);
+
+	return rect;
 }
 
 export default SVGRenderer;
