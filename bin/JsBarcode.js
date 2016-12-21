@@ -179,13 +179,13 @@ API.prototype.init = function () {
 			options.format = autoSelectBarcode();
 		}
 
-		var text = options.value;
+		this._errorHandler.wrapBarcodeCall(function () {
+			var text = options.value;
+			var Encoder = _barcodes2.default[options.format.toUpperCase()];
+			var encoded = encode(text, Encoder, options);
 
-		var Encoder = _barcodes2.default[options.format.toUpperCase()];
-
-		var encoded = encode(text, Encoder, options);
-
-		render(renderProperty, encoded, options);
+			render(renderProperty, encoded, options);
+		});
 	}
 };
 
