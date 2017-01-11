@@ -3,7 +3,7 @@
 /* global SVGElement */
 
 import getOptionsFromElement from "./getOptionsFromElement.js";
-import {getRendererClass} from "../renderers";
+import renderers from "../renderers";
 
 import {InvalidElementException} from "../exceptions/exceptions.js";
 
@@ -40,7 +40,7 @@ function getRenderProperties(element){
 		return {
 			element: element,
 			options: getOptionsFromElement(element),
-			renderer: getRendererClass("svg")
+			renderer: renderers.SVGRenderer
 		};
 	}
 	// If canvas (in browser)
@@ -48,14 +48,14 @@ function getRenderProperties(element){
 		return {
 			element: element,
 			options: getOptionsFromElement(element),
-			renderer: getRendererClass("canvas")
+			renderer: renderers.CanvasRenderer
 		};
 	}
 	// If canvas (in node)
 	else if(element.getContext){
 		return {
 			element: element,
-			renderer: getRendererClass("canvas")
+			renderer: renderers.CanvasRenderer
 		};
 	}
 	else{
@@ -84,7 +84,7 @@ function newCanvasRenderProperties(imgElement){
 	return {
 		element: canvas,
 		options: getOptionsFromElement(imgElement),
-		renderer: getRendererClass("canvas"),
+		renderer: renderers.CanvasRenderer,
 		afterRender: function(){
 			imgElement.setAttribute("src", canvas.toDataURL());
 		}
