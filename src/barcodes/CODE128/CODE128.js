@@ -47,6 +47,9 @@ class CODE128 extends Barcode{
 		else if(startIndex === 105){
 			encodingResult = this.nextC(bytes, 1);
 		}
+		else{
+			throw new InvalidStartCharacterException();
+		}
 
 		return {
 			text: this.text == this.data ? this.text.replace(/[^\x20-\x7E]/g, "") : this.text,
@@ -213,6 +216,14 @@ class CODE128 extends Barcode{
 		var weight = index * depth;
 
 		return {"result": enc + next.result, "checksum": weight + next.checksum};
+	}
+}
+
+class InvalidStartCharacterException extends Error{
+	constructor() {
+		super();
+		this.name = "InvalidStartCharacterException";
+		this.message = "The encoding does not start with a start character.";
 	}
 }
 
