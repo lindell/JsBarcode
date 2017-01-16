@@ -317,6 +317,8 @@ var CODE128 = function (_Barcode) {
 			encodingResult = this.nextB(bytes, 1);
 		} else if (startIndex === 105) {
 			encodingResult = this.nextC(bytes, 1);
+		} else {
+			throw new InvalidStartCharacterException();
 		}
 
 		return {
@@ -490,6 +492,22 @@ var CODE128 = function (_Barcode) {
 
 	return CODE128;
 }(_Barcode3.default);
+
+var InvalidStartCharacterException = function (_Error) {
+	_inherits(InvalidStartCharacterException, _Error);
+
+	function InvalidStartCharacterException() {
+		_classCallCheck(this, InvalidStartCharacterException);
+
+		var _this2 = _possibleConstructorReturn(this, _Error.call(this));
+
+		_this2.name = "InvalidStartCharacterException";
+		_this2.message = "The encoding does not start with a start character.";
+		return _this2;
+	}
+
+	return InvalidStartCharacterException;
+}(Error);
 
 exports.default = CODE128;
 
@@ -709,7 +727,13 @@ function calculateEncodingAttributes(encodings, barcodeOptions, context) {
 		var options = (0, _merge2.default)(barcodeOptions, encoding.options);
 
 		// Calculate the width of the encoding
-		var textWidth = messureText(encoding.text, options, context);
+		var textWidth;
+		if (options.displayValue) {
+			textWidth = messureText(encoding.text, options, context);
+		} else {
+			textWidth = 0;
+		}
+
 		var barcodeWidth = encoding.data.length * options.width;
 		encoding.width = Math.ceil(Math.max(textWidth, barcodeWidth));
 
@@ -894,6 +918,8 @@ var _getOptionsFromElement2 = _interopRequireDefault(_getOptionsFromElement);
 
 var _renderers = __webpack_require__(39);
 
+var _renderers2 = _interopRequireDefault(_renderers);
+
 var _exceptions = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -931,7 +957,7 @@ function getRenderProperties(element) {
 					return {
 						element: element,
 						options: (0, _getOptionsFromElement2.default)(element),
-						renderer: (0, _renderers.getRendererClass)("svg")
+						renderer: _renderers2.default.SVGRenderer
 					};
 				}
 				// If canvas (in browser)
@@ -939,14 +965,14 @@ function getRenderProperties(element) {
 						return {
 							element: element,
 							options: (0, _getOptionsFromElement2.default)(element),
-							renderer: (0, _renderers.getRendererClass)("canvas")
+							renderer: _renderers2.default.CanvasRenderer
 						};
 					}
 					// If canvas (in node)
 					else if (element.getContext) {
 							return {
 								element: element,
-								renderer: (0, _renderers.getRendererClass)("canvas")
+								renderer: _renderers2.default.CanvasRenderer
 							};
 						} else {
 							throw new _exceptions.InvalidElementException();
@@ -973,7 +999,7 @@ function newCanvasRenderProperties(imgElement) {
 	return {
 		element: canvas,
 		options: (0, _getOptionsFromElement2.default)(imgElement),
-		renderer: (0, _renderers.getRendererClass)("canvas"),
+		renderer: _renderers2.default.CanvasRenderer,
 		afterRender: function afterRender() {
 			imgElement.setAttribute("src", canvas.toDataURL());
 		}
@@ -2861,9 +2887,8 @@ exports.default = CanvasRenderer;
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
-exports.getRendererClass = undefined;
 
 var _canvas = __webpack_require__(38);
 
@@ -2875,18 +2900,7 @@ var _svg2 = _interopRequireDefault(_svg);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function getRendererClass(name) {
-	switch (name) {
-		case "canvas":
-			return _canvas2.default;
-		case "svg":
-			return _svg2.default;
-		default:
-			throw new Error("Invalid rederer");
-	}
-}
-
-exports.getRendererClass = getRendererClass;
+exports.default = { CanvasRenderer: _canvas2.default, SVGRenderer: _svg2.default };
 
 /***/ },
 /* 40 */

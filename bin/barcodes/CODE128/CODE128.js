@@ -54,6 +54,8 @@ var CODE128 = function (_Barcode) {
 			encodingResult = this.nextB(bytes, 1);
 		} else if (startIndex === 105) {
 			encodingResult = this.nextC(bytes, 1);
+		} else {
+			throw new InvalidStartCharacterException();
 		}
 
 		return {
@@ -227,5 +229,21 @@ var CODE128 = function (_Barcode) {
 
 	return CODE128;
 }(_Barcode3.default);
+
+var InvalidStartCharacterException = function (_Error) {
+	_inherits(InvalidStartCharacterException, _Error);
+
+	function InvalidStartCharacterException() {
+		_classCallCheck(this, InvalidStartCharacterException);
+
+		var _this2 = _possibleConstructorReturn(this, _Error.call(this));
+
+		_this2.name = "InvalidStartCharacterException";
+		_this2.message = "The encoding does not start with a start character.";
+		return _this2;
+	}
+
+	return InvalidStartCharacterException;
+}(Error);
 
 exports.default = CODE128;

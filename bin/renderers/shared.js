@@ -34,7 +34,13 @@ function calculateEncodingAttributes(encodings, barcodeOptions, context) {
 		var options = (0, _merge2.default)(barcodeOptions, encoding.options);
 
 		// Calculate the width of the encoding
-		var textWidth = messureText(encoding.text, options, context);
+		var textWidth;
+		if (options.displayValue) {
+			textWidth = messureText(encoding.text, options, context);
+		} else {
+			textWidth = 0;
+		}
+
 		var barcodeWidth = encoding.data.length * options.width;
 		encoding.width = Math.ceil(Math.max(textWidth, barcodeWidth));
 

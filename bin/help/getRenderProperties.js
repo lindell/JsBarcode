@@ -10,6 +10,8 @@ var _getOptionsFromElement2 = _interopRequireDefault(_getOptionsFromElement);
 
 var _renderers = require("../renderers");
 
+var _renderers2 = _interopRequireDefault(_renderers);
+
 var _exceptions = require("../exceptions/exceptions.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -47,7 +49,7 @@ function getRenderProperties(element) {
 					return {
 						element: element,
 						options: (0, _getOptionsFromElement2.default)(element),
-						renderer: (0, _renderers.getRendererClass)("svg")
+						renderer: _renderers2.default.SVGRenderer
 					};
 				}
 				// If canvas (in browser)
@@ -55,14 +57,14 @@ function getRenderProperties(element) {
 						return {
 							element: element,
 							options: (0, _getOptionsFromElement2.default)(element),
-							renderer: (0, _renderers.getRendererClass)("canvas")
+							renderer: _renderers2.default.CanvasRenderer
 						};
 					}
 					// If canvas (in node)
 					else if (element.getContext) {
 							return {
 								element: element,
-								renderer: (0, _renderers.getRendererClass)("canvas")
+								renderer: _renderers2.default.CanvasRenderer
 							};
 						} else {
 							throw new _exceptions.InvalidElementException();
@@ -89,7 +91,7 @@ function newCanvasRenderProperties(imgElement) {
 	return {
 		element: canvas,
 		options: (0, _getOptionsFromElement2.default)(imgElement),
-		renderer: (0, _renderers.getRendererClass)("canvas"),
+		renderer: _renderers2.default.CanvasRenderer,
 		afterRender: function afterRender() {
 			imgElement.setAttribute("src", canvas.toDataURL());
 		}
