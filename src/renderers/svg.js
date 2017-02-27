@@ -66,12 +66,23 @@ class SVGRenderer{
 		for(var b = 0; b < binary.length; b++){
 			x = b * options.width + encoding.barcodePadding;
 
-			if(binary[b] === "1"){
+			if(binary[b] == 1){
 				barWidth++;
 			}
 			else if(barWidth > 0){
 				drawRect(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
 				barWidth = 0;
+			}
+			else if(typeof binary[b].start !== "undefined" && typeof binary[b].end !== "undefined"){
+				let start = binary[b].start;
+				let end = binary[b].end;
+				drawRect(
+					x,
+					yFrom + start * options.height,
+					options.width,
+					(end - start) * options.height,
+					parent
+				);
 			}
 		}
 

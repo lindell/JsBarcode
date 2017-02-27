@@ -71,11 +71,19 @@ class CanvasRenderer{
 		for(var b = 0; b < binary.length; b++){
 			var x = b * options.width + encoding.barcodePadding;
 
-			if(binary[b] === "1"){
+			if(binary[b] == 1){
 				ctx.fillRect(x, yFrom, options.width, options.height);
 			}
-			else if(binary[b]){
-				ctx.fillRect(x, yFrom, options.width, options.height * binary[b]);
+			else if(typeof binary[b].start !== "undefined" && typeof binary[b].end !== "undefined"){
+				let start = binary[b].start;
+				let end = binary[b].end;
+				ctx.fillRect(
+					x,
+					yFrom + start * options.height,
+					options.width,
+					(end - start) * options.height,
+					parent
+				);
 			}
 		}
 	}
