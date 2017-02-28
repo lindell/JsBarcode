@@ -6,6 +6,7 @@ import {ITF} from './ITF/';
 import {MSI, MSI10, MSI11, MSI1010, MSI1110} from './MSI/';
 import {pharmacode} from './pharmacode/';
 import {codabar} from './codabar';
+import {KIX} from './KIX/';
 import {GenericBarcode} from './GenericBarcode/';
 
 export default {
@@ -17,5 +18,6 @@ export default {
 	MSI, MSI10, MSI11, MSI1010, MSI1110,
 	pharmacode,
 	codabar,
+	KIX,
 	GenericBarcode
 };
