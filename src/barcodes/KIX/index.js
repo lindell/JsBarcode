@@ -11,15 +11,13 @@ class KIX extends Barcode {
 	}
 
 	encode(){
-		let bars = [];
-
-		// Take every character and add the binary representation to the bars
-		for(let i = 0; i < this.data.length; i++){
-			bars = bars.concat(getEncoding(this.data[i]));
-		}
-
-		// Add spacers
-		const result = addSpacing(bars);
+		const result = this.data.split('') // Make an array of the data
+			.map((character) => { // Get the corresponding bars
+				return encodings[character].map(barType => barTypes[barType]);
+			})
+			.reduce((a, b) => a.concat(b), []) // Merge all results into on array
+			.reduce((a, b) => a.concat([b], [0]), []) // Add space between all bars
+			.slice(0, -1); // Remove last element
 
 		return {
 			data: result,
@@ -33,95 +31,25 @@ class KIX extends Barcode {
 }
 
 
+// Encodings
+const encodings = {
+	"0":[0, 0, 3, 3], "1":[0, 1, 2, 3], "2":[0, 1, 3, 2], "3":[1, 0, 2, 3],
+	"4":[1, 0, 3, 2], "5":[1, 1, 2, 2], "6":[0, 2, 1, 3], "7":[0, 3, 0, 3],
+	"8":[0, 3, 1, 2], "9":[1, 2, 0, 3], "A":[1, 2, 1, 2], "B":[1, 3, 0, 2],
+	"C":[0, 2, 3, 1], "D":[0, 3, 2, 1], "E":[0, 3, 3, 0], "F":[1, 2, 2, 1],
+	"G":[1, 2, 3, 0], "H":[1, 3, 2, 0], "I":[2, 0, 1, 3], "J":[2, 1, 0, 3],
+	"K":[2, 1, 1, 2], "L":[3, 0, 0, 3], "M":[3, 0, 1, 2], "N":[3, 1, 0, 2],
+	"O":[2, 0, 3, 1], "P":[2, 1, 2, 1], "Q":[2, 1, 3, 0], "R":[3, 0, 2, 1],
+	"S":[3, 0, 3, 0], "T":[3, 1, 2, 0], "U":[2, 2, 1, 1], "V":[2, 3, 0, 1],
+	"W":[2, 3, 1, 0], "X":[3, 2, 0, 1], "Y":[3, 2, 1, 0], "Z":[3, 3, 0, 0],
+};
 
-
-
-
-// All characters. The position in the array is the (checksum) value
-const characters = [
-	"0", "1", "2", "3",
-	"4", "5", "6", "7",
-	"8", "9", "A", "B",
-	"C", "D", "E", "F",
-	"G", "H", "I", "J",
-	"K", "L", "M", "N",
-	"O", "P", "Q", "R",
-	"S", "T", "U", "V",
-	"W", "X", "Y", "Z"
-];
-
-// The decimal representation of the characters, is converted to the
-// corresponding binary with the getEncoding function
-const encodings = [
-	"00001111", "00011011", "00011110", "01001011",
-	"01001110", "01011010", "00100111", "00110011",
-	"00110110", "01100011", "01100110", "01110010",
-	"00101101", "00111001", "00111100", "01101001",
-	"01101100", "01111000", "10000111", "10010011",
-	"10010110", "11000011", "11000110", "11010010",
-	"10001101", "10011001", "10011100", "11001001",
-	"11001100", "11011000", "10100101", "10110001",
-	"10110100", "11100001", "11100100", "11110000"
-];
-
-// Get the binary representation of a character by converting the encodings
-// from decimal to binary and then to a correct bar
-function getEncoding(character){
-
-	// Relative sizes of the sync bar in the middle and the extending bars
-	const relativeSize = {
-		sync: 0.26,
-		bar: 0.37
-	};
-
-	const encoding = [];
-	const bits = getBits(character);
-	// Loop over bits in pairs of 2, since we need one for both the
-	// upper and lower part of the bar
-	for(let i = 0; i < bits.length; i += 2) {
-		let start = 0;
-		let height = relativeSize.sync;
-
-		// Check upper bit
-		if (bits[i] == 1) {
-			height += relativeSize.bar;
-		}
-		else {
-			start += relativeSize.bar;
-		}
-
-		// Check lower bit
-		if (bits[i + 1] == 1) {
-			height += relativeSize.bar;
-		}
-
-		encoding.push({
-			start: start,
-			end: start + height
-		});
-	}
-	return encoding;
-}
-
-function characterValue(character){
-	return characters.indexOf(character);
-}
-
-function getBits(character){
-	return encodings[characterValue(character)];
-}
-
-// Add the white space between the bars
-function addSpacing(bars) {
-	const result = [];
-	for(let i = 0; i < bars.length; i++){
-		// Skip spacer for very first bar
-		if (i > 0) {
-			result.push(0);
-		}
-		result.push(bars[i]);
-	}
-	return result;
-}
+const syncHeight = 0.37;
+const barTypes = {
+	0: {start: syncHeight, end: 1 - syncHeight},
+	1: {start: syncHeight, end: 1},
+	2: {start: 0, end: 1 - syncHeight},
+	3: {start: 0, end: 1},
+};
 
 export {KIX};
