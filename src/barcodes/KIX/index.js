@@ -15,8 +15,8 @@ class KIX extends Barcode {
 			.map((character) => { // Get the corresponding bars
 				return encodings[character].map(barType => barTypes[barType]);
 			})
-			.reduce((a, b) => a.concat(b), []) // Merge all results into on array
-			.reduce((a, b) => a.concat([b], [0]), []) // Add space between all bars
+			.reduce((a, b) => [...a, ...b], []) // Merge all results into on array
+			.reduce((a, b) => [...a, b, 0], []) // Add space between all bars
 			.slice(0, -1); // Remove last element
 
 		return {
@@ -31,7 +31,6 @@ class KIX extends Barcode {
 }
 
 
-// Encodings
 const encodings = {
 	"0":[0, 0, 3, 3], "1":[0, 1, 2, 3], "2":[0, 1, 3, 2], "3":[1, 0, 2, 3],
 	"4":[1, 0, 3, 2], "5":[1, 1, 2, 2], "6":[0, 2, 1, 3], "7":[0, 3, 0, 3],
