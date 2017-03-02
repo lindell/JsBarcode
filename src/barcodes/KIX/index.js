@@ -6,18 +6,23 @@ import Barcode from "../Barcode.js";
 class KIX extends Barcode {
 	constructor(data, options){
 		data = data.toUpperCase();
-
 		super(data, options);
+		this.syncHeight = options.syncHeight || 0.37;
+
+		// Make sure the lines are not antialiased vertically
+		if(typeof options.integerHeight === "undefined" || this.integerHeight){
+			this.syncHeight = Math.round(this.syncHeight * options.height) / options.height;
+		}
 	}
 
 	encode(){
 		const result = this.data.split('') // Make an array of the data
 			.map((character) => { // Get the corresponding bars
-				return encodings[character].map(barType => barTypes[barType]);
+				return encodings[character].map(barType => getBarTypes(this.syncHeight)[barType]);
 			})
 			.reduce((a, b) => [...a, ...b], []) // Merge all results into on array
-			.reduce((a, b) => [...a, b, 0], []) // Add space between all bars
-			.slice(0, -1); // Remove last element
+			.reduce((a, b) => [...a, b, 0], []) // Add space after all bars
+			.slice(0, -1); // Remove last space
 
 		return {
 			data: result,
@@ -43,12 +48,14 @@ const encodings = {
 	"W":[2, 3, 1, 0], "X":[3, 2, 0, 1], "Y":[3, 2, 1, 0], "Z":[3, 3, 0, 0],
 };
 
-const syncHeight = 0.37;
-const barTypes = {
-	0: {start: syncHeight, end: 1 - syncHeight},
-	1: {start: syncHeight, end: 1},
-	2: {start: 0, end: 1 - syncHeight},
-	3: {start: 0, end: 1},
-};
+function getBarTypes(syncHeight){
+	return {
+		0: {start: syncHeight, end: 1 - syncHeight},
+		1: {start: syncHeight, end: 1},
+		2: {start: 0, end: 1 - syncHeight},
+		3: {start: 0, end: 1},
+	};
+}
+
 
 export {KIX};

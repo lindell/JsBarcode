@@ -7,7 +7,7 @@ describe('KIX', function () {
     });
 
     it('should be able to encode normal text', function () {
-        const enc = new KIX("AB12", {});
+        const enc = new KIX("AB12", {height: 100});
         const expectedResult = [
             {"start": 0.37, "end": 1},
             0,

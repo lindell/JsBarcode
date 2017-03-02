@@ -22,6 +22,7 @@ function createTests(newTest){
   newTest("1234567890", {format: "codabar", width: 1});
   newTest("A1234567890A", {format: "codabar", width: 1});
   newTest("C1234567890D", {format: "codabar", width: 1});
+  newTest("1234", {format: "KIX", width: 5, height: 50});
   newTest("12345674", {format: "GenericBarcode", width: 1});
   newTest("Such customize!", {
     width: 1,
