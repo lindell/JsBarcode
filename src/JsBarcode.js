@@ -66,6 +66,9 @@ function registerBarcode(barcodes, name){
 		function(text, options){
 			var api = this;
 			return api._errorHandler.wrapBarcodeCall(function(){
+				// Ensure text is options.text
+				options.text = typeof options.text === 'undefined' ? undefined : '' + options.text;
+
 				var newOptions = merge(api._options, options);
 				newOptions = optionsFromStrings(newOptions);
 				var Encoder = barcodes[name];
