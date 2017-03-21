@@ -3187,6 +3187,9 @@ function registerBarcode(barcodes, name) {
 	API.prototype[name] = API.prototype[name.toUpperCase()] = API.prototype[name.toLowerCase()] = function (text, options) {
 		var api = this;
 		return api._errorHandler.wrapBarcodeCall(function () {
+			// Ensure text is options.text
+			options.text = typeof options.text === 'undefined' ? undefined : '' + options.text;
+
 			var newOptions = (0, _merge2.default)(api._options, options);
 			newOptions = (0, _optionsFromStrings2.default)(newOptions);
 			var Encoder = barcodes[name];
