@@ -122,22 +122,9 @@ const data = {};
 JsBarcode(data, 'text', {...options});
 ```
 data will be filled with a ``` encodings ``` property which has all the needed values.
+See wiki for an example of what data looks like.
 
-Example:
-```
-{ encodings:
-   [ { data: '00000000', text: '5', options: [Object] },
-     { data: '1010110001', options: [Object], text: '' },
-     { data: '01100010001101000110100011010001101',
-       text: '50000',
-       options: [Object] },
-     { data: '01010', options: [Object], text: '' },
-     { data: '11100101110010111001011100101110010',
-       text: '00000',
-       options: [Object] },
-     { data: '1110010101', options: [Object], text: '' },
-     { data: '00000000', text: '0', options: [Object] } ] }
-```
+
 Setup for browsers:
 ----
 ### Step 1:
