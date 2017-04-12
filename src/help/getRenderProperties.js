@@ -58,7 +58,7 @@ function getRenderProperties(element){
 			renderer: renderers.CanvasRenderer
 		};
 	}
-	else if(element && typeof element === 'object') {
+	else if(element && typeof element === 'object' && !element.nodeName) {
 		return {
 			element: element,
 			renderer: renderers.ObjectRenderer
@@ -68,7 +68,6 @@ function getRenderProperties(element){
 		throw new InvalidElementException();
 	}
 }
-
 
 function querySelectedRenderProperties(string){
 	var selector = document.querySelectorAll(string);
