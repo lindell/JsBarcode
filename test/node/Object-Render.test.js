@@ -17,4 +17,13 @@ describe('Object', function() {
 			/InvalidElementException/
 		);
 	});
+	
+	it('should work for different types', function () {
+		var data = {};
+		JsBarcode(data, '550000000000', {
+			format: 'upc'
+		});
+		assert.equal(data.encodings.length, 7);
+		assert.ok(data.encodings.every((val) => val.options.format === 'upc'));
+	});
 });
