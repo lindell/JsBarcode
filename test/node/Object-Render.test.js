@@ -9,7 +9,7 @@ describe('Object', function() {
 		assert.equal(typeof data.encodings, 'object');
 	});
 
-	it('should still catch targets', function() {
+	it('should catch null', function() {
 		assert.throws(
 			() => {
 				JsBarcode(null, '12345678');
@@ -17,6 +17,18 @@ describe('Object', function() {
 			/InvalidElementException/
 		);
 	});
+
+  it('should ignore dom elements', function() {
+    var fakeElement = {
+      nodeName: 'Some Dom Element'
+    }
+    assert.throws(
+      () => {
+        JsBarcode(fakeElement, '2345678');
+      },
+      /InvalidElementException/
+    );
+  });
 	
 	it('should work for different types', function () {
 		var data = {};
