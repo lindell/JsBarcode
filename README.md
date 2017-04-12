@@ -114,6 +114,17 @@ JsBarcode(".barcode").init();
 ![Result](http://imgh.us/upc.svg)
 
 
+
+#### Retrieve the barcode values so you can render it any way you'd like
+Pass in an object which will be filled with data.
+```
+const data = {};
+JsBarcode(data, 'text', {...options});
+```
+data will be filled with a ``` encodings ``` property which has all the needed values.
+See wiki for an example of what data looks like.
+
+
 Setup for browsers:
 ----
 ### Step 1:
