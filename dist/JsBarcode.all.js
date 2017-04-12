@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 41);
+/******/ 	return __webpack_require__(__webpack_require__.s = 42);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -912,6 +912,10 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /* global HTMLImageElement */
+/* global HTMLCanvasElement */
+/* global SVGElement */
+
 var _getOptionsFromElement = __webpack_require__(37);
 
 var _getOptionsFromElement2 = _interopRequireDefault(_getOptionsFromElement);
@@ -969,17 +973,20 @@ function getRenderProperties(element) {
 						};
 					}
 					// If canvas (in node)
-					else if (element.getContext) {
+					else if (element && element.getContext) {
 							return {
 								element: element,
 								renderer: _renderers2.default.CanvasRenderer
 							};
+						} else if (element && (typeof element === "undefined" ? "undefined" : _typeof(element)) === 'object' && !element.nodeName) {
+							return {
+								element: element,
+								renderer: _renderers2.default.ObjectRenderer
+							};
 						} else {
 							throw new _exceptions.InvalidElementException();
 						}
-} /* global HTMLImageElement */
-/* global HTMLCanvasElement */
-/* global SVGElement */
+}
 
 function querySelectedRenderProperties(string) {
 	var selector = document.querySelectorAll(string);
@@ -2894,16 +2901,51 @@ var _canvas = __webpack_require__(38);
 
 var _canvas2 = _interopRequireDefault(_canvas);
 
-var _svg = __webpack_require__(40);
+var _svg = __webpack_require__(41);
 
 var _svg2 = _interopRequireDefault(_svg);
 
+var _object = __webpack_require__(40);
+
+var _object2 = _interopRequireDefault(_object);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = { CanvasRenderer: _canvas2.default, SVGRenderer: _svg2.default };
+exports.default = { CanvasRenderer: _canvas2.default, SVGRenderer: _svg2.default, ObjectRenderer: _object2.default };
 
 /***/ },
 /* 40 */
+/***/ function(module, exports) {
+
+"use strict";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ObjectRenderer = function () {
+	function ObjectRenderer(object, encodings, options) {
+		_classCallCheck(this, ObjectRenderer);
+
+		this.object = object;
+		this.encodings = encodings;
+		this.options = options;
+	}
+
+	ObjectRenderer.prototype.render = function render() {
+		this.object.encodings = this.encodings;
+	};
+
+	return ObjectRenderer;
+}();
+
+exports.default = ObjectRenderer;
+
+/***/ },
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3086,7 +3128,7 @@ function drawRect(x, y, width, height, parent) {
 exports.default = SVGRenderer;
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";

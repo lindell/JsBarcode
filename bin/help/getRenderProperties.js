@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /* global HTMLImageElement */
+/* global HTMLCanvasElement */
+/* global SVGElement */
+
 var _getOptionsFromElement = require("./getOptionsFromElement.js");
 
 var _getOptionsFromElement2 = _interopRequireDefault(_getOptionsFromElement);
@@ -61,17 +65,20 @@ function getRenderProperties(element) {
 						};
 					}
 					// If canvas (in node)
-					else if (element.getContext) {
+					else if (element && element.getContext) {
 							return {
 								element: element,
 								renderer: _renderers2.default.CanvasRenderer
 							};
+						} else if (element && (typeof element === "undefined" ? "undefined" : _typeof(element)) === 'object' && !element.nodeName) {
+							return {
+								element: element,
+								renderer: _renderers2.default.ObjectRenderer
+							};
 						} else {
 							throw new _exceptions.InvalidElementException();
 						}
-} /* global HTMLImageElement */
-/* global HTMLCanvasElement */
-/* global SVGElement */
+}
 
 function querySelectedRenderProperties(string) {
 	var selector = document.querySelectorAll(string);

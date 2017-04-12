@@ -1,7 +1,7 @@
 {
   "name": "JsBarcode",
   "main": "dist/JsBarcode.all.min.js",
-  "version": "3.5.9",
+  "version": "3.6.0",
   "homepage": "https://github.com/lindell/JsBarcode",
   "authors": [
     "Johan Lindell <johan@lindell.me>"
