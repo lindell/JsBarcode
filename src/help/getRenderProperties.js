@@ -52,10 +52,16 @@ function getRenderProperties(element){
 		};
 	}
 	// If canvas (in node)
-	else if(element.getContext){
+	else if(element && element.getContext){
 		return {
 			element: element,
 			renderer: renderers.CanvasRenderer
+		};
+	}
+	else if(element && typeof element === 'object') {
+		return {
+			element: element,
+			renderer: renderers.ObjectRenderer
 		};
 	}
 	else{
