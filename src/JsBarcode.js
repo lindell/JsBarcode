@@ -222,4 +222,4 @@ if (typeof jQuery !== 'undefined') {
 }
 
 // Export to commonJS
-module.exports = JsBarcode;
+export default JsBarcode;
