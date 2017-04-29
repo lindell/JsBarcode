@@ -1,7 +1,4 @@
-declare function JsBarcode(element: any): jsbarcode.api;
-declare function JsBarcode(element: any, data: string, options?: jsbarcode.Options): void;
-
-declare namespace jsbarcode {
+declare namespace JsBarcode {
   interface Options {
     width?: number,
     height?: number,
@@ -51,4 +48,8 @@ declare namespace jsbarcode {
   }
 }
 
+declare function JsBarcode(element: any): JsBarcode.api;
+declare function JsBarcode(element: any, data: string, options?: JsBarcode.Options): void;
+
 export = JsBarcode;
+export as namespace JsBarcode;
