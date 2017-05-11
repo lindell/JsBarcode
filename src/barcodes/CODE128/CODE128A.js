@@ -1,12 +1,13 @@
 import CODE128 from './CODE128.js';
+import { A_START_CHAR, A_CHARS } from './constants';
 
-class CODE128A extends CODE128{
-	constructor(string, options){
-		super(String.fromCharCode(208) + string, options);
+class CODE128A extends CODE128 {
+	constructor(string, options) {
+		super(A_START_CHAR + string, options);
 	}
 
-	valid(){
-		return this.data.search(/^[\x00-\x5F\xC8-\xCF]+$/) !== -1;
+	valid() {
+		return (new RegExp(`^${A_CHARS}+$`)).test(this.data);
 	}
 }
 
