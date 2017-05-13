@@ -1,229 +1,106 @@
-// This is the master class, it does require the start code to be
-// included in the string
-
 import Barcode from "../Barcode.js";
+import { getEncoding, normalizeText, needSwap } from './helpers';
+import { SHIFT, SET_A, SET_B, MODULO, STOP, ABC } from './constants';
 
-class CODE128 extends Barcode{
-	constructor(data, options){
+// This is the master class,
+// it does require the start code to be included in the string
+class CODE128 extends Barcode {
+	constructor(data, options) {
 		super(data.substring(1), options);
 
-		// Fill the bytes variable with the ascii codes of string
-		this.bytes = [];
-		for (var i = 0; i < data.length; ++i) {
-			this.bytes.push(data.charCodeAt(i));
-		}
+		// Get array of ascii codes from data
+		this.bytes = data.split('')
+			.map(char => char.charCodeAt(0));
+	}
 
-		// Data for each character, the last characters will not be encoded but are used for error correction
-		// Numbers encode to (n + 1000) -> binary; 740 -> (740 + 1000).toString(2) -> "11011001100"
-		this.encodings = [ // + 1000
-			740, 644, 638, 176, 164, 100, 224, 220, 124, 608, 604,
-			572, 436, 244, 230, 484, 260, 254, 650, 628, 614, 764,
-			652, 902, 868, 836, 830, 892, 844, 842, 752, 734, 590,
-			304, 112,  94, 416, 128, 122, 672, 576, 570, 464, 422,
-			134, 496, 478, 142, 910, 678, 582, 768, 762, 774, 880,
-			862, 814, 896, 890, 818, 914, 602, 930, 328, 292, 200,
-			158,  68,  62, 424, 412, 232, 218,  76,  74, 554, 616,
-			978, 556, 146, 340, 212, 182, 508, 268, 266, 956, 940,
-			938, 758, 782, 974, 400, 310, 118, 512, 506, 960, 954,
-			502, 518, 886, 966, /* Start codes */   668, 680, 692,
-			5379
-		];
+	valid() {
+		// ASCII value ranges 0-127, 200-211
+		return /^[\x00-\x7F\xC8-\xD3]+$/.test(this.data);
 	}
 
 	// The public encoding function
 	encode() {
-		var encodingResult;
-		var bytes = this.bytes;
-		// Remove the startcode from the bytes and set its index
-		var startIndex = bytes.shift() - 105;
+		let encodingResult;
+		const bytes = this.bytes;
+
+		// Remove the start code from the bytes and set its index
+		const startIndex = bytes.shift() - 105;
+		// Get start set by index
+		const startSet = ABC[startIndex];
+
+		if (startSet === undefined) {
+			throw new RangeError('The encoding does not start with a start character.');
+		}
 
 		// Start encode with the right type
-		if(startIndex === 103){
-			encodingResult = this.nextA(bytes, 1);
-		}
-		else if(startIndex === 104){
-			encodingResult = this.nextB(bytes, 1);
-		}
-		else if(startIndex === 105){
-			encodingResult = this.nextC(bytes, 1);
-		}
-		else{
-			throw new InvalidStartCharacterException();
-		}
+		encodingResult = this.next(bytes, 1, startSet);
 
 		return {
-			text: this.text == this.data ? this.text.replace(/[^\x20-\x7E]/g, "") : this.text,
+			text: normalizeText(this.text, this.data),
 			data:
-			// Add the start bits
-			this.getEncoding(startIndex) +
-			// Add the encoded bits
-			encodingResult.result +
-			// Add the checksum
-			this.getEncoding((encodingResult.checksum + startIndex) % 103) +
-			// Add the end bits
-			this.getEncoding(106)
+				// Add the start bits
+				getEncoding(startIndex) +
+				// Add the encoded bits
+				encodingResult.result +
+				// Add the checksum
+				getEncoding((encodingResult.checksum + startIndex) % MODULO) +
+				// Add the end bits
+				getEncoding(STOP)
 		};
 	}
 
-	getEncoding(n) {
-		return (this.encodings[n] ? (this.encodings[n] + 1000).toString(2) : '');
-	}
-
-	// Use the regexp variable for validation
-	valid() {
-    // ASCII value ranges 0-127, 200-211
-		return this.data.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1;
-	}
-
-	nextA(bytes, depth){
-		if(bytes.length <= 0){
-			return {"result": "", "checksum": 0};
-		}
-
-		var next, index;
+	next(bytes, depth, set) {
+		if (!bytes.length) return { result: '', checksum: 0 };
+		let nextCode, index;
 
 		// Special characters
-		if(bytes[0] >= 200){
-			index = bytes[0] - 105;
+		if (bytes[0] >= 200){
+			index = bytes.shift() - 105;
+			const nextSet = needSwap(index);
 
-			// Remove first element
-			bytes.shift();
-
-			// Swap to CODE128C
-			if(index === 99){
-				next = this.nextC(bytes, depth + 1);
+			// Swap to other set
+			if (nextSet !== undefined) {
+				nextCode = this.next(bytes, depth + 1, nextSet);
 			}
-			// Swap to CODE128B
-			else if(index === 100){
-				next = this.nextB(bytes, depth + 1);
-			}
-			// Shift
-			else if(index === 98){
-				// Convert the next character so that is encoded correctly
-				bytes[0] = bytes[0] > 95 ? bytes[0] - 96 : bytes[0];
-				next = this.nextA(bytes, depth + 1);
-			}
-			// Continue on CODE128A but encode a special character
-			else{
-				next = this.nextA(bytes, depth + 1);
+			// Continue on current set but encode a special character
+			else {
+				// Shift
+				if ((set === SET_A || set === SET_B) && index === SHIFT) {
+					// Convert the next character so that is encoded correctly
+					bytes[0] = (set === SET_A)
+						? bytes[0] > 95 ? bytes[0] - 96 : bytes[0]
+						: bytes[0] < 32 ? bytes[0] + 96 : bytes[0];
+				}
+				nextCode = this.next(bytes, depth + 1, set);
 			}
 		}
-		// Continue encoding of CODE128A
-		else{
-			var charCode = bytes[0];
-			index = charCode < 32 ? charCode + 64 : charCode - 32;
+		// Continue encoding
+		else {
+			// CODE128A
+			if (set === SET_A) {
+				const charCode = bytes.shift();
+				index = charCode < 32 ? charCode + 64 : charCode - 32;
+			}
+			// CODE128B
+			else if (set === SET_B) {
+				index = bytes.shift() - 32;
+			}
+			// CODE128C
+			else {
+				index = (bytes.shift() - 48) * 10 + bytes.shift() - 48;
+			}
 
-			// Remove first element
-			bytes.shift();
-
-			next = this.nextA(bytes, depth + 1);
+			nextCode = this.next(bytes, depth + 1, set);
 		}
 
 		// Get the correct binary encoding and calculate the weight
-		var enc = this.getEncoding(index);
-		var weight = index * depth;
+		const enc = getEncoding(index);
+		const weight = index * depth;
 
 		return {
-			"result": enc + next.result,
-			"checksum": weight + next.checksum
+			result: enc + nextCode.result,
+			checksum: weight + nextCode.checksum
 		};
-	}
-
-	nextB(bytes, depth){
-		if(bytes.length <= 0){
-			return {"result": "", "checksum": 0};
-		}
-
-		var next, index;
-
-		// Special characters
-		if(bytes[0] >= 200){
-			index = bytes[0] - 105;
-
-			// Remove first element
-			bytes.shift();
-
-			// Swap to CODE128C
-			if(index === 99){
-				next = this.nextC(bytes, depth + 1);
-			}
-			// Swap to CODE128A
-			else if(index === 101){
-				next = this.nextA(bytes, depth + 1);
-			}
-			// Shift
-			else if(index === 98){
-				// Convert the next character so that is encoded correctly
-				bytes[0] = bytes[0] < 32 ? bytes[0] + 96 : bytes[0];
-				next = this.nextB(bytes, depth + 1);
-			}
-			// Continue on CODE128B but encode a special character
-			else{
-				next = this.nextB(bytes, depth + 1);
-			}
-		}
-		// Continue encoding of CODE128B
-		else {
-			index = bytes[0] - 32;
-			bytes.shift();
-			next = this.nextB(bytes, depth + 1);
-		}
-
-		// Get the correct binary encoding and calculate the weight
-		var enc = this.getEncoding(index);
-		var weight = index * depth;
-
-		return {"result": enc + next.result, "checksum": weight + next.checksum};
-	}
-
-	nextC(bytes, depth){
-		if(bytes.length <= 0){
-			return {"result": "", "checksum": 0};
-		}
-
-		var next, index;
-
-		// Special characters
-		if(bytes[0] >= 200){
-			index = bytes[0] - 105;
-
-			// Remove first element
-			bytes.shift();
-
-			// Swap to CODE128B
-			if(index === 100){
-				next = this.nextB(bytes, depth + 1);
-			}
-			// Swap to CODE128A
-			else if(index === 101){
-				next = this.nextA(bytes, depth + 1);
-			}
-			// Continue on CODE128C but encode a special character
-			else{
-				next = this.nextC(bytes, depth + 1);
-			}
-		}
-		// Continue encoding of CODE128C
-		else{
-			index = (bytes[0] - 48) * 10 + bytes[1] - 48;
-			bytes.shift();
-			bytes.shift();
-			next = this.nextC(bytes, depth + 1);
-		}
-
-		// Get the correct binary encoding and calculate the weight
-		var enc = this.getEncoding(index);
-		var weight = index * depth;
-
-		return {"result": enc + next.result, "checksum": weight + next.checksum};
-	}
-}
-
-class InvalidStartCharacterException extends Error{
-	constructor() {
-		super();
-		this.name = "InvalidStartCharacterException";
-		this.message = "The encoding does not start with a start character.";
 	}
 }
 
