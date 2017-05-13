@@ -11,10 +11,18 @@ export const START_C = 105;
 export const MODULO = 103;
 export const STOP = 106;
 
+// Get set by start code
 export const ABC = {
 	[START_A]: SET_A,
 	[START_B]: SET_B,
 	[START_C]: SET_C,
+};
+
+// Get next set by code
+export const SWAP = {
+	101: SET_A,
+	100: SET_B,
+	99: SET_C,
 };
 
 export const A_START_CHAR = String.fromCharCode(208); // START_A + 105

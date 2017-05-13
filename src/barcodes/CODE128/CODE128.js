@@ -1,6 +1,5 @@
 import Barcode from "../Barcode.js";
-import { getEncoding, normalizeText, needSwap } from './helpers';
-import { SHIFT, SET_A, SET_B, MODULO, STOP, ABC } from './constants';
+import { SHIFT, SET_A, SET_B, MODULO, STOP, ABC, SWAP, BARS } from './constants';
 
 // This is the master class,
 // it does require the start code to be included in the string
@@ -20,9 +19,7 @@ class CODE128 extends Barcode {
 
 	// The public encoding function
 	encode() {
-		let encodingResult;
 		const bytes = this.bytes;
-
 		// Remove the start code from the bytes and set its index
 		const startIndex = bytes.shift() - 105;
 		// Get start set by index
@@ -33,34 +30,41 @@ class CODE128 extends Barcode {
 		}
 
 		// Start encode with the right type
-		encodingResult = this.next(bytes, 1, startSet);
+		const encodingResult = CODE128.next(bytes, 1, startSet);
 
 		return {
-			text: normalizeText(this.text, this.data),
+			text:
+				this.text === this.data
+					? this.text.replace(/[^\x20-\x7E]/g, '')
+					: this.text,
 			data:
 				// Add the start bits
-				getEncoding(startIndex) +
+				CODE128.getEncoding(startIndex) +
 				// Add the encoded bits
 				encodingResult.result +
 				// Add the checksum
-				getEncoding((encodingResult.checksum + startIndex) % MODULO) +
+				CODE128.getEncoding((encodingResult.checksum + startIndex) % MODULO) +
 				// Add the end bits
-				getEncoding(STOP)
+				CODE128.getEncoding(STOP)
 		};
 	}
 
-	next(bytes, depth, set) {
+	static getEncoding(code) {
+		return BARS[code] || '';
+	}
+
+	static next(bytes, depth, set) {
 		if (!bytes.length) return { result: '', checksum: 0 };
 		let nextCode, index;
 
 		// Special characters
 		if (bytes[0] >= 200){
 			index = bytes.shift() - 105;
-			const nextSet = needSwap(index);
+			const nextSet = SWAP[index];
 
 			// Swap to other set
 			if (nextSet !== undefined) {
-				nextCode = this.next(bytes, depth + 1, nextSet);
+				nextCode = CODE128.next(bytes, depth + 1, nextSet);
 			}
 			// Continue on current set but encode a special character
 			else {
@@ -71,7 +75,7 @@ class CODE128 extends Barcode {
 						? bytes[0] > 95 ? bytes[0] - 96 : bytes[0]
 						: bytes[0] < 32 ? bytes[0] + 96 : bytes[0];
 				}
-				nextCode = this.next(bytes, depth + 1, set);
+				nextCode = CODE128.next(bytes, depth + 1, set);
 			}
 		}
 		// Continue encoding
@@ -90,11 +94,11 @@ class CODE128 extends Barcode {
 				index = (bytes.shift() - 48) * 10 + bytes.shift() - 48;
 			}
 
-			nextCode = this.next(bytes, depth + 1, set);
+			nextCode = CODE128.next(bytes, depth + 1, set);
 		}
 
 		// Get the correct binary encoding and calculate the weight
-		const enc = getEncoding(index);
+		const enc = CODE128.getEncoding(index);
 		const weight = index * depth;
 
 		return {
