@@ -39,20 +39,22 @@ class CODE128 extends Barcode {
 					: this.text,
 			data:
 				// Add the start bits
-				CODE128.getEncoding(startIndex) +
+				CODE128.getBar(startIndex) +
 				// Add the encoded bits
 				encodingResult.result +
 				// Add the checksum
-				CODE128.getEncoding((encodingResult.checksum + startIndex) % MODULO) +
+				CODE128.getBar((encodingResult.checksum + startIndex) % MODULO) +
 				// Add the end bits
-				CODE128.getEncoding(STOP)
+				CODE128.getBar(STOP)
 		};
 	}
 
-	static getEncoding(code) {
-		return BARS[code] || '';
+	// Get a bar symbol by index
+	static getBar(index) {
+		return BARS[index] ? BARS[index].toString() : '';
 	}
 
+	// Correct an index by a set and shift it from the bytes array
 	static correctIndex(bytes, set) {
 		if (set === SET_A) {
 			const charCode = bytes.shift();
@@ -96,7 +98,7 @@ class CODE128 extends Barcode {
 		}
 
 		// Get the correct binary encoding and calculate the weight
-		const enc = CODE128.getEncoding(index);
+		const enc = CODE128.getBar(index);
 		const weight = index * pos;
 
 		return {
