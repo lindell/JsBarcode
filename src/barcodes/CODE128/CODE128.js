@@ -53,7 +53,18 @@ class CODE128 extends Barcode {
 		return BARS[code] || '';
 	}
 
-	static next(bytes, depth, set) {
+	static correctIndex(bytes, set) {
+		if (set === SET_A) {
+			const charCode = bytes.shift();
+			return charCode < 32 ? charCode + 64 : charCode - 32;
+		} else if (set === SET_B) {
+			return bytes.shift() - 32;
+		} else {
+			return (bytes.shift() - 48) * 10 + bytes.shift() - 48;
+		}
+	}
+
+	static next(bytes, pos, set) {
 		if (!bytes.length) return { result: '', checksum: 0 };
 		let nextCode, index;
 
@@ -64,7 +75,7 @@ class CODE128 extends Barcode {
 
 			// Swap to other set
 			if (nextSet !== undefined) {
-				nextCode = CODE128.next(bytes, depth + 1, nextSet);
+				nextCode = CODE128.next(bytes, pos + 1, nextSet);
 			}
 			// Continue on current set but encode a special character
 			else {
@@ -75,31 +86,18 @@ class CODE128 extends Barcode {
 						? bytes[0] > 95 ? bytes[0] - 96 : bytes[0]
 						: bytes[0] < 32 ? bytes[0] + 96 : bytes[0];
 				}
-				nextCode = CODE128.next(bytes, depth + 1, set);
+				nextCode = CODE128.next(bytes, pos + 1, set);
 			}
 		}
 		// Continue encoding
 		else {
-			// CODE128A
-			if (set === SET_A) {
-				const charCode = bytes.shift();
-				index = charCode < 32 ? charCode + 64 : charCode - 32;
-			}
-			// CODE128B
-			else if (set === SET_B) {
-				index = bytes.shift() - 32;
-			}
-			// CODE128C
-			else {
-				index = (bytes.shift() - 48) * 10 + bytes.shift() - 48;
-			}
-
-			nextCode = CODE128.next(bytes, depth + 1, set);
+			index = CODE128.correctIndex(bytes, set);
+			nextCode = CODE128.next(bytes, pos + 1, set);
 		}
 
 		// Get the correct binary encoding and calculate the weight
 		const enc = CODE128.getEncoding(index);
-		const weight = index * depth;
+		const weight = index * pos;
 
 		return {
 			result: enc + nextCode.result,
