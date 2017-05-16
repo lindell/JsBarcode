@@ -1,5 +1,5 @@
 import Barcode from "../Barcode.js";
-import { SHIFT, SET_A, SET_B, MODULO, STOP, ABC, SWAP, BARS } from './constants';
+import { SHIFT, SET_A, SET_B, MODULO, STOP, SET_BY_CODE, SWAP, BARS } from './constants';
 
 // This is the master class,
 // it does require the start code to be included in the string
@@ -23,7 +23,7 @@ class CODE128 extends Barcode {
 		// Remove the start code from the bytes and set its index
 		const startIndex = bytes.shift() - 105;
 		// Get start set by index
-		const startSet = ABC[startIndex];
+		const startSet = SET_BY_CODE[startIndex];
 
 		if (startSet === undefined) {
 			throw new RangeError('The encoding does not start with a start character.');
@@ -67,7 +67,10 @@ class CODE128 extends Barcode {
 	}
 
 	static next(bytes, pos, set) {
-		if (!bytes.length) return { result: '', checksum: 0 };
+		if (!bytes.length) {
+			return { result: '', checksum: 0 };
+		}
+
 		let nextCode, index;
 
 		// Special characters

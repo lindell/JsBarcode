@@ -12,7 +12,7 @@ export const MODULO = 103;
 export const STOP = 106;
 
 // Get set by start code
-export const ABC = {
+export const SET_BY_CODE = {
 	[START_A]: SET_A,
 	[START_B]: SET_B,
 	[START_C]: SET_C,

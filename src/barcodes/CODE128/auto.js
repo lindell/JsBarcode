@@ -10,14 +10,19 @@ function autoSelectFromAB(string, isA){
 	const ranges = isA ? A_CHARS : B_CHARS;
 	const untilC = string.match(new RegExp(`^(${ranges}+?)(([0-9]{2}){2,})([^0-9]|$)`));
 
-	if (untilC) return (
-		untilC[1] +
-		String.fromCharCode(204) +
-		autoSelectFromC(string.substring(untilC[1].length))
-	);
+	if (untilC) {
+		return (
+			untilC[1] +
+			String.fromCharCode(204) +
+			autoSelectFromC(string.substring(untilC[1].length))
+		);
+	}
 
 	const chars = string.match(new RegExp(`^${ranges}+`))[0];
-	if (chars.length === string.length) return string;
+
+	if (chars.length === string.length) {
+		return string;
+	}
 
 	return (
 		chars +
@@ -31,7 +36,10 @@ function autoSelectFromC(string) {
 	const cMatch = matchSetC(string);
 	const length = cMatch.length;
 
-	if (length === string.length) return string;
+	if (length === string.length) {
+		return string;
+	}
+
 	string = string.substring(length);
 
 	// Select A/B depending on the longest match
