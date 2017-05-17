@@ -24,7 +24,7 @@ gulp.task("babel", function () {
 function babelFunc(){
 	return gulp.src("src/**/*")
 		.pipe(babel({
-			presets: ['es2015'],
+			presets: ['es2015', 'stage-0'],
 			plugins: [["transform-es2015-classes", {loose: true}]]
 		}))
 		.pipe(gulp.dest("bin/"));
