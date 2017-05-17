@@ -23,6 +23,7 @@ var SVGRenderer = function () {
 		this.svg = svg;
 		this.encodings = encodings;
 		this.options = options;
+		this.document = options.xmlDocument || document;
 	}
 
 	SVGRenderer.prototype.render = function render() {
@@ -33,9 +34,9 @@ var SVGRenderer = function () {
 			var encoding = this.encodings[i];
 			var encodingOptions = (0, _merge2.default)(this.options, encoding.options);
 
-			var group = createGroup(currentX, encodingOptions.marginTop, this.svg);
+			var group = this.createGroup(currentX, encodingOptions.marginTop, this.svg);
 
-			setGroupOptions(group, encodingOptions);
+			this.setGroupOptions(group, encodingOptions);
 
 			this.drawSvgBarcode(group, encodingOptions, encoding);
 			this.drawSVGText(group, encodingOptions, encoding);
@@ -58,7 +59,7 @@ var SVGRenderer = function () {
 		this.setSvgAttributes(width, maxHeight);
 
 		if (this.options.background) {
-			drawRect(0, 0, width, maxHeight, this.svg).setAttribute("style", "fill:" + this.options.background + ";");
+			this.drawRect(0, 0, width, maxHeight, this.svg).setAttribute("style", "fill:" + this.options.background + ";");
 		}
 	};
 
@@ -81,19 +82,19 @@ var SVGRenderer = function () {
 			if (binary[b] === "1") {
 				barWidth++;
 			} else if (barWidth > 0) {
-				drawRect(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
+				this.drawRect(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
 				barWidth = 0;
 			}
 		}
 
 		// Last draw is needed since the barcode ends with 1
 		if (barWidth > 0) {
-			drawRect(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
+			this.drawRect(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
 		}
 	};
 
 	SVGRenderer.prototype.drawSVGText = function drawSVGText(parent, options, encoding) {
-		var textElem = document.createElementNS(svgns, 'text');
+		var textElem = this.document.createElementNS(svgns, 'text');
 
 		// Draw the text if displayValue is set
 		if (options.displayValue) {
@@ -124,7 +125,7 @@ var SVGRenderer = function () {
 			textElem.setAttribute("x", x);
 			textElem.setAttribute("y", y);
 
-			textElem.appendChild(document.createTextNode(encoding.text));
+			textElem.appendChild(this.document.createTextNode(encoding.text));
 
 			parent.appendChild(textElem);
 		}
@@ -141,37 +142,36 @@ var SVGRenderer = function () {
 		svg.setAttribute("xmlns", svgns);
 		svg.setAttribute("version", "1.1");
 
-		svg.style.transform = "translate(0,0)";
+		svg.setAttribute("style", "transform: translate(0,0)");
+	};
+
+	SVGRenderer.prototype.createGroup = function createGroup(x, y, parent) {
+		var group = this.document.createElementNS(svgns, 'g');
+		group.setAttribute("transform", "translate(" + x + ", " + y + ")");
+
+		parent.appendChild(group);
+
+		return group;
+	};
+
+	SVGRenderer.prototype.setGroupOptions = function setGroupOptions(group, options) {
+		group.setAttribute("style", "fill:" + options.lineColor + ";");
+	};
+
+	SVGRenderer.prototype.drawRect = function drawRect(x, y, width, height, parent) {
+		var rect = this.document.createElementNS(svgns, 'rect');
+
+		rect.setAttribute("x", x);
+		rect.setAttribute("y", y);
+		rect.setAttribute("width", width);
+		rect.setAttribute("height", height);
+
+		parent.appendChild(rect);
+
+		return rect;
 	};
 
 	return SVGRenderer;
 }();
-
-function createGroup(x, y, parent) {
-	var group = document.createElementNS(svgns, 'g');
-
-	group.setAttribute("transform", "translate(" + x + ", " + y + ")");
-
-	parent.appendChild(group);
-
-	return group;
-}
-
-function setGroupOptions(group, options) {
-	group.setAttribute("style", "fill:" + options.lineColor + ";");
-}
-
-function drawRect(x, y, width, height, parent) {
-	var rect = document.createElementNS(svgns, 'rect');
-
-	rect.setAttribute("x", x);
-	rect.setAttribute("y", y);
-	rect.setAttribute("width", width);
-	rect.setAttribute("height", height);
-
-	parent.appendChild(rect);
-
-	return rect;
-}
 
 exports.default = SVGRenderer;

@@ -8,6 +8,8 @@ var _CODE2 = require('./CODE128.js');
 
 var _CODE3 = _interopRequireDefault(_CODE2);
 
+var _constants = require('./constants');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22,11 +24,11 @@ var CODE128B = function (_CODE) {
 	function CODE128B(string, options) {
 		_classCallCheck(this, CODE128B);
 
-		return _possibleConstructorReturn(this, _CODE.call(this, String.fromCharCode(209) + string, options));
+		return _possibleConstructorReturn(this, _CODE.call(this, _constants.B_START_CHAR + string, options));
 	}
 
 	CODE128B.prototype.valid = function valid() {
-		return this.data.search(/^[\x20-\x7F\xC8-\xCF]+$/) !== -1;
+		return new RegExp('^' + _constants.B_CHARS + '+$').test(this.data);
 	};
 
 	return CODE128B;

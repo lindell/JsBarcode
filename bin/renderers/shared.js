@@ -70,12 +70,16 @@ function getMaximumHeightOfEncodings(encodings) {
 
 function messureText(string, options, context) {
 	var ctx;
-	if (typeof context === "undefined") {
+
+	if (context) {
+		ctx = context;
+	} else if (typeof document !== "undefined") {
 		ctx = document.createElement("canvas").getContext("2d");
 	} else {
-		ctx = context;
+		// If the text cannot be messured we will return 0.
+		// This will make some barcode with big text render incorrectly
+		return 0;
 	}
-
 	ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
 
 	// Calculate the width of the encoding

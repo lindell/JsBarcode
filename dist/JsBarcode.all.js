@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 42);
+/******/ 	return __webpack_require__(__webpack_require__.s = 44);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -89,6 +89,65 @@ exports.default = Barcode;
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+"use strict";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _SET_BY_CODE;
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+// constants for internal usage
+var SET_A = exports.SET_A = 0;
+var SET_B = exports.SET_B = 1;
+var SET_C = exports.SET_C = 2;
+
+// Special characters
+var SHIFT = exports.SHIFT = 98;
+var START_A = exports.START_A = 103;
+var START_B = exports.START_B = 104;
+var START_C = exports.START_C = 105;
+var MODULO = exports.MODULO = 103;
+var STOP = exports.STOP = 106;
+
+// Get set by start code
+var SET_BY_CODE = exports.SET_BY_CODE = (_SET_BY_CODE = {}, _defineProperty(_SET_BY_CODE, START_A, SET_A), _defineProperty(_SET_BY_CODE, START_B, SET_B), _defineProperty(_SET_BY_CODE, START_C, SET_C), _SET_BY_CODE);
+
+// Get next set by code
+var SWAP = exports.SWAP = {
+	101: SET_A,
+	100: SET_B,
+	99: SET_C
+};
+
+var A_START_CHAR = exports.A_START_CHAR = String.fromCharCode(208); // START_A + 105
+var B_START_CHAR = exports.B_START_CHAR = String.fromCharCode(209); // START_B + 105
+var C_START_CHAR = exports.C_START_CHAR = String.fromCharCode(210); // START_C + 105
+
+// 128A (Code Set A)
+// ASCII characters 00 to 95 (0–9, A–Z and control codes), special characters, and FNC 1–4
+var A_CHARS = exports.A_CHARS = "[\x00-\x5F\xC8-\xCF]";
+
+// 128B (Code Set B)
+// ASCII characters 32 to 127 (0–9, A–Z, a–z), special characters, and FNC 1–4
+var B_CHARS = exports.B_CHARS = "[\x20-\x7F\xC8-\xCF]";
+
+// 128C (Code Set C)
+// 00–99 (encodes two digits with a single code point) and FNC1
+var C_CHARS = exports.C_CHARS = "(\xCF*[0-9]{2}\xCF*)";
+
+// CODE128 includes 107 symbols:
+// 103 data symbols, 3 start symbols (A, B and C), and 1 stop symbol (the last one)
+// Each symbol consist of three black bars (1) and three white spaces (0).
+var BARS = exports.BARS = [11011001100, 11001101100, 11001100110, 10010011000, 10010001100, 10001001100, 10011001000, 10011000100, 10001100100, 11001001000, 11001000100, 11000100100, 10110011100, 10011011100, 10011001110, 10111001100, 10011101100, 10011100110, 11001110010, 11001011100, 11001001110, 11011100100, 11001110100, 11101101110, 11101001100, 11100101100, 11100100110, 11101100100, 11100110100, 11100110010, 11011011000, 11011000110, 11000110110, 10100011000, 10001011000, 10001000110, 10110001000, 10001101000, 10001100010, 11010001000, 11000101000, 11000100010, 10110111000, 10110001110, 10001101110, 10111011000, 10111000110, 10001110110, 11101110110, 11010001110, 11000101110, 11011101000, 11011100010, 11011101110, 11101011000, 11101000110, 11100010110, 11101101000, 11101100010, 11100011010, 11101111010, 11001000010, 11110001010, 10100110000, 10100001100, 10010110000, 10010000110, 10000101100, 10000100110, 10110010000, 10110000100, 10011010000, 10011000010, 10000110100, 10000110010, 11000010010, 11001010000, 11110111010, 11000010100, 10001111010, 10100111100, 10010111100, 10010011110, 10111100100, 10011110100, 10011110010, 11110100100, 11110010100, 11110010010, 11011011110, 11011110110, 11110110110, 10101111000, 10100011110, 10001011110, 10111101000, 10111100010, 11110101000, 11110100010, 10111011110, 10111101110, 11101011110, 11110101110, 11010000100, 11010010000, 11010011100, 1100011101011];
+
+/***/ },
+/* 2 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -154,7 +213,7 @@ var EANencoder = function () {
 exports.default = EANencoder;
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -228,7 +287,7 @@ function addZeroes(number, n) {
 exports.default = MSI;
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -257,11 +316,11 @@ function merge(old, replaceObj) {
 }
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -271,248 +330,141 @@ var _Barcode2 = __webpack_require__(0);
 
 var _Barcode3 = _interopRequireDefault(_Barcode2);
 
+var _constants = __webpack_require__(1);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // This is the master class, it does require the start code to be
-// included in the string
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+// This is the master class,
+// it does require the start code to be included in the string
 var CODE128 = function (_Barcode) {
 	_inherits(CODE128, _Barcode);
 
 	function CODE128(data, options) {
 		_classCallCheck(this, CODE128);
 
-		// Fill the bytes variable with the ascii codes of string
+		// Get array of ascii codes from data
 		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data.substring(1), options));
 
-		_this.bytes = [];
-		for (var i = 0; i < data.length; ++i) {
-			_this.bytes.push(data.charCodeAt(i));
-		}
-
-		// Data for each character, the last characters will not be encoded but are used for error correction
-		// Numbers encode to (n + 1000) -> binary; 740 -> (740 + 1000).toString(2) -> "11011001100"
-		_this.encodings = [// + 1000
-		740, 644, 638, 176, 164, 100, 224, 220, 124, 608, 604, 572, 436, 244, 230, 484, 260, 254, 650, 628, 614, 764, 652, 902, 868, 836, 830, 892, 844, 842, 752, 734, 590, 304, 112, 94, 416, 128, 122, 672, 576, 570, 464, 422, 134, 496, 478, 142, 910, 678, 582, 768, 762, 774, 880, 862, 814, 896, 890, 818, 914, 602, 930, 328, 292, 200, 158, 68, 62, 424, 412, 232, 218, 76, 74, 554, 616, 978, 556, 146, 340, 212, 182, 508, 268, 266, 956, 940, 938, 758, 782, 974, 400, 310, 118, 512, 506, 960, 954, 502, 518, 886, 966, /* Start codes */668, 680, 692, 5379];
+		_this.bytes = data.split('').map(function (char) {
+			return char.charCodeAt(0);
+		});
 		return _this;
 	}
+
+	CODE128.prototype.valid = function valid() {
+		// ASCII value ranges 0-127, 200-211
+		return (/^[\x00-\x7F\xC8-\xD3]+$/.test(this.data)
+		);
+	};
 
 	// The public encoding function
 
 
 	CODE128.prototype.encode = function encode() {
-		var encodingResult;
 		var bytes = this.bytes;
-		// Remove the startcode from the bytes and set its index
+		// Remove the start code from the bytes and set its index
 		var startIndex = bytes.shift() - 105;
+		// Get start set by index
+		var startSet = _constants.SET_BY_CODE[startIndex];
 
-		// Start encode with the right type
-		if (startIndex === 103) {
-			encodingResult = this.nextA(bytes, 1);
-		} else if (startIndex === 104) {
-			encodingResult = this.nextB(bytes, 1);
-		} else if (startIndex === 105) {
-			encodingResult = this.nextC(bytes, 1);
-		} else {
-			throw new InvalidStartCharacterException();
+		if (startSet === undefined) {
+			throw new RangeError('The encoding does not start with a start character.');
 		}
 
+		// Start encode with the right type
+		var encodingResult = CODE128.next(bytes, 1, startSet);
+
 		return {
-			text: this.text == this.data ? this.text.replace(/[^\x20-\x7E]/g, "") : this.text,
+			text: this.text === this.data ? this.text.replace(/[^\x20-\x7E]/g, '') : this.text,
 			data:
 			// Add the start bits
-			this.getEncoding(startIndex) +
+			CODE128.getBar(startIndex) +
 			// Add the encoded bits
 			encodingResult.result +
 			// Add the checksum
-			this.getEncoding((encodingResult.checksum + startIndex) % 103) +
+			CODE128.getBar((encodingResult.checksum + startIndex) % _constants.MODULO) +
 			// Add the end bits
-			this.getEncoding(106)
+			CODE128.getBar(_constants.STOP)
 		};
 	};
 
-	CODE128.prototype.getEncoding = function getEncoding(n) {
-		return this.encodings[n] ? (this.encodings[n] + 1000).toString(2) : '';
+	// Get a bar symbol by index
+
+
+	CODE128.getBar = function getBar(index) {
+		return _constants.BARS[index] ? _constants.BARS[index].toString() : '';
 	};
 
-	// Use the regexp variable for validation
+	// Correct an index by a set and shift it from the bytes array
 
 
-	CODE128.prototype.valid = function valid() {
-		// ASCII value ranges 0-127, 200-211
-		return this.data.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1;
+	CODE128.correctIndex = function correctIndex(bytes, set) {
+		if (set === _constants.SET_A) {
+			var charCode = bytes.shift();
+			return charCode < 32 ? charCode + 64 : charCode - 32;
+		} else if (set === _constants.SET_B) {
+			return bytes.shift() - 32;
+		} else {
+			return (bytes.shift() - 48) * 10 + bytes.shift() - 48;
+		}
 	};
 
-	CODE128.prototype.nextA = function nextA(bytes, depth) {
-		if (bytes.length <= 0) {
-			return { "result": "", "checksum": 0 };
+	CODE128.next = function next(bytes, pos, set) {
+		if (!bytes.length) {
+			return { result: '', checksum: 0 };
 		}
 
-		var next, index;
+		var nextCode = void 0,
+		    index = void 0;
 
 		// Special characters
 		if (bytes[0] >= 200) {
-			index = bytes[0] - 105;
+			index = bytes.shift() - 105;
+			var nextSet = _constants.SWAP[index];
 
-			// Remove first element
-			bytes.shift();
-
-			// Swap to CODE128C
-			if (index === 99) {
-				next = this.nextC(bytes, depth + 1);
+			// Swap to other set
+			if (nextSet !== undefined) {
+				nextCode = CODE128.next(bytes, pos + 1, nextSet);
 			}
-			// Swap to CODE128B
-			else if (index === 100) {
-					next = this.nextB(bytes, depth + 1);
-				}
-				// Shift
-				else if (index === 98) {
+			// Continue on current set but encode a special character
+			else {
+					// Shift
+					if ((set === _constants.SET_A || set === _constants.SET_B) && index === _constants.SHIFT) {
 						// Convert the next character so that is encoded correctly
-						bytes[0] = bytes[0] > 95 ? bytes[0] - 96 : bytes[0];
-						next = this.nextA(bytes, depth + 1);
+						bytes[0] = set === _constants.SET_A ? bytes[0] > 95 ? bytes[0] - 96 : bytes[0] : bytes[0] < 32 ? bytes[0] + 96 : bytes[0];
 					}
-					// Continue on CODE128A but encode a special character
-					else {
-							next = this.nextA(bytes, depth + 1);
-						}
+					nextCode = CODE128.next(bytes, pos + 1, set);
+				}
 		}
-		// Continue encoding of CODE128A
+		// Continue encoding
 		else {
-				var charCode = bytes[0];
-				index = charCode < 32 ? charCode + 64 : charCode - 32;
-
-				// Remove first element
-				bytes.shift();
-
-				next = this.nextA(bytes, depth + 1);
+				index = CODE128.correctIndex(bytes, set);
+				nextCode = CODE128.next(bytes, pos + 1, set);
 			}
 
 		// Get the correct binary encoding and calculate the weight
-		var enc = this.getEncoding(index);
-		var weight = index * depth;
+		var enc = CODE128.getBar(index);
+		var weight = index * pos;
 
 		return {
-			"result": enc + next.result,
-			"checksum": weight + next.checksum
+			result: enc + nextCode.result,
+			checksum: weight + nextCode.checksum
 		};
-	};
-
-	CODE128.prototype.nextB = function nextB(bytes, depth) {
-		if (bytes.length <= 0) {
-			return { "result": "", "checksum": 0 };
-		}
-
-		var next, index;
-
-		// Special characters
-		if (bytes[0] >= 200) {
-			index = bytes[0] - 105;
-
-			// Remove first element
-			bytes.shift();
-
-			// Swap to CODE128C
-			if (index === 99) {
-				next = this.nextC(bytes, depth + 1);
-			}
-			// Swap to CODE128A
-			else if (index === 101) {
-					next = this.nextA(bytes, depth + 1);
-				}
-				// Shift
-				else if (index === 98) {
-						// Convert the next character so that is encoded correctly
-						bytes[0] = bytes[0] < 32 ? bytes[0] + 96 : bytes[0];
-						next = this.nextB(bytes, depth + 1);
-					}
-					// Continue on CODE128B but encode a special character
-					else {
-							next = this.nextB(bytes, depth + 1);
-						}
-		}
-		// Continue encoding of CODE128B
-		else {
-				index = bytes[0] - 32;
-				bytes.shift();
-				next = this.nextB(bytes, depth + 1);
-			}
-
-		// Get the correct binary encoding and calculate the weight
-		var enc = this.getEncoding(index);
-		var weight = index * depth;
-
-		return { "result": enc + next.result, "checksum": weight + next.checksum };
-	};
-
-	CODE128.prototype.nextC = function nextC(bytes, depth) {
-		if (bytes.length <= 0) {
-			return { "result": "", "checksum": 0 };
-		}
-
-		var next, index;
-
-		// Special characters
-		if (bytes[0] >= 200) {
-			index = bytes[0] - 105;
-
-			// Remove first element
-			bytes.shift();
-
-			// Swap to CODE128B
-			if (index === 100) {
-				next = this.nextB(bytes, depth + 1);
-			}
-			// Swap to CODE128A
-			else if (index === 101) {
-					next = this.nextA(bytes, depth + 1);
-				}
-				// Continue on CODE128C but encode a special character
-				else {
-						next = this.nextC(bytes, depth + 1);
-					}
-		}
-		// Continue encoding of CODE128C
-		else {
-				index = (bytes[0] - 48) * 10 + bytes[1] - 48;
-				bytes.shift();
-				bytes.shift();
-				next = this.nextC(bytes, depth + 1);
-			}
-
-		// Get the correct binary encoding and calculate the weight
-		var enc = this.getEncoding(index);
-		var weight = index * depth;
-
-		return { "result": enc + next.result, "checksum": weight + next.checksum };
 	};
 
 	return CODE128;
 }(_Barcode3.default);
 
-var InvalidStartCharacterException = function (_Error) {
-	_inherits(InvalidStartCharacterException, _Error);
-
-	function InvalidStartCharacterException() {
-		_classCallCheck(this, InvalidStartCharacterException);
-
-		var _this2 = _possibleConstructorReturn(this, _Error.call(this));
-
-		_this2.name = "InvalidStartCharacterException";
-		_this2.message = "The encoding does not start with a start character.";
-		return _this2;
-	}
-
-	return InvalidStartCharacterException;
-}(Error);
-
 exports.default = CODE128;
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -547,7 +499,7 @@ function mod11(number) {
 }
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -620,7 +572,7 @@ exports.InvalidElementException = InvalidElementException;
 exports.NoElementException = NoElementException;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -653,7 +605,7 @@ function optionsFromStrings(options) {
 }
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -687,7 +639,7 @@ var defaults = {
 exports.default = defaults;
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -698,7 +650,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getTotalWidthOfEncodings = exports.calculateEncodingAttributes = exports.getBarcodePadding = exports.getEncodingHeight = exports.getMaximumHeightOfEncodings = undefined;
 
-var _merge = __webpack_require__(3);
+var _merge = __webpack_require__(4);
 
 var _merge2 = _interopRequireDefault(_merge);
 
@@ -763,12 +715,16 @@ function getMaximumHeightOfEncodings(encodings) {
 
 function messureText(string, options, context) {
 	var ctx;
-	if (typeof context === "undefined") {
+
+	if (context) {
+		ctx = context;
+	} else if (typeof document !== "undefined") {
 		ctx = document.createElement("canvas").getContext("2d");
 	} else {
-		ctx = context;
+		// If the text cannot be messured we will return 0.
+		// This will make some barcode with big text render incorrectly
+		return 0;
 	}
-
 	ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
 
 	// Calculate the width of the encoding
@@ -784,7 +740,7 @@ exports.calculateEncodingAttributes = calculateEncodingAttributes;
 exports.getTotalWidthOfEncodings = getTotalWidthOfEncodings;
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -794,23 +750,23 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _CODE = __webpack_require__(20);
+var _CODE = __webpack_require__(22);
 
-var _CODE2 = __webpack_require__(19);
+var _CODE2 = __webpack_require__(21);
 
-var _EAN_UPC = __webpack_require__(26);
+var _EAN_UPC = __webpack_require__(28);
 
-var _ITF = __webpack_require__(29);
+var _ITF = __webpack_require__(31);
 
-var _ITF2 = __webpack_require__(28);
+var _ITF2 = __webpack_require__(30);
 
-var _MSI = __webpack_require__(34);
+var _MSI = __webpack_require__(36);
 
-var _pharmacode = __webpack_require__(36);
+var _pharmacode = __webpack_require__(38);
 
-var _codabar = __webpack_require__(35);
+var _codabar = __webpack_require__(37);
 
-var _GenericBarcode = __webpack_require__(27);
+var _GenericBarcode = __webpack_require__(29);
 
 exports.default = {
 	CODE39: _CODE.CODE39,
@@ -825,7 +781,7 @@ exports.default = {
 };
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -879,7 +835,7 @@ var ErrorHandler = function () {
 exports.default = ErrorHandler;
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -902,7 +858,7 @@ function fixOptions(options) {
 }
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -916,15 +872,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 /* global HTMLCanvasElement */
 /* global SVGElement */
 
-var _getOptionsFromElement = __webpack_require__(37);
+var _getOptionsFromElement = __webpack_require__(39);
 
 var _getOptionsFromElement2 = _interopRequireDefault(_getOptionsFromElement);
 
-var _renderers = __webpack_require__(39);
+var _renderers = __webpack_require__(41);
 
 var _renderers2 = _interopRequireDefault(_renderers);
 
-var _exceptions = __webpack_require__(6);
+var _exceptions = __webpack_require__(7);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -957,7 +913,7 @@ function getRenderProperties(element) {
 				return newCanvasRenderProperties(element);
 			}
 			// If SVG
-			else if (typeof SVGElement !== 'undefined' && element instanceof SVGElement) {
+			else if (element && element.nodeName === 'svg' || typeof SVGElement !== 'undefined' && element instanceof SVGElement) {
 					return {
 						element: element,
 						options: (0, _getOptionsFromElement2.default)(element),
@@ -1016,7 +972,7 @@ function newCanvasRenderProperties(imgElement) {
 exports.default = getRenderProperties;
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -1049,7 +1005,7 @@ function linearizeEncodings(encodings) {
 }
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1059,9 +1015,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _CODE2 = __webpack_require__(4);
+var _CODE2 = __webpack_require__(5);
 
 var _CODE3 = _interopRequireDefault(_CODE2);
+
+var _constants = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1077,11 +1035,11 @@ var CODE128A = function (_CODE) {
 	function CODE128A(string, options) {
 		_classCallCheck(this, CODE128A);
 
-		return _possibleConstructorReturn(this, _CODE.call(this, String.fromCharCode(208) + string, options));
+		return _possibleConstructorReturn(this, _CODE.call(this, _constants.A_START_CHAR + string, options));
 	}
 
 	CODE128A.prototype.valid = function valid() {
-		return this.data.search(/^[\x00-\x5F\xC8-\xCF]+$/) !== -1;
+		return new RegExp('^' + _constants.A_CHARS + '+$').test(this.data);
 	};
 
 	return CODE128A;
@@ -1090,7 +1048,7 @@ var CODE128A = function (_CODE) {
 exports.default = CODE128A;
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1100,9 +1058,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _CODE2 = __webpack_require__(4);
+var _CODE2 = __webpack_require__(5);
 
 var _CODE3 = _interopRequireDefault(_CODE2);
+
+var _constants = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1118,11 +1078,11 @@ var CODE128B = function (_CODE) {
 	function CODE128B(string, options) {
 		_classCallCheck(this, CODE128B);
 
-		return _possibleConstructorReturn(this, _CODE.call(this, String.fromCharCode(209) + string, options));
+		return _possibleConstructorReturn(this, _CODE.call(this, _constants.B_START_CHAR + string, options));
 	}
 
 	CODE128B.prototype.valid = function valid() {
-		return this.data.search(/^[\x20-\x7F\xC8-\xCF]+$/) !== -1;
+		return new RegExp('^' + _constants.B_CHARS + '+$').test(this.data);
 	};
 
 	return CODE128B;
@@ -1131,7 +1091,7 @@ var CODE128B = function (_CODE) {
 exports.default = CODE128B;
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1141,9 +1101,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _CODE2 = __webpack_require__(4);
+var _CODE2 = __webpack_require__(5);
 
 var _CODE3 = _interopRequireDefault(_CODE2);
+
+var _constants = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1159,11 +1121,11 @@ var CODE128C = function (_CODE) {
 	function CODE128C(string, options) {
 		_classCallCheck(this, CODE128C);
 
-		return _possibleConstructorReturn(this, _CODE.call(this, String.fromCharCode(210) + string, options));
+		return _possibleConstructorReturn(this, _CODE.call(this, _constants.C_START_CHAR + string, options));
 	}
 
 	CODE128C.prototype.valid = function valid() {
-		return this.data.search(/^(\xCF*[0-9]{2}\xCF*)+$/) !== -1;
+		return new RegExp('^' + _constants.C_CHARS + '+$').test(this.data);
 	};
 
 	return CODE128C;
@@ -1172,7 +1134,7 @@ var CODE128C = function (_CODE) {
 exports.default = CODE128C;
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1182,9 +1144,13 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _CODE2 = __webpack_require__(4);
+var _CODE2 = __webpack_require__(5);
 
 var _CODE3 = _interopRequireDefault(_CODE2);
+
+var _auto = __webpack_require__(20);
+
+var _auto2 = _interopRequireDefault(_auto);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1201,8 +1167,8 @@ var CODE128AUTO = function (_CODE) {
 		_classCallCheck(this, CODE128AUTO);
 
 		// ASCII value ranges 0-127, 200-211
-		if (data.search(/^[\x00-\x7F\xC8-\xD3]+$/) !== -1) {
-			var _this = _possibleConstructorReturn(this, _CODE.call(this, autoSelectModes(data), options));
+		if (/^[\x00-\x7F\xC8-\xD3]+$/.test(data)) {
+			var _this = _possibleConstructorReturn(this, _CODE.call(this, (0, _auto2.default)(data), options));
 		} else {
 			var _this = _possibleConstructorReturn(this, _CODE.call(this, data, options));
 		}
@@ -1212,65 +1178,53 @@ var CODE128AUTO = function (_CODE) {
 	return CODE128AUTO;
 }(_CODE3.default);
 
-function autoSelectModes(string) {
-	// ASCII ranges 0-98 and 200-207 (FUNCs and SHIFTs)
-	var aLength = string.match(/^[\x00-\x5F\xC8-\xCF]*/)[0].length;
-	// ASCII ranges 32-127 and 200-207 (FUNCs and SHIFTs)
-	var bLength = string.match(/^[\x20-\x7F\xC8-\xCF]*/)[0].length;
-	// Number pairs or [FNC1]
-	var cLength = string.match(/^(\xCF*[0-9]{2}\xCF*)*/)[0].length;
+exports.default = CODE128AUTO;
 
-	var newString;
-	// Select CODE128C if the string start with enough digits
-	if (cLength >= 2) {
-		newString = String.fromCharCode(210) + autoSelectFromC(string);
-	}
-	// Select A/C depending on the longest match
-	else if (aLength > bLength) {
-			newString = String.fromCharCode(208) + autoSelectFromA(string);
-		} else {
-			newString = String.fromCharCode(209) + autoSelectFromB(string);
-		}
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
 
-	newString = newString.replace(/[\xCD\xCE]([^])[\xCD\xCE]/, function (match, char) {
-		return String.fromCharCode(203) + char;
-	});
+"use strict";
+'use strict';
 
-	return newString;
-}
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-function autoSelectFromA(string) {
-	var untilC = string.match(/^([\x00-\x5F\xC8-\xCF]+?)(([0-9]{2}){2,})([^0-9]|$)/);
+var _constants = __webpack_require__(1);
 
-	if (untilC) {
-		return untilC[1] + String.fromCharCode(204) + autoSelectFromC(string.substring(untilC[1].length));
-	}
+// Match Set functions
+var matchSetALength = function matchSetALength(string) {
+	return string.match(new RegExp('^' + _constants.A_CHARS + '*'))[0].length;
+};
+var matchSetBLength = function matchSetBLength(string) {
+	return string.match(new RegExp('^' + _constants.B_CHARS + '*'))[0].length;
+};
+var matchSetC = function matchSetC(string) {
+	return string.match(new RegExp('^' + _constants.C_CHARS + '*'))[0];
+};
 
-	var aChars = string.match(/^[\x00-\x5F\xC8-\xCF]+/);
-	if (aChars[0].length === string.length) {
-		return string;
-	}
-
-	return aChars[0] + String.fromCharCode(205) + autoSelectFromB(string.substring(aChars[0].length));
-}
-
-function autoSelectFromB(string) {
-	var untilC = string.match(/^([\x20-\x7F\xC8-\xCF]+?)(([0-9]{2}){2,})([^0-9]|$)/);
+// CODE128A or CODE128B
+function autoSelectFromAB(string, isA) {
+	var ranges = isA ? _constants.A_CHARS : _constants.B_CHARS;
+	var untilC = string.match(new RegExp('^(' + ranges + '+?)(([0-9]{2}){2,})([^0-9]|$)'));
 
 	if (untilC) {
 		return untilC[1] + String.fromCharCode(204) + autoSelectFromC(string.substring(untilC[1].length));
 	}
 
-	var bChars = string.match(/^[\x20-\x7F\xC8-\xCF]+/);
-	if (bChars[0].length === string.length) {
+	var chars = string.match(new RegExp('^' + ranges + '+'))[0];
+
+	if (chars.length === string.length) {
 		return string;
 	}
 
-	return bChars[0] + String.fromCharCode(206) + autoSelectFromA(string.substring(bChars[0].length));
+	return chars + String.fromCharCode(isA ? 205 : 206) + autoSelectFromAB(string.substring(chars.length), !isA);
 }
 
+// CODE128C
 function autoSelectFromC(string) {
-	var cMatch = string.match(/^(\xCF*[0-9]{2}\xCF*)+/)[0];
+	var cMatch = matchSetC(string);
 	var length = cMatch.length;
 
 	if (length === string.length) {
@@ -1280,19 +1234,33 @@ function autoSelectFromC(string) {
 	string = string.substring(length);
 
 	// Select A/B depending on the longest match
-	var aLength = string.match(/^[\x00-\x5F\xC8-\xCF]*/)[0].length;
-	var bLength = string.match(/^[\x20-\x7F\xC8-\xCF]*/)[0].length;
-	if (aLength >= bLength) {
-		return cMatch + String.fromCharCode(206) + autoSelectFromA(string);
-	} else {
-		return cMatch + String.fromCharCode(205) + autoSelectFromB(string);
-	}
+	var isA = matchSetALength(string) >= matchSetBLength(string);
+	return cMatch + String.fromCharCode(isA ? 206 : 205) + autoSelectFromAB(string, isA);
 }
 
-exports.default = CODE128AUTO;
+// Detect Code Set (A, B or C) and format the string
+
+exports.default = function (string) {
+	var newString = void 0;
+	var cLength = matchSetC(string).length;
+
+	// Select 128C if the string start with enough digits
+	if (cLength >= 2) {
+		newString = _constants.C_START_CHAR + autoSelectFromC(string);
+	} else {
+		// Select A/B depending on the longest match
+		var isA = matchSetALength(string) > matchSetBLength(string);
+		newString = (isA ? _constants.A_START_CHAR : _constants.B_START_CHAR) + autoSelectFromAB(string, isA);
+	}
+
+	return newString.replace(/[\xCD\xCE]([^])[\xCD\xCE]/, // Any sequence between 205 and 206 characters
+	function (match, char) {
+		return String.fromCharCode(203) + char;
+	});
+};
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1303,19 +1271,19 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CODE128C = exports.CODE128B = exports.CODE128A = exports.CODE128 = undefined;
 
-var _CODE128_AUTO = __webpack_require__(18);
+var _CODE128_AUTO = __webpack_require__(19);
 
 var _CODE128_AUTO2 = _interopRequireDefault(_CODE128_AUTO);
 
-var _CODE128A = __webpack_require__(15);
+var _CODE128A = __webpack_require__(16);
 
 var _CODE128A2 = _interopRequireDefault(_CODE128A);
 
-var _CODE128B = __webpack_require__(16);
+var _CODE128B = __webpack_require__(17);
 
 var _CODE128B2 = _interopRequireDefault(_CODE128B);
 
-var _CODE128C = __webpack_require__(17);
+var _CODE128C = __webpack_require__(18);
 
 var _CODE128C2 = _interopRequireDefault(_CODE128C);
 
@@ -1327,7 +1295,7 @@ exports.CODE128B = _CODE128B2.default;
 exports.CODE128C = _CODE128C2.default;
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1432,7 +1400,7 @@ function mod43checksum(data) {
 exports.CODE39 = CODE39;
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1442,7 +1410,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _ean_encoder = __webpack_require__(1);
+var _ean_encoder = __webpack_require__(2);
 
 var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
@@ -1616,7 +1584,7 @@ function checksum(number) {
 exports.default = EAN13;
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1626,7 +1594,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _ean_encoder = __webpack_require__(1);
+var _ean_encoder = __webpack_require__(2);
 
 var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
@@ -1683,7 +1651,7 @@ var EAN2 = function (_Barcode) {
 exports.default = EAN2;
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1693,7 +1661,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _ean_encoder = __webpack_require__(1);
+var _ean_encoder = __webpack_require__(2);
 
 var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
@@ -1761,7 +1729,7 @@ var EAN5 = function (_Barcode) {
 exports.default = EAN5;
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1771,7 +1739,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _ean_encoder = __webpack_require__(1);
+var _ean_encoder = __webpack_require__(2);
 
 var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
@@ -1863,7 +1831,7 @@ function checksum(number) {
 exports.default = EAN8;
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1873,7 +1841,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _ean_encoder = __webpack_require__(1);
+var _ean_encoder = __webpack_require__(2);
 
 var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
@@ -2026,7 +1994,7 @@ function checksum(number) {
 exports.default = UPC;
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2037,23 +2005,23 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.UPC = exports.EAN2 = exports.EAN5 = exports.EAN8 = exports.EAN13 = undefined;
 
-var _EAN = __webpack_require__(21);
+var _EAN = __webpack_require__(23);
 
 var _EAN2 = _interopRequireDefault(_EAN);
 
-var _EAN3 = __webpack_require__(24);
+var _EAN3 = __webpack_require__(26);
 
 var _EAN4 = _interopRequireDefault(_EAN3);
 
-var _EAN5 = __webpack_require__(23);
+var _EAN5 = __webpack_require__(25);
 
 var _EAN6 = _interopRequireDefault(_EAN5);
 
-var _EAN7 = __webpack_require__(22);
+var _EAN7 = __webpack_require__(24);
 
 var _EAN8 = _interopRequireDefault(_EAN7);
 
-var _UPC = __webpack_require__(25);
+var _UPC = __webpack_require__(27);
 
 var _UPC2 = _interopRequireDefault(_UPC);
 
@@ -2066,7 +2034,7 @@ exports.EAN2 = _EAN8.default;
 exports.UPC = _UPC2.default;
 
 /***/ },
-/* 27 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2121,7 +2089,7 @@ var GenericBarcode = function (_Barcode) {
 exports.GenericBarcode = GenericBarcode;
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2213,7 +2181,7 @@ var ITF = function (_Barcode) {
 exports.ITF = ITF;
 
 /***/ },
-/* 29 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2322,7 +2290,7 @@ function checksum(data) {
 exports.ITF14 = ITF14;
 
 /***/ },
-/* 30 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2332,11 +2300,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _MSI2 = __webpack_require__(2);
+var _MSI2 = __webpack_require__(3);
 
 var _MSI3 = _interopRequireDefault(_MSI2);
 
-var _checksums = __webpack_require__(5);
+var _checksums = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2361,7 +2329,7 @@ var MSI10 = function (_MSI) {
 exports.default = MSI10;
 
 /***/ },
-/* 31 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2371,11 +2339,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _MSI2 = __webpack_require__(2);
+var _MSI2 = __webpack_require__(3);
 
 var _MSI3 = _interopRequireDefault(_MSI2);
 
-var _checksums = __webpack_require__(5);
+var _checksums = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2402,7 +2370,7 @@ var MSI1010 = function (_MSI) {
 exports.default = MSI1010;
 
 /***/ },
-/* 32 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2412,11 +2380,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _MSI2 = __webpack_require__(2);
+var _MSI2 = __webpack_require__(3);
 
 var _MSI3 = _interopRequireDefault(_MSI2);
 
-var _checksums = __webpack_require__(5);
+var _checksums = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2441,7 +2409,7 @@ var MSI11 = function (_MSI) {
 exports.default = MSI11;
 
 /***/ },
-/* 33 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2451,11 +2419,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _MSI2 = __webpack_require__(2);
+var _MSI2 = __webpack_require__(3);
 
 var _MSI3 = _interopRequireDefault(_MSI2);
 
-var _checksums = __webpack_require__(5);
+var _checksums = __webpack_require__(6);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2482,7 +2450,7 @@ var MSI1110 = function (_MSI) {
 exports.default = MSI1110;
 
 /***/ },
-/* 34 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2493,23 +2461,23 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.MSI1110 = exports.MSI1010 = exports.MSI11 = exports.MSI10 = exports.MSI = undefined;
 
-var _MSI = __webpack_require__(2);
+var _MSI = __webpack_require__(3);
 
 var _MSI2 = _interopRequireDefault(_MSI);
 
-var _MSI3 = __webpack_require__(30);
+var _MSI3 = __webpack_require__(32);
 
 var _MSI4 = _interopRequireDefault(_MSI3);
 
-var _MSI5 = __webpack_require__(32);
+var _MSI5 = __webpack_require__(34);
 
 var _MSI6 = _interopRequireDefault(_MSI5);
 
-var _MSI7 = __webpack_require__(31);
+var _MSI7 = __webpack_require__(33);
 
 var _MSI8 = _interopRequireDefault(_MSI7);
 
-var _MSI9 = __webpack_require__(33);
+var _MSI9 = __webpack_require__(35);
 
 var _MSI10 = _interopRequireDefault(_MSI9);
 
@@ -2522,7 +2490,7 @@ exports.MSI1010 = _MSI8.default;
 exports.MSI1110 = _MSI10.default;
 
 /***/ },
-/* 35 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2613,7 +2581,7 @@ var codabar = function (_Barcode) {
 exports.codabar = codabar;
 
 /***/ },
-/* 36 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2686,7 +2654,7 @@ var pharmacode = function (_Barcode) {
 exports.pharmacode = pharmacode;
 
 /***/ },
-/* 37 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2696,11 +2664,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _optionsFromStrings = __webpack_require__(7);
+var _optionsFromStrings = __webpack_require__(8);
 
 var _optionsFromStrings2 = _interopRequireDefault(_optionsFromStrings);
 
-var _defaults = __webpack_require__(8);
+var _defaults = __webpack_require__(9);
 
 var _defaults2 = _interopRequireDefault(_defaults);
 
@@ -2733,7 +2701,7 @@ function getOptionsFromElement(element) {
 exports.default = getOptionsFromElement;
 
 /***/ },
-/* 38 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2743,11 +2711,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _merge = __webpack_require__(3);
+var _merge = __webpack_require__(4);
 
 var _merge2 = _interopRequireDefault(_merge);
 
-var _shared = __webpack_require__(9);
+var _shared = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2887,7 +2855,7 @@ var CanvasRenderer = function () {
 exports.default = CanvasRenderer;
 
 /***/ },
-/* 39 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2897,15 +2865,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _canvas = __webpack_require__(38);
+var _canvas = __webpack_require__(40);
 
 var _canvas2 = _interopRequireDefault(_canvas);
 
-var _svg = __webpack_require__(41);
+var _svg = __webpack_require__(43);
 
 var _svg2 = _interopRequireDefault(_svg);
 
-var _object = __webpack_require__(40);
+var _object = __webpack_require__(42);
 
 var _object2 = _interopRequireDefault(_object);
 
@@ -2914,7 +2882,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = { CanvasRenderer: _canvas2.default, SVGRenderer: _svg2.default, ObjectRenderer: _object2.default };
 
 /***/ },
-/* 40 */
+/* 42 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -2945,7 +2913,7 @@ var ObjectRenderer = function () {
 exports.default = ObjectRenderer;
 
 /***/ },
-/* 41 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2955,11 +2923,11 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _merge = __webpack_require__(3);
+var _merge = __webpack_require__(4);
 
 var _merge2 = _interopRequireDefault(_merge);
 
-var _shared = __webpack_require__(9);
+var _shared = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2974,6 +2942,7 @@ var SVGRenderer = function () {
 		this.svg = svg;
 		this.encodings = encodings;
 		this.options = options;
+		this.document = options.xmlDocument || document;
 	}
 
 	SVGRenderer.prototype.render = function render() {
@@ -2984,9 +2953,9 @@ var SVGRenderer = function () {
 			var encoding = this.encodings[i];
 			var encodingOptions = (0, _merge2.default)(this.options, encoding.options);
 
-			var group = createGroup(currentX, encodingOptions.marginTop, this.svg);
+			var group = this.createGroup(currentX, encodingOptions.marginTop, this.svg);
 
-			setGroupOptions(group, encodingOptions);
+			this.setGroupOptions(group, encodingOptions);
 
 			this.drawSvgBarcode(group, encodingOptions, encoding);
 			this.drawSVGText(group, encodingOptions, encoding);
@@ -3009,7 +2978,7 @@ var SVGRenderer = function () {
 		this.setSvgAttributes(width, maxHeight);
 
 		if (this.options.background) {
-			drawRect(0, 0, width, maxHeight, this.svg).setAttribute("style", "fill:" + this.options.background + ";");
+			this.drawRect(0, 0, width, maxHeight, this.svg).setAttribute("style", "fill:" + this.options.background + ";");
 		}
 	};
 
@@ -3032,19 +3001,19 @@ var SVGRenderer = function () {
 			if (binary[b] === "1") {
 				barWidth++;
 			} else if (barWidth > 0) {
-				drawRect(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
+				this.drawRect(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
 				barWidth = 0;
 			}
 		}
 
 		// Last draw is needed since the barcode ends with 1
 		if (barWidth > 0) {
-			drawRect(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
+			this.drawRect(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
 		}
 	};
 
 	SVGRenderer.prototype.drawSVGText = function drawSVGText(parent, options, encoding) {
-		var textElem = document.createElementNS(svgns, 'text');
+		var textElem = this.document.createElementNS(svgns, 'text');
 
 		// Draw the text if displayValue is set
 		if (options.displayValue) {
@@ -3075,7 +3044,7 @@ var SVGRenderer = function () {
 			textElem.setAttribute("x", x);
 			textElem.setAttribute("y", y);
 
-			textElem.appendChild(document.createTextNode(encoding.text));
+			textElem.appendChild(this.document.createTextNode(encoding.text));
 
 			parent.appendChild(textElem);
 		}
@@ -3092,79 +3061,78 @@ var SVGRenderer = function () {
 		svg.setAttribute("xmlns", svgns);
 		svg.setAttribute("version", "1.1");
 
-		svg.style.transform = "translate(0,0)";
+		svg.setAttribute("style", "transform: translate(0,0)");
+	};
+
+	SVGRenderer.prototype.createGroup = function createGroup(x, y, parent) {
+		var group = this.document.createElementNS(svgns, 'g');
+		group.setAttribute("transform", "translate(" + x + ", " + y + ")");
+
+		parent.appendChild(group);
+
+		return group;
+	};
+
+	SVGRenderer.prototype.setGroupOptions = function setGroupOptions(group, options) {
+		group.setAttribute("style", "fill:" + options.lineColor + ";");
+	};
+
+	SVGRenderer.prototype.drawRect = function drawRect(x, y, width, height, parent) {
+		var rect = this.document.createElementNS(svgns, 'rect');
+
+		rect.setAttribute("x", x);
+		rect.setAttribute("y", y);
+		rect.setAttribute("width", width);
+		rect.setAttribute("height", height);
+
+		parent.appendChild(rect);
+
+		return rect;
 	};
 
 	return SVGRenderer;
 }();
 
-function createGroup(x, y, parent) {
-	var group = document.createElementNS(svgns, 'g');
-
-	group.setAttribute("transform", "translate(" + x + ", " + y + ")");
-
-	parent.appendChild(group);
-
-	return group;
-}
-
-function setGroupOptions(group, options) {
-	group.setAttribute("style", "fill:" + options.lineColor + ";");
-}
-
-function drawRect(x, y, width, height, parent) {
-	var rect = document.createElementNS(svgns, 'rect');
-
-	rect.setAttribute("x", x);
-	rect.setAttribute("y", y);
-	rect.setAttribute("width", width);
-	rect.setAttribute("height", height);
-
-	parent.appendChild(rect);
-
-	return rect;
-}
-
 exports.default = SVGRenderer;
 
 /***/ },
-/* 42 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
 'use strict';
 
-var _barcodes = __webpack_require__(10);
+var _barcodes = __webpack_require__(11);
 
 var _barcodes2 = _interopRequireDefault(_barcodes);
 
-var _merge = __webpack_require__(3);
+var _merge = __webpack_require__(4);
 
 var _merge2 = _interopRequireDefault(_merge);
 
-var _linearizeEncodings = __webpack_require__(14);
+var _linearizeEncodings = __webpack_require__(15);
 
 var _linearizeEncodings2 = _interopRequireDefault(_linearizeEncodings);
 
-var _fixOptions = __webpack_require__(12);
+var _fixOptions = __webpack_require__(13);
 
 var _fixOptions2 = _interopRequireDefault(_fixOptions);
 
-var _getRenderProperties = __webpack_require__(13);
+var _getRenderProperties = __webpack_require__(14);
 
 var _getRenderProperties2 = _interopRequireDefault(_getRenderProperties);
 
-var _optionsFromStrings = __webpack_require__(7);
+var _optionsFromStrings = __webpack_require__(8);
 
 var _optionsFromStrings2 = _interopRequireDefault(_optionsFromStrings);
 
-var _ErrorHandler = __webpack_require__(11);
+var _ErrorHandler = __webpack_require__(12);
 
 var _ErrorHandler2 = _interopRequireDefault(_ErrorHandler);
 
-var _exceptions = __webpack_require__(6);
+var _exceptions = __webpack_require__(7);
 
-var _defaults = __webpack_require__(8);
+var _defaults = __webpack_require__(9);
 
 var _defaults2 = _interopRequireDefault(_defaults);
 
