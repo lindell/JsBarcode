@@ -4,12 +4,16 @@
     "node": true
   },
   "parserOptions": {
-    "ecmaVersion": 6,
-    "sourceType": "module"
+    "ecmaVersion": 8,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
   },
   "extends": "eslint:recommended",
   "predef": "jQuery",
   "rules": {
+    "curly": "error",
     "semi": [1, "always"],
     "no-console": 2,
     "no-control-regex": 0,
