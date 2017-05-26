@@ -9,6 +9,7 @@ function createTests(newTest){
   newTest("52", {format: "EAN2", width: 1});
   newTest("423514346455", {format: "UPC", width: 2, textMargin: 0});
   newTest("423514346455", {format: "UPC", width: 2, textMargin: 0, flat: true});
+  newTest("01245714", {format: "UPCE", width: 2, textMargin: 0});
   newTest("5901234123457", {format: "EAN13", fontSize: 40, textMargin: 0, lastChar: ">"});
   newTest("590123412345", {format: "EAN13", width: 2, fontSize: 16});
   newTest("590123412345", {format: "EAN13", width: 3});

@@ -31,6 +31,7 @@ Supported barcodes:
   * EAN-5
   * EAN-2
   * UPC (A)
+  * UPC (E)
 * [CODE39](https://github.com/lindell/JsBarcode/wiki/CODE39)
 * [ITF-14](https://github.com/lindell/JsBarcode/wiki/ITF-14)
 * [MSI](https://github.com/lindell/JsBarcode/wiki/MSI)

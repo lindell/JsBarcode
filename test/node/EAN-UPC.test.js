@@ -6,7 +6,7 @@ var clone = help.clone;
 
 var options = {height: 100, displayValue: true, fontSize: 20, textMargin: 2, width: 2};
 
-describe('UPC', function() {
+describe('UPC-A', function() {
   it('should be able to include the encoder(s)', function () {
     UPC = JsBarcode.getModule("UPC");
   });
@@ -37,6 +37,39 @@ describe('UPC', function() {
     assert.equal("10100110010010011011110101000110110001010111101010100010010010001110100111010011101001110100101"
       , enc.encode().data);
     assert.equal("123456789999", enc.encode().text);
+  });
+});
+
+const UPCE_BINARY = "101011001100100110011101011100101110110011001010101";
+describe('UPC-E', function() {
+  it('should be able to include the encoder(s)', function () {
+    UPCE = JsBarcode.getModule("UPCE");
+  });
+
+  it('should be able to encode 8-digit codes', function () {
+    var enc = new UPCE("01245714", clone(options));
+    assert.equal(UPCE_BINARY, help.fixBin(enc.encode()));
+  });
+
+  it('should be able to encode 6-digit codes by assuming a 0 number system', function () {
+    var enc = new UPCE("124571", clone(options));
+    assert.equal(UPCE_BINARY, help.fixBin(enc.encode()));
+  });
+
+  it('should warn with invalid text', function () {
+    var enc = new UPCE("01245715", clone(options));
+    assert.equal(false, enc.valid());
+  });
+
+  it('should work with text option', function () {
+    var enc = new UPCE("124571", help.merge(options, {text: "SOMETEXT"}));
+    assert.equal("SOMETEXT", help.fixText(enc.encode()));
+  });
+
+  it('should work with flat option', function () {
+    var enc = new UPCE("01245714", help.merge(options, {flat: true}));
+    assert.equal(UPCE_BINARY, enc.encode().data);
+    assert.equal("01245714", enc.encode().text);
   });
 });
 
