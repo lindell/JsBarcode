@@ -61,7 +61,7 @@ class UPC extends Barcode{
 		var encoder = new EANencoder();
 		var result = [];
 
-		// Add the first digigt
+		// Add the first digit
 		if(this.displayValue){
 			result.push({
 				data: "00000000",
@@ -117,7 +117,7 @@ class UPC extends Barcode{
 
 // Calulate the checksum digit
 // https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
-function checksum(number){
+export function checksum(number){
 	var result = 0;
 
 	var i;
