@@ -4,7 +4,7 @@
     "node": true
   },
   "parserOptions": {
-    "ecmaVersion": 8,
+    "ecmaVersion": 7,
     "sourceType": "module",
     "ecmaFeatures": {
       "experimentalObjectRestSpread": true
