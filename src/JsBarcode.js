@@ -127,7 +127,7 @@ API.prototype.options = function(options){
 
 // Will create a blank space (usually in between barcodes)
 API.prototype.blank = function(size){
-	var zeroes = "0".repeat(size);
+	const zeroes = new Array(size + 1).join("0");
 	this._encodings.push({data: zeroes});
 	return this;
 };
