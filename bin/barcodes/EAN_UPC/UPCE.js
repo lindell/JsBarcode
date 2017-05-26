@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -6,15 +6,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-exports.checksum = checksum;
-
-var _ean_encoder = require("./ean_encoder.js");
+var _ean_encoder = require('./ean_encoder.js');
 
 var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
 
-var _Barcode2 = require("../Barcode.js");
+var _Barcode2 = require('../Barcode.js');
 
 var _Barcode3 = _interopRequireDefault(_Barcode2);
+
+var _UPC = require('./UPC.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -24,19 +24,45 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding documentation:
 // https://en.wikipedia.org/wiki/Universal_Product_Code#Encoding
+//
+// UPC-E documentation:
+// https://en.wikipedia.org/wiki/Universal_Product_Code#UPC-E
 
-var UPC = function (_Barcode) {
-	_inherits(UPC, _Barcode);
+var EXPANSIONS = ["XX00000XXX", "XX10000XXX", "XX20000XXX", "XXX00000XX", "XXXX00000X", "XXXXX00005", "XXXXX00006", "XXXXX00007", "XXXXX00008", "XXXXX00009"];
 
-	function UPC(data, options) {
-		_classCallCheck(this, UPC);
+var PARITIES = [["EEEOOO", "OOOEEE"], ["EEOEOO", "OOEOEE"], ["EEOOEO", "OOEEOE"], ["EEOOOE", "OOEEEO"], ["EOEEOO", "OEOOEE"], ["EOOEEO", "OEEOOE"], ["EOOOEE", "OEEEOO"], ["EOEOEO", "OEOEOE"], ["EOEOOE", "OEOEEO"], ["EOOEOE", "OEEOEO"]];
 
-		// Add checksum if it does not exist
-		if (data.search(/^[0-9]{11}$/) !== -1) {
-			data += checksum(data);
+var UPCE = function (_Barcode) {
+	_inherits(UPCE, _Barcode);
+
+	function UPCE(data, options) {
+		_classCallCheck(this, UPCE);
+
+		var _this = _possibleConstructorReturn(this, (UPCE.__proto__ || Object.getPrototypeOf(UPCE)).call(this, data, options));
+		// Code may be 6 or 8 digits;
+		// A 7 digit code is ambiguous as to whether the extra digit
+		// is a UPC-A check or number system digit.
+
+
+		_this.isValid = false;
+		if (data.search(/^[0-9]{6}$/) !== -1) {
+			_this.middleDigits = data;
+			_this.upcA = expandToUPCA(data, "0");
+			_this.text = options.text || '' + _this.upcA[0] + data + _this.upcA[_this.upcA.length - 1];
+			_this.isValid = true;
+		} else if (data.search(/^[01][0-9]{7}$/) !== -1) {
+			_this.middleDigits = data.substring(1, data.length - 1);
+			_this.upcA = expandToUPCA(_this.middleDigits, data[0]);
+
+			if (_this.upcA[_this.upcA.length - 1] === data[data.length - 1]) {
+				_this.isValid = true;
+			} else {
+				// checksum mismatch
+				return _possibleConstructorReturn(_this);
+			}
+		} else {
+			return _possibleConstructorReturn(_this);
 		}
-
-		var _this = _possibleConstructorReturn(this, (UPC.__proto__ || Object.getPrototypeOf(UPC)).call(this, data, options));
 
 		_this.displayValue = options.displayValue;
 
@@ -52,13 +78,13 @@ var UPC = function (_Barcode) {
 		return _this;
 	}
 
-	_createClass(UPC, [{
-		key: "valid",
+	_createClass(UPCE, [{
+		key: 'valid',
 		value: function valid() {
-			return this.data.search(/^[0-9]{12}$/) !== -1 && this.data[11] == checksum(this.data);
+			return this.isValid;
 		}
 	}, {
-		key: "encode",
+		key: 'encode',
 		value: function encode() {
 			if (this.options.flat) {
 				return this.flatEncoding();
@@ -67,16 +93,14 @@ var UPC = function (_Barcode) {
 			}
 		}
 	}, {
-		key: "flatEncoding",
+		key: 'flatEncoding',
 		value: function flatEncoding() {
 			var encoder = new _ean_encoder2.default();
 			var result = "";
 
 			result += "101";
-			result += encoder.encode(this.data.substr(0, 6), "LLLLLL");
-			result += "01010";
-			result += encoder.encode(this.data.substr(6, 6), "RRRRRR");
-			result += "101";
+			result += this.encodeMiddleDigits(encoder);
+			result += "010101";
 
 			return {
 				data: result,
@@ -84,84 +108,80 @@ var UPC = function (_Barcode) {
 			};
 		}
 	}, {
-		key: "guardedEncoding",
+		key: 'guardedEncoding',
 		value: function guardedEncoding() {
 			var encoder = new _ean_encoder2.default();
 			var result = [];
 
-			// Add the first digit
+			// Add the UPC-A number system digit beneath the quiet zone
 			if (this.displayValue) {
 				result.push({
 					data: "00000000",
-					text: this.text.substr(0, 1),
+					text: this.text[0],
 					options: { textAlign: "left", fontSize: this.fontSize }
 				});
 			}
 
 			// Add the guard bars
 			result.push({
-				data: "101" + encoder.encode(this.data[0], "L"),
+				data: "101",
 				options: { height: this.guardHeight }
 			});
 
-			// Add the left side
+			// Add the 6 UPC-E digits
 			result.push({
-				data: encoder.encode(this.data.substr(1, 5), "LLLLL"),
-				text: this.text.substr(1, 5),
-				options: { fontSize: this.fontSize }
-			});
-
-			// Add the middle bits
-			result.push({
-				data: "01010",
-				options: { height: this.guardHeight }
-			});
-
-			// Add the right side
-			result.push({
-				data: encoder.encode(this.data.substr(6, 5), "RRRRR"),
-				text: this.text.substr(6, 5),
+				data: this.encodeMiddleDigits(encoder),
+				text: this.text.substring(1, 7),
 				options: { fontSize: this.fontSize }
 			});
 
 			// Add the end bits
 			result.push({
-				data: encoder.encode(this.data[11], "R") + "101",
+				data: "010101",
 				options: { height: this.guardHeight }
 			});
 
-			// Add the last digit
+			// Add the UPC-A check digit beneath the quiet zone
 			if (this.displayValue) {
 				result.push({
 					data: "00000000",
-					text: this.text.substr(11, 1),
+					text: this.text[7],
 					options: { textAlign: "right", fontSize: this.fontSize }
 				});
 			}
 
 			return result;
 		}
+	}, {
+		key: 'encodeMiddleDigits',
+		value: function encodeMiddleDigits(encoder) {
+			var numberSystem = this.upcA[0];
+			var checkDigit = this.upcA[this.upcA.length - 1];
+			var parity = PARITIES[parseInt(checkDigit)][parseInt(numberSystem)];
+			return encoder.encode(this.middleDigits, parity);
+		}
 	}]);
 
-	return UPC;
+	return UPCE;
 }(_Barcode3.default);
 
-// Calulate the checksum digit
-// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
+function expandToUPCA(middleDigits, numberSystem) {
+	var lastUpcE = parseInt(middleDigits[middleDigits.length - 1]);
+	var expansion = EXPANSIONS[lastUpcE];
 
-
-function checksum(number) {
-	var result = 0;
-
-	var i;
-	for (i = 1; i < 11; i += 2) {
-		result += parseInt(number[i]);
+	var result = "";
+	var digitIndex = 0;
+	for (var i = 0; i < expansion.length; i++) {
+		var c = expansion[i];
+		if (c === 'X') {
+			result += middleDigits[digitIndex++];
+		} else {
+			result += c;
+		}
 	}
-	for (i = 0; i < 11; i += 2) {
-		result += parseInt(number[i]) * 3;
-	}
 
-	return (10 - result % 10) % 10;
+	result = '' + numberSystem + result;
+	return '' + result + (0, _UPC.checksum)(result);
 }
 
-exports.default = UPC;
+exports.default = UPCE;

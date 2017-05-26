@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _ean_encoder = require("./ean_encoder.js");
 
 var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
@@ -28,43 +30,48 @@ var EAN5 = function (_Barcode) {
 		_classCallCheck(this, EAN5);
 
 		// Define the EAN-13 structure
-		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
+		var _this = _possibleConstructorReturn(this, (EAN5.__proto__ || Object.getPrototypeOf(EAN5)).call(this, data, options));
 
 		_this.structure = ["GGLLL", "GLGLL", "GLLGL", "GLLLG", "LGGLL", "LLGGL", "LLLGG", "LGLGL", "LGLLG", "LLGLG"];
 		return _this;
 	}
 
-	EAN5.prototype.valid = function valid() {
-		return this.data.search(/^[0-9]{5}$/) !== -1;
-	};
+	_createClass(EAN5, [{
+		key: "valid",
+		value: function valid() {
+			return this.data.search(/^[0-9]{5}$/) !== -1;
+		}
+	}, {
+		key: "encode",
+		value: function encode() {
+			var encoder = new _ean_encoder2.default();
+			var checksum = this.checksum();
 
-	EAN5.prototype.encode = function encode() {
-		var encoder = new _ean_encoder2.default();
-		var checksum = this.checksum();
+			// Start bits
+			var result = "1011";
 
-		// Start bits
-		var result = "1011";
+			// Use normal ean encoding with 01 in between all digits
+			result += encoder.encode(this.data, this.structure[checksum], "01");
 
-		// Use normal ean encoding with 01 in between all digits
-		result += encoder.encode(this.data, this.structure[checksum], "01");
+			return {
+				data: result,
+				text: this.text
+			};
+		}
+	}, {
+		key: "checksum",
+		value: function checksum() {
+			var result = 0;
 
-		return {
-			data: result,
-			text: this.text
-		};
-	};
+			result += parseInt(this.data[0]) * 3;
+			result += parseInt(this.data[1]) * 9;
+			result += parseInt(this.data[2]) * 3;
+			result += parseInt(this.data[3]) * 9;
+			result += parseInt(this.data[4]) * 3;
 
-	EAN5.prototype.checksum = function checksum() {
-		var result = 0;
-
-		result += parseInt(this.data[0]) * 3;
-		result += parseInt(this.data[1]) * 9;
-		result += parseInt(this.data[2]) * 3;
-		result += parseInt(this.data[3]) * 9;
-		result += parseInt(this.data[4]) * 3;
-
-		return result % 10;
-	};
+			return result % 10;
+		}
+	}]);
 
 	return EAN5;
 }(_Barcode3.default);

@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ITF14 = undefined;
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _Barcode2 = require("../Barcode.js");
 
 var _Barcode3 = _interopRequireDefault(_Barcode2);
@@ -28,7 +30,7 @@ var ITF14 = function (_Barcode) {
 			data += checksum(data);
 		}
 
-		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
+		var _this = _possibleConstructorReturn(this, (ITF14.__proto__ || Object.getPrototypeOf(ITF14)).call(this, data, options));
 
 		_this.binaryRepresentation = {
 			"0": "00110",
@@ -45,44 +47,49 @@ var ITF14 = function (_Barcode) {
 		return _this;
 	}
 
-	ITF14.prototype.valid = function valid() {
-		return this.data.search(/^[0-9]{14}$/) !== -1 && this.data[13] == checksum(this.data);
-	};
+	_createClass(ITF14, [{
+		key: "valid",
+		value: function valid() {
+			return this.data.search(/^[0-9]{14}$/) !== -1 && this.data[13] == checksum(this.data);
+		}
+	}, {
+		key: "encode",
+		value: function encode() {
+			var result = "1010";
 
-	ITF14.prototype.encode = function encode() {
-		var result = "1010";
+			// Calculate all the digit pairs
+			for (var i = 0; i < 14; i += 2) {
+				result += this.calculatePair(this.data.substr(i, 2));
+			}
 
-		// Calculate all the digit pairs
-		for (var i = 0; i < 14; i += 2) {
-			result += this.calculatePair(this.data.substr(i, 2));
+			// Always add the same end bits
+			result += "11101";
+
+			return {
+				data: result,
+				text: this.text
+			};
 		}
 
-		// Always add the same end bits
-		result += "11101";
+		// Calculate the data of a number pair
 
-		return {
-			data: result,
-			text: this.text
-		};
-	};
+	}, {
+		key: "calculatePair",
+		value: function calculatePair(numberPair) {
+			var result = "";
 
-	// Calculate the data of a number pair
+			var number1Struct = this.binaryRepresentation[numberPair[0]];
+			var number2Struct = this.binaryRepresentation[numberPair[1]];
 
+			// Take every second bit and add to the result
+			for (var i = 0; i < 5; i++) {
+				result += number1Struct[i] == "1" ? "111" : "1";
+				result += number2Struct[i] == "1" ? "000" : "0";
+			}
 
-	ITF14.prototype.calculatePair = function calculatePair(numberPair) {
-		var result = "";
-
-		var number1Struct = this.binaryRepresentation[numberPair[0]];
-		var number2Struct = this.binaryRepresentation[numberPair[1]];
-
-		// Take every second bit and add to the result
-		for (var i = 0; i < 5; i++) {
-			result += number1Struct[i] == "1" ? "111" : "1";
-			result += number2Struct[i] == "1" ? "000" : "0";
+			return result;
 		}
-
-		return result;
-	};
+	}]);
 
 	return ITF14;
 }(_Barcode3.default);

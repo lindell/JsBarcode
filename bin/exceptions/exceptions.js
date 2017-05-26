@@ -16,7 +16,7 @@ var InvalidInputException = function (_Error) {
 	function InvalidInputException(symbology, input) {
 		_classCallCheck(this, InvalidInputException);
 
-		var _this = _possibleConstructorReturn(this, _Error.call(this));
+		var _this = _possibleConstructorReturn(this, (InvalidInputException.__proto__ || Object.getPrototypeOf(InvalidInputException)).call(this));
 
 		_this.name = "InvalidInputException";
 
@@ -36,7 +36,7 @@ var InvalidElementException = function (_Error2) {
 	function InvalidElementException() {
 		_classCallCheck(this, InvalidElementException);
 
-		var _this2 = _possibleConstructorReturn(this, _Error2.call(this));
+		var _this2 = _possibleConstructorReturn(this, (InvalidElementException.__proto__ || Object.getPrototypeOf(InvalidElementException)).call(this));
 
 		_this2.name = "InvalidElementException";
 		_this2.message = "Not supported type to render on";
@@ -52,7 +52,7 @@ var NoElementException = function (_Error3) {
 	function NoElementException() {
 		_classCallCheck(this, NoElementException);
 
-		var _this3 = _possibleConstructorReturn(this, _Error3.call(this));
+		var _this3 = _possibleConstructorReturn(this, (NoElementException.__proto__ || Object.getPrototypeOf(NoElementException)).call(this));
 
 		_this3.name = "NoElementException";
 		_this3.message = "No element to render on.";

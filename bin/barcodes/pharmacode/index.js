@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.pharmacode = undefined;
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _Barcode2 = require("../Barcode.js");
 
 var _Barcode3 = _interopRequireDefault(_Barcode2);
@@ -24,42 +26,46 @@ var pharmacode = function (_Barcode) {
 	function pharmacode(data, options) {
 		_classCallCheck(this, pharmacode);
 
-		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data, options));
+		var _this = _possibleConstructorReturn(this, (pharmacode.__proto__ || Object.getPrototypeOf(pharmacode)).call(this, data, options));
 
 		_this.number = parseInt(data, 10);
 		return _this;
 	}
 
-	pharmacode.prototype.encode = function encode() {
-		var z = this.number;
-		var result = "";
+	_createClass(pharmacode, [{
+		key: "encode",
+		value: function encode() {
+			var z = this.number;
+			var result = "";
 
-		// http://i.imgur.com/RMm4UDJ.png
-		// (source: http://www.gomaro.ch/ftproot/Laetus_PHARMA-CODE.pdf, page: 34)
-		while (!isNaN(z) && z != 0) {
-			if (z % 2 === 0) {
-				// Even
-				result = "11100" + result;
-				z = (z - 2) / 2;
-			} else {
-				// Odd
-				result = "100" + result;
-				z = (z - 1) / 2;
+			// http://i.imgur.com/RMm4UDJ.png
+			// (source: http://www.gomaro.ch/ftproot/Laetus_PHARMA-CODE.pdf, page: 34)
+			while (!isNaN(z) && z != 0) {
+				if (z % 2 === 0) {
+					// Even
+					result = "11100" + result;
+					z = (z - 2) / 2;
+				} else {
+					// Odd
+					result = "100" + result;
+					z = (z - 1) / 2;
+				}
 			}
+
+			// Remove the two last zeroes
+			result = result.slice(0, -2);
+
+			return {
+				data: result,
+				text: this.text
+			};
 		}
-
-		// Remove the two last zeroes
-		result = result.slice(0, -2);
-
-		return {
-			data: result,
-			text: this.text
-		};
-	};
-
-	pharmacode.prototype.valid = function valid() {
-		return this.number >= 3 && this.number <= 131070;
-	};
+	}, {
+		key: "valid",
+		value: function valid() {
+			return this.number >= 3 && this.number <= 131070;
+		}
+	}]);
 
 	return pharmacode;
 }(_Barcode3.default);

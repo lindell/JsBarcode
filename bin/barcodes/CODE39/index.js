@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.CODE39 = undefined;
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _Barcode2 = require("../Barcode.js");
 
 var _Barcode3 = _interopRequireDefault(_Barcode2);
@@ -31,30 +33,34 @@ var CODE39 = function (_Barcode) {
 			data += getCharacter(mod43checksum(data));
 		}
 
-		return _possibleConstructorReturn(this, _Barcode.call(this, data, options));
+		return _possibleConstructorReturn(this, (CODE39.__proto__ || Object.getPrototypeOf(CODE39)).call(this, data, options));
 	}
 
-	CODE39.prototype.encode = function encode() {
-		// First character is always a *
-		var result = getEncoding("*");
+	_createClass(CODE39, [{
+		key: "encode",
+		value: function encode() {
+			// First character is always a *
+			var result = getEncoding("*");
 
-		// Take every character and add the binary representation to the result
-		for (var i = 0; i < this.data.length; i++) {
-			result += getEncoding(this.data[i]) + "0";
+			// Take every character and add the binary representation to the result
+			for (var i = 0; i < this.data.length; i++) {
+				result += getEncoding(this.data[i]) + "0";
+			}
+
+			// Last character is always a *
+			result += getEncoding("*");
+
+			return {
+				data: result,
+				text: this.text
+			};
 		}
-
-		// Last character is always a *
-		result += getEncoding("*");
-
-		return {
-			data: result,
-			text: this.text
-		};
-	};
-
-	CODE39.prototype.valid = function valid() {
-		return this.data.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
-	};
+	}, {
+		key: "valid",
+		value: function valid() {
+			return this.data.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
+		}
+	}]);
 
 	return CODE39;
 }(_Barcode3.default);

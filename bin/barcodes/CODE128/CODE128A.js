@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _CODE2 = require('./CODE128.js');
 
 var _CODE3 = _interopRequireDefault(_CODE2);
@@ -24,12 +26,15 @@ var CODE128A = function (_CODE) {
 	function CODE128A(string, options) {
 		_classCallCheck(this, CODE128A);
 
-		return _possibleConstructorReturn(this, _CODE.call(this, _constants.A_START_CHAR + string, options));
+		return _possibleConstructorReturn(this, (CODE128A.__proto__ || Object.getPrototypeOf(CODE128A)).call(this, _constants.A_START_CHAR + string, options));
 	}
 
-	CODE128A.prototype.valid = function valid() {
-		return new RegExp('^' + _constants.A_CHARS + '+$').test(this.data);
-	};
+	_createClass(CODE128A, [{
+		key: 'valid',
+		value: function valid() {
+			return new RegExp('^' + _constants.A_CHARS + '+$').test(this.data);
+		}
+	}]);
 
 	return CODE128A;
 }(_CODE3.default);

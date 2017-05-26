@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.UPC = exports.EAN2 = exports.EAN5 = exports.EAN8 = exports.EAN13 = undefined;
+exports.UPCE = exports.UPC = exports.EAN2 = exports.EAN5 = exports.EAN8 = exports.EAN13 = undefined;
 
 var _EAN = require('./EAN13.js');
 
@@ -25,6 +25,10 @@ var _UPC = require('./UPC.js');
 
 var _UPC2 = _interopRequireDefault(_UPC);
 
+var _UPCE = require('./UPCE.js');
+
+var _UPCE2 = _interopRequireDefault(_UPCE);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.EAN13 = _EAN2.default;
@@ -32,3 +36,4 @@ exports.EAN8 = _EAN4.default;
 exports.EAN5 = _EAN6.default;
 exports.EAN2 = _EAN8.default;
 exports.UPC = _UPC2.default;
+exports.UPCE = _UPCE2.default;

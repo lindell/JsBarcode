@@ -26,7 +26,7 @@ var MSI1110 = function (_MSI) {
 
 		data += (0, _checksums.mod11)(data);
 		data += (0, _checksums.mod10)(data);
-		return _possibleConstructorReturn(this, _MSI.call(this, data, options));
+		return _possibleConstructorReturn(this, (MSI1110.__proto__ || Object.getPrototypeOf(MSI1110)).call(this, data, options));
 	}
 
 	return MSI1110;

@@ -24,7 +24,7 @@ var MSI11 = function (_MSI) {
 	function MSI11(data, options) {
 		_classCallCheck(this, MSI11);
 
-		return _possibleConstructorReturn(this, _MSI.call(this, data + (0, _checksums.mod11)(data), options));
+		return _possibleConstructorReturn(this, (MSI11.__proto__ || Object.getPrototypeOf(MSI11)).call(this, data + (0, _checksums.mod11)(data), options));
 	}
 
 	return MSI11;

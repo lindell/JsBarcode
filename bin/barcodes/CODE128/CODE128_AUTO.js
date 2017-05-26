@@ -28,9 +28,9 @@ var CODE128AUTO = function (_CODE) {
 
 		// ASCII value ranges 0-127, 200-211
 		if (/^[\x00-\x7F\xC8-\xD3]+$/.test(data)) {
-			var _this = _possibleConstructorReturn(this, _CODE.call(this, (0, _auto2.default)(data), options));
+			var _this = _possibleConstructorReturn(this, (CODE128AUTO.__proto__ || Object.getPrototypeOf(CODE128AUTO)).call(this, (0, _auto2.default)(data), options));
 		} else {
-			var _this = _possibleConstructorReturn(this, _CODE.call(this, data, options));
+			var _this = _possibleConstructorReturn(this, (CODE128AUTO.__proto__ || Object.getPrototypeOf(CODE128AUTO)).call(this, data, options));
 		}
 		return _possibleConstructorReturn(_this);
 	}

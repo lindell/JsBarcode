@@ -5,6 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.codabar = undefined;
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _Barcode2 = require("../Barcode.js");
 
 var _Barcode3 = _interopRequireDefault(_Barcode2);
@@ -28,56 +30,61 @@ var codabar = function (_Barcode) {
 			data = "A" + data + "A";
 		}
 
-		var _this = _possibleConstructorReturn(this, _Barcode.call(this, data.toUpperCase(), options));
+		var _this = _possibleConstructorReturn(this, (codabar.__proto__ || Object.getPrototypeOf(codabar)).call(this, data.toUpperCase(), options));
 
 		_this.text = _this.options.text || _this.text.replace(/[A-D]/g, '');
 		return _this;
 	}
 
-	codabar.prototype.valid = function valid() {
-		return this.data.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
-	};
-
-	codabar.prototype.encode = function encode() {
-		var result = [];
-		var encodings = this.getEncodings();
-		for (var i = 0; i < this.data.length; i++) {
-			result.push(encodings[this.data.charAt(i)]);
-			// for all characters except the last, append a narrow-space ("0")
-			if (i !== this.data.length - 1) {
-				result.push("0");
-			}
+	_createClass(codabar, [{
+		key: "valid",
+		value: function valid() {
+			return this.data.search(/^[A-D][0-9\-\$\:\.\+\/]+[A-D]$/) !== -1;
 		}
-		return {
-			text: this.text,
-			data: result.join('')
-		};
-	};
-
-	codabar.prototype.getEncodings = function getEncodings() {
-		return {
-			"0": "101010011",
-			"1": "101011001",
-			"2": "101001011",
-			"3": "110010101",
-			"4": "101101001",
-			"5": "110101001",
-			"6": "100101011",
-			"7": "100101101",
-			"8": "100110101",
-			"9": "110100101",
-			"-": "101001101",
-			"$": "101100101",
-			":": "1101011011",
-			"/": "1101101011",
-			".": "1101101101",
-			"+": "101100110011",
-			"A": "1011001001",
-			"B": "1010010011",
-			"C": "1001001011",
-			"D": "1010011001"
-		};
-	};
+	}, {
+		key: "encode",
+		value: function encode() {
+			var result = [];
+			var encodings = this.getEncodings();
+			for (var i = 0; i < this.data.length; i++) {
+				result.push(encodings[this.data.charAt(i)]);
+				// for all characters except the last, append a narrow-space ("0")
+				if (i !== this.data.length - 1) {
+					result.push("0");
+				}
+			}
+			return {
+				text: this.text,
+				data: result.join('')
+			};
+		}
+	}, {
+		key: "getEncodings",
+		value: function getEncodings() {
+			return {
+				"0": "101010011",
+				"1": "101011001",
+				"2": "101001011",
+				"3": "110010101",
+				"4": "101101001",
+				"5": "110101001",
+				"6": "100101011",
+				"7": "100101101",
+				"8": "100110101",
+				"9": "110100101",
+				"-": "101001101",
+				"$": "101100101",
+				":": "1101011011",
+				"/": "1101101011",
+				".": "1101101101",
+				"+": "101100110011",
+				"A": "1011001001",
+				"B": "1010010011",
+				"C": "1001001011",
+				"D": "1010011001"
+			};
+		}
+	}]);
 
 	return codabar;
 }(_Barcode3.default);

@@ -1,23 +1,11 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+  value: true
 });
-exports.default = merge;
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-function merge(old, replaceObj) {
-	var newMerge = {};
-	var k;
-	for (k in old) {
-		if (old.hasOwnProperty(k)) {
-			newMerge[k] = old[k];
-		}
-	}
-	for (k in replaceObj) {
-		if (replaceObj.hasOwnProperty(k) && typeof replaceObj[k] !== "undefined") {
-			newMerge[k] = replaceObj[k];
-		}
-	}
-	return newMerge;
-}
+exports.default = function (old, replaceObj) {
+  return _extends({}, old, replaceObj);
+};
