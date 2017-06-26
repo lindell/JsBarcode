@@ -4,7 +4,7 @@ var Canvas = require("canvas");
 var help = require("./help/help");
 var clone = help.clone;
 
-var options = {height: 100, displayValue: true, fontSize: 20, textMargin: 2, width: 2};
+var options = {height: 100, displayValue: true, fontSize: 20, textMargin: 2, width: 2, flat: false};
 
 describe('UPC-A', function() {
   it('should be able to include the encoder(s)', function () {
@@ -144,6 +144,11 @@ describe('EAN-8', function() {
 
   it('should work with text option', function () {
     var enc = new EAN8("96385074", help.merge(options, {text: "THISISTEXT"}));
+    assert.equal("THISISTEXT", help.fixText(enc.encode()));
+  });
+
+  it('should work with flat option', function () {
+    var enc = new EAN8("96385074", help.merge(options, {flat: true}));
     assert.equal("THISISTEXT", help.fixText(enc.encode()));
   });
 });
