@@ -10,6 +10,7 @@ export const START_B = 104;
 export const START_C = 105;
 export const MODULO = 103;
 export const STOP = 106;
+export const FNC1 = 207;
 
 // Get set by start code
 export const SET_BY_CODE = {
