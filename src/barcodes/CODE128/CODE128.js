@@ -1,15 +1,14 @@
 import Barcode from "../Barcode.js";
-import { normalizeOptions, formatData } from './helpers';
 import { SHIFT, SET_A, SET_B, MODULO, STOP, FNC1, SET_BY_CODE, SWAP, BARS } from './constants';
 
 // This is the master class,
 // it does require the start code to be included in the string
 class CODE128 extends Barcode {
 	constructor(data, options) {
-		super(data.substring(1), normalizeOptions(options));
+		super(data.substring(1), options);
 
 		// Get array of ascii codes from data
-		this.bytes = formatData(data, this.options).split('')
+		this.bytes = data.split('')
 			.map(char => char.charCodeAt(0));
 	}
 
@@ -30,8 +29,7 @@ class CODE128 extends Barcode {
 			throw new RangeError('The encoding does not start with a start character.');
 		}
 
-		// GS1-128/EAN-128
-		if (this.options.ean128 === true) {
+		if (this.encodeAsEan128() === true) {
 			bytes.unshift(FNC1);
 		}
 
@@ -53,6 +51,15 @@ class CODE128 extends Barcode {
 				// Add the end bits
 				CODE128.getBar(STOP)
 		};
+	}
+
+	// GS1-128/EAN-128
+	encodeAsEan128() {
+		let isEAN128 = this.options.ean128 || false;
+		if (typeof isEAN128 === 'string') {
+			isEAN128 = isEAN128.toLowerCase() === 'true';
+		}
+		return isEAN128;
 	}
 
 	// Get a bar symbol by index
