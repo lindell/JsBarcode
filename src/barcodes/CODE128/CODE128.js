@@ -29,7 +29,7 @@ class CODE128 extends Barcode {
 			throw new RangeError('The encoding does not start with a start character.');
 		}
 
-		if (this.encodeAsEan128() === true) {
+		if (this.shouldEncodeAsEan128() === true) {
 			bytes.unshift(FNC1);
 		}
 
@@ -54,7 +54,7 @@ class CODE128 extends Barcode {
 	}
 
 	// GS1-128/EAN-128
-	encodeAsEan128() {
+	shouldEncodeAsEan128() {
 		let isEAN128 = this.options.ean128 || false;
 		if (typeof isEAN128 === 'string') {
 			isEAN128 = isEAN128.toLowerCase() === 'true';
