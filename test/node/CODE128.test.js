@@ -29,6 +29,12 @@ describe('CODE128', function() {
       , enc.encode().data);
   });
 
+  it('should encode CODE128 as GS1-128/EAN-128', function () {
+    var enc = new CODE128C("12345678", { ean128: true });
+    assert.equal("110100111001111010111010110011100100010110001110001011011000010100110010011101100011101011",
+      enc.encode().data);
+  });
+
   it('should remove unprintable characters', function () {
     var enc = new CODE128C("A\n\x00B \x04\x10\x1FC", {});
     assert.equal("AB C", enc.encode().text);
