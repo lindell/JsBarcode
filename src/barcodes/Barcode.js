@@ -4,6 +4,10 @@ class Barcode{
 		this.text = options.text || data;
 		this.options = options;
 	}
+
+	static options() {
+		return {};
+	}
 }
 
 export default Barcode;

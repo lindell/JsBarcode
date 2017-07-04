@@ -8,7 +8,7 @@ class ErrorHandler{
 	handleCatch(e){
 		// If babel supported extending of Error in a correct way instanceof would be used here
 		if(e.name === "InvalidInputException"){
-			if(this.api._options.valid !== this.api._defaults.valid){
+			if(typeof this.api._options.valid !== 'undefined' && this.api._options.valid !== this.api._defaults.valid){
 				this.api._options.valid(false);
 			}
 			else{
@@ -25,7 +25,9 @@ class ErrorHandler{
 	wrapBarcodeCall(func){
 		try{
 			var result = func(...arguments);
-			this.api._options.valid(true);
+			if (typeof this.api._options.valid !== 'undefined') {
+				this.api._options.valid(true);
+			}
 			return result;
 		}
 		catch(e){

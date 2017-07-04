@@ -3,10 +3,10 @@ import barcodes from './barcodes/';
 
 // Help functions
 import merge from './help/merge.js';
+import applyOptions from './help/applyOptions.js';
 import linearizeEncodings from './help/linearizeEncodings.js';
 import fixOptions from './help/fixOptions.js';
 import getRenderProperties from './help/getRenderProperties.js';
-import optionsFromStrings from './help/optionsFromStrings.js';
 
 // Exceptions
 import ErrorHandler from './exceptions/ErrorHandler.js';
@@ -31,18 +31,19 @@ let JsBarcode = function(element, text, options){
 	// Variables that will be pased through the API calls
 	api._renderProperties = getRenderProperties(element);
 	api._encodings = [];
-	api._options = defaults;
+	api._optionsBlueprint = defaults;
 	api._errorHandler = new ErrorHandler(api);
+
+	api._options = options || {};
+	api._options = applyOptions(api._optionsBlueprint, api._options);
 
 	// If text is set, use the simple syntax (render the barcode directly)
 	if(typeof text !== "undefined"){
-		options = options || {};
-
-		if(!options.format){
-			options.format = autoSelectBarcode();
+		if(!api._options.format || api._options.format === 'auto'){
+			api._options.format = autoSelectBarcode();
 		}
 
-		api.options(options)[options.format](text, options).render();
+		api[api._options.format](text, api._options).render();
 	}
 
 	return api;
@@ -69,9 +70,11 @@ function registerBarcode(barcodes, name){
 				// Ensure text is options.text
 				options.text = typeof options.text === 'undefined' ? undefined : '' + options.text;
 
-				var newOptions = merge(api._options, options);
-				newOptions = optionsFromStrings(newOptions);
 				var Encoder = barcodes[name];
+				var optionsBlueprint = merge(api._optionsBlueprint, Encoder.options());
+				var newOptions = applyOptions(optionsBlueprint, options);
+				newOptions = merge(api._options, newOptions);
+
 				var encoded = encode(text, Encoder, newOptions);
 				api._encodings.push(encoded);
 
