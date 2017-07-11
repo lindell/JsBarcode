@@ -73,8 +73,12 @@ var defaults = {
 	},
 	valid: {
 		type: "function",
-		default: function(){},
+		default: undefined,
 	},
+	xmlDocument: {
+		type: "function",
+		default: undefined,
+	}
 };
 
 export default defaults;
