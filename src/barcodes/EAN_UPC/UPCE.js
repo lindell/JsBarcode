@@ -155,6 +155,15 @@ class UPCE extends Barcode{
 		const parity = PARITIES[parseInt(checkDigit)][parseInt(numberSystem)];
 		return encoder.encode(this.middleDigits, parity);
 	}
+
+	static options() {
+		return {
+			flat: {
+				type: "boolean",
+				default: false,
+			}
+		};
+	}
 }
 
 function expandToUPCA(middleDigits, numberSystem) {

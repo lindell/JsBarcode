@@ -113,6 +113,15 @@ class UPC extends Barcode{
 
 		return result;
 	}
+
+	static options() {
+		return {
+			flat: {
+				type: "boolean",
+				default: false,
+			}
+		};
+	}
 }
 
 // Calulate the checksum digit
