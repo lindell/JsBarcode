@@ -143,6 +143,9 @@ Download or get the CDN link to the script:
 |  Pharmacode  |  Pharmacode  |  4.6 kB  |  [JsBarcode.pharmacode.min.js][8]  |
 |  Codabar  |  Codabar  |  4.8 kB  |  [JsBarcode.codabar.min.js][9]  |
 
+[![](https://data.jsdelivr.com/v1/package/npm/jsbarcode/badge)](https://www.jsdelivr.com/package/npm/jsbarcode)
+
+
 ### Step 2:
 Include the script in your code:
 
