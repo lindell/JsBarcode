@@ -5,6 +5,7 @@
 	<a href="http://travis-ci.org/lindell/JsBarcode"><img src="https://secure.travis-ci.org/lindell/JsBarcode.svg" alt="Build Status"/></a>
 	<a href="https://scrutinizer-ci.com/g/lindell/JsBarcode/?branch=master"><img src="https://scrutinizer-ci.com/g/lindell/JsBarcode/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"/></a>
 	<a href="http://packagequality.com/#?package=jsbarcode"><img src="http://npm.packagequality.com/shield/jsbarcode.svg" alt="Package Quality"/></a>
+	<a href="https://www.jsdelivr.com/package/npm/jsbarcode"><img src="https://data.jsdelivr.com/v1/package/npm/jsbarcode/badge?style=rounded" alt="CDN"></a>
 	<a href="https://github.com/lindell/JsBarcode/blob/master/MIT-LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"/></a>
 </p>
 
@@ -142,8 +143,6 @@ Download or get the CDN link to the script:
 |  MSI  |  MSI, MSI10, MSI11, MSI1010, MSI1110  |  4.9 kB  |  [JsBarcode.msi.min.js][7]  |
 |  Pharmacode  |  Pharmacode  |  4.6 kB  |  [JsBarcode.pharmacode.min.js][8]  |
 |  Codabar  |  Codabar  |  4.8 kB  |  [JsBarcode.codabar.min.js][9]  |
-
-[![](https://data.jsdelivr.com/v1/package/npm/jsbarcode/badge)](https://www.jsdelivr.com/package/npm/jsbarcode)
 
 
 ### Step 2:
