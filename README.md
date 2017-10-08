@@ -119,7 +119,7 @@ JsBarcode(".barcode").init();
 
 #### Retrieve the barcode values so you can render it any way you'd like
 Pass in an object which will be filled with data.
-```
+```javascript
 const data = {};
 JsBarcode(data, 'text', {...options});
 ```
@@ -159,17 +159,17 @@ You are done! Go generate some barcodes :smile:
 Bower and npm:
 ----
 You can also use [Bower](http://bower.io) or [npm](https://www.npmjs.com) to install and manage the library.
-````
+````bash
 bower install jsbarcode --save
 ````
-````
+````bash
 npm install jsbarcode --save
 ````
 
 Node.js:
 ----
 #### Install with npm:
-````
+````bash
 npm install jsbarcode
 npm install canvas
 ````
