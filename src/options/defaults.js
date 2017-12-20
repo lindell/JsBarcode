@@ -10,6 +10,7 @@ var defaults = {
 	textPosition: "bottom",
 	textMargin: 2,
 	fontSize: 20,
+	fontAntiAlias: true,
 	background: "#ffffff",
 	lineColor: "#000000",
 	margin: 10,
