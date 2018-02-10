@@ -9,7 +9,7 @@ describe('Codabar', function() {
 
   it('should encode a string with start and stop characters', function() {
     var enc = new Codabar("A12345B", {});
-    assert.equal("10110010010101011001010100101101100101010101101001011010100101010010011"
+    assert.equal("10110010010101011001010100101101100101010101101001011010100101001001011"
       , enc.encode().data);
   });
 
