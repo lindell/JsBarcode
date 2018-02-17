@@ -212,6 +212,7 @@ For information about how to use the options, see [the wiki page](https://github
 | [`marginBottom`](https://github.com/lindell/JsBarcode/wiki/Options#margins) | `undefined` | `Number` |
 | [`marginLeft`](https://github.com/lindell/JsBarcode/wiki/Options#margins) | `undefined` | `Number` |
 | [`marginRight`](https://github.com/lindell/JsBarcode/wiki/Options#margins) | `undefined` | `Number` |
+| [`flat`](https://github.com/lindell/JsBarcode/wiki/Options#flat) | `false` | `Boolean` |
 | [`valid`](https://github.com/lindell/JsBarcode/wiki/Options#valid) | `function(valid){}` | `Function` |
 
 Contributions and feedback:

@@ -27,5 +27,9 @@ function optionsFromStrings(options){
 		options["displayValue"] = (options["displayValue"] != "false");
 	}
 
+	if(typeof options["flat"] === "string"){
+		options["flat"] = (options["flat"] != "false");
+	}
+
 	return options;
 }
