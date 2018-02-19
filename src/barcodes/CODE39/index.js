@@ -36,6 +36,15 @@ class CODE39 extends Barcode {
 	valid(){
 		return this.data.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
 	}
+
+	static options() {
+		return {
+			mod43: {
+				type: "boolean",
+				default: false,
+			}
+		};
+	}
 }
 
 

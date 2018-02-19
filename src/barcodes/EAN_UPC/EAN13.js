@@ -141,6 +141,15 @@ class EAN13 extends Barcode{
 			text: this.text
 		};
 	}
+
+	static options() {
+		return {
+			flat: {
+				type: "boolean",
+				default: false,
+			}
+		};
+	}
 }
 
 // Calulate the checksum digit

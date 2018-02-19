@@ -1,23 +1,84 @@
 var defaults = {
-	width: 2,
-	height: 100,
-	format: "auto",
-	displayValue: true,
-	fontOptions: "",
-	font: "monospace",
-	text: undefined,
-	textAlign: "center",
-	textPosition: "bottom",
-	textMargin: 2,
-	fontSize: 20,
-	background: "#ffffff",
-	lineColor: "#000000",
-	margin: 10,
-	marginTop: undefined,
-	marginBottom: undefined,
-	marginLeft: undefined,
-	marginRight: undefined,
-	valid: function(){}
+	width: {
+		type: "number",
+		default: 2,
+	},
+	height: {
+		type: "number",
+		default: 100,
+	},
+	format: {
+		type: "string",
+		default: "auto",
+	},
+	displayValue: {
+		type: "boolean",
+		default: true,
+	},
+	fontOptions: {
+		type: "string",
+		default: "",
+	},
+	font: {
+		type: "string",
+		default: "monospace",
+	},
+	text: {
+		type: "string",
+		default: undefined,
+	},
+	textAlign: {
+		type: "string",
+		default: "center",
+	},
+	textPosition: {
+		type: "string",
+		default: "bottom",
+	},
+	textMargin: {
+		type: "number",
+		default: 2,
+	},
+	fontSize: {
+		type: "number",
+		default: 20,
+	},
+	background: {
+		type: "string",
+		default: "#ffffff",
+	},
+	lineColor: {
+		type: "string",
+		default: "#000000",
+	},
+	margin: {
+		type: "number",
+		default: 10,
+	},
+	marginTop: {
+		type: "number",
+		default: undefined,
+	},
+	marginBottom: {
+		type: "number",
+		default: undefined,
+	},
+	marginLeft: {
+		type: "number",
+		default: undefined,
+	},
+	marginRight: {
+		type: "number",
+		default: undefined,
+	},
+	valid: {
+		type: "function",
+		default: undefined,
+	},
+	xmlDocument: {
+		type: "function",
+		default: undefined,
+	}
 };
 
 export default defaults;
