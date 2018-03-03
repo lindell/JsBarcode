@@ -1,7 +1,7 @@
 // Encoding documentation:
 // https://en.wikipedia.org/wiki/Universal_Product_Code#Encoding
 
-import EANencoder from './ean_encoder.js';
+import encode from './encoder';
 import Barcode from "../Barcode.js";
 
 class UPC extends Barcode{
@@ -42,13 +42,12 @@ class UPC extends Barcode{
 	}
 
 	flatEncoding(){
-		var encoder = new EANencoder();
 		var result = "";
 
 		result += "101";
-		result += encoder.encode(this.data.substr(0, 6), "LLLLLL");
+		result += encode(this.data.substr(0, 6), "LLLLLL");
 		result += "01010";
-		result += encoder.encode(this.data.substr(6, 6), "RRRRRR");
+		result += encode(this.data.substr(6, 6), "RRRRRR");
 		result += "101";
 
 		return {
@@ -58,7 +57,6 @@ class UPC extends Barcode{
 	}
 
 	guardedEncoding(){
-		var encoder = new EANencoder();
 		var result = [];
 
 		// Add the first digit
@@ -72,13 +70,13 @@ class UPC extends Barcode{
 
 		// Add the guard bars
 		result.push({
-			data: "101" + encoder.encode(this.data[0], "L"),
+			data: "101" + encode(this.data[0], "L"),
 			options: {height: this.guardHeight}
 		});
 
 		// Add the left side
 		result.push({
-			data: encoder.encode(this.data.substr(1, 5), "LLLLL"),
+			data: encode(this.data.substr(1, 5), "LLLLL"),
 			text: this.text.substr(1, 5),
 			options: {fontSize: this.fontSize}
 		});
@@ -91,14 +89,14 @@ class UPC extends Barcode{
 
 		// Add the right side
 		result.push({
-			data: encoder.encode(this.data.substr(6, 5), "RRRRR"),
+			data: encode(this.data.substr(6, 5), "RRRRR"),
 			text: this.text.substr(6, 5),
 			options: {fontSize: this.fontSize}
 		});
 
 		// Add the end bits
 		result.push({
-			data: encoder.encode(this.data[11], "R") + "101",
+			data: encode(this.data[11], "R") + "101",
 			options: {height: this.guardHeight}
 		});
 

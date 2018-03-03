@@ -1,25 +1,40 @@
 // Encoding documentation:
 // https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Binary_encoding_of_data_digits_into_EAN-13_barcode
 
-import EANencoder from './ean_encoder.js';
-import Barcode from "../Barcode.js";
+import { SIDE_BIN, MIDDLE_BIN, EAN13_STRUCTURE } from './constants';
+import encode from './encoder';
+import Barcode from '../Barcode';
 
-class EAN13 extends Barcode{
-	constructor(data, options){
+// Calculate the checksum digit
+// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
+const checksum = (number) => {
+	const res = number
+		.substr(0, 12)
+		.split('')
+		.map((n) => +n)
+		.reduce((sum, a, idx) => {
+			return idx % 2
+				? sum + a * 3
+				: sum + a;
+		}, 0);
+
+	return (10 - (res % 10)) % 10;
+};
+
+class EAN13 extends Barcode {
+
+	constructor(data, options) {
 		// Add checksum if it does not exist
-		if(data.search(/^[0-9]{12}$/) !== -1){
+		if (data.search(/^[0-9]{12}$/) !== -1) {
 			data += checksum(data);
 		}
 
 		super(data, options);
 
 		// Make sure the font is not bigger than the space between the guard bars
-		if(!options.flat && options.fontSize > options.width * 10){
-			this.fontSize = options.width * 10;
-		}
-		else{
-			this.fontSize = options.fontSize;
-		}
+		this.fontSize = !options.flat && options.fontSize > options.width * 10
+			? options.width * 10
+			: options.fontSize;
 
 		// Make the guard bars go down half the way of the text
 		this.guardHeight = options.height + this.fontSize / 2 + options.textMargin;
@@ -28,135 +43,89 @@ class EAN13 extends Barcode{
 		this.lastChar = options.lastChar;
 	}
 
-	valid(){
-		return this.data.search(/^[0-9]{13}$/) !== -1 &&
-			this.data[12] == checksum(this.data);
+	valid() {
+		return (
+			this.data.search(/^[0-9]{13}$/) !== -1 &&
+			+this.data[12] === checksum(this.data)
+		);
 	}
 
-	encode(){
-		if(this.options.flat){
-			return this.flatEncoding();
-		}
-		else{
-			return this.guardedEncoding();
-		}
+	encode() {
+		return this.options.flat
+			? this.encodeFlat()
+			: this.encodeGuarded();
 	}
 
-	// Define the EAN-13 structure
-	getStructure(){
-		return [
-			"LLLLLL",
-			"LLGLGG",
-			"LLGGLG",
-			"LLGGGL",
-			"LGLLGG",
-			"LGGLLG",
-			"LGGGLL",
-			"LGLGLG",
-			"LGLGGL",
-			"LGGLGL"
-		];
+	get leftData() {
+		return this.data.substr(1, 6);
+	}
+
+	get rightData() {
+		return this.data.substr(7, 6);
 	}
 
 	// The "standard" way of printing EAN13 barcodes with guard bars
-	guardedEncoding(){
-		var encoder = new EANencoder();
-		var result = [];
+	encodeGuarded() {
+		const textOptions = { fontSize: this.fontSize };
+		const guardOptions = { height: this.guardHeight };
 
-		var structure = this.getStructure()[this.data[0]];
+		const data = [
+			{
+				data: SIDE_BIN,
+				options: guardOptions
+			},
+			{
+				data: encode(this.leftData, EAN13_STRUCTURE[this.data[0]]),
+				text: this.text.substr(1, 6),
+				options: textOptions
+			},
+			{
+				data: MIDDLE_BIN,
+				options: guardOptions
+			},
+			{
+				data: encode(this.rightData, 'RRRRRR'),
+				text: this.text.substr(7, 6),
+				options: textOptions
+			},
+			{
+				data: SIDE_BIN,
+				options: guardOptions
+			},
+		];
 
-		// Get the string to be encoded on the left side of the EAN code
-		var leftSide = this.data.substr(1, 6);
-
-		// Get the string to be encoded on the right side of the EAN code
-		var rightSide = this.data.substr(7, 6);
-
-		// Add the first digigt
-		if(this.options.displayValue){
-			result.push({
-				data: "000000000000",
+		if (this.options.displayValue) {
+			data.unshift({
+				data: '000000000000',
 				text: this.text.substr(0, 1),
-				options: {textAlign: "left", fontSize: this.fontSize}
+				options: { textAlign: 'left', ...textOptions }
 			});
+
+			if (this.options.lastChar) {
+				data.push({
+					data: '00'
+				});
+				data.push({
+					data: '00000',
+					text: this.options.lastChar,
+					options: textOptions
+				});
+			}
 		}
 
-		// Add the guard bars
-		result.push({
-			data: "101",
-			options: {height: this.guardHeight}
-		});
-
-		// Add the left side
-		result.push({
-			data: encoder.encode(leftSide, structure),
-			text: this.text.substr(1, 6),
-			options: {fontSize: this.fontSize}
-		});
-
-		// Add the middle bits
-		result.push({
-			data: "01010",
-			options: {height: this.guardHeight}
-		});
-
-		// Add the right side
-		result.push({
-			data: encoder.encode(rightSide, "RRRRRR"),
-			text: this.text.substr(7, 6),
-			options: {fontSize: this.fontSize}
-		});
-
-		// Add the end bits
-		result.push({
-			data: "101",
-			options: {height: this.guardHeight}
-		});
-
-		if(this.options.lastChar && this.options.displayValue){
-			result.push({data: "00"});
-
-			result.push({
-				data: "00000",
-				text: this.options.lastChar,
-				options: {fontSize: this.fontSize}
-			});
-		}
-		return result;
+		return data;
 	}
 
-	flatEncoding(){
-		var encoder = new EANencoder();
-		var result = "";
-
-		var structure = this.getStructure()[this.data[0]];
-
-		result += "101";
-		result += encoder.encode(this.data.substr(1, 6), structure);
-		result += "01010";
-		result += encoder.encode(this.data.substr(7, 6), "RRRRRR");
-		result += "101";
+	encodeFlat() {
+		const left = encode(this.leftData, EAN13_STRUCTURE[this.data[0]]);
+		const right = encode(this.rightData, 'RRRRRR');
 
 		return {
-			data: result,
+			data: [SIDE_BIN, left, MIDDLE_BIN, right, SIDE_BIN].join(''),
 			text: this.text
 		};
 	}
-}
 
-// Calulate the checksum digit
-// https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
-function checksum(number){
-	var result = 0;
-
-	var i;
-	for(i = 0; i < 12; i += 2){
-		result += parseInt(number[i]);
-	}
-	for(i = 1; i < 12; i += 2){
-		result += parseInt(number[i]) * 3;
-	}
-
-	return (10 - (result % 10)) % 10;
 }
 
 export default EAN13;

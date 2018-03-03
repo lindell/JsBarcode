@@ -1,11 +1,28 @@
 // Encoding documentation:
 // http://www.barcodeisland.com/ean8.phtml
 
-import EANencoder from './ean_encoder.js';
-import Barcode from "../Barcode.js";
+import { SIDE_BIN, MIDDLE_BIN } from './constants';
+import encode from './encoder';
+import Barcode from "../Barcode";
 
-class EAN8 extends Barcode{
-	constructor(data, options){
+// Calculate the checksum digit
+const checksum = (number) => {
+	const res = number
+		.substr(0, 7)
+		.split('')
+		.map((n) => +n)
+		.reduce((sum, a, idx) => {
+			return idx % 2
+				? sum + a
+				: sum + a * 3;
+		}, 0);
+
+	return (10 - (res % 10)) % 10;
+};
+
+class EAN8 extends Barcode {
+
+	constructor(data, options) {
 		// Add checksum if it does not exist
 		if(data.search(/^[0-9]{7}$/) !== -1){
 			data += checksum(data);
@@ -14,59 +31,36 @@ class EAN8 extends Barcode{
 		super(data, options);
 	}
 
-	valid(){
-		return this.data.search(/^[0-9]{8}$/) !== -1 &&
-			this.data[7] == checksum(this.data);
+	valid() {
+		return (
+			this.data.search(/^[0-9]{8}$/) !== -1 &&
+			+this.data[7] === checksum(this.data)
+		);
 	}
 
-	encode(){
-		var encoder = new EANencoder();
+	get leftData() {
+		return this.data.substr(0, 4);
+	}
 
-		// Create the return variable
-		var result = "";
+	get rightData() {
+		return this.data.substr(4, 4);
+	}
 
-		// Get the number to be encoded on the left side of the EAN code
-		var leftSide = this.data.substr(0, 4);
-
-		// Get the number to be encoded on the right side of the EAN code
-		var rightSide = this.data.substr(4, 4);
-
-		// Add the start bits
-		result += encoder.startBin;
-
-		// Add the left side
-		result += encoder.encode(leftSide, "LLLL");
-
-		// Add the middle bits
-		result += encoder.middleBin;
-
-		// Add the right side
-		result += encoder.encode(rightSide, "RRRR");
-
-		// Add the end bits
-		result += encoder.endBin;
+	encode() {
+		const data = [
+			SIDE_BIN,
+			encode(this.leftData, 'LLLL'),
+			MIDDLE_BIN,
+			encode(this.rightData, 'RRRR'),
+			SIDE_BIN,
+		];
 
 		return {
-			data: result,
+			data: data.join(''),
 			text: this.text
 		};
 	}
-}
 
-// Calulate the checksum digit
-function checksum(number){
-	var result = 0;
-
-	var i;
-	for(i = 0; i < 7; i += 2){
-		result += parseInt(number[i]) * 3;
-	}
-
-	for(i = 1; i < 7; i += 2){
-		result += parseInt(number[i]);
-	}
-
-	return (10 - (result % 10)) % 10;
 }
 
 export default EAN8;
