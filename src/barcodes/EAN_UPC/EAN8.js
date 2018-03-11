@@ -11,11 +11,9 @@ const checksum = (number) => {
 		.substr(0, 7)
 		.split('')
 		.map((n) => +n)
-		.reduce((sum, a, idx) => {
-			return idx % 2
-				? sum + a
-				: sum + a * 3;
-		}, 0);
+		.reduce((sum, a, idx) => (
+			idx % 2 ? sum + a : sum + a * 3
+		), 0);
 
 	return (10 - (res % 10)) % 10;
 };
