@@ -1,37 +1,30 @@
 // Encoding documentation:
 // https://en.wikipedia.org/wiki/EAN_2#Encoding
 
-import EANencoder from './ean_encoder.js';
-import Barcode from "../Barcode.js";
+import { EAN2_STRUCTURE } from './constants';
+import encode from './encoder';
+import Barcode from '../Barcode';
 
-class EAN2 extends Barcode{
-	constructor(data, options){
+class EAN2 extends Barcode {
+
+	constructor(data, options) {
 		super(data, options);
-
-		this.structure = ["LL", "LG", "GL", "GG"];
 	}
 
-	valid(){
+	valid() {
 		return this.data.search(/^[0-9]{2}$/) !== -1;
 	}
 
 	encode(){
-		var encoder = new EANencoder();
-
 		// Choose the structure based on the number mod 4
-		var structure = this.structure[parseInt(this.data) % 4];
-
-		// Start bits
-		var result = "1011";
-
-		// Encode the two digits with 01 in between
-		result += encoder.encode(this.data, structure, "01");
-
+		const structure = EAN2_STRUCTURE[parseInt(this.data) % 4];
 		return {
-			data: result,
+			// Start bits + Encode the two digits with 01 in between
+			data: '1011' + encode(this.data, structure, '01'),
 			text: this.text
 		};
 	}
+
 }
 
 export default EAN2;

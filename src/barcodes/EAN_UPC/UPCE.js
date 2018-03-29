@@ -4,7 +4,7 @@
 // UPC-E documentation:
 // https://en.wikipedia.org/wiki/Universal_Product_Code#UPC-E
 
-import EANencoder from './ean_encoder.js';
+import encode from './encoder';
 import Barcode from "../Barcode.js";
 import { checksum } from './UPC.js';
 
@@ -92,11 +92,10 @@ class UPCE extends Barcode{
 	}
 
 	flatEncoding(){
-		var encoder = new EANencoder();
 		var result = "";
 
 		result += "101";
-		result += this.encodeMiddleDigits(encoder);
+		result += this.encodeMiddleDigits();
 		result += "010101";
 
 		return {
@@ -106,7 +105,6 @@ class UPCE extends Barcode{
 	}
 
 	guardedEncoding(){
-		var encoder = new EANencoder();
 		var result = [];
 
 		// Add the UPC-A number system digit beneath the quiet zone
@@ -126,7 +124,7 @@ class UPCE extends Barcode{
 
 		// Add the 6 UPC-E digits
 		result.push({
-			data: this.encodeMiddleDigits(encoder),
+			data: this.encodeMiddleDigits(),
 			text: this.text.substring(1, 7),
 			options: {fontSize: this.fontSize}
 		});
@@ -149,11 +147,11 @@ class UPCE extends Barcode{
 		return result;
 	}
 
-	encodeMiddleDigits(encoder) {
+	encodeMiddleDigits() {
 		const numberSystem = this.upcA[0];
 		const checkDigit = this.upcA[this.upcA.length - 1];
 		const parity = PARITIES[parseInt(checkDigit)][parseInt(numberSystem)];
-		return encoder.encode(this.middleDigits, parity);
+		return encode(this.middleDigits, parity);
 	}
 }
 
