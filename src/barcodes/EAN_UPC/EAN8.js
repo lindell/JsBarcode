@@ -1,9 +1,7 @@
 // Encoding documentation:
 // http://www.barcodeisland.com/ean8.phtml
 
-import { SIDE_BIN, MIDDLE_BIN } from './constants';
-import encode from './encoder';
-import Barcode from "../Barcode";
+import EAN from './EAN';
 
 // Calculate the checksum digit
 const checksum = (number) => {
@@ -18,11 +16,11 @@ const checksum = (number) => {
 	return (10 - (res % 10)) % 10;
 };
 
-class EAN8 extends Barcode {
+class EAN8 extends EAN {
 
 	constructor(data, options) {
 		// Add checksum if it does not exist
-		if(data.search(/^[0-9]{7}$/) !== -1){
+		if (data.search(/^[0-9]{7}$/) !== -1) {
 			data += checksum(data);
 		}
 
@@ -36,27 +34,22 @@ class EAN8 extends Barcode {
 		);
 	}
 
-	get leftData() {
-		return this.data.substr(0, 4);
+	leftText() {
+		return super.leftText(0, 4);
 	}
 
-	get rightData() {
-		return this.data.substr(4, 4);
+	leftEncode() {
+		const data = this.data.substr(0, 4);
+		return super.leftEncode(data, 'LLLL');
 	}
 
-	encode() {
-		const data = [
-			SIDE_BIN,
-			encode(this.leftData, 'LLLL'),
-			MIDDLE_BIN,
-			encode(this.rightData, 'RRRR'),
-			SIDE_BIN,
-		];
+	rightText() {
+		return super.rightText(4, 4);
+	}
 
-		return {
-			data: data.join(''),
-			text: this.text
-		};
+	rightEncode() {
+		const data = this.data.substr(4, 4);
+		return super.rightEncode(data, 'RRRR');
 	}
 
 }

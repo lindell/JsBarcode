@@ -25,6 +25,10 @@ declare namespace JsBarcode {
     ean128?: boolean;
   }
 
+  interface Ean8Options extends BaseOptions {
+    flat?: boolean;
+  }
+
   interface Ean13Options extends BaseOptions {
     flat?: boolean;
     lastChar?: string;
@@ -43,7 +47,7 @@ declare namespace JsBarcode {
     CODE128B(value: string, options?: Code128Options): api;
     CODE128C(value: string, options?: Code128Options): api;
     EAN13(value: string, options?: Ean13Options): api;
-    EAN8(value: string, options?: BaseOptions): api;
+    EAN8(value: string, options?: Ean8Options): api;
     EAN5(value: string, options?: BaseOptions): api;
     EAN2(value: string, options?: BaseOptions): api;
     UPC(value: string, options?: BaseOptions): api;
