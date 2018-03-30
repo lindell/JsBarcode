@@ -122,16 +122,25 @@ describe('EAN-8', function() {
     var enc = new EAN8("96385074", {});
     assert.equal(true, enc.valid());
     assert.equal("1010001011010111101111010110111010101001110111001010001001011100101"
+      , help.fixBin(enc.encode()));
+    assert.equal("96385074", help.fixText(enc.encode()));
+  });
+
+  it('should be able to encode normal text with flat option', function () {
+    var enc = new EAN8("96385074", help.merge(options, {flat: true}));
+    assert.equal(true, enc.valid());
+    assert.equal("1010001011010111101111010110111010101001110111001010001001011100101"
       , enc.encode().data);
+    assert.equal("96385074", help.fixText(enc.encode()));
   });
 
   it('should auto include the checksum if missing', function () {
     var enc = new EAN8("9638507", {});
 
     assert.equal(true, enc.valid());
-    assert.equal("96385074", enc.encode().text);
+    assert.equal("96385074", help.fixText(enc.encode()));
     assert.equal("1010001011010111101111010110111010101001110111001010001001011100101"
-      , enc.encode().data);
+      , help.fixBin(enc.encode()));
   });
 
   it('should warn with invalid text', function () {
@@ -143,7 +152,7 @@ describe('EAN-8', function() {
   });
 
   it('should work with text option', function () {
-    var enc = new EAN8("96385074", help.merge(options, {text: "THISISTEXT"}));
+    var enc = new EAN8("96385074", help.merge(options, {text: "THISISTEXT", flat: true}));
     assert.equal("THISISTEXT", help.fixText(enc.encode()));
   });
 });
