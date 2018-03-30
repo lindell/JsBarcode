@@ -60,6 +60,10 @@ var CODE128 = function (_Barcode) {
 				throw new RangeError('The encoding does not start with a start character.');
 			}
 
+			if (this.shouldEncodeAsEan128() === true) {
+				bytes.unshift(_constants.FNC1);
+			}
+
 			// Start encode with the right type
 			var encodingResult = CODE128.next(bytes, 1, startSet);
 
@@ -75,6 +79,18 @@ var CODE128 = function (_Barcode) {
 				// Add the end bits
 				CODE128.getBar(_constants.STOP)
 			};
+		}
+
+		// GS1-128/EAN-128
+
+	}, {
+		key: 'shouldEncodeAsEan128',
+		value: function shouldEncodeAsEan128() {
+			var isEAN128 = this.options.ean128 || false;
+			if (typeof isEAN128 === 'string') {
+				isEAN128 = isEAN128.toLowerCase() === 'true';
+			}
+			return isEAN128;
 		}
 
 		// Get a bar symbol by index

@@ -8,9 +8,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 exports.checksum = checksum;
 
-var _ean_encoder = require("./ean_encoder.js");
+var _encoder = require("./encoder");
 
-var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
+var _encoder2 = _interopRequireDefault(_encoder);
 
 var _Barcode2 = require("../Barcode.js");
 
@@ -69,13 +69,12 @@ var UPC = function (_Barcode) {
 	}, {
 		key: "flatEncoding",
 		value: function flatEncoding() {
-			var encoder = new _ean_encoder2.default();
 			var result = "";
 
 			result += "101";
-			result += encoder.encode(this.data.substr(0, 6), "LLLLLL");
+			result += (0, _encoder2.default)(this.data.substr(0, 6), "LLLLLL");
 			result += "01010";
-			result += encoder.encode(this.data.substr(6, 6), "RRRRRR");
+			result += (0, _encoder2.default)(this.data.substr(6, 6), "RRRRRR");
 			result += "101";
 
 			return {
@@ -86,7 +85,6 @@ var UPC = function (_Barcode) {
 	}, {
 		key: "guardedEncoding",
 		value: function guardedEncoding() {
-			var encoder = new _ean_encoder2.default();
 			var result = [];
 
 			// Add the first digit
@@ -100,13 +98,13 @@ var UPC = function (_Barcode) {
 
 			// Add the guard bars
 			result.push({
-				data: "101" + encoder.encode(this.data[0], "L"),
+				data: "101" + (0, _encoder2.default)(this.data[0], "L"),
 				options: { height: this.guardHeight }
 			});
 
 			// Add the left side
 			result.push({
-				data: encoder.encode(this.data.substr(1, 5), "LLLLL"),
+				data: (0, _encoder2.default)(this.data.substr(1, 5), "LLLLL"),
 				text: this.text.substr(1, 5),
 				options: { fontSize: this.fontSize }
 			});
@@ -119,14 +117,14 @@ var UPC = function (_Barcode) {
 
 			// Add the right side
 			result.push({
-				data: encoder.encode(this.data.substr(6, 5), "RRRRR"),
+				data: (0, _encoder2.default)(this.data.substr(6, 5), "RRRRR"),
 				text: this.text.substr(6, 5),
 				options: { fontSize: this.fontSize }
 			});
 
 			// Add the end bits
 			result.push({
-				data: encoder.encode(this.data[11], "R") + "101",
+				data: (0, _encoder2.default)(this.data[11], "R") + "101",
 				options: { height: this.guardHeight }
 			});
 

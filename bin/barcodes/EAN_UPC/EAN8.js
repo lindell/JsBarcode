@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -6,13 +6,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _ean_encoder = require("./ean_encoder.js");
+var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
+var _EAN2 = require('./EAN');
 
-var _Barcode2 = require("../Barcode.js");
-
-var _Barcode3 = _interopRequireDefault(_Barcode2);
+var _EAN3 = _interopRequireDefault(_EAN2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23,8 +21,19 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding documentation:
 // http://www.barcodeisland.com/ean8.phtml
 
-var EAN8 = function (_Barcode) {
-	_inherits(EAN8, _Barcode);
+// Calculate the checksum digit
+var checksum = function checksum(number) {
+	var res = number.substr(0, 7).split('').map(function (n) {
+		return +n;
+	}).reduce(function (sum, a, idx) {
+		return idx % 2 ? sum + a : sum + a * 3;
+	}, 0);
+
+	return (10 - res % 10) % 10;
+};
+
+var EAN8 = function (_EAN) {
+	_inherits(EAN8, _EAN);
 
 	function EAN8(data, options) {
 		_classCallCheck(this, EAN8);
@@ -38,65 +47,35 @@ var EAN8 = function (_Barcode) {
 	}
 
 	_createClass(EAN8, [{
-		key: "valid",
+		key: 'valid',
 		value: function valid() {
-			return this.data.search(/^[0-9]{8}$/) !== -1 && this.data[7] == checksum(this.data);
+			return this.data.search(/^[0-9]{8}$/) !== -1 && +this.data[7] === checksum(this.data);
 		}
 	}, {
-		key: "encode",
-		value: function encode() {
-			var encoder = new _ean_encoder2.default();
-
-			// Create the return variable
-			var result = "";
-
-			// Get the number to be encoded on the left side of the EAN code
-			var leftSide = this.data.substr(0, 4);
-
-			// Get the number to be encoded on the right side of the EAN code
-			var rightSide = this.data.substr(4, 4);
-
-			// Add the start bits
-			result += encoder.startBin;
-
-			// Add the left side
-			result += encoder.encode(leftSide, "LLLL");
-
-			// Add the middle bits
-			result += encoder.middleBin;
-
-			// Add the right side
-			result += encoder.encode(rightSide, "RRRR");
-
-			// Add the end bits
-			result += encoder.endBin;
-
-			return {
-				data: result,
-				text: this.text
-			};
+		key: 'leftText',
+		value: function leftText() {
+			return _get(EAN8.prototype.__proto__ || Object.getPrototypeOf(EAN8.prototype), 'leftText', this).call(this, 0, 4);
+		}
+	}, {
+		key: 'leftEncode',
+		value: function leftEncode() {
+			var data = this.data.substr(0, 4);
+			return _get(EAN8.prototype.__proto__ || Object.getPrototypeOf(EAN8.prototype), 'leftEncode', this).call(this, data, 'LLLL');
+		}
+	}, {
+		key: 'rightText',
+		value: function rightText() {
+			return _get(EAN8.prototype.__proto__ || Object.getPrototypeOf(EAN8.prototype), 'rightText', this).call(this, 4, 4);
+		}
+	}, {
+		key: 'rightEncode',
+		value: function rightEncode() {
+			var data = this.data.substr(4, 4);
+			return _get(EAN8.prototype.__proto__ || Object.getPrototypeOf(EAN8.prototype), 'rightEncode', this).call(this, data, 'RRRR');
 		}
 	}]);
 
 	return EAN8;
-}(_Barcode3.default);
-
-// Calulate the checksum digit
-
-
-function checksum(number) {
-	var result = 0;
-
-	var i;
-	for (i = 0; i < 7; i += 2) {
-		result += parseInt(number[i]) * 3;
-	}
-
-	for (i = 1; i < 7; i += 2) {
-		result += parseInt(number[i]);
-	}
-
-	return (10 - result % 10) % 10;
-}
+}(_EAN3.default);
 
 exports.default = EAN8;

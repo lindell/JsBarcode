@@ -6,9 +6,9 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _ean_encoder = require('./ean_encoder.js');
+var _encoder = require('./encoder');
 
-var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
+var _encoder2 = _interopRequireDefault(_encoder);
 
 var _Barcode2 = require('../Barcode.js');
 
@@ -95,11 +95,10 @@ var UPCE = function (_Barcode) {
 	}, {
 		key: 'flatEncoding',
 		value: function flatEncoding() {
-			var encoder = new _ean_encoder2.default();
 			var result = "";
 
 			result += "101";
-			result += this.encodeMiddleDigits(encoder);
+			result += this.encodeMiddleDigits();
 			result += "010101";
 
 			return {
@@ -110,7 +109,6 @@ var UPCE = function (_Barcode) {
 	}, {
 		key: 'guardedEncoding',
 		value: function guardedEncoding() {
-			var encoder = new _ean_encoder2.default();
 			var result = [];
 
 			// Add the UPC-A number system digit beneath the quiet zone
@@ -130,7 +128,7 @@ var UPCE = function (_Barcode) {
 
 			// Add the 6 UPC-E digits
 			result.push({
-				data: this.encodeMiddleDigits(encoder),
+				data: this.encodeMiddleDigits(),
 				text: this.text.substring(1, 7),
 				options: { fontSize: this.fontSize }
 			});
@@ -154,11 +152,11 @@ var UPCE = function (_Barcode) {
 		}
 	}, {
 		key: 'encodeMiddleDigits',
-		value: function encodeMiddleDigits(encoder) {
+		value: function encodeMiddleDigits() {
 			var numberSystem = this.upcA[0];
 			var checkDigit = this.upcA[this.upcA.length - 1];
 			var parity = PARITIES[parseInt(checkDigit)][parseInt(numberSystem)];
-			return encoder.encode(this.middleDigits, parity);
+			return (0, _encoder2.default)(this.middleDigits, parity);
 		}
 	}]);
 

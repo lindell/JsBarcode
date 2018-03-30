@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -6,11 +6,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _ean_encoder = require("./ean_encoder.js");
+var _constants = require('./constants');
 
-var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
+var _encoder = require('./encoder');
 
-var _Barcode2 = require("../Barcode.js");
+var _encoder2 = _interopRequireDefault(_encoder);
+
+var _Barcode2 = require('../Barcode');
 
 var _Barcode3 = _interopRequireDefault(_Barcode2);
 
@@ -29,33 +31,22 @@ var EAN2 = function (_Barcode) {
 	function EAN2(data, options) {
 		_classCallCheck(this, EAN2);
 
-		var _this = _possibleConstructorReturn(this, (EAN2.__proto__ || Object.getPrototypeOf(EAN2)).call(this, data, options));
-
-		_this.structure = ["LL", "LG", "GL", "GG"];
-		return _this;
+		return _possibleConstructorReturn(this, (EAN2.__proto__ || Object.getPrototypeOf(EAN2)).call(this, data, options));
 	}
 
 	_createClass(EAN2, [{
-		key: "valid",
+		key: 'valid',
 		value: function valid() {
 			return this.data.search(/^[0-9]{2}$/) !== -1;
 		}
 	}, {
-		key: "encode",
+		key: 'encode',
 		value: function encode() {
-			var encoder = new _ean_encoder2.default();
-
 			// Choose the structure based on the number mod 4
-			var structure = this.structure[parseInt(this.data) % 4];
-
-			// Start bits
-			var result = "1011";
-
-			// Encode the two digits with 01 in between
-			result += encoder.encode(this.data, structure, "01");
-
+			var structure = _constants.EAN2_STRUCTURE[parseInt(this.data) % 4];
 			return {
-				data: result,
+				// Start bits + Encode the two digits with 01 in between
+				data: '1011' + (0, _encoder2.default)(this.data, structure, '01'),
 				text: this.text
 			};
 		}

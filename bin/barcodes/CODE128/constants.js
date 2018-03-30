@@ -20,6 +20,7 @@ var START_B = exports.START_B = 104;
 var START_C = exports.START_C = 105;
 var MODULO = exports.MODULO = 103;
 var STOP = exports.STOP = 106;
+var FNC1 = exports.FNC1 = 207;
 
 // Get set by start code
 var SET_BY_CODE = exports.SET_BY_CODE = (_SET_BY_CODE = {}, _defineProperty(_SET_BY_CODE, START_A, SET_A), _defineProperty(_SET_BY_CODE, START_B, SET_B), _defineProperty(_SET_BY_CODE, START_C, SET_C), _SET_BY_CODE);

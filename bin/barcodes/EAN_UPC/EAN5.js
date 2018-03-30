@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
@@ -6,11 +6,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _ean_encoder = require("./ean_encoder.js");
+var _constants = require('./constants');
 
-var _ean_encoder2 = _interopRequireDefault(_ean_encoder);
+var _encoder = require('./encoder');
 
-var _Barcode2 = require("../Barcode.js");
+var _encoder2 = _interopRequireDefault(_encoder);
+
+var _Barcode2 = require('../Barcode');
 
 var _Barcode3 = _interopRequireDefault(_Barcode2);
 
@@ -23,53 +25,37 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // Encoding documentation:
 // https://en.wikipedia.org/wiki/EAN_5#Encoding
 
+var checksum = function checksum(data) {
+	var result = data.split('').map(function (n) {
+		return +n;
+	}).reduce(function (sum, a, idx) {
+		return idx % 2 ? sum + a * 9 : sum + a * 3;
+	}, 0);
+	return result % 10;
+};
+
 var EAN5 = function (_Barcode) {
 	_inherits(EAN5, _Barcode);
 
 	function EAN5(data, options) {
 		_classCallCheck(this, EAN5);
 
-		// Define the EAN-13 structure
-		var _this = _possibleConstructorReturn(this, (EAN5.__proto__ || Object.getPrototypeOf(EAN5)).call(this, data, options));
-
-		_this.structure = ["GGLLL", "GLGLL", "GLLGL", "GLLLG", "LGGLL", "LLGGL", "LLLGG", "LGLGL", "LGLLG", "LLGLG"];
-		return _this;
+		return _possibleConstructorReturn(this, (EAN5.__proto__ || Object.getPrototypeOf(EAN5)).call(this, data, options));
 	}
 
 	_createClass(EAN5, [{
-		key: "valid",
+		key: 'valid',
 		value: function valid() {
 			return this.data.search(/^[0-9]{5}$/) !== -1;
 		}
 	}, {
-		key: "encode",
+		key: 'encode',
 		value: function encode() {
-			var encoder = new _ean_encoder2.default();
-			var checksum = this.checksum();
-
-			// Start bits
-			var result = "1011";
-
-			// Use normal ean encoding with 01 in between all digits
-			result += encoder.encode(this.data, this.structure[checksum], "01");
-
+			var structure = _constants.EAN5_STRUCTURE[checksum(this.data)];
 			return {
-				data: result,
+				data: '1011' + (0, _encoder2.default)(this.data, structure, '01'),
 				text: this.text
 			};
-		}
-	}, {
-		key: "checksum",
-		value: function checksum() {
-			var result = 0;
-
-			result += parseInt(this.data[0]) * 3;
-			result += parseInt(this.data[1]) * 9;
-			result += parseInt(this.data[2]) * 3;
-			result += parseInt(this.data[3]) * 9;
-			result += parseInt(this.data[4]) * 3;
-
-			return result % 10;
 		}
 	}]);
 
