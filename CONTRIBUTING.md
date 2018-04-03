@@ -7,7 +7,7 @@ First fork and clone the repo:
 git clone git@github.com:your-username/JsBarcode.git
 ````
 
-Then run ``npm install`` to set everything up. Make sure you have all dependencies of [node-canvas](https://github.com/Automattic/node-canvas) installed before doing this.
+Then run ``npm install`` to set everything up. Make sure you have all dependencies of [node-canvas](https://github.com/Automattic/node-canvas) installed before doing this, or check **Using Docker** section.
 
 You are now ready to start doing your changes.
 
@@ -29,6 +29,10 @@ Testing
 JsBarcode has tests on all barcode symbologies (and more). If you want to test your changes just run ``npm test`` and the code will be compiled and tested.
 
 There are also visual tests located under ``test/browser/``.
+
+Using Docker
+----
+If you have installed [Docker](https://www.docker.com), you can avoid local installation of dependencies for [node-canvas](https://github.com/Automattic/node-canvas). For doing that, run ``npm install --ignore-scripts`` instead of ``npm install``. Then you can run tests by ``docker-compose up``
 
 Symbologies and The Core
 ----

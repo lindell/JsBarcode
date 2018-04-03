@@ -1,0 +1,10 @@
+version: '2'
+services:
+  jsbarcode:
+    build:
+      context: ./
+    volumes:
+      - ./src:/frontend/src
+      - ./test:/frontend/test
+    ports:
+      - 3000:3000
