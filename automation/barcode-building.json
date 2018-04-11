@@ -15,13 +15,8 @@
     "barcodeFile": "./EAN_UPC"
   },
   {
-    "name": "itf-14",
-    "names": "ITF14",
-    "barcodeFile": "./ITF14"
-  },
-  {
     "name": "itf",
-    "names": "ITF",
+    "names": "ITF, ITF14",
     "barcodeFile": "./ITF"
   },
   {
