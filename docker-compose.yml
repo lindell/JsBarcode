@@ -1,0 +1,10 @@
+version: '2'
+services:
+  jsbarcode:
+    build:
+      context: ./
+    volumes:
+      - ./src:/jsbarcode/src
+      - ./test:/jsbarcode/test
+    ports:
+      - 3000:3000
