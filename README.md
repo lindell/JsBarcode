@@ -140,7 +140,7 @@ Download or get the CDN link to the script:
 |  CODE128  |  CODE128 (auto and force mode)  |  6.1 kB  |  [JsBarcode.code128.min.js][2]  |
 |  CODE39  |  CODE39  |  5 kB  |  [JsBarcode.code39.min.js][3]  |
 |  EAN / UPC  |  EAN-13, EAN-8, EAN-5, EAN-2, UPC (A)  |  6.5 kB  |  [JsBarcode.ean-upc.min.js][4]  |
-|  ITF  |  ITF, ITF-14  |  4.7 kB  |  [JsBarcode.itf.min.js][5]  |
+|  ITF  |  ITF, ITF-14  |  4.9 kB  |  [JsBarcode.itf.min.js][5]  |
 |  MSI  |  MSI, MSI10, MSI11, MSI1010, MSI1110  |  4.9 kB  |  [JsBarcode.msi.min.js][6]  |
 |  Pharmacode  |  Pharmacode  |  4.6 kB  |  [JsBarcode.pharmacode.min.js][7]  |
 |  Codabar  |  Codabar  |  4.8 kB  |  [JsBarcode.codabar.min.js][8]  |
