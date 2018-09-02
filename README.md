@@ -231,12 +231,12 @@ JsBarcode is shared under the [MIT license](https://github.com/lindell/JsBarcode
 
 
 
-[1]: https://cdn.jsdelivr.net/npm/jsbarcode@3.8.0/dist/JsBarcode.all.min.js "jsdelivr all barcodes"
-[2]: https://cdn.jsdelivr.net/npm/jsbarcode@3.8.0/dist/barcodes/JsBarcode.code128.min.js "jsdelivr code128"
-[3]: https://cdn.jsdelivr.net/npm/jsbarcode@3.8.0/dist/barcodes/JsBarcode.code39.min.js "jsdelivr code39"
-[4]: https://cdn.jsdelivr.net/npm/jsbarcode@3.8.0/dist/barcodes/JsBarcode.ean-upc.min.js "jsdelivr ean/upc"
-[5]: https://cdn.jsdelivr.net/npm/jsbarcode@3.8.0/dist/barcodes/JsBarcode.itf-14.min.js "jsdelivr itf-14"
-[6]: https://cdn.jsdelivr.net/npm/jsbarcode@3.8.0/dist/barcodes/JsBarcode.itf.min.js "jsdelivr itf"
-[7]: https://cdn.jsdelivr.net/npm/jsbarcode@3.8.0/dist/barcodes/JsBarcode.msi.min.js "jsdelivr msi"
-[8]: https://cdn.jsdelivr.net/npm/jsbarcode@3.8.0/dist/barcodes/JsBarcode.pharmacode.min.js "jsdelivr pharmacode"
-[9]: https://cdn.jsdelivr.net/npm/jsbarcode@3.8.0/dist/barcodes/JsBarcode.codabar.min.js "jsdelivr codabar"
+[1]: https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/JsBarcode.all.min.js "jsdelivr all barcodes"
+[2]: https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.code128.min.js "jsdelivr code128"
+[3]: https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.code39.min.js "jsdelivr code39"
+[4]: https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.ean-upc.min.js "jsdelivr ean/upc"
+[5]: https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.itf-14.min.js "jsdelivr itf-14"
+[6]: https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.itf.min.js "jsdelivr itf"
+[7]: https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.msi.min.js "jsdelivr msi"
+[8]: https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.pharmacode.min.js "jsdelivr pharmacode"
+[9]: https://cdn.jsdelivr.net/npm/jsbarcode@3.11.0/dist/barcodes/JsBarcode.codabar.min.js "jsdelivr codabar"
