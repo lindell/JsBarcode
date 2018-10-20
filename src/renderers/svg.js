@@ -135,8 +135,12 @@ class SVGRenderer{
 
 		svg.setAttribute("xmlns", svgns);
 		svg.setAttribute("version", "1.1");
-
-		svg.setAttribute("style", "transform: translate(0,0)");
+		
+		if (options.autoScale) {
+			svg.setAttribute("style", "transform: translate(0,0); width: 100%;");
+		} else {
+			svg.setAttribute("style", "transform: translate(0,0)");
+		}
 	}
 
 	createGroup(x, y, parent){
