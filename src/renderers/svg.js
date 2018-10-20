@@ -136,7 +136,7 @@ class SVGRenderer{
 		svg.setAttribute("xmlns", svgns);
 		svg.setAttribute("version", "1.1");
 		
-		if (options.autoScale) {
+		if (this.options.autoScale) {
 			svg.setAttribute("style", "transform: translate(0,0); width: 100%;");
 		} else {
 			svg.setAttribute("style", "transform: translate(0,0)");
