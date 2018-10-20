@@ -3604,7 +3604,7 @@ var SVGRenderer = function () {
 			svg.setAttribute("xmlns", svgns);
 			svg.setAttribute("version", "1.1");
 
-			svg.setAttribute("style", "transform: translate(0,0)");
+			svg.setAttribute("style", "transform: translate(0,0); width: 100%;");
 		}
 	}, {
 		key: "createGroup",
