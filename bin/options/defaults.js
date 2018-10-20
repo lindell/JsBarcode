@@ -22,6 +22,7 @@ var defaults = {
 	marginBottom: undefined,
 	marginLeft: undefined,
 	marginRight: undefined,
+	autoScale: undefined,
 	valid: function valid() {}
 };
 
