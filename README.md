@@ -48,7 +48,7 @@ Supported barcodes:
 Examples for browsers:
 ----
 
-#### First create an canvas (or image)
+#### First create a canvas (or image)
 ````html
 <svg id="barcode"></svg>
 <!-- or -->
