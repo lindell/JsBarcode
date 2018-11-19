@@ -52,7 +52,7 @@ Examples for browsers:
 ````html
 <svg id="barcode"></svg>
 <!-- or -->
-<canvas id="canvas"></canvas>
+<canvas id="barcode"></canvas>
 <!-- or -->
 <img id="barcode"/>
 ````
