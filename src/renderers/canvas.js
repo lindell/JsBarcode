@@ -8,7 +8,7 @@ class CanvasRenderer{
 		this.options = options;
 	}
 
-	render(){
+	render(){		
 		// Abort if the browser does not support HTML5 canvas
 		if (!this.canvas.getContext) {
 			throw new Error('The browser does not support canvas.');
@@ -117,7 +117,6 @@ class CanvasRenderer{
 			ctx.fillText(encoding.text, x, y);
 		}
 	}
-
 
 
 	moveCanvasDrawing(encoding){
