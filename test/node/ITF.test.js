@@ -1,11 +1,7 @@
 var assert = require('assert');
-var JsBarcode = require('../../bin/JsBarcode.js');
+var ITF = require('../../lib/barcodes/ITF/ITF').default;
 
 describe('ITF', function() {
-  it('should be able to include the encoder(s)', function () {
-    ITF = JsBarcode.getModule("ITF");
-  });
-
   it('should be able to encode normal text', function () {
     var enc = new ITF("123456", {});
     assert.equal("101011101000101011100011101110100010100011101000111000101011101"

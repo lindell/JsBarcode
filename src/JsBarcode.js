@@ -10,12 +10,12 @@ import { InvalidInputException } from './exceptions/exceptions.js';
 import defaults from './options/defaults.js';
 
 // The protype of the object returned from the JsBarcode() call
-let API = function() {};
+const API = function() {};
 
 // The first call of the library API
 // Will return an object with all barcodes calls and the data that is used
 // by the renderers
-let JsBarcode = function(element, text, options) {
+const JsBarcode = function(element, text, options) {
 	var api = new API();
 
 	if (typeof element === 'string') {

@@ -1,14 +1,7 @@
 var assert = require('assert');
-var JsBarcode = require('../../bin/JsBarcode.js');
+var { CODE128, CODE128A, CODE128B, CODE128C } = require('../../lib/barcodes/CODE128');
 
 describe('CODE128', function() {
-  it('should be able to include the encoder(s)', function () {
-    CODE128 = JsBarcode.getModule("CODE128");
-    CODE128A = JsBarcode.getModule("CODE128A");
-    CODE128B = JsBarcode.getModule("CODE128B");
-    CODE128C = JsBarcode.getModule("CODE128C");
-  });
-
   it('should encode CODE128A', function () {
     var enc = new CODE128A("ABC" + String.fromCharCode(25), {});
     assert.equal("1101000010010100011000100010110001000100011011011011110100011101101100011101011"

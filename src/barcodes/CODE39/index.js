@@ -163,4 +163,4 @@ function mod43checksum(data) {
 	return checksum;
 }
 
-export { CODE39 };
+export default CODE39;

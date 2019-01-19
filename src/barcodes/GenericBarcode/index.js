@@ -19,4 +19,4 @@ class GenericBarcode extends Barcode {
 	}
 }
 
-export { GenericBarcode };
+export default GenericBarcode;

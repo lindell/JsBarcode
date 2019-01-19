@@ -1,15 +1,11 @@
 var assert = require('assert');
-var JsBarcode = require('../../bin/JsBarcode.js');
+var { EAN13, EAN8, EAN5, EAN2, UPC, UPCE } = require('../../lib/barcodes/EAN_UPC');
 var help = require("./help/help");
 var clone = help.clone;
 
 var options = {height: 100, displayValue: true, fontSize: 20, textMargin: 2, width: 2};
 
 describe('UPC-A', function() {
-  it('should be able to include the encoder(s)', function () {
-    UPC = JsBarcode.getModule("UPC");
-  });
-
   it('should be able to encode normal text', function () {
     var enc = new UPC("123456789999", clone(options));
     assert.equal("10100110010010011011110101000110110001010111101010100010010010001110100111010011101001110100101"
@@ -41,10 +37,6 @@ describe('UPC-A', function() {
 
 const UPCE_BINARY = "101011001100100110011101011100101110110011001010101";
 describe('UPC-E', function() {
-  it('should be able to include the encoder(s)', function () {
-    UPCE = JsBarcode.getModule("UPCE");
-  });
-
   it('should be able to encode 8-digit codes', function () {
     var enc = new UPCE("01245714", clone(options));
     assert.equal(UPCE_BINARY, help.fixBin(enc.encode()));
@@ -73,12 +65,8 @@ describe('UPC-E', function() {
 });
 
 describe('EAN', function() {
-  it('should be able to include the encoder(s)', function () {
-    EAN = JsBarcode.getModule("EAN13");
-  });
-
   it('should be able to encode normal text', function () {
-    var enc = new EAN("5901234123457", clone(options));
+    var enc = new EAN13("5901234123457", clone(options));
     assert.equal(true, enc.valid());
     assert.equal("10100010110100111011001100100110111101001110101010110011011011001000010101110010011101000100101"
       , help.fixBin(enc.encode()));
@@ -86,7 +74,7 @@ describe('EAN', function() {
   });
 
   it('should be able to encode normal text with flat option', function () {
-    var enc = new EAN("5901234123457", help.merge(options, {flat: true}));
+    var enc = new EAN13("5901234123457", help.merge(options, {flat: true}));
     assert.equal(true, enc.valid());
     assert.equal("10100010110100111011001100100110111101001110101010110011011011001000010101110010011101000100101"
       , enc.encode().data);
@@ -94,29 +82,25 @@ describe('EAN', function() {
   });
 
   it('should warn with invalid text', function () {
-    var enc = new EAN("12345", {});
+    var enc = new EAN13("12345", {});
     assert.equal(false, enc.valid());
 
-    var enc = new EAN("5901234123456  ", {});
+    var enc = new EAN13("5901234123456  ", {});
     assert.equal(false, enc.valid());
   });
 
   it('should auto include the checksum if missing', function () {
-    var enc = new EAN("590123412345", clone(options));
+    var enc = new EAN13("590123412345", clone(options));
     assert.equal("5901234123457", help.fixText(enc.encode()));
   });
 
   it('should work with text option', function () {
-    var enc = new EAN("12345678999", help.merge(options, {text: "THISISTEXT"}));
+    var enc = new EAN13("12345678999", help.merge(options, {text: "THISISTEXT"}));
     assert.equal("THISISTEXT", help.fixText(enc.encode()));
   });
 });
 
 describe('EAN-8', function() {
-  it('should be able to include the encoder(s)', function () {
-    EAN8 = JsBarcode.getModule("EAN8");
-  });
-
   it('should be able to encode normal text', function () {
     var enc = new EAN8("96385074", {});
     assert.equal(true, enc.valid());
@@ -157,10 +141,6 @@ describe('EAN-8', function() {
 });
 
 describe('EAN-5', function() {
-  it('should be able to include the encoder(s)', function () {
-    EAN5 = JsBarcode.getModule("EAN5");
-  });
-
   it('should be able to encode normal text', function () {
     var enc = new EAN5("54495", {});
     assert.equal(true, enc.valid());
@@ -188,10 +168,6 @@ describe('EAN-5', function() {
 });
 
 describe('EAN-2', function() {
-  it('should be able to include the encoder(s)', function () {
-    EAN2 = JsBarcode.getModule("EAN2");
-  });
-
   it('should be able to encode normal text', function () {
     var enc = new EAN2("53", {});
     assert.equal(true, enc.valid());

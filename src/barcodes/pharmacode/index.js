@@ -41,4 +41,4 @@ class pharmacode extends Barcode {
 	}
 }
 
-export { pharmacode };
+export default pharmacode;

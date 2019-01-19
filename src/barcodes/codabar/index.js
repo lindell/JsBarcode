@@ -60,4 +60,4 @@ class codabar extends Barcode {
 	}
 }
 
-export { codabar };
+export default codabar;
