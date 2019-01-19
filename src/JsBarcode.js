@@ -18,6 +18,10 @@ let API = function(){};
 let JsBarcode = function(element, text, options) {
 	var api = new API();
 
+	if (typeof element === "string") {
+		element = document.querySelector(element);
+	}
+
 	if(typeof element === "undefined"){
 		throw Error("No element to render on was provided.");
 	}
