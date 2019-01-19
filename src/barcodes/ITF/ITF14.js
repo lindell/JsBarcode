@@ -21,10 +21,7 @@ class ITF14 extends ITF {
 	}
 
 	valid() {
-		return (
-			this.data.search(/^[0-9]{14}$/) !== -1 &&
-			+this.data[13] === checksum(this.data)
-		);
+		return this.data.search(/^[0-9]{14}$/) !== -1 && +this.data[13] === checksum(this.data);
 	}
 }
 

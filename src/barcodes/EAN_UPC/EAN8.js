@@ -25,10 +25,7 @@ class EAN8 extends EAN {
 	}
 
 	valid() {
-		return (
-			this.data.search(/^[0-9]{8}$/) !== -1 &&
-			+this.data[7] === checksum(this.data)
-		);
+		return this.data.search(/^[0-9]{8}$/) !== -1 && +this.data[7] === checksum(this.data);
 	}
 
 	leftText() {

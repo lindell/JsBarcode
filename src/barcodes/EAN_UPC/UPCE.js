@@ -44,9 +44,7 @@ class UPCE extends Barcode {
 		if (data.search(/^[0-9]{6}$/) !== -1) {
 			this.middleDigits = data;
 			this.upcA = expandToUPCA(data, '0');
-			this.text =
-				options.text ||
-				`${this.upcA[0]}${data}${this.upcA[this.upcA.length - 1]}`;
+			this.text = options.text || `${this.upcA[0]}${data}${this.upcA[this.upcA.length - 1]}`;
 			this.isValid = true;
 		} else if (data.search(/^[01][0-9]{7}$/) !== -1) {
 			this.middleDigits = data.substring(1, data.length - 1);

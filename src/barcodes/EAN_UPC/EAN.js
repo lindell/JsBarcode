@@ -8,10 +8,7 @@ class EAN extends Barcode {
 		super(data, options);
 
 		// Make sure the font is not bigger than the space between the guard bars
-		this.fontSize =
-			!options.flat && options.fontSize > options.width * 10
-				? options.width * 10
-				: options.fontSize;
+		this.fontSize = !options.flat && options.fontSize > options.width * 10 ? options.width * 10 : options.fontSize;
 
 		// Make the guard bars go down half the way of the text
 		this.guardHeight = options.height + this.fontSize / 2 + options.textMargin;
@@ -55,13 +52,7 @@ class EAN extends Barcode {
 	}
 
 	encodeFlat() {
-		const data = [
-			SIDE_BIN,
-			this.leftEncode(),
-			MIDDLE_BIN,
-			this.rightEncode(),
-			SIDE_BIN
-		];
+		const data = [SIDE_BIN, this.leftEncode(), MIDDLE_BIN, this.rightEncode(), SIDE_BIN];
 
 		return {
 			data: data.join(''),

@@ -1,9 +1,5 @@
 import merge from '../help/merge.js';
-import {
-	calculateEncodingAttributes,
-	getTotalWidthOfEncodings,
-	getMaximumHeightOfEncodings
-} from './shared.js';
+import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings } from './shared.js';
 
 class CanvasRenderer {
 	constructor(canvas, encodings, options) {
@@ -41,8 +37,7 @@ class CanvasRenderer {
 		var totalWidth = getTotalWidthOfEncodings(this.encodings);
 		var maxHeight = getMaximumHeightOfEncodings(this.encodings);
 
-		this.canvas.width =
-			totalWidth + this.options.marginLeft + this.options.marginRight;
+		this.canvas.width = totalWidth + this.options.marginLeft + this.options.marginRight;
 
 		this.canvas.height = maxHeight;
 
@@ -87,8 +82,7 @@ class CanvasRenderer {
 		// Get the canvas context
 		var ctx = this.canvas.getContext('2d');
 
-		var font =
-			options.fontOptions + ' ' + options.fontSize + 'px ' + options.font;
+		var font = options.fontOptions + ' ' + options.fontSize + 'px ' + options.font;
 
 		// Draw the text if displayValue is set
 		if (options.displayValue) {
@@ -97,11 +91,7 @@ class CanvasRenderer {
 			if (options.textPosition == 'top') {
 				y = options.marginTop + options.fontSize - options.textMargin;
 			} else {
-				y =
-					options.height +
-					options.textMargin +
-					options.marginTop +
-					options.fontSize;
+				y = options.height + options.textMargin + options.marginTop + options.fontSize;
 			}
 
 			ctx.font = font;

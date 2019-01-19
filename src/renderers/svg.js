@@ -1,9 +1,5 @@
 import merge from '../help/merge.js';
-import {
-	calculateEncodingAttributes,
-	getTotalWidthOfEncodings,
-	getMaximumHeightOfEncodings
-} from './shared.js';
+import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings } from './shared.js';
 
 var svgns = 'http://www.w3.org/2000/svg';
 
@@ -23,11 +19,7 @@ class SVGRenderer {
 			var encoding = this.encodings[i];
 			var encodingOptions = merge(this.options, encoding.options);
 
-			var group = this.createGroup(
-				currentX,
-				encodingOptions.marginTop,
-				this.svg
-			);
+			var group = this.createGroup(currentX, encodingOptions.marginTop, this.svg);
 
 			this.setGroupOptions(group, encodingOptions);
 
@@ -52,10 +44,7 @@ class SVGRenderer {
 		this.setSvgAttributes(width, maxHeight);
 
 		if (this.options.background) {
-			this.drawRect(0, 0, width, maxHeight, this.svg).setAttribute(
-				'style',
-				'fill:' + this.options.background + ';'
-			);
+			this.drawRect(0, 0, width, maxHeight, this.svg).setAttribute('style', 'fill:' + this.options.background + ';');
 		}
 	}
 
@@ -78,26 +67,14 @@ class SVGRenderer {
 			if (binary[b] === '1') {
 				barWidth++;
 			} else if (barWidth > 0) {
-				this.drawRect(
-					x - options.width * barWidth,
-					yFrom,
-					options.width * barWidth,
-					options.height,
-					parent
-				);
+				this.drawRect(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
 				barWidth = 0;
 			}
 		}
 
 		// Last draw is needed since the barcode ends with 1
 		if (barWidth > 0) {
-			this.drawRect(
-				x - options.width * (barWidth - 1),
-				yFrom,
-				options.width * barWidth,
-				options.height,
-				parent
-			);
+			this.drawRect(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
 		}
 	}
 
@@ -108,15 +85,7 @@ class SVGRenderer {
 		if (options.displayValue) {
 			var x, y;
 
-			textElem.setAttribute(
-				'style',
-				'font:' +
-					options.fontOptions +
-					' ' +
-					options.fontSize +
-					'px ' +
-					options.font
-			);
+			textElem.setAttribute('style', 'font:' + options.fontOptions + ' ' + options.fontSize + 'px ' + options.font);
 
 			if (options.textPosition == 'top') {
 				y = options.fontSize - options.textMargin;

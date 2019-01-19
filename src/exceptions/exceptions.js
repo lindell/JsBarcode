@@ -6,8 +6,7 @@ class InvalidInputException extends Error {
 		this.symbology = symbology;
 		this.input = input;
 
-		this.message =
-			'"' + this.input + '" is not a valid input for ' + this.symbology;
+		this.message = '"' + this.input + '" is not a valid input for ' + this.symbology;
 	}
 }
 

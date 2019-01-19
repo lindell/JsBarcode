@@ -25,10 +25,7 @@ class ITF extends Barcode {
 
 		return BINARIES[pair[0]]
 			.split('')
-			.map(
-				(first, idx) =>
-					(first === '1' ? '111' : '1') + (second[idx] === '1' ? '000' : '0')
-			)
+			.map((first, idx) => (first === '1' ? '111' : '1') + (second[idx] === '1' ? '000' : '0'))
 			.join('');
 	}
 }

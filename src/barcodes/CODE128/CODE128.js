@@ -1,15 +1,5 @@
 import Barcode from '../Barcode.js';
-import {
-	SHIFT,
-	SET_A,
-	SET_B,
-	MODULO,
-	STOP,
-	FNC1,
-	SET_BY_CODE,
-	SWAP,
-	BARS
-} from './constants';
+import { SHIFT, SET_A, SET_B, MODULO, STOP, FNC1, SET_BY_CODE, SWAP, BARS } from './constants';
 
 // This is the master class,
 // it does require the start code to be included in the string
@@ -35,9 +25,7 @@ class CODE128 extends Barcode {
 		const startSet = SET_BY_CODE[startIndex];
 
 		if (startSet === undefined) {
-			throw new RangeError(
-				'The encoding does not start with a start character.'
-			);
+			throw new RangeError('The encoding does not start with a start character.');
 		}
 
 		if (this.shouldEncodeAsEan128() === true) {
@@ -48,10 +36,7 @@ class CODE128 extends Barcode {
 		const encodingResult = CODE128.next(bytes, 1, startSet);
 
 		return {
-			text:
-				this.text === this.data
-					? this.text.replace(/[^\x20-\x7E]/g, '')
-					: this.text,
+			text: this.text === this.data ? this.text.replace(/[^\x20-\x7E]/g, '') : this.text,
 			data:
 				// Add the start bits
 				CODE128.getBar(startIndex) +
@@ -112,13 +97,7 @@ class CODE128 extends Barcode {
 				if ((set === SET_A || set === SET_B) && index === SHIFT) {
 					// Convert the next character so that is encoded correctly
 					bytes[0] =
-						set === SET_A
-							? bytes[0] > 95
-								? bytes[0] - 96
-								: bytes[0]
-							: bytes[0] < 32
-								? bytes[0] + 96
-								: bytes[0];
+						set === SET_A ? (bytes[0] > 95 ? bytes[0] - 96 : bytes[0]) : bytes[0] < 32 ? bytes[0] + 96 : bytes[0];
 				}
 				nextCode = CODE128.next(bytes, pos + 1, set);
 			}

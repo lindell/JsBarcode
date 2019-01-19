@@ -3,9 +3,7 @@ import merge from '../help/merge.js';
 function getEncodingHeight(encoding, options) {
 	return (
 		options.height +
-		(options.displayValue && encoding.text.length > 0
-			? options.fontSize + options.textMargin
-			: 0) +
+		(options.displayValue && encoding.text.length > 0 ? options.fontSize + options.textMargin : 0) +
 		options.marginTop +
 		options.marginBottom
 	);
@@ -42,11 +40,7 @@ function calculateEncodingAttributes(encodings, barcodeOptions, context) {
 
 		encoding.height = getEncodingHeight(encoding, options);
 
-		encoding.barcodePadding = getBarcodePadding(
-			textWidth,
-			barcodeWidth,
-			options
-		);
+		encoding.barcodePadding = getBarcodePadding(textWidth, barcodeWidth, options);
 	}
 }
 
@@ -80,8 +74,7 @@ function messureText(string, options, context) {
 		// This will make some barcode with big text render incorrectly
 		return 0;
 	}
-	ctx.font =
-		options.fontOptions + ' ' + options.fontSize + 'px ' + options.font;
+	ctx.font = options.fontOptions + ' ' + options.fontSize + 'px ' + options.font;
 
 	// Calculate the width of the encoding
 	var size = ctx.measureText(string).width;

@@ -30,10 +30,7 @@ class EAN13 extends EAN {
 	}
 
 	valid() {
-		return (
-			this.data.search(/^[0-9]{13}$/) !== -1 &&
-			+this.data[12] === checksum(this.data)
-		);
+		return this.data.search(/^[0-9]{13}$/) !== -1 && +this.data[12] === checksum(this.data);
 	}
 
 	leftText() {
