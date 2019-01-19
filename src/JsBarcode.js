@@ -22,7 +22,7 @@ const JsBarcode = function(element, text, options) {
 	}
 
 	if (typeof element === 'undefined') {
-		throw NoElementException('No element to render on was provided.');
+		throw new NoElementException('No element to render on was provided.');
 	}
 
 	// Variables that will be pased through the API calls

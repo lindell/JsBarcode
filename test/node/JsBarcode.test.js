@@ -37,6 +37,12 @@ describe('node-canvas generation', function() {
     assert.throws(function(){jsbarcode(123, "Hello");});
   });
 
+  it('should throws error when no object is provided', function () {
+    assert.throws(() =>{
+      jsbarcode(undefined, "Hello", {encoder: ean8, renderer: canvasRenderer});
+    }, (err) => err.name === 'NoElementException');
+  });
+
   // it('should use the valid callback correct', function (done) {
   //   var canvas = createCanvas();
 
