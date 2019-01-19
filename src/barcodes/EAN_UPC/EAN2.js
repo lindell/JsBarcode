@@ -6,7 +6,6 @@ import encode from './encoder';
 import Barcode from '../Barcode';
 
 class EAN2 extends Barcode {
-
 	constructor(data, options) {
 		super(data, options);
 	}
@@ -15,7 +14,7 @@ class EAN2 extends Barcode {
 		return this.data.search(/^[0-9]{2}$/) !== -1;
 	}
 
-	encode(){
+	encode() {
 		// Choose the structure based on the number mod 4
 		const structure = EAN2_STRUCTURE[parseInt(this.data) % 4];
 		return {
@@ -24,7 +23,6 @@ class EAN2 extends Barcode {
 			text: this.text
 		};
 	}
-
 }
 
 export default EAN2;

@@ -1,14 +1,25 @@
-import { A_START_CHAR, B_START_CHAR, C_START_CHAR, A_CHARS, B_CHARS, C_CHARS } from './constants';
+import {
+	A_START_CHAR,
+	B_START_CHAR,
+	C_START_CHAR,
+	A_CHARS,
+	B_CHARS,
+	C_CHARS
+} from './constants';
 
 // Match Set functions
-const matchSetALength = (string) => string.match(new RegExp(`^${A_CHARS}*`))[0].length;
-const matchSetBLength = (string) => string.match(new RegExp(`^${B_CHARS}*`))[0].length;
-const matchSetC = (string) => string.match(new RegExp(`^${C_CHARS}*`))[0];
+const matchSetALength = string =>
+	string.match(new RegExp(`^${A_CHARS}*`))[0].length;
+const matchSetBLength = string =>
+	string.match(new RegExp(`^${B_CHARS}*`))[0].length;
+const matchSetC = string => string.match(new RegExp(`^${C_CHARS}*`))[0];
 
 // CODE128A or CODE128B
-function autoSelectFromAB(string, isA){
+function autoSelectFromAB(string, isA) {
 	const ranges = isA ? A_CHARS : B_CHARS;
-	const untilC = string.match(new RegExp(`^(${ranges}+?)(([0-9]{2}){2,})([^0-9]|$)`));
+	const untilC = string.match(
+		new RegExp(`^(${ranges}+?)(([0-9]{2}){2,})([^0-9]|$)`)
+	);
 
 	if (untilC) {
 		return (
@@ -44,11 +55,15 @@ function autoSelectFromC(string) {
 
 	// Select A/B depending on the longest match
 	const isA = matchSetALength(string) >= matchSetBLength(string);
-	return cMatch + String.fromCharCode(isA ? 206 : 205) + autoSelectFromAB(string, isA);
+	return (
+		cMatch +
+		String.fromCharCode(isA ? 206 : 205) +
+		autoSelectFromAB(string, isA)
+	);
 }
 
 // Detect Code Set (A, B or C) and format the string
-export default (string) => {
+export default string => {
 	let newString;
 	const cLength = matchSetC(string).length;
 
@@ -58,7 +73,8 @@ export default (string) => {
 	} else {
 		// Select A/B depending on the longest match
 		const isA = matchSetALength(string) > matchSetBLength(string);
-		newString = (isA ? A_START_CHAR : B_START_CHAR) + autoSelectFromAB(string, isA);
+		newString =
+			(isA ? A_START_CHAR : B_START_CHAR) + autoSelectFromAB(string, isA);
 	}
 
 	return newString.replace(

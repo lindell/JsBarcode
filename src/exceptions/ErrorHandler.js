@@ -1,34 +1,31 @@
 /*eslint no-console: 0 */
 
-class ErrorHandler{
-	constructor(api){
+class ErrorHandler {
+	constructor(api) {
 		this.api = api;
 	}
 
-	handleCatch(e){
+	handleCatch(e) {
 		// If babel supported extending of Error in a correct way instanceof would be used here
-		if(e.name === "InvalidInputException"){
-			if(this.api._options.valid !== this.api._defaults.valid){
+		if (e.name === 'InvalidInputException') {
+			if (this.api._options.valid !== this.api._defaults.valid) {
 				this.api._options.valid(false);
-			}
-			else{
+			} else {
 				throw e.message;
 			}
-		}
-		else{
+		} else {
 			throw e;
 		}
 
-		this.api.render = function(){};
+		this.api.render = function() {};
 	}
 
-	wrapBarcodeCall(func){
-		try{
+	wrapBarcodeCall(func) {
+		try {
 			var result = func(...arguments);
 			this.api._options.valid(true);
 			return result;
-		}
-		catch(e){
+		} catch (e) {
 			this.handleCatch(e);
 
 			return this.api;

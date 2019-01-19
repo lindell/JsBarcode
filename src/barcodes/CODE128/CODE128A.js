@@ -7,7 +7,7 @@ class CODE128A extends CODE128 {
 	}
 
 	valid() {
-		return (new RegExp(`^${A_CHARS}+$`)).test(this.data);
+		return new RegExp(`^${A_CHARS}+$`).test(this.data);
 	}
 }
 

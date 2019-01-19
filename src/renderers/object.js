@@ -10,5 +10,4 @@ class ObjectRenderer {
 	}
 }
 
-
 export default ObjectRenderer;

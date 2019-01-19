@@ -13,7 +13,8 @@
     "test": "gulp babel && node_modules/mocha/bin/mocha test/node/ -R spec",
     "coveralls": "NODE_ENV=test YOURPACKAGE_COVERAGE=1 ./node_modules/.bin/mocha test/node/ --require blanket --reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js",
     "coverage": "./node_modules/.bin/mocha test/node/ -r blanket -R html-cov > test/coverage.html",
-    "build": "babel src --config-file ./.babelrc -d lib && webpack ./example/index.js"
+    "build": "babel src --config-file ./.babelrc -d lib && webpack ./example/index.js",
+    "format": "prettier-eslint --write ./src/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -43,6 +44,9 @@
     "coveralls": "^3.0.0",
     "mocha": "^5.2.0",
     "mocha-lcov-reporter": "^1.2.0",
+    "prettier": "1.15.3",
+    "prettier-eslint": "^8.8.2",
+    "prettier-eslint-cli": "^4.7.1",
     "publish-release": "^1.2.0",
     "request": "^2.72.0",
     "run-sequence": "^1.1.5",

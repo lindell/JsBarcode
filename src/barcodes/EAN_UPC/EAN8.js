@@ -4,20 +4,17 @@
 import EAN from './EAN';
 
 // Calculate the checksum digit
-const checksum = (number) => {
+const checksum = number => {
 	const res = number
 		.substr(0, 7)
 		.split('')
-		.map((n) => +n)
-		.reduce((sum, a, idx) => (
-			idx % 2 ? sum + a : sum + a * 3
-		), 0);
+		.map(n => +n)
+		.reduce((sum, a, idx) => (idx % 2 ? sum + a : sum + a * 3), 0);
 
 	return (10 - (res % 10)) % 10;
 };
 
 class EAN8 extends EAN {
-
 	constructor(data, options) {
 		// Add checksum if it does not exist
 		if (data.search(/^[0-9]{7}$/) !== -1) {
@@ -51,7 +48,6 @@ class EAN8 extends EAN {
 		const data = this.data.substr(4, 4);
 		return super.rightEncode(data, 'RRRR');
 	}
-
 }
 
 export default EAN8;

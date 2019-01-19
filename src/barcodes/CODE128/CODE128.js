@@ -1,5 +1,15 @@
-import Barcode from "../Barcode.js";
-import { SHIFT, SET_A, SET_B, MODULO, STOP, FNC1, SET_BY_CODE, SWAP, BARS } from './constants';
+import Barcode from '../Barcode.js';
+import {
+	SHIFT,
+	SET_A,
+	SET_B,
+	MODULO,
+	STOP,
+	FNC1,
+	SET_BY_CODE,
+	SWAP,
+	BARS
+} from './constants';
 
 // This is the master class,
 // it does require the start code to be included in the string
@@ -8,8 +18,7 @@ class CODE128 extends Barcode {
 		super(data.substring(1), options);
 
 		// Get array of ascii codes from data
-		this.bytes = data.split('')
-			.map(char => char.charCodeAt(0));
+		this.bytes = data.split('').map(char => char.charCodeAt(0));
 	}
 
 	valid() {
@@ -26,7 +35,9 @@ class CODE128 extends Barcode {
 		const startSet = SET_BY_CODE[startIndex];
 
 		if (startSet === undefined) {
-			throw new RangeError('The encoding does not start with a start character.');
+			throw new RangeError(
+				'The encoding does not start with a start character.'
+			);
 		}
 
 		if (this.shouldEncodeAsEan128() === true) {
@@ -87,7 +98,7 @@ class CODE128 extends Barcode {
 		let nextCode, index;
 
 		// Special characters
-		if (bytes[0] >= 200){
+		if (bytes[0] >= 200) {
 			index = bytes.shift() - 105;
 			const nextSet = SWAP[index];
 
@@ -100,9 +111,14 @@ class CODE128 extends Barcode {
 				// Shift
 				if ((set === SET_A || set === SET_B) && index === SHIFT) {
 					// Convert the next character so that is encoded correctly
-					bytes[0] = (set === SET_A)
-						? bytes[0] > 95 ? bytes[0] - 96 : bytes[0]
-						: bytes[0] < 32 ? bytes[0] + 96 : bytes[0];
+					bytes[0] =
+						set === SET_A
+							? bytes[0] > 95
+								? bytes[0] - 96
+								: bytes[0]
+							: bytes[0] < 32
+								? bytes[0] + 96
+								: bytes[0];
 				}
 				nextCode = CODE128.next(bytes, pos + 1, set);
 			}
