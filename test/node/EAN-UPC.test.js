@@ -1,6 +1,5 @@
 var assert = require('assert');
 var JsBarcode = require('../../bin/JsBarcode.js');
-var Canvas = require("canvas");
 var help = require("./help/help");
 var clone = help.clone;
 

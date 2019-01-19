@@ -1,6 +1,5 @@
 var assert = require('assert');
 var JsBarcode = require('../../bin/JsBarcode.js');
-var Canvas = require("canvas");
 
 describe('Object', function() {
 	it('should handle default options', function () {

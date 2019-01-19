@@ -10,7 +10,7 @@
     "bin": "bin"
   },
   "scripts": {
-    "test": "gulp babel && node_modules/mocha/bin/mocha test/node/ -R spec",
+    "test": "mocha ./test/node",
     "coveralls": "NODE_ENV=test YOURPACKAGE_COVERAGE=1 ./node_modules/.bin/mocha test/node/ --require blanket --reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js",
     "coverage": "./node_modules/.bin/mocha test/node/ -r blanket -R html-cov > test/coverage.html",
     "build": "babel src --config-file ./.babelrc -d lib && webpack ./example/index.js",
@@ -41,6 +41,7 @@
     "@babel/core": "^7.2.2",
     "@babel/preset-env": "^7.2.3",
     "blanket": "^1.2.3",
+    "canvas-prebuilt": "2.0.0-alpha.13",
     "coveralls": "^3.0.0",
     "mocha": "^5.2.0",
     "mocha-lcov-reporter": "^1.2.0",

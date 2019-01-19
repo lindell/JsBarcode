@@ -1,6 +1,5 @@
 var assert = require('assert');
 var JsBarcode = require('../../bin/JsBarcode.js');
-var Canvas = require("canvas");
 
 describe('Codabar', function() {
   it('should be able to include the encoder(s)', function () {
