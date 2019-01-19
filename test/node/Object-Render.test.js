@@ -16,9 +16,7 @@ describe('Object', function() {
 			() => {
 				jsbarcode(null, '12345678', { renderer: objectRenderer, encoder: code128 });
 			},
-			{
-				name: 'InvalidElementException',
-			}
+			(err) => err.name === 'InvalidElementException',
 		);
 	});
 	
