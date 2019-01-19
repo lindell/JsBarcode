@@ -3,8 +3,7 @@ import linearizeEncodings from './help/linearizeEncodings.js';
 import fixOptions from './help/fixOptions.js';
 
 // Exceptions
-import ErrorHandler from './exceptions/ErrorHandler.js';
-import { InvalidInputException } from './exceptions/exceptions.js';
+import { InvalidInputException, NoElementException } from './exceptions/exceptions.js';
 
 // Default values
 import defaults from './options/defaults.js';
@@ -23,13 +22,12 @@ const JsBarcode = function(element, text, options) {
 	}
 
 	if (typeof element === 'undefined') {
-		throw Error('No element to render on was provided.');
+		throw NoElementException('No element to render on was provided.');
 	}
 
 	// Variables that will be pased through the API calls
 	api._encodings = [];
 	api._options = { ...defaults, ...(options || {}) };
-	api._errorHandler = new ErrorHandler(api);
 	api._element = element;
 
 	// If text is set, use the simple syntax (render the barcode directly)

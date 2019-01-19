@@ -12,8 +12,8 @@
   "scripts": {
     "test": "npm run convert && mocha ./test/node",
     "coveralls": "NODE_ENV=test YOURPACKAGE_COVERAGE=1 ./node_modules/.bin/mocha test/node/ --require blanket --reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js",
-    "coverage": "nyc --reporter=html mocha test/node/",
-    "convert": "babel src --config-file ./.babelrc -d lib",
+    "coverage": "npm run convert && nyc --reporter=html mocha test/node/",
+    "convert": "babel src --config-file ./.babelrc --source-maps -d lib",
     "build": "npm run convert && webpack ./example/index.js",
     "format": "prettier-eslint --write ./src/**/*.js ./test/node/**/*.test.js"
   },
