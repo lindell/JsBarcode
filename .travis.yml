@@ -4,7 +4,9 @@ install:
   - npm install
 after_success: npm run coveralls
 node_js:
-  - "node"
   - "6"
-  - "5"
-  - "4"
+  - "7"
+  - "8"
+  - "9"
+  - "10"
+
