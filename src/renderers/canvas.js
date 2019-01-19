@@ -1,4 +1,3 @@
-import merge from '../help/merge.js';
 import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings } from './shared.js';
 
 class CanvasRenderer {
@@ -16,7 +15,7 @@ class CanvasRenderer {
 
 		this.prepareCanvas();
 		for (let i = 0; i < this.encodings.length; i++) {
-			var encodingOptions = merge(this.options, this.encodings[i].options);
+			var encodingOptions = { ...this.options, ...this.encodings[i].options };
 
 			this.drawCanvasBarcode(encodingOptions, this.encodings[i]);
 			this.drawCanvasText(encodingOptions, this.encodings[i]);

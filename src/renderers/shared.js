@@ -1,5 +1,3 @@
-import merge from '../help/merge.js';
-
 function getEncodingHeight(encoding, options) {
 	return (
 		options.height +
@@ -25,7 +23,7 @@ function getBarcodePadding(textWidth, barcodeWidth, options) {
 function calculateEncodingAttributes(encodings, barcodeOptions, context) {
 	for (let i = 0; i < encodings.length; i++) {
 		var encoding = encodings[i];
-		var options = merge(barcodeOptions, encoding.options);
+		var options = { ...barcodeOptions, ...encoding.options };
 
 		// Calculate the width of the encoding
 		var textWidth;
