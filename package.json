@@ -43,31 +43,12 @@
     "@babel/preset-env": "^7.2.3",
     "blanket": "^1.2.3",
     "canvas-prebuilt": "2.0.0-alpha.13",
-    "coveralls": "^3.0.0",
     "mocha": "^5.2.0",
-    "mocha-lcov-reporter": "^1.2.0",
     "nyc": "^13.1.0",
-    "prettier": "1.15.3",
-    "prettier-eslint": "^8.8.2",
     "prettier-eslint-cli": "^4.7.1",
-    "publish-release": "^1.2.0",
-    "request": "^2.72.0",
-    "run-sequence": "^1.1.5",
     "webpack": "^4.28.4",
     "webpack-cli": "^3.2.1",
     "xmldom": "^0.1.27"
   },
-  "typings": "./jsbarcode.d.ts",
-  "config": {
-    "blanket": {
-      "pattern": [
-        "JsBarcode.js",
-        "barcodes"
-      ],
-      "data-cover-never": [
-        "GenericBarcode",
-        "node_modules"
-      ]
-    }
-  }
+  "typings": "./jsbarcode.d.ts"
 }
