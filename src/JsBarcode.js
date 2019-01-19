@@ -62,7 +62,7 @@ function encode(text, options){
 // Sets global encoder options
 // Added to the api by the JsBarcode function
 API.prototype.options = function(options){
-	Object.assign(this._options, options);
+	this._options = {...this._options, ...options};
 	return this;
 };
 
@@ -87,7 +87,7 @@ function render(element, encodings, options){
 	encodings = linearizeEncodings(encodings);
 
 	for(let i = 0; i < encodings.length; i++){
-		Object.assign(encodings[i].options, options);
+		encodings[i].options = {...options, ...encodings[i].options};
 		fixOptions(encodings[i].options);
 	}
 
