@@ -1,4 +1,3 @@
-import merge from '../help/merge.js';
 import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings } from './shared.js';
 
 var svgns = 'http://www.w3.org/2000/svg';
@@ -17,7 +16,7 @@ class SVGRenderer {
 		this.prepareSVG();
 		for (let i = 0; i < this.encodings.length; i++) {
 			var encoding = this.encodings[i];
-			var encodingOptions = merge(this.options, encoding.options);
+			var encodingOptions = { ...this.options, ...encoding.options };
 
 			var group = this.createGroup(currentX, encodingOptions.marginTop, this.svg);
 
