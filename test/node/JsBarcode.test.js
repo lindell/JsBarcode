@@ -1,5 +1,5 @@
 const assert = require('assert');
-const jsbarcode = require('../../lib/JsBarcode.js').default;
+const jsbarcode = require('../../lib/').default;
 
 const code128 = require('../../lib/barcodes/CODE128/CODE128_AUTO').default;
 const code39 = require('../../lib/barcodes/CODE39').default;
