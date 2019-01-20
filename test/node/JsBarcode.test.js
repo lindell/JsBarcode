@@ -139,6 +139,16 @@ describe('Advanced api use', function() {
 
     assert.equal(canvas1.toDataURL(), canvas2.toDataURL());
   });
+
+  it('should work with blank', function () {
+    var canvas1 = createCanvas();
+    var canvas2 = createCanvas();
+
+    jsbarcode(canvas1).options({encoder: code128, renderer: canvasRenderer}).barcode("Hello").barcode("Hello").render();
+    jsbarcode(canvas2).options({encoder: code128, renderer: canvasRenderer}).barcode("Hello").blank(10).barcode("Hello").render();
+
+    assert.notEqual(canvas1.toDataURL(), canvas2.toDataURL());
+  });
 });
 
 describe('Extended Arrays', function() {
