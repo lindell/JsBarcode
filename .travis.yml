@@ -18,6 +18,7 @@ jobs:
       deploy:
         provider: npm
         skip_cleanup: true
+        email: johan@lindell.me
         api_key: $NPM_TOKEN
         on:
           all_branches: true
