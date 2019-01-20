@@ -1,12 +1,22 @@
 language: node_js
 sudo: required
 install:
-  - npm install
+- npm install
 after_success: npm run coveralls
 node_js:
-  - "6"
-  - "7"
-  - "8"
-  - "9"
-  - "10"
-
+- '6'
+- '7'
+- '8'
+- '9'
+- '10'
+deploy:
+  provider: script
+  skip_cleanup: true
+    provider: npm
+    email: johan@lindell.me
+    api_key: $NPM_TOKEN
+  on:
+    tags: true
+env:
+  global:
+    secure: D02YgDzW5Ig6WWYXK7wL1qzmsUHeE3rRv3JK7IIZ2S1IuYJaKBfyRUag08lhrOLOsm4G/4QB+i0A6/X3EyGvdKuZea7tXbPMbsG7DwTzzdEfGX1bZwrtyXGrXPQY5Z0ggJCxjDxk7GkgnTgHPHqaCLPVurccwiXE/Yj0vvNNxn0=
