@@ -2,7 +2,6 @@ language: node_js
 sudo: required
 install:
 - npm install
-after_success: npm run coveralls
 node_js:
 - '6'
 - '7'
