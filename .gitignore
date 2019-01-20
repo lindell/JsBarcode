@@ -34,3 +34,5 @@ jspm_packages
 .node_repl_history
 
 .nyc_output
+lib
+dist

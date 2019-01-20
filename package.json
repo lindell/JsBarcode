@@ -2,12 +2,11 @@
   "name": "jsbarcode",
   "version": "4.0.0-alpha.1",
   "description": "JsBarcode is a customizable barcode generator with support for multiple barcode formats.",
-  "main": "./bin/JsBarcode.js",
+  "main": "./lib",
   "directories": {
     "example": "example",
     "test": "test",
-    "lib": "src",
-    "bin": "bin"
+    "lib": "src"
   },
   "scripts": {
     "test": "npm run convert && mocha ./test/node",
