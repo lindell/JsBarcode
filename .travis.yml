@@ -17,8 +17,8 @@ jobs:
       script: npm run convert
       deploy:
         provider: npm
+        skip_cleanup: true
         api_key: $NPM_TOKEN
-        on: tag
 env:
   global:
     secure: D02YgDzW5Ig6WWYXK7wL1qzmsUHeE3rRv3JK7IIZ2S1IuYJaKBfyRUag08lhrOLOsm4G/4QB+i0A6/X3EyGvdKuZea7tXbPMbsG7DwTzzdEfGX1bZwrtyXGrXPQY5Z0ggJCxjDxk7GkgnTgHPHqaCLPVurccwiXE/Yj0vvNNxn0=
