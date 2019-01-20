@@ -12,9 +12,9 @@ node_js:
 deploy:
   provider: script
   skip_cleanup: true
-    provider: npm
-    email: johan@lindell.me
-    api_key: $NPM_TOKEN
+  provider: npm
+  email: johan@lindell.me
+  api_key: $NPM_TOKEN
   on:
     tags: true
 env:
