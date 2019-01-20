@@ -75,6 +75,12 @@ API.prototype.blank = function(size) {
 	return this;
 };
 
+// Will encode another barcode
+API.prototype.barcode = function(text, options) {
+	this._encodings.push(encode(text, { ...this._options, ...(options || {}) }));
+	return this;
+};
+
 // The render API call. Calls the real render function.
 API.prototype.render = function() {
 	render(this._element, this._encodings, this._options);

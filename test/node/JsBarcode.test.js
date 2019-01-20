@@ -129,6 +129,18 @@ describe('Text printing', function() {
   });
 });
 
+describe('Advanced api use', function() {
+  it('should work as simple version', function () {
+    var canvas1 = createCanvas();
+    var canvas2 = createCanvas();
+
+    jsbarcode(canvas1, "Hello", {encoder: code128, renderer: canvasRenderer});
+    jsbarcode(canvas2).options({encoder: code128, renderer: canvasRenderer}).barcode("Hello").render();
+
+    assert.equal(canvas1.toDataURL(), canvas2.toDataURL());
+  });
+});
+
 describe('Extended Arrays', function() {
   it('should work with extended arrays', function () {
     Array.prototype.test = function(){};
