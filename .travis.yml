@@ -18,6 +18,7 @@ jobs:
       deploy:
         provider: npm
         skip_cleanup: true
+        all_branches: true
         api_key: $NPM_TOKEN
 env:
   global:
