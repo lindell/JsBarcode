@@ -1,4 +1,4 @@
-import jsbarcode from '../lib/JsBarcode';
+import jsbarcode from '../lib/';
 import ean13 from '../lib/barcodes/EAN_UPC/EAN13';
 import svg from '../lib/renderers/svg';
 import canvas from '../lib/renderers/canvas';
