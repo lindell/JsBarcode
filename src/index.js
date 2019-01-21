@@ -101,10 +101,7 @@ function render(element, encodings, options) {
 
 	fixOptions(options);
 
-	const Renderer = options.renderer;
-
-	var renderer = new Renderer(element, encodings, options);
-	renderer.render();
+	options.renderer(element, encodings, options);
 }
 
 export default JsBarcode;

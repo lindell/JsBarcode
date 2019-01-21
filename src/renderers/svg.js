@@ -2,52 +2,45 @@ import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeight
 
 var svgns = 'http://www.w3.org/2000/svg';
 
-class SVGRenderer {
-	constructor(svg, encodings, options) {
-		this.svg = svg;
-		this.encodings = encodings;
-		this.options = options;
-		this.document = options.xmlDocument || document;
+function renderer(svg, encodings, options) {
+	const doc = options.xmlDocument || document;
+
+	var currentX = options.marginLeft;
+
+	prepareSVG();
+	for (let i = 0; i < encodings.length; i++) {
+		var encoding = encodings[i];
+		var encodingOptions = { ...options, ...encoding.options };
+
+		var group = createGroup(currentX, encodingOptions.marginTop, svg);
+
+		setGroupOptions(group, encodingOptions);
+
+		drawSvgBarcode(group, encodingOptions, encoding);
+		drawSVGText(group, encodingOptions, encoding);
+
+		currentX += encoding.width;
 	}
 
-	render() {
-		var currentX = this.options.marginLeft;
-
-		this.prepareSVG();
-		for (let i = 0; i < this.encodings.length; i++) {
-			var encoding = this.encodings[i];
-			var encodingOptions = { ...this.options, ...encoding.options };
-
-			var group = this.createGroup(currentX, encodingOptions.marginTop, this.svg);
-
-			this.setGroupOptions(group, encodingOptions);
-
-			this.drawSvgBarcode(group, encodingOptions, encoding);
-			this.drawSVGText(group, encodingOptions, encoding);
-
-			currentX += encoding.width;
-		}
-	}
-
-	prepareSVG() {
+	function prepareSVG() {
 		// Clear the SVG
-		while (this.svg.firstChild) {
-			this.svg.removeChild(this.svg.firstChild);
+		while (svg.firstChild) {
+			svg.removeChild(svg.firstChild);
 		}
 
-		calculateEncodingAttributes(this.encodings, this.options);
-		var totalWidth = getTotalWidthOfEncodings(this.encodings);
-		var maxHeight = getMaximumHeightOfEncodings(this.encodings);
+		calculateEncodingAttributes(encodings, options);
+		var totalWidth = getTotalWidthOfEncodings(encodings);
+		var maxHeight = getMaximumHeightOfEncodings(encodings);
 
-		var width = totalWidth + this.options.marginLeft + this.options.marginRight;
-		this.setSvgAttributes(width, maxHeight);
+		var width = totalWidth + options.marginLeft + options.marginRight;
+		setSvgAttributes(width, maxHeight);
 
-		if (this.options.background) {
-			this.drawRect(0, 0, width, maxHeight, this.svg).setAttribute('style', 'fill:' + this.options.background + ';');
+		if (options.background) {
+			drawRect(0, 0, width, maxHeight, svg).setAttribute('style', 'fill:' + options.background + ';');
 		}
 	}
 
-	drawSvgBarcode(parent, options, encoding) {
+	function drawSvgBarcode(parent, options, encoding) {
 		var binary = encoding.data;
 
 		// Creates the barcode out of the encoded binary
@@ -66,19 +59,19 @@ class SVGRenderer {
 			if (binary[b] === '1') {
 				barWidth++;
 			} else if (barWidth > 0) {
-				this.drawRect(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
+				drawRect(x - options.width * barWidth, yFrom, options.width * barWidth, options.height, parent);
 				barWidth = 0;
 			}
 		}
 
 		// Last draw is needed since the barcode ends with 1
 		if (barWidth > 0) {
-			this.drawRect(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
+			drawRect(x - options.width * (barWidth - 1), yFrom, options.width * barWidth, options.height, parent);
 		}
 	}
 
-	drawSVGText(parent, options, encoding) {
-		var textElem = this.document.createElementNS(svgns, 'text');
+	function drawSVGText(parent, options, encoding) {
+		var textElem = doc.createElementNS(svgns, 'text');
 
 		// Draw the text if displayValue is set
 		if (options.displayValue) {
@@ -109,14 +102,13 @@ class SVGRenderer {
 			textElem.setAttribute('x', x);
 			textElem.setAttribute('y', y);
 
-			textElem.appendChild(this.document.createTextNode(encoding.text));
+			textElem.appendChild(doc.createTextNode(encoding.text));
 
 			parent.appendChild(textElem);
 		}
 	}
 
-	setSvgAttributes(width, height) {
-		var svg = this.svg;
+	function setSvgAttributes(width, height) {
 		svg.setAttribute('width', width + 'px');
 		svg.setAttribute('height', height + 'px');
 		svg.setAttribute('x', '0px');
@@ -129,8 +121,8 @@ class SVGRenderer {
 		svg.setAttribute('style', 'transform: translate(0,0)');
 	}
 
-	createGroup(x, y, parent) {
-		var group = this.document.createElementNS(svgns, 'g');
+	function createGroup(x, y, parent) {
+		var group = doc.createElementNS(svgns, 'g');
 		group.setAttribute('transform', 'translate(' + x + ', ' + y + ')');
 
 		parent.appendChild(group);
@@ -138,12 +130,12 @@ class SVGRenderer {
 		return group;
 	}
 
-	setGroupOptions(group, options) {
+	function setGroupOptions(group, options) {
 		group.setAttribute('style', 'fill:' + options.lineColor + ';');
 	}
 
-	drawRect(x, y, width, height, parent) {
-		var rect = this.document.createElementNS(svgns, 'rect');
+	function drawRect(x, y, width, height, parent) {
+		var rect = doc.createElementNS(svgns, 'rect');
 
 		rect.setAttribute('x', x);
 		rect.setAttribute('y', y);
@@ -156,4 +148,4 @@ class SVGRenderer {
 	}
 }
 
-export default SVGRenderer;
+export default renderer;
