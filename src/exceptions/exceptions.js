@@ -1,29 +1,23 @@
-class InvalidInputException extends Error {
-	constructor(symbology, input) {
-		super();
-		this.name = 'InvalidInputException';
+function InvalidInputException(symbology, input) {
+	this.name = 'InvalidInputException';
 
-		this.symbology = symbology;
-		this.input = input;
+	this.symbology = symbology;
+	this.input = input;
 
-		this.message = '"' + this.input + '" is not a valid input for ' + this.symbology;
-	}
+	this.message = '"' + this.input + '" is not a valid input for ' + this.symbology;
 }
+InvalidInputException.prototype = Error.prototype;
 
-class InvalidElementException extends Error {
-	constructor() {
-		super();
-		this.name = 'InvalidElementException';
-		this.message = 'Not supported type to render on';
-	}
+function InvalidElementException() {
+	this.name = 'InvalidElementException';
+	this.message = 'Not supported type to render on';
 }
+InvalidElementException.prototype = Error.prototype;
 
-class NoElementException extends Error {
-	constructor() {
-		super();
-		this.name = 'NoElementException';
-		this.message = 'No element to render on.';
-	}
+function NoElementException() {
+	this.name = 'NoElementException';
+	this.message = 'No element to render on.';
 }
+NoElementException.prototype = Error.prototype;
 
 export { InvalidInputException, InvalidElementException, NoElementException };
