@@ -46,17 +46,14 @@ function encode(text, options) {
 	// Ensure that text is a string
 	text = '' + text;
 
-	const Encoder = options.encoder;
-	const encoder = new Encoder(text, options);
-
 	// If the input is not valid for the encoder, throw error.
 	// If the valid callback option is set, call it instead of throwing error
-	if (!encoder.valid()) {
-		throw new InvalidInputException(encoder.constructor.name, text);
+	if (!options.encoder.valid(text, options)) {
+		throw new InvalidInputException('AASDASD', text);
 	}
 
 	// Make a request for the binary data (and other infromation) that should be rendered
-	const encoded = encoder.encode();
+	const encoded = options.encoder.encode(text, options);
 
 	return encoded;
 }
