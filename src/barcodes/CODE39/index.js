@@ -1,41 +1,33 @@
 // Encoding documentation:
 // https://en.wikipedia.org/wiki/Code_39#Encoding
 
-import Barcode from '../Barcode.js';
+function encode(d, options) {
+	let data = d.toUpperCase();
 
-class CODE39 extends Barcode {
-	constructor(data, options) {
-		data = data.toUpperCase();
-
-		// Calculate mod43 checksum if enabled
-		if (options.mod43) {
-			data += getCharacter(mod43checksum(data));
-		}
-
-		super(data, options);
+	// Calculate mod43 checksum if enabled
+	if (options.mod43) {
+		data += getCharacter(mod43checksum(data));
 	}
 
-	encode() {
-		// First character is always a *
-		var result = getEncoding('*');
+	// First character is always a *
+	var result = getEncoding('*');
 
-		// Take every character and add the binary representation to the result
-		for (let i = 0; i < this.data.length; i++) {
-			result += getEncoding(this.data[i]) + '0';
-		}
-
-		// Last character is always a *
-		result += getEncoding('*');
-
-		return {
-			data: result,
-			text: this.text
-		};
+	// Take every character and add the binary representation to the result
+	for (let i = 0; i < data.length; i++) {
+		result += getEncoding(data[i]) + '0';
 	}
 
-	valid() {
-		return this.data.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
-	}
+	// Last character is always a *
+	result += getEncoding('*');
+
+	return {
+		data: result,
+		text: options.text || data,
+	};
+}
+
+function valid(data) {
+	return data.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
 }
 
 // All characters. The position in the array is the (checksum) value
@@ -163,4 +155,6 @@ function mod43checksum(data) {
 	return checksum;
 }
 
-export default CODE39;
+export default {
+	encode, valid,
+};
