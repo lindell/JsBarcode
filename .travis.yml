@@ -19,6 +19,7 @@ jobs:
         skip_cleanup: true
         email: johan@lindell.me
         api_key: $NPM_TOKEN
+        tag: alpha
         on:
           all_branches: true
 env:
