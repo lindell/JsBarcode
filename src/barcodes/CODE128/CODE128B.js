@@ -1,14 +1,12 @@
-import CODE128 from './CODE128.js';
+import code128 from './CODE128.js';
 import { B_START_CHAR, B_CHARS } from './constants';
 
-class CODE128B extends CODE128 {
-	constructor(string, options) {
-		super(B_START_CHAR + string, options);
-	}
-
-	valid() {
-		return new RegExp(`^${B_CHARS}+$`).test(this.data);
-	}
+function encode(data, options) {
+	return code128.encode(B_START_CHAR + data, options);
 }
 
-export default CODE128B;
+function valid(data) {
+	return new RegExp(`^${B_CHARS}+$`).test(data);
+}
+
+export default {encode, valid};

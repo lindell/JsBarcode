@@ -1,4 +1,4 @@
-var defaults = {
+const defaults = {
 	width: 2,
 	height: 100,
 	format: 'auto',
@@ -17,7 +17,6 @@ var defaults = {
 	marginBottom: undefined,
 	marginLeft: undefined,
 	marginRight: undefined,
-	valid: function() {}
 };
 
 export default defaults;
