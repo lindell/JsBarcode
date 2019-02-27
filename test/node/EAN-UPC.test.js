@@ -1,5 +1,8 @@
 var assert = require('assert');
-var { EAN13, EAN8, EAN5, EAN2, UPC, UPCE } = require('../../lib/barcodes/EAN_UPC');
+var { EAN8, EAN5, EAN2, UPC, UPCE } = require('../../lib/barcodes/EAN_UPC');
+const ean13 = require('../../lib/barcodes/EAN_UPC/EAN13').default;
+const ean8 = require('../../lib/barcodes/EAN_UPC/EAN8').default;
+const ean2 = require('../../lib/barcodes/EAN_UPC/EAN2').default;
 var help = require("./help/help");
 var clone = help.clone;
 
@@ -66,77 +69,70 @@ describe('UPC-E', function() {
 
 describe('EAN', function() {
   it('should be able to encode normal text', function () {
-    var enc = new EAN13("5901234123457", clone(options));
-    assert.equal(true, enc.valid());
+    var encoded = ean13.encode("5901234123457", clone(options));
+    var valid = ean13.valid("5901234123457", clone(options));
+    assert.equal(true, valid);
     assert.equal("10100010110100111011001100100110111101001110101010110011011011001000010101110010011101000100101"
-      , help.fixBin(enc.encode()));
-    assert.equal("5901234123457", help.fixText(enc.encode()));
+      , help.fixBin(encoded));
+    assert.equal("5901234123457", help.fixText(encoded));
   });
 
   it('should be able to encode normal text with flat option', function () {
-    var enc = new EAN13("5901234123457", help.merge(options, {flat: true}));
-    assert.equal(true, enc.valid());
+    var encoded = ean13.encode("5901234123457", help.merge(options, {flat: true}));
+    var valid = ean13.valid("5901234123457", help.merge(options, {flat: true}));
+    assert.equal(true, valid);
     assert.equal("10100010110100111011001100100110111101001110101010110011011011001000010101110010011101000100101"
-      , enc.encode().data);
-    assert.equal("5901234123457", help.fixText(enc.encode()));
+      , encoded.data);
+    assert.equal("5901234123457", help.fixText(encoded));
   });
 
   it('should warn with invalid text', function () {
-    var enc = new EAN13("12345", {});
-    assert.equal(false, enc.valid());
+    var valid = ean13.valid("12345", {});
+    assert.equal(false, valid);
 
-    var enc = new EAN13("5901234123456  ", {});
-    assert.equal(false, enc.valid());
-  });
-
-  it('should auto include the checksum if missing', function () {
-    var enc = new EAN13("590123412345", clone(options));
-    assert.equal("5901234123457", help.fixText(enc.encode()));
+    valid = ean13.valid("5901234123456  ", {});
+    assert.equal(false, valid);
   });
 
   it('should work with text option', function () {
-    var enc = new EAN13("12345678999", help.merge(options, {text: "THISISTEXT"}));
-    assert.equal("THISISTEXT", help.fixText(enc.encode()));
+    var encoded = ean13.encode("12345678999", help.merge(options, {text: "THISISTEXT"}));
+    assert.equal("THISISTEXT", help.fixText(encoded));
   });
 });
 
 describe('EAN-8', function() {
   it('should be able to encode normal text', function () {
-    var enc = new EAN8("96385074", {});
-    assert.equal(true, enc.valid());
+    var encoded = ean8.encode("96385074", {});
+    var valid = ean8.valid("96385074", {});
+
+    assert.equal(true, valid);
     assert.equal("1010001011010111101111010110111010101001110111001010001001011100101"
-      , help.fixBin(enc.encode()));
-    assert.equal("96385074", help.fixText(enc.encode()));
+      , help.fixBin(encoded));
+    assert.equal("96385074", help.fixText(encoded));
   });
 
   it('should be able to encode normal text with flat option', function () {
-    var enc = new EAN8("96385074", help.merge(options, {flat: true}));
-    assert.equal(true, enc.valid());
-    assert.equal("1010001011010111101111010110111010101001110111001010001001011100101"
-      , enc.encode().data);
-    assert.equal("96385074", help.fixText(enc.encode()));
-  });
+    const args = ["96385074", help.merge(options, {flat: true})];
+    const encoded = ean8.encode(...args);
+    const valid = ean8.valid(...args);
 
-  it('should auto include the checksum if missing', function () {
-    var enc = new EAN8("9638507", {});
-
-    assert.equal(true, enc.valid());
-    assert.equal("96385074", help.fixText(enc.encode()));
+    assert.equal(true, valid);
     assert.equal("1010001011010111101111010110111010101001110111001010001001011100101"
-      , help.fixBin(enc.encode()));
+      , encoded.data);
+    assert.equal("96385074", help.fixText(encoded));
   });
 
   it('should warn with invalid text', function () {
-    var enc = new EAN8("12345", {});
-    assert.equal(false, enc.valid());
+    var valid = ean8.valid("12345", {});
+    assert.equal(false, valid);
 
-    var enc = new EAN8("96385073", {});
-    assert.equal(false, enc.valid());
+    var valid = ean8.valid("96385073", {});
+    assert.equal(false, valid);
   });
 
   it('should work with text option', function () {
-    var enc = new EAN8("96385074", help.merge(options, {text: "THISISTEXT", flat: true}));
-    assert.equal("THISISTEXT", help.fixText(enc.encode()));
+    var encoded = ean8.encode("96385074", help.merge(options, {text: "THISISTEXT", flat: true}));
+    assert.equal("THISISTEXT", help.fixText(encoded));
   });
 });
 
@@ -169,27 +165,29 @@ describe('EAN-5', function() {
 
 describe('EAN-2', function() {
   it('should be able to encode normal text', function () {
-    var enc = new EAN2("53", {});
-    assert.equal(true, enc.valid());
+    let encoded = ean2.encode("53", {});
+    let valid = ean2.valid("53", {});
+    assert.equal(true, valid);
     assert.equal("10110110001010100001"
-      , enc.encode().data);
+      , encoded.data);
 
-    var enc = new EAN2("12", {});
-    assert.equal(true, enc.valid());
+    encoded = ean2.encode("12", {});
+    valid = ean2.valid("12", {});
+    assert.equal(true, valid);
     assert.equal("10110011001010010011"
-      , enc.encode().data);
+      , encoded.data);
   });
 
   it('should warn with invalid text', function () {
-    var enc = new EAN2("1", {});
-    assert.equal(false, enc.valid());
+    let valid = ean2.valid("1", {});
+    assert.equal(false, valid);
 
-    var enc = new EAN2("a2", {});
-    assert.equal(false, enc.valid());
+    valid = ean2.valid("a2", {});
+    assert.equal(false, valid);
   });
 
   it('should work with text option', function () {
-    var enc = new EAN2("12", help.merge(options, {text: "THISISTEXT"}));
-    assert.equal("THISISTEXT", help.fixText(enc.encode()));
+    const encoded = ean2.encode("12", help.merge(options, {text: "THISISTEXT"}));
+    assert.equal("THISISTEXT", help.fixText(encoded));
   });
 });

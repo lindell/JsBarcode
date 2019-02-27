@@ -1,5 +1,4 @@
 import { SIDE_BIN, MIDDLE_BIN } from './constants';
-import encode from './encoder';
 import Barcode from '../Barcode';
 
 // Base class for EAN8 & EAN13
@@ -16,39 +15,6 @@ class EAN extends Barcode {
 
 	encode() {
 		return this.options.flat ? this.encodeFlat() : this.encodeGuarded();
-	}
-
-	leftText(from, to) {
-		return this.text.substr(from, to);
-	}
-
-	leftEncode(data, structure) {
-		return encode(data, structure);
-	}
-
-	rightText(from, to) {
-		return this.text.substr(from, to);
-	}
-
-	rightEncode(data, structure) {
-		return encode(data, structure);
-	}
-
-	encodeGuarded() {
-		const textOptions = { fontSize: this.fontSize };
-		const guardOptions = { height: this.guardHeight };
-
-		return [
-			{ data: SIDE_BIN, options: guardOptions },
-			{ data: this.leftEncode(), text: this.leftText(), options: textOptions },
-			{ data: MIDDLE_BIN, options: guardOptions },
-			{
-				data: this.rightEncode(),
-				text: this.rightText(),
-				options: textOptions
-			},
-			{ data: SIDE_BIN, options: guardOptions }
-		];
 	}
 
 	encodeFlat() {
