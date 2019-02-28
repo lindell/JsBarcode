@@ -2,8 +2,7 @@
 // https://en.wikipedia.org/wiki/EAN_5#Encoding
 
 import { EAN5_STRUCTURE } from './constants';
-import encode from './encoder';
-import Barcode from '../Barcode';
+import encodeEAN from './encoder';
 
 const checksum = data => {
 	const result = data
@@ -15,22 +14,20 @@ const checksum = data => {
 	return result % 10;
 };
 
-class EAN5 extends Barcode {
-	constructor(data, options) {
-		super(data, options);
-	}
-
-	valid() {
-		return this.data.search(/^[0-9]{5}$/) !== -1;
-	}
-
-	encode() {
-		const structure = EAN5_STRUCTURE[checksum(this.data)];
-		return {
-			data: '1011' + encode(this.data, structure, '01'),
-			text: this.text
-		};
-	}
+function valid(data) {
+	return data.search(/^[0-9]{5}$/) !== -1;
 }
 
-export default EAN5;
+
+function encode(data, options) {
+	const structure = EAN5_STRUCTURE[checksum(data)];
+	return {
+		data: '1011' + encodeEAN(data, structure, '01'),
+		text: options.text || data,
+	};
+}
+
+export default {
+	encode,
+	valid,
+};
