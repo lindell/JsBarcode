@@ -169,13 +169,8 @@ npm install jsbarcode --save
 
 Node.js:
 ----
-#### Install with npm:
-````bash
-npm install jsbarcode
-npm install canvas
-````
 
-#### Use:
+#### With canvas:
 ```` javascript
 var JsBarcode = require('jsbarcode');
 
@@ -195,6 +190,19 @@ JsBarcode(canvas, "Hello");
 // See https://github.com/Automattic/node-canvas for more information
 ````
 
+#### With svg:
+```` javascript
+const { DOMImplementation, XMLSerializer } = require('xmldom');
+const xmlSerializer = new XMLSerializer();
+const document = new DOMImplementation().createDocument('http://www.w3.org/1999/xhtml', 'html', null);
+const svgNode = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+
+JsBarcode(svgNode, 'test', {
+    xmlDocument: document,
+});
+
+const svgText = xmlSerializer.serializeToString(svgNode);
+````
 
 
 Options:
