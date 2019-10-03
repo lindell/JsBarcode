@@ -60,8 +60,9 @@ function newCanvasRenderProperties(imgElement){
 }
 
 function elementInstanceRenderProperties(element){
-	const ownerDocument = element.ownerDocument || document;
-	const ownerWindow = ownerDocument.defaultView || ownerDocument.parentWindow || window;
+	const global = typeof window !== 'undefined' ? window : global;
+	const ownerDocument = element.ownerDocument || global.document;
+	const ownerWindow = ownerDocument.defaultView || ownerDocument.parentWindow || global.window;
 
 	// If element, render on canvas and set the uri as src
 	if(typeof HTMLCanvasElement !== 'undefined' && element instanceof ownerWindow.HTMLImageElement){
