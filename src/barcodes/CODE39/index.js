@@ -10,7 +10,7 @@ function encode(d, options) {
 	}
 
 	// First character is always a *
-	var result = getEncoding('*');
+	let result = getEncoding('*');
 
 	// Take every character and add the binary representation to the result
 	for (let i = 0; i < data.length; i++) {
@@ -27,11 +27,11 @@ function encode(d, options) {
 }
 
 function valid(data) {
-	return data.search(/^[0-9A-Z\-\.\ \$\/\+\%]+$/) !== -1;
+	return data.search(/^[0-9A-Z\-. $/+%]+$/) !== -1;
 }
 
 // All characters. The position in the array is the (checksum) value
-var characters = [
+const characters = [
 	'0',
 	'1',
 	'2',
@@ -75,12 +75,12 @@ var characters = [
 	'/',
 	'+',
 	'%',
-	'*'
+	'*',
 ];
 
 // The decimal representation of the characters, is converted to the
 // corresponding binary with the getEncoding function
-var encodings = [
+const encodings = [
 	20957,
 	29783,
 	23639,
@@ -124,7 +124,7 @@ var encodings = [
 	17489,
 	17681,
 	20753,
-	35770
+	35770,
 ];
 
 // Get the binary representation of a character by converting the encodings
@@ -156,5 +156,6 @@ function mod43checksum(data) {
 }
 
 export default {
-	encode, valid,
+	encode,
+	valid,
 };
