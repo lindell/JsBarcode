@@ -1,10 +1,9 @@
-function InvalidInputException(symbology, input) {
+function InvalidInputException(input) {
 	this.name = 'InvalidInputException';
 
-	this.symbology = symbology;
 	this.input = input;
 
-	this.message = '"' + this.input + '" is not a valid input for ' + this.symbology;
+	this.message = `"${this.input}" is not a valid input`;
 }
 InvalidInputException.prototype = Error.prototype;
 

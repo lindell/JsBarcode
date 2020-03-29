@@ -49,7 +49,7 @@ function encode(text, options) {
 	// If the input is not valid for the encoder, throw error.
 	// If the valid callback option is set, call it instead of throwing error
 	if (!options.encoder.valid(text, options)) {
-		throw new InvalidInputException('AASDASD', text);
+		throw new InvalidInputException(text);
 	}
 
 	// Make a request for the binary data (and other infromation) that should be rendered
