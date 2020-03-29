@@ -37,17 +37,17 @@
   },
   "homepage": "https://github.com/lindell/JsBarcode#readme",
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.2.3",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
     "blanket": "^1.2.3",
-    "canvas-prebuilt": "2.0.0-alpha.13",
+    "canvas": "^2.0.0",
     "mocha": "^5.2.0",
-    "nyc": "^13.1.0",
+    "nyc": "^13.3.0",
     "prettier-eslint-cli": "^4.7.1",
-    "webpack": "^4.28.4",
-    "webpack-cli": "^3.2.1",
-    "xmldom": "^0.1.27"
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "xmldom": "^0.1.31"
   },
   "typings": "./jsbarcode.d.ts"
 }
