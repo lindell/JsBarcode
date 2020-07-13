@@ -3,4 +3,4 @@ import CODE128A from './CODE128A.js';
 import CODE128B from './CODE128B.js';
 import CODE128C from './CODE128C.js';
 
-export {CODE128, CODE128A, CODE128B, CODE128C};
+export { CODE128, CODE128A, CODE128B, CODE128C };

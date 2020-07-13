@@ -1,12 +1,7 @@
 var assert = require('assert');
-var JsBarcode = require('../../bin/JsBarcode.js');
-var Canvas = require("canvas");
+var Pharmacode = require('../../lib/barcodes/pharmacode').default;
 
 describe('Pharmacode', function() {
-  it('should be able to include the encoder(s)', function () {
-    Pharmacode = JsBarcode.getModule("pharmacode");
-  });
-
   it('should be able to encode normal text', function () {
     var enc = new Pharmacode("1234", {});
     assert.equal("10010011100111001001110010010011100111"

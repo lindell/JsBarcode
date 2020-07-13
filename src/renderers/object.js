@@ -1,14 +1,11 @@
-class ObjectRenderer {
-	constructor(object, encodings, options) {
-		this.object = object;
-		this.encodings = encodings;
-		this.options = options;
-	}
+import { InvalidElementException } from '../exceptions/exceptions';
 
-	render() {
-		this.object.encodings = this.encodings;
+function renderer(object, encodings) {
+	if (typeof object !== 'object' || !object) {
+		throw new InvalidElementException('object is not an object');
 	}
+	object.encodings = encodings;
 }
 
 
-export default ObjectRenderer;
+export default renderer;

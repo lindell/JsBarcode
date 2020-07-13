@@ -1,27 +1,28 @@
 // Encoding documentation
 // http://www.gomaro.ch/ftproot/Laetus_PHARMA-CODE.pdf
 
-import Barcode from "../Barcode.js";
+import Barcode from '../Barcode.js';
 
-class pharmacode extends Barcode{
-	constructor(data, options){
+class pharmacode extends Barcode {
+	constructor(data, options) {
 		super(data, options);
 		this.number = parseInt(data, 10);
 	}
 
-	encode(){
+	encode() {
 		var z = this.number;
-		var result = "";
+		var result = '';
 
 		// http://i.imgur.com/RMm4UDJ.png
 		// (source: http://www.gomaro.ch/ftproot/Laetus_PHARMA-CODE.pdf, page: 34)
-		while(!isNaN(z) && z != 0){
-			if(z % 2 === 0){ // Even
-				result = "11100" + result;
+		while (!isNaN(z) && z != 0) {
+			if (z % 2 === 0) {
+				// Even
+				result = '11100' + result;
 				z = (z - 2) / 2;
-			}
-			else{ // Odd
-				result = "100" + result;
+			} else {
+				// Odd
+				result = '100' + result;
 				z = (z - 1) / 2;
 			}
 		}
@@ -35,9 +36,9 @@ class pharmacode extends Barcode{
 		};
 	}
 
-	valid(){
+	valid() {
 		return this.number >= 3 && this.number <= 131070;
 	}
 }
 
-export {pharmacode};
+export default pharmacode;

@@ -2,7 +2,6 @@ import { START_BIN, END_BIN, BINARIES } from './constants';
 import Barcode from '../Barcode';
 
 class ITF extends Barcode {
-
 	valid() {
 		return this.data.search(/^([0-9]{2})+$/) !== -1;
 	}
@@ -26,10 +25,7 @@ class ITF extends Barcode {
 
 		return BINARIES[pair[0]]
 			.split('')
-			.map((first, idx) => (
-				(first === '1' ? '111' : '1') +
-				(second[idx] === '1' ? '000' : '0')
-			))
+			.map((first, idx) => (first === '1' ? '111' : '1') + (second[idx] === '1' ? '000' : '0'))
 			.join('');
 	}
 }

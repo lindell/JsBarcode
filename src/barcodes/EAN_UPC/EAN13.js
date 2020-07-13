@@ -2,89 +2,115 @@
 // https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Binary_encoding_of_data_digits_into_EAN-13_barcode
 
 import { EAN13_STRUCTURE } from './constants';
-import EAN from './EAN';
+import encodeEAN from './encoder';
+import { SIDE_BIN, MIDDLE_BIN } from './constants';
 
 // Calculate the checksum digit
 // https://en.wikipedia.org/wiki/International_Article_Number_(EAN)#Calculation_of_checksum_digit
-const checksum = (number) => {
+const checksum = number => {
 	const res = number
 		.substr(0, 12)
 		.split('')
-		.map((n) => +n)
-		.reduce((sum, a, idx) => (
-			idx % 2 ? sum + a * 3 : sum + a
-		), 0);
+		.map(n => +n)
+		.reduce((sum, a, idx) => (idx % 2 ? sum + a * 3 : sum + a), 0);
 
 	return (10 - (res % 10)) % 10;
 };
 
-class EAN13 extends EAN {
+const firstData = data => data[0];
+const leftSide = data => data.substr(1, 6);
+const rightSide = data => data.substr(7, 6);
 
-	constructor(data, options) {
-		// Add checksum if it does not exist
-		if (data.search(/^[0-9]{12}$/) !== -1) {
-			data += checksum(data);
-		}
+function encode(data, options) {
+	const leftData = leftSide(data);
+	const leftStructure = EAN13_STRUCTURE[firstData(data)];
+	const leftEncoded = encodeEAN(leftData, leftStructure);
 
-		super(data, options);
+	const rightData = rightSide(data);
+	const rightEncoded = encodeEAN(rightData, 'RRRRRR');
 
-		// Adds a last character to the end of the barcode
-		this.lastChar = options.lastChar;
-	}
+	// Make sure the font is not bigger than the space between the guard bars
+	const fontSize = !options.flat && options.fontSize > options.width * 10 ? options.width * 10 : options.fontSize;
+	// Make the guard bars go down half the way of the text
+	const guardHeight = options.height + fontSize / 2 + options.textMargin;
 
-	valid() {
-		return (
-			this.data.search(/^[0-9]{13}$/) !== -1 &&
-			+this.data[12] === checksum(this.data)
-		);
-	}
+	const encodingData = {
+		fontSize,
+		guardHeight,
 
-	leftText() {
-		return super.leftText(1, 6);
-	}
+		leftEncoded,
+		rightEncoded,
+	};
 
-	leftEncode() {
-		const data = this.data.substr(1, 6);
-		const structure = EAN13_STRUCTURE[this.data[0]];
-		return super.leftEncode(data, structure);
-	}
-
-	rightText() {
-		return super.rightText(7, 6);
-	}
-
-	rightEncode() {
-		const data = this.data.substr(7, 6);
-		return super.rightEncode(data, 'RRRRRR');
-	}
-
-	// The "standard" way of printing EAN13 barcodes with guard bars
-	encodeGuarded() {
-		const data = super.encodeGuarded();
-
-		// Extend data with left digit & last character
-		if (this.options.displayValue) {
-			data.unshift({
-				data: '000000000000',
-				text: this.text.substr(0, 1),
-				options: { textAlign: 'left', fontSize: this.fontSize }
-			});
-
-			if (this.options.lastChar) {
-				data.push({
-					data: '00'
-				});
-				data.push({
-					data: '00000',
-					text: this.options.lastChar,
-					options: { fontSize: this.fontSize }
-				});
-			}
-		}
-
-		return data;
-	}
-
+	return options.flat ? encodeFlat(encodingData, data, options) : encodeGuarded(encodingData, data, options);
 }
 
-export default EAN13;
+function valid(data) {
+	return data.search(/^[0-9]{13}$/) !== -1 && +data[12] === checksum(data);
+}
+
+// The "standard" way of printing EAN13 barcodes with guard bars
+function encodeGuarded({
+	fontSize,
+	guardHeight,
+	leftEncoded,
+	rightEncoded,
+}, data, {
+	lastChar,
+	displayValue,
+	text,
+}) {
+	const textOptions = { fontSize };
+	const guardOptions = { height: guardHeight };
+	const displayText = text || data; 
+	
+	const encoded = [
+		{ data: SIDE_BIN, options: guardOptions },
+		{ data: leftEncoded, text: leftSide(displayText), options: textOptions },
+		{ data: MIDDLE_BIN, options: guardOptions },
+		{
+			data: rightEncoded,
+			text: rightSide(displayText),
+			options: textOptions
+		},
+		{ data: SIDE_BIN, options: guardOptions }
+	];
+
+	// Extend data with left digit & last character
+	if (displayValue) {
+		encoded.unshift({
+			data: '000000000000',
+			text: firstData(displayText),
+			options: { textAlign: 'left', fontSize }
+		});
+
+		if (lastChar) {
+			encoded.push({
+				data: '00'
+			});
+			encoded.push({
+				data: '00000',
+				text: lastChar,
+				options: { fontSize }
+			});
+		}
+	}
+
+	return encoded;
+}
+
+function encodeFlat({
+	leftEncoded,
+	rightEncoded,
+}, data, options) {
+	return {
+		data: [SIDE_BIN, leftEncoded, MIDDLE_BIN, rightEncoded, SIDE_BIN].join(''),
+		text: options.text || data,
+	};
+}
+
+
+export default {
+	encode,
+	valid,
+};

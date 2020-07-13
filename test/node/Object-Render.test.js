@@ -1,41 +1,31 @@
 var assert = require('assert');
-var JsBarcode = require('../../bin/JsBarcode.js');
-var Canvas = require("canvas");
+var jsbarcode = require('../../lib').default;
+const objectRenderer = require('../../lib/renderers/object').default;
+const code128 = require('../../lib/barcodes/CODE128/CODE128_AUTO').default;
+const upc = require('../../lib/barcodes/EAN_UPC/UPC').default;
 
 describe('Object', function() {
 	it('should handle default options', function () {
 		var data = {};
-		JsBarcode(data, '12345678');
-		assert.equal(typeof data.encodings, 'object');
+		jsbarcode(data, '12345678', { renderer: objectRenderer, encoder: code128 });
+		assert.equal(typeof data.encodings, 'object', { renderer: objectRenderer });
 	});
 
 	it('should catch null', function() {
 		assert.throws(
 			() => {
-				JsBarcode(null, '12345678');
+				jsbarcode(null, '12345678', { renderer: objectRenderer, encoder: code128 });
 			},
-			/InvalidElementException/
+			(err) => err.name === 'InvalidElementException'
 		);
 	});
-
-  it('should ignore dom elements', function() {
-    var fakeElement = {
-      nodeName: 'Some Dom Element'
-    }
-    assert.throws(
-      () => {
-        JsBarcode(fakeElement, '2345678');
-      },
-      /InvalidElementException/
-    );
-  });
 	
 	it('should work for different types', function () {
 		var data = {};
-		JsBarcode(data, '550000000000', {
-			format: 'upc'
+		jsbarcode(data, '550000000000', {
+			renderer: objectRenderer,
+			encoder: upc,
 		});
 		assert.equal(data.encodings.length, 7);
-		assert.ok(data.encodings.every((val) => val.options.format === 'upc'));
 	});
 });

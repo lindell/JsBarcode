@@ -1,16 +1,28 @@
 language: node_js
 sudo: required
-before_install:
-  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-  - sudo apt-get update
-  - npm install -g gulp
 install:
-  - sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++-4.8
-  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
   - npm install
-after_success: npm run coveralls
 node_js:
-  - "node"
-  - "6"
-  - "5"
-  - "4"
+  - "8"
+  - "9"
+  - "10"
+  - "11"
+  - "12"
+  - "13"
+jobs:
+  include:
+    - stage: npm release
+      if: tag IS present
+      node_js: "10"
+      script: npm run convert
+      deploy:
+        provider: npm
+        skip_cleanup: true
+        email: johan@lindell.me
+        api_key: $NPM_TOKEN
+        tag: alpha
+        on:
+          all_branches: true
+env:
+  global:
+    secure: D02YgDzW5Ig6WWYXK7wL1qzmsUHeE3rRv3JK7IIZ2S1IuYJaKBfyRUag08lhrOLOsm4G/4QB+i0A6/X3EyGvdKuZea7tXbPMbsG7DwTzzdEfGX1bZwrtyXGrXPQY5Z0ggJCxjDxk7GkgnTgHPHqaCLPVurccwiXE/Yj0vvNNxn0=

@@ -1,17 +1,7 @@
 var assert = require('assert');
-var JsBarcode = require('../../bin/JsBarcode.js');
-var Canvas = require("canvas");
-
+var { MSI, MSI10, MSI11, MSI1010, MSI1110 } = require('../../lib/barcodes/MSI');
 
 describe('MSI', function() {
-  it('should be able to include the encoder(s)', function () {
-    MSI = JsBarcode.getModule("MSI");
-    MSI10 = JsBarcode.getModule("MSI10");
-    MSI11 = JsBarcode.getModule("MSI11");
-    MSI1010 = JsBarcode.getModule("MSI1010");
-    MSI1110 = JsBarcode.getModule("MSI1110");
-  });
-
   it('should be able to encode normal text', function () {
     var enc = new MSI10("1234567", {});
     assert.equal(true, enc.valid());
