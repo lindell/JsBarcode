@@ -21,6 +21,10 @@ declare namespace JsBarcode {
     valid?: (valid: boolean) => void;
   }
 
+  interface NodeOptions extends BaseOptions {
+    xmlDocument?: XMLDocument;
+  }
+  
   interface Code128Options extends BaseOptions {
     ean128?: boolean;
   }
@@ -34,7 +38,7 @@ declare namespace JsBarcode {
     lastChar?: string;
   }
 
-  type Options = BaseOptions | Code128Options | Ean13Options;
+  type Options = BaseOptions | Code128Options | Ean13Options | NodeOptions;
 
   interface api {
     options(options: Options): api;
