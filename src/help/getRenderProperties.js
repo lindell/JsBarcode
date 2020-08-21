@@ -1,7 +1,3 @@
-/* global HTMLImageElement */
-/* global HTMLCanvasElement */
-/* global SVGElement */
-
 import getOptionsFromElement from "./getOptionsFromElement.js";
 import renderers from "../renderers";
 
@@ -18,7 +14,7 @@ import {InvalidElementException} from "../exceptions/exceptions.js";
 //   options (optional): Options that can be defined in the element
 // }
 
-function getRenderProperties(element){
+function getRenderProperties(element) {
 	// If the element is a string, query select call again
 	if(typeof element === "string"){
 		return querySelectedRenderProperties(element);
@@ -31,14 +27,51 @@ function getRenderProperties(element){
 		}
 		return returnArray;
 	}
+	// If an element is a single instance
+	else{
+		return elementInstanceRenderProperties(element);
+	}
+}
+
+function querySelectedRenderProperties(string){
+	var selector = document.querySelectorAll(string);
+	if(selector.length === 0){
+		return undefined;
+	}
+	else{
+		let returnArray = [];
+		for(let i = 0; i < selector.length; i++){
+			returnArray.push(getRenderProperties(selector[i]));
+		}
+		return returnArray;
+	}
+}
+
+function newCanvasRenderProperties(imgElement){
+	var canvas = document.createElement('canvas');
+	return {
+		element: canvas,
+		options: getOptionsFromElement(imgElement),
+		renderer: renderers.CanvasRenderer,
+		afterRender: function(){
+			imgElement.setAttribute("src", canvas.toDataURL());
+		}
+	};
+}
+
+function elementInstanceRenderProperties(element){
+	const globalThis = typeof window !== 'undefined' ? window : global;
+	const ownerDocument = element && element.ownerDocument || globalThis.document;
+	const ownerWindow = ownerDocument && (ownerDocument.defaultView || ownerDocument.parentWindow) || globalThis;
+
 	// If element, render on canvas and set the uri as src
-	else if(typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLImageElement){
+	if(typeof HTMLCanvasElement !== 'undefined' && element instanceof ownerWindow.HTMLImageElement){
 		return newCanvasRenderProperties(element);
 	}
 	// If SVG
 	else if(
 		(element && element.nodeName === 'svg') ||
-		(typeof SVGElement !== 'undefined' && element instanceof SVGElement)
+		(typeof SVGElement !== 'undefined' && element instanceof ownerWindow.SVGElement)
 	){
 		return {
 			element: element,
@@ -47,7 +80,7 @@ function getRenderProperties(element){
 		};
 	}
 	// If canvas (in browser)
-	else if(typeof HTMLCanvasElement !== 'undefined' && element instanceof HTMLCanvasElement){
+	else if(typeof HTMLCanvasElement !== 'undefined' && element instanceof ownerWindow.HTMLCanvasElement){
 		return {
 			element: element,
 			options: getOptionsFromElement(element),
@@ -70,33 +103,6 @@ function getRenderProperties(element){
 	else{
 		throw new InvalidElementException();
 	}
-}
-
-function querySelectedRenderProperties(string){
-	var selector = document.querySelectorAll(string);
-	if(selector.length === 0){
-		return undefined;
-	}
-	else{
-		let returnArray = [];
-		for(let i = 0; i < selector.length; i++){
-			returnArray.push(getRenderProperties(selector[i]));
-		}
-		return returnArray;
-	}
-}
-
-
-function newCanvasRenderProperties(imgElement){
-	var canvas = document.createElement('canvas');
-	return {
-		element: canvas,
-		options: getOptionsFromElement(imgElement),
-		renderer: renderers.CanvasRenderer,
-		afterRender: function(){
-			imgElement.setAttribute("src", canvas.toDataURL());
-		}
-	};
 }
 
 export default getRenderProperties;
