@@ -7,7 +7,7 @@ var bump = require('gulp-bump');
 var git = require('gulp-git');
 var publishRelease = require('publish-release');
 var gzipSize = require('gzip-size');
-var runSequence = require('run-sequence');
+var runSequence = require('gulp4-run-sequence');
 var fs = require('fs');
 
 var settings = require('./settings.json');
@@ -78,7 +78,7 @@ gulp.task('github-release', function (done) {
 
 
 
-gulp.task('release', gulp.series(['lint'], function (callback) {
+gulp.task('release', gulp.series(function (callback) {
 	runSequence(
 		'git-release',
 		'github-release',

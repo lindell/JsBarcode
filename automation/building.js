@@ -4,7 +4,7 @@ var clean = require('gulp-clean');
 var gulpWebpack = require('webpack-stream');
 var webpack = require('webpack');
 var babel = require("gulp-babel");
-var runSequence = require('run-sequence');
+var runSequence = require('gulp4-run-sequence');
 var fs = require('fs');
 
 var settings = require('./settings.json');
@@ -39,6 +39,7 @@ function webpackFunc() {
 	return gulp.src('bin/JsBarcode.js')
 		.pipe(gulpWebpack(
 			{
+				mode: "none",
 				output: {
 					filename: 'JsBarcode.all.js'
 				}
@@ -58,10 +59,10 @@ function webpackMin(name, dest) {
 	return gulp.src('bin/JsBarcode.js')
 		.pipe(gulpWebpack(
 			{
+				mode: "production",
 				output: {
 					filename: shared.minifiedFilename(name)
 				},
-				plugins: [new webpack.optimize.UglifyJsPlugin()]
 			}
 			, webpack))
 		.pipe(header(settings.banner, require(settings.baseDir + 'package.json')))
