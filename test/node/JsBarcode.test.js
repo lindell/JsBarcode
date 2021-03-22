@@ -36,6 +36,12 @@ describe('node-canvas generation', function() {
 			jsbarcode(canvas, 'Hello', { encoder: ean8, renderer: canvasRenderer });
 		});
 		assert.throws(function() {
+			jsbarcode(canvas, 'Hello', { encoder: code128 });
+		});
+		assert.throws(function() {
+			jsbarcode(canvas, 'Hello', { renderer: canvasRenderer });
+		});
+		assert.throws(function() {
 			jsbarcode('Hello', 'Hello');
 		});
 		assert.throws(function() {
@@ -51,34 +57,6 @@ describe('node-canvas generation', function() {
 			err => err.name === 'NoElementException',
 		);
 	});
-
-	// it('should use the valid callback correct', function (done) {
-	//   var canvas = createCanvas();
-
-	//   jsbarcode(canvas, "Hello", {
-	//     encoder: code128,
-	//     renderer: canvasRenderer,
-	//     valid: function(valid){
-	//       if(valid){
-	//         done();
-	//       }
-	//     }
-	//   });
-	// });
-
-	// it('should use false valid callback correct', function (done) {
-	//   var canvas = createCanvas();
-
-	//   jsbarcode(canvas, "Hello", {
-	//     encoder: pharmacode,
-	//     renderer: canvasRenderer,
-	//     valid: function(valid){
-	//       if(!valid){
-	//         done();
-	//       }
-	//     }
-	//   });
-	// });
 
 	it('should create output with same input', function() {
 		var canvas1 = createCanvas();
@@ -185,13 +163,5 @@ describe('Extended Arrays', function() {
 		var canvas = createCanvas();
 		jsbarcode(canvas, 'Hello', { encoder: code128, renderer: canvasRenderer });
 		jsbarcode(canvas, 'HI', { encoder: code39, renderer: canvasRenderer });
-	});
-});
-
-describe('Generic barcode', function() {
-	it('should not fail generic barcode', function() {
-		var enc = new GENERIC('1234', {});
-		assert.equal(enc.valid(), true);
-		assert.equal(enc.encode().text, '1234');
 	});
 });
