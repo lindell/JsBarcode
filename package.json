@@ -42,12 +42,12 @@
     "@babel/preset-env": "^7.9.0",
     "blanket": "^1.2.3",
     "canvas": "^2.6.1",
-    "mocha": "^5.2.0",
-    "nyc": "^13.3.0",
-    "prettier-eslint-cli": "^4.7.1",
+    "mocha": "^8.3.2",
+    "nyc": "^15.1.0",
+    "prettier-eslint-cli": "^5.0.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
-    "xmldom": "^0.1.31"
+    "xmldom": "^0.5.0"
   },
   "typings": "./jsbarcode.d.ts"
 }
