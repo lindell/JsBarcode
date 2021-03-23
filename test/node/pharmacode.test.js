@@ -1,32 +1,29 @@
 var assert = require('assert');
-var Pharmacode = require('../../lib/barcodes/pharmacode').default;
+const pharmacode = require('../../lib/barcodes/pharmacode').default;
 
 describe('Pharmacode', function() {
-  it('should be able to encode normal text', function () {
-    var enc = new Pharmacode("1234", {});
-    assert.equal("10010011100111001001110010010011100111"
-      , enc.encode().data);
+	it('should be able to encode normal text', function() {
+		let encoded = pharmacode.encode('1234', {});
+		assert.equal('10010011100111001001110010010011100111', encoded.data);
 
-    var enc = new Pharmacode("4567", {});
-    assert.equal("10010010011100111001110010011100111001001001"
-      , enc.encode().data);
+		encoded = pharmacode.encode('4567', {});
+		assert.equal('10010010011100111001110010011100111001001001', encoded.data);
 
-    var enc = new Pharmacode("12", {});
-    assert.equal("11100100111", enc.encode().data);
-  });
+		encoded = pharmacode.encode('12', {});
+		assert.equal('11100100111', encoded.data);
+	});
 
-  it('should return getText correct', function () {
-    var enc = new Pharmacode("1234", {});
-    assert.equal("1234", enc.encode().text);
-  });
+	it('should return getText correct', function() {
+		let encoded = pharmacode.encode('1234', {});
+		assert.equal('1234', encoded.text);
+	});
 
-  it('should warn with invalid text', function () {
-    var enc = new Pharmacode("12345678", {});
-    assert.equal(false, enc.valid());
-  });
+	it('should warn with invalid text', function() {
+		assert.equal(false, pharmacode.valid('12345678', {}));
+	});
 
-  it('should work with text option', function () {
-    var enc = new Pharmacode("12345678", {text: "THISISTEXT"});
-    assert.equal("THISISTEXT", enc.encode().text);
-  });
+	it('should work with text option', function() {
+		let encoded = pharmacode.encode('12345678', { text: 'THISISTEXT' });
+		assert.equal('THISISTEXT', encoded.text);
+	});
 });
