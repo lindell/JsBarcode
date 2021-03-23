@@ -2,66 +2,73 @@ var assert = require('assert');
 var { MSI, MSI10, MSI11, MSI1010, MSI1110 } = require('../../lib/barcodes/MSI');
 
 describe('MSI', function() {
-  it('should be able to encode normal text', function () {
-    var enc = new MSI10("1234567", {});
-    assert.equal(true, enc.valid());
-    assert.equal("12345674", enc.encode().text);
-    assert.equal("1101001001001101001001101001001001101101001101001001001101001101001101101001001101101101001101001001001"
-      , enc.encode().data);
+	it('should be able to encode normal text', function() {
+		let encoded = MSI10.encode('1234567', {});
+		let valid = MSI10.valid('1234567', {});
+		assert.equal(true, valid);
+		assert.equal('12345674', encoded.text);
+		assert.equal(
+			'1101001001001101001001101001001001101101001101001001001101001101001101101001001101101101001101001001001',
+			encoded.data,
+		);
 
-    var enc = new MSI("12345674", {});
-    assert.equal("1101001001001101001001101001001001101101001101001001001101001101001101101001001101101101001101001001001"
-      , enc.encode().data);
+		encoded = MSI.encode('12345674', {});
+		assert.equal(
+			'1101001001001101001001101001001001101101001101001001001101001101001101101001001101101101001101001001001',
+			encoded.data,
+		);
 
-    var enc = new MSI10("17345", {});
-    assert.equal(true, enc.valid());
-    assert.equal("173450", enc.encode().text);
+		valid = MSI10.valid('17345', {});
+		encoded = MSI10.encode('17345', {});
+		assert.equal(true, valid);
+		assert.equal('173450', encoded.text);
 
-    var enc = new MSI10("1234", {});
-    assert.equal(true, enc.valid());
-    assert.equal("12344", enc.encode().text);
-  });
+		valid = MSI10.valid('1234', {});
+		encoded = MSI10.encode('1234', {});
+		assert.equal(true, valid);
+		assert.equal('12344', encoded.text);
+	});
 
-  it('should encode MSI11', function () {
-    var enc = new MSI11("123456", {});
-    assert.equal("1234560", enc.encode().text);
+	it('should encode MSI11', function() {
+		let encoded = MSI11.encode('123456', {});
+		assert.equal('1234560', encoded.text);
 
-    var enc = new MSI11("12345678", {});
-    assert.equal("123456785", enc.encode().text);
+		encoded = MSI11.encode('12345678', {});
+		assert.equal('123456785', encoded.text);
 
-    var enc = new MSI11("1234567891011", {});
-    assert.equal("12345678910115", enc.encode().text);
+		encoded = MSI11.encode('1234567891011', {});
+		assert.equal('12345678910115', encoded.text);
 
-    var enc = new MSI11("1134567", {});
-    assert.equal("11345670", enc.encode().text);
-  });
+		encoded = MSI11.encode('1134567', {});
+		assert.equal('11345670', encoded.text);
+	});
 
-  it('should encode MSI1010', function () {
-    var enc = new MSI1010("1234567", {});
-    assert.equal("123456741", enc.encode().text);
+	it('should encode MSI1010', function() {
+		let encoded = MSI1010.encode('1234567', {});
+		assert.equal('123456741', encoded.text);
 
-    var enc = new MSI1010("1337", {});
-    assert.equal("133751", enc.encode().text);
-  });
+		encoded = MSI1010.encode('1337', {});
+		assert.equal('133751', encoded.text);
+	});
 
-  it('should encode MSI1110', function () {
-    var enc = new MSI1110("12345678", {});
-    assert.equal("1234567855", enc.encode().text);
+	it('should encode MSI1110', function() {
+		let encoded = MSI1110.encode('12345678', {});
+		assert.equal('1234567855', encoded.text);
 
-    var enc = new MSI1110("1337", {});
-    assert.equal("133744", enc.encode().text);
-  });
+		encoded = MSI1110.encode('1337', {});
+		assert.equal('133744', encoded.text);
+	});
 
-  it('should warn with invalid text', function () {
-    var enc = new MSI("12345ABC", {});
-    assert.equal(false, enc.valid());
+	it('should warn with invalid text', function() {
+		let valid = MSI.valid('12345ABC', {});
+		assert.equal(false, valid);
 
-    var enc = new MSI("12345AB675", {});
-    assert.equal(false, enc.valid());
-  });
+		valid = MSI.valid('12345AB675', {});
+		assert.equal(false, valid);
+	});
 
-  it('should work with text option', function () {
-    var enc = new MSI("12345674", {text: "THISISTEXT"});
-    assert.equal("THISISTEXT", enc.encode().text);
-  });
+	it('should work with text option', function() {
+		let encoded = MSI.encode('12345674', { text: 'THISISTEXT' });
+		assert.equal('THISISTEXT', encoded.text);
+	});
 });

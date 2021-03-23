@@ -1,12 +1,11 @@
-import MSI from './MSI.js';
+import msi from './MSI.js';
 import { mod10 } from './checksums.js';
 
-class MSI1010 extends MSI {
-	constructor(data, options) {
+export default {
+	encode: (data, options) => {
 		data += mod10(data);
 		data += mod10(data);
-		super(data, options);
-	}
-}
-
-export default MSI1010;
+		return msi.encode(data, options);
+	},
+	valid: msi.valid,
+};
