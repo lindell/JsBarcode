@@ -7,10 +7,12 @@ function encode(d, options) {
 		data = 'A' + data + 'A';
 	}
 
-
 	return {
 		text: options.text || data.replace(/[A-D]/g, ''),
-		data: data.split('').map(c => encodings[c]).join('0'),
+		data: data
+			.split('')
+			.map(c => encodings[c])
+			.join('0'),
 	};
 }
 
@@ -38,10 +40,10 @@ const encodings = {
 	A: '1011001001',
 	B: '1001001011',
 	C: '1010010011',
-	D: '1010011001'
+	D: '1010011001',
 };
 
-export default {
+export default () => ({
 	encode,
 	valid,
-};
+});

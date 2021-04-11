@@ -1,5 +1,5 @@
 const assert = require('assert');
-const {encode, valid} = require('../../lib/barcodes/codabar').default;
+const {encode, valid} = require('../../lib/barcodes/codabar').default();
 
 describe('Codabar', function() {
   it('should encode a string with start and stop characters', function() {
