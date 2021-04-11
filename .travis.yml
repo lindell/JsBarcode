@@ -3,17 +3,15 @@ sudo: required
 install:
   - npm install
 node_js:
-  - "8"
-  - "9"
-  - "10"
-  - "11"
-  - "12"
-  - "13"
+  - '10'
+  - '11'
+  - '12'
+  - '13'
 jobs:
   include:
     - stage: npm release
       if: tag IS present
-      node_js: "10"
+      node_js: '10'
       script: npm run convert
       deploy:
         provider: npm
