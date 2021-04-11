@@ -1,5 +1,5 @@
 const assert = require('assert');
-const {encode, valid} = require('../../lib/barcodes/CODE39').default;
+const {encode, valid} = require('../../lib/barcodes/CODE39').default();
 
 describe('CODE39', function() {
   it('should be able to encode normal text', function () {

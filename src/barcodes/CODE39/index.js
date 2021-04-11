@@ -155,7 +155,7 @@ function mod43checksum(data) {
 	return checksum;
 }
 
-export default {
+export default () => ({
 	encode,
 	valid,
-};
+});
