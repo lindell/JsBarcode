@@ -37,7 +37,7 @@ function addZeroes(number, n) {
 	return number;
 }
 
-export default {
+export default () => ({
 	encode,
 	valid,
-};
+});
