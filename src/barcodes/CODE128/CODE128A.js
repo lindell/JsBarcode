@@ -9,4 +9,4 @@ function valid(data) {
 	return new RegExp(`^${A_CHARS}+$`).test(data);
 }
 
-export default {encode, valid};
+export default () => ({ encode, valid });

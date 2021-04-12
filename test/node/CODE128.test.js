@@ -1,8 +1,8 @@
 const assert = require('assert');
-const code128 = require('../../lib/barcodes/CODE128/CODE128_AUTO').default;
-const code128a = require('../../lib/barcodes/CODE128/CODE128A').default;
-const code128b = require('../../lib/barcodes/CODE128/CODE128B').default;
-const code128c = require('../../lib/barcodes/CODE128/CODE128C').default;
+const code128 = require('../../lib/barcodes/CODE128/CODE128_AUTO').default();
+const code128a = require('../../lib/barcodes/CODE128/CODE128A').default();
+const code128b = require('../../lib/barcodes/CODE128/CODE128B').default();
+const code128c = require('../../lib/barcodes/CODE128/CODE128C').default();
 
 
 describe('CODE128', function() {

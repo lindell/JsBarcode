@@ -1,8 +1,8 @@
 const assert = require('assert');
 const jsbarcode = require('../../lib/').default;
 
-const code128 = require('../../lib/barcodes/CODE128/CODE128_AUTO').default;
-const code39 = require('../../lib/barcodes/CODE39').default;
+const code128 = require('../../lib/barcodes/CODE128/CODE128_AUTO').default();
+const code39 = require('../../lib/barcodes/CODE39').default();
 const ean8 = require('../../lib/barcodes/EAN_UPC/EAN8').default;
 const ean13 = require('../../lib/barcodes/EAN_UPC/EAN13').default;
 const GENERIC = require('../../lib/barcodes/GenericBarcode').default;
@@ -25,7 +25,7 @@ describe('node-canvas generation', function() {
 		var canvas2 = createCanvas();
 
 		jsbarcode(canvas1, 'HELLO', { encoder: code128, renderer: canvasRenderer });
-		jsbarcode(canvas2, 'HELLO', { encoder: code39(), renderer: canvasRenderer });
+		jsbarcode(canvas2, 'HELLO', { encoder: code39, renderer: canvasRenderer });
 
 		assert.notEqual(canvas1.width, canvas2.width);
 	});
@@ -162,6 +162,6 @@ describe('Extended Arrays', function() {
 
 		var canvas = createCanvas();
 		jsbarcode(canvas, 'Hello', { encoder: code128, renderer: canvasRenderer });
-		jsbarcode(canvas, 'HI', { encoder: code39(), renderer: canvasRenderer });
+		jsbarcode(canvas, 'HI', { encoder: code39, renderer: canvasRenderer });
 	});
 });

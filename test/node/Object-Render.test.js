@@ -1,7 +1,7 @@
 var assert = require('assert');
 var jsbarcode = require('../../lib').default;
 const objectRenderer = require('../../lib/renderers/object').default;
-const code128 = require('../../lib/barcodes/CODE128/CODE128_AUTO').default;
+const code128 = require('../../lib/barcodes/CODE128/CODE128_AUTO').default();
 const upc = require('../../lib/barcodes/EAN_UPC/UPC').default;
 
 describe('Object', function() {

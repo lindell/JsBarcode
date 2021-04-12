@@ -1,6 +1,6 @@
 const assert = require('assert');
 const JsBarcode = require('../../lib').default;
-const code128 = require('../../lib/barcodes/CODE128/CODE128_AUTO').default;
+const code128 = require('../../lib/barcodes/CODE128/CODE128_AUTO').default();
 const svgRenderer = require('../../lib/renderers/svg').default;
 const xmldom  = require('xmldom');
 const DOMImplementation = xmldom.DOMImplementation;
