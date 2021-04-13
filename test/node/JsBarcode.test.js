@@ -117,7 +117,7 @@ describe('Text printing', function() {
 	it('should allow numbers as input', function() {
 		var canvas = createCanvas();
 
-		jsbarcode(canvas, 1234567890128, { encoder: ean13, renderer: canvasRenderer });
+		jsbarcode(canvas, 1234567890128, { encoder: ean13(), renderer: canvasRenderer });
 	});
 });
 

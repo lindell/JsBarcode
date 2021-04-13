@@ -18,7 +18,6 @@ function valid(data) {
 	return data.search(/^[0-9]{5}$/) !== -1;
 }
 
-
 function encode(data, options) {
 	const structure = EAN5_STRUCTURE[checksum(data)];
 	return {
@@ -27,7 +26,7 @@ function encode(data, options) {
 	};
 }
 
-export default {
+export default () => ({
 	encode,
 	valid,
-};
+});

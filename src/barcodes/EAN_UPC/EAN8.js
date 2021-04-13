@@ -80,7 +80,7 @@ function encodeFlat({
 	};
 }
 
-export default {
+export default () => ({
 	encode,
 	valid,
-};
+});

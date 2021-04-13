@@ -23,9 +23,9 @@ function valid(data) {
 	return data.search(/^[0-9]{12}$/) !== -1 && data[11] == checksum(data);
 }
 
-function encode(data, options) {
+function encode(data, options, flat) {
 	// Make sure the font is not bigger than the space between the guard bars
-	const fontSize = !options.flat && options.fontSize > options.width * 10 ? options.width * 10 : options.fontSize;
+	const fontSize = !flat && options.fontSize > options.width * 10 ? options.width * 10 : options.fontSize;
 
 	// Make the guard bars go down half the way of the text
 	const guardHeight = options.height + fontSize / 2 + options.textMargin;
@@ -35,7 +35,7 @@ function encode(data, options) {
 		guardHeight,
 	};
 
-	return options.flat ? flatEncoding(data, options, encodeOptions) : guardedEncoding(data, options, encodeOptions);
+	return flat ? flatEncoding(data, options, encodeOptions) : guardedEncoding(data, options, encodeOptions);
 }
 
 function flatEncoding(data, options) {
@@ -62,40 +62,40 @@ function guardedEncoding(data, options, encodeOptions) {
 		result.push({
 			data: '00000000',
 			text: text.substr(0, 1),
-			options: { textAlign: 'left', fontSize: encodeOptions.fontSize }
+			options: { textAlign: 'left', fontSize: encodeOptions.fontSize },
 		});
 	}
 
 	// Add the guard bars
 	result.push({
 		data: '101' + encodeEAN(data[0], 'L'),
-		options: { height: encodeOptions.guardHeight }
+		options: { height: encodeOptions.guardHeight },
 	});
 
 	// Add the left side
 	result.push({
 		data: encodeEAN(data.substr(1, 5), 'LLLLL'),
 		text: text.substr(1, 5),
-		options: { fontSize: encodeOptions.fontSize }
+		options: { fontSize: encodeOptions.fontSize },
 	});
 
 	// Add the middle bits
 	result.push({
 		data: '01010',
-		options: { height: encodeOptions.guardHeight }
+		options: { height: encodeOptions.guardHeight },
 	});
 
 	// Add the right side
 	result.push({
 		data: encodeEAN(data.substr(6, 5), 'RRRRR'),
 		text: text.substr(6, 5),
-		options: { fontSize: encodeOptions.fontSize }
+		options: { fontSize: encodeOptions.fontSize },
 	});
 
 	// Add the end bits
 	result.push({
 		data: encodeEAN(data[11], 'R') + '101',
-		options: { height: encodeOptions.guardHeight }
+		options: { height: encodeOptions.guardHeight },
 	});
 
 	// Add the last digit
@@ -103,14 +103,14 @@ function guardedEncoding(data, options, encodeOptions) {
 		result.push({
 			data: '00000000',
 			text: text.substr(11, 1),
-			options: { textAlign: 'right', fontSize: encodeOptions.fontSize }
+			options: { textAlign: 'right', fontSize: encodeOptions.fontSize },
 		});
 	}
 
 	return result;
 }
 
-export default {
-	encode,
+export default (upcOptions = { flat: false }) => ({
+	encode: (data, options) => encode(data, options, upcOptions.flat),
 	valid,
-};
+});

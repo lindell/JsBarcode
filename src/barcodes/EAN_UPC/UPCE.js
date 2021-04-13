@@ -160,4 +160,4 @@ function expandToUPCA(middleDigits, numberSystem) {
 	return `${result}${checksum(result)}`;
 }
 
-export default { valid, encode };
+export default () => ({ valid, encode });

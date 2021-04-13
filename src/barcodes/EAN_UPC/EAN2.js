@@ -18,7 +18,7 @@ function valid(data) {
 	return data.search(/^[0-9]{2}$/) !== -1;
 }
 
-export default {
+export default () => ({
 	encode,
 	valid,
-};
+});

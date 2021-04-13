@@ -1,10 +1,10 @@
 var assert = require('assert');
 const ean13 = require('../../lib/barcodes/EAN_UPC/EAN13').default;
-const ean8 = require('../../lib/barcodes/EAN_UPC/EAN8').default;
-const ean5 = require('../../lib/barcodes/EAN_UPC/EAN5').default;
-const ean2 = require('../../lib/barcodes/EAN_UPC/EAN2').default;
+const ean8 = require('../../lib/barcodes/EAN_UPC/EAN8').default();
+const ean5 = require('../../lib/barcodes/EAN_UPC/EAN5').default();
+const ean2 = require('../../lib/barcodes/EAN_UPC/EAN2').default();
 const upc = require('../../lib/barcodes/EAN_UPC/UPC').default;
-const upce = require('../../lib/barcodes/EAN_UPC/UPCE').default;
+const upce = require('../../lib/barcodes/EAN_UPC/UPCE').default();
 var help = require('./help/help');
 var clone = help.clone;
 
@@ -12,7 +12,7 @@ var options = { height: 100, displayValue: true, fontSize: 20, textMargin: 2, wi
 
 describe('UPC-A', function() {
 	it('should be able to encode normal text', function() {
-		const encoded = upc.encode('123456789999', clone(options));
+		const encoded = upc().encode('123456789999', clone(options));
 		assert.equal(
 			'10100110010010011011110101000110110001010111101010100010010010001110100111010011101001110100101',
 			help.fixBin(encoded),
@@ -20,17 +20,17 @@ describe('UPC-A', function() {
 	});
 
 	it('should warn with invalid text', function() {
-		const valid = upc.valid('12345678999', clone(options));
+		const valid = upc().valid('12345678999', clone(options));
 		assert.equal(false, valid);
 	});
 
 	it('should work with text option', function() {
-		const encoded = upc.encode('123456789999', help.merge(options, { text: 'THISISTEXT' }));
+		const encoded = upc().encode('123456789999', help.merge(options, { text: 'THISISTEXT' }));
 		assert.equal('THISISTEXT', help.fixText(encoded));
 	});
 
 	it('should work with flat option', function() {
-		const encoded = upc.encode('123456789999', help.merge(options, { flat: true }));
+		const encoded = upc({ flat: true }).encode('123456789999', help.merge(options));
 		assert.equal(
 			'10100110010010011011110101000110110001010111101010100010010010001110100111010011101001110100101',
 			encoded.data,
@@ -70,8 +70,8 @@ describe('UPC-E', function() {
 
 describe('EAN', function() {
 	it('should be able to encode normal text', function() {
-		var encoded = ean13.encode('5901234123457', clone(options));
-		var valid = ean13.valid('5901234123457', clone(options));
+		var encoded = ean13().encode('5901234123457', clone(options));
+		var valid = ean13().valid('5901234123457', clone(options));
 		assert.equal(true, valid);
 		assert.equal(
 			'10100010110100111011001100100110111101001110101010110011011011001000010101110010011101000100101',
@@ -81,8 +81,8 @@ describe('EAN', function() {
 	});
 
 	it('should be able to encode normal text with flat option', function() {
-		var encoded = ean13.encode('5901234123457', help.merge(options, { flat: true }));
-		var valid = ean13.valid('5901234123457', help.merge(options, { flat: true }));
+		var encoded = ean13({ flat: true }).encode('5901234123457', help.merge(options));
+		var valid = ean13({ flat: true }).valid('5901234123457', help.merge(options));
 		assert.equal(true, valid);
 		assert.equal(
 			'10100010110100111011001100100110111101001110101010110011011011001000010101110010011101000100101',
@@ -92,15 +92,15 @@ describe('EAN', function() {
 	});
 
 	it('should warn with invalid text', function() {
-		var valid = ean13.valid('12345', {});
+		var valid = ean13().valid('12345', {});
 		assert.equal(false, valid);
 
-		valid = ean13.valid('5901234123456  ', {});
+		valid = ean13().valid('5901234123456  ', {});
 		assert.equal(false, valid);
 	});
 
 	it('should work with text option', function() {
-		var encoded = ean13.encode('12345678999', help.merge(options, { text: 'THISISTEXT' }));
+		var encoded = ean13().encode('12345678999', help.merge(options, { text: 'THISISTEXT' }));
 		assert.equal('THISISTEXT', help.fixText(encoded));
 	});
 });
