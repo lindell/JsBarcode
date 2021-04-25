@@ -3285,8 +3285,14 @@ function messureText(string, options, context) {
 	ctx.font = options.fontOptions + " " + options.fontSize + "px " + options.font;
 
 	// Calculate the width of the encoding
-	var size = ctx.measureText(string).width;
-
+	var measureTextResult = ctx.measureText(string);
+	if (!measureTextResult) {
+		// Some implementations don't implement measureText and return undefined.
+		// If the text cannot be measured we will return 0.
+		// This will make some barcode with big text render incorrectly
+		return 0;
+	}
+	var size = measureTextResult.width;
 	return size;
 }
 
