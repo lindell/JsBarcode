@@ -24,6 +24,8 @@
       JsBarcode("#barcode1").init();
       $("#barcode2").JsBarcode().init();
       JsBarcode("#barcode3").init();
+
+			JsBarcode(".barcode4").init(); // Should not give errors
 		}
 	</script>
 </head>
@@ -31,8 +33,9 @@
 	<svg class="barcode"
 		jsbarcode-value="123456789010"
 		jsbarcode-format="ean13"
-		jsbarcode-textMargin="0"
-		jsbarcode-lineColor="#e00">
+		jsbarcode-text-margin="0"
+		jsbarcode-flat="true"
+		jsbarcode-line-color="#e00">
 	</svg>
 
 	<img class="barcode" data-value="Test"/>
@@ -48,8 +51,8 @@
   <svg class="jqbarcode"
 		jsbarcode-value="123456789010"
 		jsbarcode-format="ean13"
-		jsbarcode-textMargin="0"
-		jsbarcode-lineColor="#e00">
+		jsbarcode-text-margin="0"
+		jsbarcode-line-color="#e00">
 	</svg>
 
 	<img class="jqbarcode" data-value="Test"/>
@@ -65,8 +68,8 @@
   <svg id="barcode1"
     jsbarcode-value="123456789010"
     jsbarcode-format="ean13"
-    jsbarcode-textMargin="0"
-    jsbarcode-lineColor="#e00">
+    jsbarcode-text-margin="0"
+    jsbarcode-line-color="#e00">
   </svg>
 
   <img id="barcode2" data-value="Test"/>
