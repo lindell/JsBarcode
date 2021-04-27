@@ -1,8 +1,29 @@
 declare namespace JsBarcode {
+  type Format =
+    | "CODE39"
+    | "CODE128"
+    | "CODE128A"
+    | "CODE128B"
+    | "CODE128C"
+    | "EAN13"
+    | "EAN8"
+    | "EAN5"
+    | "EAN2"
+    | "UPC"
+    | "ITF14"
+    | "ITF"
+    | "MSI"
+    | "MSI10"
+    | "MSI11"
+    | "MSI1010"
+    | "MSI1110"
+    | "pharmacode"
+    | "codabar";
+
   interface BaseOptions {
     width?: number;
     height?: number;
-    format?: string;
+    format?: Format;
     displayValue?: boolean;
     fontOptions?: string;
     font?: string;
@@ -68,7 +89,11 @@ declare namespace JsBarcode {
 }
 
 declare function JsBarcode(element: any): JsBarcode.api;
-declare function JsBarcode(element: any, data: string, options?: JsBarcode.Options): void;
+declare function JsBarcode(
+  element: any,
+  data: string,
+  options?: JsBarcode.Options
+): void;
 
 export = JsBarcode;
 export as namespace JsBarcode;
