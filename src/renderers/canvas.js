@@ -97,6 +97,10 @@ class CanvasRenderer{
 				y = options.height + options.textMargin + options.marginTop + options.fontSize;
 			}
 
+			if(options.fontAntiAlias == false){
+				ctx.antialias = 'none';
+			}
+
 			ctx.font = font;
 
 			// Draw the text in the correct X depending on the textAlign option
@@ -113,7 +117,7 @@ class CanvasRenderer{
 				x = encoding.width / 2;
 				ctx.textAlign = 'center';
 			}
-
+			
 			ctx.fillText(encoding.text, x, y);
 		}
 	}
