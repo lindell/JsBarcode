@@ -1,6 +1,6 @@
 var defaults = {
 	width: 2,
-	height: 100,
+	height: 1,
 	format: "auto",
 	displayValue: true,
 	fontOptions: "",
