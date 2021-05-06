@@ -27,7 +27,7 @@ function encodePair(pair) {
 		.join('');
 }
 
-export default {
+export default () => ({
 	encode,
 	valid,
-};
+});

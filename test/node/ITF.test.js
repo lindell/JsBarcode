@@ -1,5 +1,5 @@
 var assert = require('assert');
-var itf = require('../../lib/barcodes/ITF/ITF').default;
+var itf = require('../../lib/barcodes/ITF/ITF').default();
 
 describe('ITF', function() {
 	it('should be able to encode normal text', function() {

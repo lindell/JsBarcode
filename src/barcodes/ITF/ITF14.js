@@ -16,14 +16,14 @@ function encode(data, options) {
 	if (data.search(/^[0-9]{13}$/) !== -1) {
 		data += checksum(data);
 	}
-	return ifc.encode(data, options);
+	return ifc().encode(data, options);
 }
 
 function valid(data) {
 	return data.search(/^[0-9]{14}$/) !== -1 && +data[13] === checksum(data);
 }
 
-export default {
+export default () => ({
 	encode,
 	valid,
-};
+});
