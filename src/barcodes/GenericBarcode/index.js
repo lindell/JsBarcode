@@ -11,7 +11,7 @@ function valid() {
 	return true;
 }
 
-export default {
+export default () => ({
 	encode,
 	valid,
-};
+});
