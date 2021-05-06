@@ -33,7 +33,7 @@ function valid(data) {
 	return number >= 3 && number <= 131070;
 }
 
-export default {
+export default () => ({
 	encode,
 	valid,
-};
+});

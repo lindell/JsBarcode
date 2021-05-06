@@ -1,5 +1,5 @@
 var assert = require('assert');
-const pharmacode = require('../../lib/barcodes/pharmacode').default;
+const pharmacode = require('../../lib/barcodes/pharmacode').default();
 
 describe('Pharmacode', function() {
 	it('should be able to encode normal text', function() {
