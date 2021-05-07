@@ -1,5 +1,5 @@
-import msi from './MSI.js';
-import { mod10 } from './checksums.js';
+import msi from './MSI';
+import { mod10 } from './checksums';
 
 export default () => ({
 	encode: (data, options) => {

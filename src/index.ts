@@ -1,12 +1,12 @@
 // Help functions
-import linearizeEncodings from './help/linearizeEncodings.js';
-import fixOptions from './help/fixOptions.js';
+import linearizeEncodings from './help/linearizeEncodings';
+import fixOptions from './help/fixOptions';
 
 // Exceptions
-import { InvalidInputException, NoElementException } from './exceptions/exceptions.js';
+import { InvalidInputException, NoElementException } from './exceptions/exceptions';
 
 // Default values
-import defaults from './options/defaults.js';
+import defaults from './options/defaults';
 
 // The protype of the object returned from the JsBarcode() call
 const API = function() {};
@@ -22,7 +22,7 @@ const JsBarcode = function(element, text, options) {
 	}
 
 	if (typeof element === 'undefined') {
-		throw new NoElementException('No element to render on was provided.');
+		throw new NoElementException();
 	}
 
 	// Variables that will be pased through the API calls

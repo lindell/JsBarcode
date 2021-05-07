@@ -1,4 +1,4 @@
-import code128 from './CODE128.js';
+import code128 from './CODE128';
 import { A_START_CHAR, A_CHARS } from './constants';
 
 function encode(data, options) {

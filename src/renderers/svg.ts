@@ -1,4 +1,4 @@
-import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings } from './shared.js';
+import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings } from './shared';
 
 var svgns = 'http://www.w3.org/2000/svg';
 

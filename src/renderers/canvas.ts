@@ -1,4 +1,4 @@
-import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings } from './shared.js';
+import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings } from './shared';
 
 function renderer(canvas, encodings, options) {
 	// Abort if the browser does not support HTML5 canvas

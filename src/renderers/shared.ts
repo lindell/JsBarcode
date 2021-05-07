@@ -20,7 +20,7 @@ function getBarcodePadding(textWidth, barcodeWidth, options) {
 	return 0;
 }
 
-function calculateEncodingAttributes(encodings, barcodeOptions, context) {
+function calculateEncodingAttributes(encodings, barcodeOptions, context?) {
 	for (let i = 0; i < encodings.length; i++) {
 		var encoding = encodings[i];
 		var options = { ...barcodeOptions, ...encoding.options };

@@ -55,7 +55,7 @@ function encodeGuarded({ fontSize, guardHeight, leftEncoded, rightEncoded }, dat
 	const guardOptions = { height: guardHeight };
 	const displayText = text || data;
 
-	const encoded = [
+	const encoded: any[] = [
 		{ data: SIDE_BIN, options: guardOptions },
 		{ data: leftEncoded, text: leftSide(displayText), options: textOptions },
 		{ data: MIDDLE_BIN, options: guardOptions },

@@ -1,7 +1,7 @@
 import { BINARIES } from './constants';
 
 // Encode data string
-const encode = (data, structure, separator) => {
+const encode = (data, structure, separator = null) => {
 	let encoded = data
 		.split('')
 		.map((val, idx) => BINARIES[structure[idx]])

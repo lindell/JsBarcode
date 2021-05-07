@@ -35,7 +35,7 @@ function encode(data, options, flat) {
 		guardHeight,
 	};
 
-	return flat ? flatEncoding(data, options, encodeOptions) : guardedEncoding(data, options, encodeOptions);
+	return flat ? flatEncoding(data, options) : guardedEncoding(data, options, encodeOptions);
 }
 
 function flatEncoding(data, options) {

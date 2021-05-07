@@ -5,7 +5,7 @@
 // https://en.wikipedia.org/wiki/Universal_Product_Code#UPC-E
 
 import encodeEAN from './encoder';
-import { checksum } from './UPC.js';
+import { checksum } from './UPC';
 
 const EXPANSIONS = [
 	'XX00000XXX',
