@@ -5,16 +5,17 @@ import fixOptions from './help/fixOptions';
 // Exceptions
 import { InvalidInputException, NoElementException } from './exceptions/exceptions';
 
-// Default values
+// Options
+import { Options } from './options/options';
 import defaults from './options/defaults';
 
-// The protype of the object returned from the JsBarcode() call
+// The prototype of the object returned from the JsBarcode() call
 const API = function() {};
 
 // The first call of the library API
 // Will return an object with all barcodes calls and the data that is used
 // by the renderers
-const JsBarcode = function(element, text, options) {
+const JsBarcode = function(element: any, text: string, options?: Options) {
 	var api = new API();
 
 	if (typeof element === 'string') {
@@ -32,7 +33,7 @@ const JsBarcode = function(element, text, options) {
 
 	// If text is set, use the simple syntax (render the barcode directly)
 	if (typeof text !== 'undefined') {
-		options = options || {};
+		options = options || defaults;
 
 		api._encodings.push(encode(text, api._options));
 		api.options(options).render();
@@ -85,10 +86,8 @@ API.prototype.render = function() {
 	return this;
 };
 
-API.prototype._defaults = defaults;
-
 // Prepares the encodings and calls the renderer
-function render(element, encodings, options) {
+function render(element, encodings, options: Options) {
 	encodings = linearizeEncodings(encodings);
 
 	for (let i = 0; i < encodings.length; i++) {

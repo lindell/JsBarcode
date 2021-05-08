@@ -1,6 +1,8 @@
 export default fixOptions;
 
-function fixOptions(options) {
+import { Options } from '../options/options';
+
+function fixOptions(options: Options) {
 	// Fix the margins
 	options.marginTop = options.marginTop || options.margin;
 	options.marginBottom = options.marginBottom || options.margin;

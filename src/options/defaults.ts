@@ -1,4 +1,6 @@
-const defaults = {
+import { Options } from './options';
+
+const defaults: Options = {
 	width: 2,
 	height: 100,
 	format: 'auto',
@@ -17,6 +19,8 @@ const defaults = {
 	marginBottom: undefined,
 	marginLeft: undefined,
 	marginRight: undefined,
+
+	renderer: undefined,
 };
 
 export default defaults;
