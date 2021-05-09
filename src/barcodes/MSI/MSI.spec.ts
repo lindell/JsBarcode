@@ -1,10 +1,10 @@
-var assert = require('assert');
-var { MSI, MSI10, MSI11, MSI1010, MSI1110 } = require('../../lib/barcodes/MSI');
+import assert from 'assert';
+import { MSI, MSI10, MSI11, MSI1010, MSI1110 } from '.';
 
 describe('MSI', function() {
 	it('should be able to encode normal text', function() {
 		let encoded = MSI10().encode('1234567', {});
-		let valid = MSI10().valid('1234567', {});
+		let valid = MSI10().valid('1234567');
 		assert.equal(true, valid);
 		assert.equal('12345674', encoded.text);
 		assert.equal(
@@ -18,12 +18,12 @@ describe('MSI', function() {
 			encoded.data,
 		);
 
-		valid = MSI10().valid('17345', {});
+		valid = MSI10().valid('17345');
 		encoded = MSI10().encode('17345', {});
 		assert.equal(true, valid);
 		assert.equal('173450', encoded.text);
 
-		valid = MSI10().valid('1234', {});
+		valid = MSI10().valid('1234');
 		encoded = MSI10().encode('1234', {});
 		assert.equal(true, valid);
 		assert.equal('12344', encoded.text);
@@ -60,10 +60,10 @@ describe('MSI', function() {
 	});
 
 	it('should warn with invalid text', function() {
-		let valid = MSI().valid('12345ABC', {});
+		let valid = MSI().valid('12345ABC');
 		assert.equal(false, valid);
 
-		valid = MSI().valid('12345AB675', {});
+		valid = MSI().valid('12345AB675');
 		assert.equal(false, valid);
 	});
 

@@ -9,7 +9,7 @@
     "lib": "src"
   },
   "scripts": {
-    "test": "npm run convert && mocha ./test/node",
+    "test": "jest ./src",
     "coveralls": "NODE_ENV=test YOURPACKAGE_COVERAGE=1 ./node_modules/.bin/mocha test/node/ --require blanket --reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js",
     "coverage": "npm run convert && nyc --reporter=html mocha test/node/",
     "build": "tsc --build tsconfig.json",
@@ -39,11 +39,14 @@
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
+    "@types/jest": "^26.0.23",
     "blanket": "^1.2.3",
     "canvas": "^2.6.1",
+    "jest": "^26.6.3",
     "mocha": "^8.3.2",
     "nyc": "^15.1.0",
     "prettier-eslint-cli": "^5.0.1",
+    "ts-jest": "^26.5.6",
     "typescript": "^3.9.9",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
