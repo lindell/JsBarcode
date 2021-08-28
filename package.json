@@ -1,6 +1,6 @@
 {
   "name": "jsbarcode",
-  "version": "3.11.4",
+  "version": "3.11.5",
   "description": "JsBarcode is a customizable barcode generator with support for multiple barcode formats.",
   "main": "./bin/JsBarcode.js",
   "directories": {
