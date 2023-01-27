@@ -65,6 +65,7 @@
     "xmldom": "^0.1.31"
   },
   "typings": "./jsbarcode.d.ts",
+  "sideEffects": false,
   "config": {
     "blanket": {
       "pattern": [
