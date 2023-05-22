@@ -11,6 +11,6 @@ install:
 after_success: npm run coveralls
 node_js:
   - "node"
-  - "6"
-  - "5"
-  - "4"
+  - "14"
+  - "12"
+  - "10"

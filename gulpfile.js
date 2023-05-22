@@ -10,10 +10,10 @@ require('./automation/releasing.js');
 require('./automation/misc.js');
 
 
-gulp.task('watch', ['compile'], function() {
+gulp.task('watch', gulp.series(['compile'], function () {
 	gulp.watch("src/**/*", ['compile']);
-});
+}));
 
-gulp.task('watch-web', ['webpack'], function() {
+gulp.task('watch-web', gulp.series(['webpack'], function () {
 	gulp.watch("src/**/*", ['webpack']);
-});
+}));

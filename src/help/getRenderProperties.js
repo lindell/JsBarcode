@@ -37,7 +37,7 @@ function getRenderProperties(element){
 	}
 	// If SVG
 	else if(
-		(element && element.nodeName === 'svg') ||
+		(element && element.nodeName && element.nodeName.toLowerCase() === 'svg') ||
 		(typeof SVGElement !== 'undefined' && element instanceof SVGElement)
 	){
 		return {

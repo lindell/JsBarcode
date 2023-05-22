@@ -1,10 +1,8 @@
 <p align="center">
 	<a href="http://lindell.me/JsBarcode"><img src="http://lindell.me/JsBarcode/other/logo.svg" alt="JsBarcode"/></a>
 	<br><br>
-	<a href="https://gitter.im/lindell/JsBarcode?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"><img src="https://badges.gitter.im/lindell/JsBarcode.svg" alt="Join the chat at https://gitter.im/lindell/JsBarcode"/></a>
 	<a href="http://travis-ci.org/lindell/JsBarcode"><img src="https://secure.travis-ci.org/lindell/JsBarcode.svg" alt="Build Status"/></a>
 	<a href="https://scrutinizer-ci.com/g/lindell/JsBarcode/?branch=master"><img src="https://scrutinizer-ci.com/g/lindell/JsBarcode/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"/></a>
-	<a href="http://packagequality.com/#?package=jsbarcode"><img src="http://npm.packagequality.com/shield/jsbarcode.svg" alt="Package Quality"/></a>
 	<a href="https://www.jsdelivr.com/package/npm/jsbarcode"><img src="https://data.jsdelivr.com/v1/package/npm/jsbarcode/badge?style=rounded" alt="CDN"></a>
 	<a href="https://github.com/lindell/JsBarcode/blob/master/MIT-LICENSE.txt"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"/></a>
 </p>
@@ -136,14 +134,14 @@ Download or get the CDN link to the script:
 
 | Name | Supported barcodes | Size (gzip) | CDN / Download |
 |------|--------------------|:-----------:|---------------:|
-|  *All*  |  *All the barcodes!*  |  *10 kB*  |  *[JsBarcode.all.min.js][1]*  |
-|  CODE128  |  CODE128 (auto and force mode)  |  6.1 kB  |  [JsBarcode.code128.min.js][2]  |
-|  CODE39  |  CODE39  |  5 kB  |  [JsBarcode.code39.min.js][3]  |
-|  EAN / UPC  |  EAN-13, EAN-8, EAN-5, EAN-2, UPC (A)  |  6.5 kB  |  [JsBarcode.ean-upc.min.js][4]  |
-|  ITF  |  ITF, ITF-14  |  4.9 kB  |  [JsBarcode.itf.min.js][5]  |
-|  MSI  |  MSI, MSI10, MSI11, MSI1010, MSI1110  |  4.9 kB  |  [JsBarcode.msi.min.js][6]  |
-|  Pharmacode  |  Pharmacode  |  4.6 kB  |  [JsBarcode.pharmacode.min.js][7]  |
-|  Codabar  |  Codabar  |  4.8 kB  |  [JsBarcode.codabar.min.js][8]  |
+|  *All*  |  *All the barcodes!*  |  *10.1 kB*  |  *[JsBarcode.all.min.js][1]*  |
+|  CODE128  |  CODE128 (auto and force mode)  |  6.2 kB  |  [JsBarcode.code128.min.js][2]  |
+|  CODE39  |  CODE39  |  5.1 kB  |  [JsBarcode.code39.min.js][3]  |
+|  EAN / UPC  |  EAN-13, EAN-8, EAN-5, EAN-2, UPC (A)  |  6.7 kB  |  [JsBarcode.ean-upc.min.js][4]  |
+|  ITF  |  ITF, ITF-14  |  5 kB  |  [JsBarcode.itf.min.js][5]  |
+|  MSI  |  MSI, MSI10, MSI11, MSI1010, MSI1110  |  5 kB  |  [JsBarcode.msi.min.js][6]  |
+|  Pharmacode  |  Pharmacode  |  4.7 kB  |  [JsBarcode.pharmacode.min.js][7]  |
+|  Codabar  |  Codabar  |  4.9 kB  |  [JsBarcode.codabar.min.js][8]  |
 
 
 ### Step 2:

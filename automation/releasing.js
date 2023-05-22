@@ -7,14 +7,14 @@ var bump = require('gulp-bump');
 var git = require('gulp-git');
 var publishRelease = require('publish-release');
 var gzipSize = require('gzip-size');
-var runSequence = require('run-sequence');
+var runSequence = require('gulp4-run-sequence');
 var fs = require('fs');
 
 var settings = require('./settings.json');
 var shared = require('./shared.js');
 
 
-gulp.task('git-release', ['compress'], function(cb){
+gulp.task('git-release', gulp.series(['compress'], function (cb) {
 	var pkg = require(settings.baseDir + 'package.json');
 	var v = 'v' + pkg.version;
 	var message = ':package: Release ' + v;
@@ -22,35 +22,35 @@ gulp.task('git-release', ['compress'], function(cb){
 	updateReadmeFileSizes();
 
 	gulp.src(['./package.json', './bower.json', './README.md', './bin/', './dist'])
-		.pipe(git.add({args: '--all --force'}))
+		.pipe(git.add({ args: '--all --force' }))
 		.pipe(git.commit(message));
 
-	git.push('origin', 'master', function(){
-		git.tag(v, message, function(){
-			git.push('origin', 'master', {args: '--tags'}, cb);
+	git.push('origin', 'master', function () {
+		git.tag(v, message, function () {
+			git.push('origin', 'master', { args: '--tags' }, cb);
 		});
 	});
-});
+}));
 
 
 // Bump (increase) the version number
-gulp.task('bump-patch', function(){
+gulp.task('bump-patch', function () {
 	return gulp.src(['./package.json', './bower.json'])
-		.pipe(bump({type:'patch'}))
+		.pipe(bump({ type: 'patch' }))
 		.pipe(gulp.dest('./'));
 });
 
 
-gulp.task('bump-minor', function(){
+gulp.task('bump-minor', function () {
 	return gulp.src(['./package.json', './bower.json'])
-		.pipe(bump({type:'minor'}))
+		.pipe(bump({ type: 'minor' }))
 		.pipe(gulp.dest('./'));
 });
 
 
-gulp.task('bump-major', function(){
+gulp.task('bump-major', function () {
 	return gulp.src(['./package.json', './bower.json'])
-		.pipe(bump({type:'major'}))
+		.pipe(bump({ type: 'major' }))
 		.pipe(gulp.dest('./'));
 });
 
@@ -61,7 +61,7 @@ gulp.task('npm', function (done) {
 });
 
 
-gulp.task('github-release', function(done) {
+gulp.task('github-release', function (done) {
 	var pkg = require(settings.baseDir + './package.json');
 	var v = 'v' + pkg.version;
 	var name = "JsBarcode " + v;
@@ -78,17 +78,17 @@ gulp.task('github-release', function(done) {
 
 
 
-gulp.task('release', ['lint'], function(callback){
+gulp.task('release', gulp.series(function (callback) {
 	runSequence(
 		'git-release',
 		'github-release',
 		'npm',
 		callback
 	);
-});
+}));
 
 
-gulp.task('patch', function(){
+gulp.task('patch', function () {
 	runSequence(
 		'bump-patch',
 		'release',
@@ -97,7 +97,7 @@ gulp.task('patch', function(){
 });
 
 
-gulp.task('minor', function(){
+gulp.task('minor', function () {
 	runSequence(
 		'bump-minor',
 		'release',
@@ -106,7 +106,7 @@ gulp.task('minor', function(){
 });
 
 
-gulp.task('major', function(){
+gulp.task('major', function () {
 	runSequence(
 		'bump-major',
 		'release',
@@ -114,7 +114,7 @@ gulp.task('major', function(){
 	);
 });
 
-function releaseDone (error) {
+function releaseDone(error) {
 	if (error) {
 		console.log(error.message);
 	}
@@ -124,7 +124,7 @@ function releaseDone (error) {
 }
 
 
-function updateReadmeFileSizes(){
+function updateReadmeFileSizes() {
 	var files = require('./barcode-building.json');
 	var readme = fs.readFileSync('README.md', "utf-8");
 
@@ -136,7 +136,7 @@ function updateReadmeFileSizes(){
 	readme = readme.replace(allRegexp, "|  *" + formatSize(allFilesize) + "*  |$1");
 
 	// Update all barcodes files
-	for(var i in files){
+	for (var i in files) {
 		var filename = shared.minifiedFilename(files[i].name);
 
 		var fileData = fs.readFileSync('dist/barcodes/' + filename);
@@ -152,11 +152,11 @@ function updateReadmeFileSizes(){
 
 
 // Util functions
-RegExp.escape = function(s) {
+RegExp.escape = function (s) {
 	return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
 };
 
-function formatSize(bytes){
+function formatSize(bytes) {
 	var kilobytes = Math.round(bytes / 1024 * 10) / 10;
 
 	return kilobytes + " kB";
