@@ -3,12 +3,6 @@
   "version": "3.11.5",
   "description": "JsBarcode is a customizable barcode generator with support for multiple barcode formats.",
   "main": "./bin/JsBarcode.js",
-  "directories": {
-    "example": "example",
-    "test": "test",
-    "lib": "src",
-    "bin": "bin"
-  },
   "scripts": {
     "test": "gulp babel && node_modules/mocha/bin/mocha test/node/ -R spec",
     "coveralls": "NODE_ENV=test YOURPACKAGE_COVERAGE=1 ./node_modules/.bin/mocha test/node/ --require blanket --reporter mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js",
