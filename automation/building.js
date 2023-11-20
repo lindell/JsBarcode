@@ -24,7 +24,7 @@ gulp.task("babel", gulp.series(function () {
 function babelFunc() {
 	return gulp.src("src/**/*")
 		.pipe(babel({
-			presets: ['es2015', 'stage-3']
+			presets: ['es2015-ie', 'stage-3']
 		}))
 		.pipe(gulp.dest("bin/"));
 }
