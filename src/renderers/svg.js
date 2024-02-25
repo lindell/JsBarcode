@@ -15,12 +15,22 @@ class SVGRenderer{
 		var currentX = this.options.marginLeft;
 
 		this.prepareSVG();
+
+		// Create Background IF not (SVG default) `transparent`
+		if(!this.options.background.match(/^(transparent|#[0-9a-f]{3}0|#[0-9a-f]{6}0{2})$/im)){
+			this.drawRect(0, 0, "100%", "100%", this.svg).setAttribute("fill", this.options.background);
+		}
+
 		for(let i = 0; i < this.encodings.length; i++){
 			var encoding = this.encodings[i];
 			var encodingOptions = merge(this.options, encoding.options);
 
 			var group = this.createGroup(currentX, encodingOptions.marginTop, this.svg);
-			group.setAttribute("fill", encodingOptions.lineColor);
+
+			// Set color IF not (SVG default) `black`
+			if(!encodingOptions.lineColor.match(/^(black|#0{3}f?|#0{6}(?:f{2})?)$/im)){
+				group.setAttribute("fill", encodingOptions.lineColor);
+			}
 
 			this.drawSvgBarcode(group, encodingOptions, encoding);
 			this.drawSVGText(group, encodingOptions, encoding);
@@ -31,9 +41,7 @@ class SVGRenderer{
 
 	prepareSVG(){
 		// Clear the SVG
-		while (this.svg.firstChild){
-			this.svg.removeChild(this.svg.firstChild);
-		}
+		this.svg.replaceChildren();
 
 		calculateEncodingAttributes(this.encodings, this.options);
 		var totalWidth = getTotalWidthOfEncodings(this.encodings);
@@ -41,10 +49,6 @@ class SVGRenderer{
 
 		var width = totalWidth + this.options.marginLeft + this.options.marginRight;
 		this.setSvgAttributes(width, maxHeight);
-
-		if(this.options.background){
-			this.drawRect(0, 0, "100%", "100%", this.svg).setAttribute("fill", this.options.background);
-		}
 	}
 
 	drawSvgBarcode(parent, options, encoding){
