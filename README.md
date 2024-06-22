@@ -10,8 +10,12 @@
 Introduction
 ----
 **JsBarcode** is a **barcode generator** written in JavaScript. It supports multiple barcode formats and works in browsers and with *Node.js*. It has *no dependencies* when it is used for the web but works with *jQuery* if you are into that.
+  
+<a href="https://npm-compare.com/jsbarcode#timeRange=FIVE_YEARS" target="_blank">
+  <img src="https://npm-compare.com/img/npm-trend/FIVE_YEARS/jsbarcode.png" width="50%" alt="NPM Usage Trend of jsbarcode" />
+</a>
 
-
+[Usage Trend of jsbarcode](https://npm-compare.com/jsbarcode#timeRange=FIVE_YEARS)
 
 Demo
 ----
