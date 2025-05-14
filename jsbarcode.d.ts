@@ -64,6 +64,7 @@ declare namespace JsBarcode {
     MSI1110(value: string, options?: BaseOptions): api;
     pharmacode(value: string, options?: BaseOptions): api;
     codabar(value: string, options?: BaseOptions): api;
+    CODE93(value: string, options?: BaseOptions): api;
   }
 }
 
