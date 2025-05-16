@@ -1,7 +1,7 @@
 // Encoding documentation:
 // https://en.wikipedia.org/wiki/Code_93#Detailed_outline
 
-import { CHARACTERS, BINARIES } from './constants';
+import { SYMBOLS, BINARIES } from './constants';
 import Barcode from "../Barcode.js";
 
 class CODE93 extends Barcode {
@@ -16,14 +16,14 @@ class CODE93 extends Barcode {
 	}
 
 	encode(){
-		const chars = this.data.split('');
-		const encoded = chars
-			.map(c => getEncoding(c))
+		const symbols = this.data.split('');
+		const encoded = symbols
+			.map(s => getEncoding(s))
 			.join('');
 
-		// Compute checksum characters
-		const csumC = checksum(chars, 20);
-		const csumK = checksum(chars.concat(csumC), 15);
+		// Compute checksum symbols
+		const csumC = checksum(symbols, 20);
+		const csumK = checksum(symbols.concat(csumC), 15);
 
 		return {
 			text: this.text,
@@ -42,32 +42,32 @@ class CODE93 extends Barcode {
 	}
 }
 
-// Get the binary encoding of a character
-const getEncoding = (character) => {
-	return BINARIES[characterValue(character)];
+// Get the binary encoding of a symbol
+const getEncoding = (symbol) => {
+	return BINARIES[symbolValue(symbol)];
 };
 
-// Get the character for a character value
-const getCharacter = (characterValue) => {
-	return CHARACTERS[characterValue];
+// Get the symbol for a symbol value
+const getSymbol = (symbolValue) => {
+	return SYMBOLS[symbolValue];
 };
 
-// Get the character value of a character
-const characterValue = (character) => {
-	return CHARACTERS.indexOf(character);
+// Get the symbol value of a symbol
+const symbolValue = (symbol) => {
+	return SYMBOLS.indexOf(symbol);
 };
 
-// Calculate a checksum character
-const checksum = (data, maxWeight) => {
-	const csum = data
+// Calculate a checksum symbol
+const checksum = (symbols, maxWeight) => {
+	const csum = symbols
 		.slice()
 		.reverse()
-		.reduce((sum, c, idx) => {
-			let weight = (idx % maxWeight) + 1;
-			return sum + (characterValue(c) * weight);
+		.reduce((sum, symbol, idx) => {
+			const weight = (idx % maxWeight) + 1;
+			return sum + (symbolValue(symbol) * weight);
 		}, 0);
 
-	return getCharacter(csum % 47);
+	return getSymbol(csum % 47);
 };
 
 export {CODE93};

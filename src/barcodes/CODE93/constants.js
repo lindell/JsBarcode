@@ -1,20 +1,23 @@
 // The position in the array is the (checksum) value
-export const CHARACTERS = [
-	"0", "1", "2", "3",
-	"4", "5", "6", "7",
-	"8", "9", "A", "B",
-	"C", "D", "E", "F",
-	"G", "H", "I", "J",
-	"K", "L", "M", "N",
-	"O", "P", "Q", "R",
-	"S", "T", "U", "V",
-	"W", "X", "Y", "Z",
-	"-", ".", " ", "$",
-	"/", "+", "%", "($)",
-	"(%)", "(/)", "(+)", "*",
+export const SYMBOLS = [
+	'0', '1', '2', '3',
+	'4', '5', '6', '7',
+	'8', '9', 'A', 'B',
+	'C', 'D', 'E', 'F',
+	'G', 'H', 'I', 'J',
+	'K', 'L', 'M', 'N',
+	'O', 'P', 'Q', 'R',
+	'S', 'T', 'U', 'V',
+	'W', 'X', 'Y', 'Z',
+	'-', '.', ' ', '$',
+	'/', '+', '%',
+	// Only used for csum and multi-symbols character encodings
+	'($)', '(%)', '(/)', '(+)',
+	// Start/Stop
+	'*'
 ];
 
-// Order matches CHARACTERS array
+// Order matches SYMBOLS array
 export const BINARIES = [
 	'100010100', '101001000', '101000100', '101000010',
 	'100101000', '100100100', '100100010', '101010000',
