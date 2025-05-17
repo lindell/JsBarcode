@@ -6,8 +6,6 @@ import Barcode from "../Barcode.js";
 
 class CODE93 extends Barcode {
 	constructor(data, options){
-		data = data.toUpperCase();
-
 		super(data, options);
 	}
 
@@ -16,7 +14,17 @@ class CODE93 extends Barcode {
 	}
 
 	encode(){
-		const symbols = this.data.split('');
+		const symbols = this.data
+			.split('')
+			.flatMap(c => {
+				const encoding = CODE93.getEncoding(c);
+				if (typeof(encoding) === 'string') {
+					// Single-symbol character
+					return c;
+				}
+				// Multi-symbol character
+				return encoding;
+			});
 		const encoded = symbols
 			.map(s => CODE93.getEncoding(s))
 			.join('');
@@ -29,13 +37,13 @@ class CODE93 extends Barcode {
 			text: this.text,
 			data:
 				// Add the start bits
-				CODE93.getEncoding('*') +
+				CODE93.getEncoding('\xff') +
 				// Add the encoded bits
 				encoded +
 				// Add the checksum
 				CODE93.getEncoding(csumC) + CODE93.getEncoding(csumK) +
 				// Add the stop bits
-				CODE93.getEncoding('*') +
+				CODE93.getEncoding('\xff') +
 				// Add the termination bit
 				'1'
 		};

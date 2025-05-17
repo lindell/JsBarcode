@@ -5,7 +5,7 @@ import {ITF, ITF14} from './ITF/';
 import {MSI, MSI10, MSI11, MSI1010, MSI1110} from './MSI/';
 import {pharmacode} from './pharmacode/';
 import {codabar} from './codabar';
-import {CODE93} from './CODE93/';
+import {CODE93, CODE93FullASCII} from './CODE93/';
 import {GenericBarcode} from './GenericBarcode/';
 
 export default {
@@ -17,6 +17,6 @@ export default {
 	MSI, MSI10, MSI11, MSI1010, MSI1110,
 	pharmacode,
 	codabar,
-	CODE93,
+	CODE93, CODE93FullASCII,
 	GenericBarcode
 };
