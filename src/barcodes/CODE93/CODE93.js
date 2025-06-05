@@ -1,7 +1,7 @@
 // Encoding documentation:
 // https://en.wikipedia.org/wiki/Code_93#Detailed_outline
 
-import { SYMBOLS, BINARIES } from './constants';
+import { SYMBOLS, BINARIES, MULTI_SYMBOLS } from './constants';
 import Barcode from "../Barcode.js";
 
 class CODE93 extends Barcode {
@@ -16,15 +16,7 @@ class CODE93 extends Barcode {
 	encode(){
 		const symbols = this.data
 			.split('')
-			.flatMap(c => {
-				const encoding = CODE93.getEncoding(c);
-				if (typeof(encoding) === 'string') {
-					// Single-symbol character
-					return c;
-				}
-				// Multi-symbol character
-				return encoding;
-			});
+			.flatMap(c => MULTI_SYMBOLS[c] || c);
 		const encoded = symbols
 			.map(s => CODE93.getEncoding(s))
 			.join('');
