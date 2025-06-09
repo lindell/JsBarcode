@@ -20,6 +20,7 @@ const defaults: Options = {
 	marginLeft: undefined,
 	marginRight: undefined,
 
+	encoder: undefined,
 	renderer: undefined,
 };
 

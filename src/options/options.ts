@@ -18,5 +18,6 @@ export interface Options {
 	marginLeft?: number;
 	marginRight?: number;
 
+	encoder: any; // TODO
 	renderer: any; // TODO
 }
