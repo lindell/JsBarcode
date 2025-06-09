@@ -33,5 +33,10 @@
     "name": "codabar",
     "names": "codabar",
     "barcodeFile": "./codabar"
+  },
+  {
+    "name": "code93",
+    "names": ["CODE93", "CODE93FullASCII"],
+    "barcodeFile": "./CODE93"
   }
 ]

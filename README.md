@@ -42,6 +42,7 @@ Supported barcodes:
   * MSI1110
 * [Pharmacode](https://github.com/lindell/JsBarcode/wiki/pharmacode)
 * [Codabar](https://github.com/lindell/JsBarcode/wiki/codabar)
+* CODE93
 
 Examples for browsers:
 ----
@@ -142,6 +143,7 @@ Download or get the CDN link to the script:
 |  MSI  |  MSI, MSI10, MSI11, MSI1010, MSI1110  |  5 kB  |  [JsBarcode.msi.min.js][6]  |
 |  Pharmacode  |  Pharmacode  |  4.7 kB  |  [JsBarcode.pharmacode.min.js][7]  |
 |  Codabar  |  Codabar  |  4.9 kB  |  [JsBarcode.codabar.min.js][8]  |
+|  CODE93  |  CODE93  |    |  JsBarcode.code93.min.js  |
 
 
 ### Step 2:
