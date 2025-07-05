@@ -38,7 +38,11 @@ declare namespace JsBarcode {
     lastChar?: string;
   }
 
-  type Options = BaseOptions | Code128Options | Ean13Options | NodeOptions;
+  interface BrowserOptions extends BaseOptions {
+    nonce?: string;
+  }
+
+  type Options = BaseOptions | Code128Options | Ean13Options | NodeOptions | BrowserOptions;
 
   interface api {
     options(options: Options): api;

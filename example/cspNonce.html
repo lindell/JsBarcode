@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self';script-src 'nonce-nonce_placeholder';style-src 'nonce-nonce_placeholder'">
+	<meta property="csp-nonce" nonce="nonce_placeholder" />
+	<title></title>
+	<script src="../dist/JsBarcode.all.js" nonce="nonce_placeholder"></script>
+	<script nonce="nonce_placeholder">
+		Number.prototype.zeroPadding = function(){
+			var ret = "" + this.valueOf();
+			return ret.length == 1 ? "0" + ret : ret;
+		};
+	</script>
+</head>
+<body>
+	<div>
+		<svg id="barcode1"/>
+		<script nonce="nonce_placeholder">JsBarcode("#barcode1", "Hi!");</script>
+	</div>
+
+	<div>
+		<svg id="barcode2"/>
+		<script nonce="nonce_placeholder">
+			JsBarcode("#barcode2", "9780199532179", {
+			  format:"EAN13",
+			  displayValue:true,
+			  fontSize:24,
+			  lineColor: "#0cc"
+			});
+		</script>
+	</div>
+
+	<div>
+		<svg id="barcode3"/>
+		<script nonce="nonce_placeholder">JsBarcode("#barcode3", "9780199532179", {
+			format:"EAN13",
+			displayValue:true,
+			fontSize:20
+		});</script>
+	</div>
+
+	<div>
+		<svg id="barcode4"/>
+		<script nonce="nonce_placeholder">
+			var repeat4 = function(){
+				var date = new Date();
+				JsBarcode("#barcode4",
+						date.getHours().zeroPadding() + ":" +
+						date.getMinutes().zeroPadding() + ":" +
+						date.getSeconds().zeroPadding(),
+					{displayValue: true});
+			};
+			setInterval(repeat4,1000);
+			repeat4();
+		</script>
+	</div>
+
+	<div>
+		<svg id="barcode5"/>
+		<script nonce="nonce_placeholder">
+			var repeat5 = function(){
+				JsBarcode("#barcode5", Math.floor(1000000+Math.random()*9000000)+"",{displayValue:true,fontSize:20});
+			};
+			setInterval(repeat5,500);
+			repeat5();
+		</script>
+	</div>
+</body>
+</html>

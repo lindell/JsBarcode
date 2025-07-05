@@ -230,6 +230,7 @@ For information about how to use the options, see [the wiki page](https://github
 | [`marginLeft`](https://github.com/lindell/JsBarcode/wiki/Options#margins) | `undefined` | `Number` |
 | [`marginRight`](https://github.com/lindell/JsBarcode/wiki/Options#margins) | `undefined` | `Number` |
 | [`valid`](https://github.com/lindell/JsBarcode/wiki/Options#valid) | `function(valid){}` | `Function` |
+| [`nonce`](https://github.com/lindell/JsBarcode/wiki/Options#nonce) | `undefined` | `String` |
 
 Contributions and feedback:
 ----

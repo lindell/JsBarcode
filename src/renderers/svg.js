@@ -3,15 +3,72 @@ import {calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightO
 
 var svgns = "http://www.w3.org/2000/svg";
 
+var idSeq = 1;
+
 class SVGRenderer{
 	constructor(svg, encodings, options){
 		this.svg = svg;
 		this.encodings = encodings;
 		this.options = options;
 		this.document = options.xmlDocument || document;
+
+		if (!options.xmlDocument) {
+			this.createStylesheet();
+		}
+	}
+
+	createStylesheet() {
+		if (!this.svg.id) {
+			this.svg.id = 'jsbc' + idSeq++;
+		}
+		var styleId = this.svg.id + '_jsbcstyle';
+		if (!document.getElementById(styleId)) {
+			var head = document.head || document.getElementsByTagName('head')[0];
+			var style = document.createElement('style');
+			style.id = styleId;
+			var nonce = this.options.nonce;
+			if (!nonce) {
+				const cspNonce = document.querySelector('meta[property=csp-nonce]');
+				if (cspNonce) {
+					nonce = cspNonce.nonce;
+				}
+			}
+			if (nonce) {
+				style.setAttribute('nonce', nonce);
+			}
+			style.setAttribute('type', 'text/css');
+			style.textContent = `
+				#${this.svg.id} {
+					transform: translate(0,0);
+				}
+			`;
+			if (this.options.background) {
+				style.textContent += `
+				#${this.svg.id} > rect {
+					fill: ${this.options.background};
+				}
+				`;
+			}
+			if (this.options.lineColor) {
+				style.textContent += `
+				#${this.svg.id} g {
+					fill: ${this.options.lineColor};
+				}
+				`;
+			}
+			if (this.options.fontOptions || this.options.fontSize || this.options.font) {
+				style.textContent += `
+				#${this.svg.id} text {
+					font: ${this.options.fontOptions} ${this.options.fontSize}px ${this.options.font};
+				}
+				`;
+			}
+			head.appendChild(style);
+		}
 	}
 
 	render(){
+
 		var currentX = this.options.marginLeft;
 
 		this.prepareSVG();
@@ -44,9 +101,12 @@ class SVGRenderer{
 		this.setSvgAttributes(width, maxHeight);
 
 		if(this.options.background){
-			this.drawRect(0, 0, width, maxHeight, this.svg).setAttribute(
-				"style", "fill:" + this.options.background + ";"
-			);
+			var rect = this.drawRect(0, 0, width, maxHeight, this.svg);
+			if (this.options.xmlDocument) {
+				rect.setAttribute(
+					"style", "fill:" + this.options.background + ";"
+				);
+			}
 		}
 	}
 
@@ -89,9 +149,11 @@ class SVGRenderer{
 		if(options.displayValue){
 			var x, y;
 
-			textElem.setAttribute("style",
-				"font:" + options.fontOptions + " " + options.fontSize + "px " + options.font
-			);
+			if (options.xmlDocument) {
+				textElem.setAttribute("style",
+					"font:" + options.fontOptions + " " + options.fontSize + "px " + options.font
+				);
+			}
 
 			if(options.textPosition == "top"){
 				y = options.fontSize - options.textMargin;
@@ -136,7 +198,9 @@ class SVGRenderer{
 		svg.setAttribute("xmlns", svgns);
 		svg.setAttribute("version", "1.1");
 
-		svg.setAttribute("style", "transform: translate(0,0)");
+		if (this.options.xmlDocument) {
+			svg.setAttribute("style", "transform: translate(0,0)");
+		}
 	}
 
 	createGroup(x, y, parent){
@@ -149,9 +213,11 @@ class SVGRenderer{
 	}
 
 	setGroupOptions(group, options){
-		group.setAttribute("style",
-			"fill:" + options.lineColor + ";"
-		);
+		if (options.xmlDocument) {
+			group.setAttribute("style",
+				"fill:" + options.lineColor + ";"
+			);
+		}
 	}
 
 	drawRect(x, y, width, height, parent){
