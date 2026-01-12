@@ -18,7 +18,11 @@ function optionsFromStrings(options){
 		if(intOptions.hasOwnProperty(intOption)){
 			intOption = intOptions[intOption];
 			if(typeof options[intOption] === "string"){
-				options[intOption] = parseInt(options[intOption], 10);
+				if (intOption === "width") {
+					options[intOption] = parseFloat(options[intOption]);
+				} else {
+					options[intOption] = parseInt(options[intOption], 10);
+				}
 			}
 		}
 	}
