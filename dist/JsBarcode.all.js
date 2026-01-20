@@ -275,7 +275,7 @@ API.prototype.init = function () {
 
 		this._errorHandler.wrapBarcodeCall(function () {
 			var text = options.value;
-			var Encoder = _barcodes2.default[options.format.toUpperCase()];
+			var Encoder = _barcodes2.default[options.format];
 			var encoded = encode(text, Encoder, options);
 
 			render(renderProperty, encoded, options);
