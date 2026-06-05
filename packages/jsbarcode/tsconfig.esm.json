@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "outDir": "./dist/esm",
+    "moduleResolution": "node"
+  },
+  "references": [
+    { "path": "../core/tsconfig.esm.json" },
+    { "path": "../renderer/canvas/tsconfig.esm.json" },
+    { "path": "../renderer/svg/tsconfig.esm.json" },
+    { "path": "../barcodes/code128/tsconfig.esm.json" },
+    { "path": "../barcodes/code39/tsconfig.esm.json" },
+    { "path": "../barcodes/codabar/tsconfig.esm.json" },
+    { "path": "../barcodes/ean-upc/tsconfig.esm.json" },
+    { "path": "../barcodes/itf/tsconfig.esm.json" },
+    { "path": "../barcodes/msi/tsconfig.esm.json" },
+    { "path": "../barcodes/pharmacode/tsconfig.esm.json" }
+  ]
+}

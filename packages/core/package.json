@@ -1,0 +1,11 @@
+{
+  "name": "@jsbarcode/core",
+  "version": "4.0.0-alpha.5",
+  "description": "Core engine of JsBarcode",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/core/tsconfig.esm.json" },
+    { "path": "./packages/renderer/canvas/tsconfig.esm.json" },
+    { "path": "./packages/renderer/svg/tsconfig.esm.json" },
+    { "path": "./packages/barcodes/code128/tsconfig.esm.json" },
+    { "path": "./packages/barcodes/code39/tsconfig.esm.json" },
+    { "path": "./packages/barcodes/codabar/tsconfig.esm.json" },
+    { "path": "./packages/barcodes/ean-upc/tsconfig.esm.json" },
+    { "path": "./packages/barcodes/itf/tsconfig.esm.json" },
+    { "path": "./packages/barcodes/msi/tsconfig.esm.json" },
+    { "path": "./packages/barcodes/pharmacode/tsconfig.esm.json" },
+    { "path": "./packages/barcodes/generic-barcode/tsconfig.esm.json" },
+    { "path": "./packages/jsbarcode/tsconfig.esm.json" }
+  ]
+}

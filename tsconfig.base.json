@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2016",
+    "module": "CommonJS",
+    "declaration": true,
+    "strict": false,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "removeComments": true,
+    "composite": true,
+    "declarationMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@jsbarcode/core": ["./packages/core/src/index.ts"],
+      "@jsbarcode/renderer-canvas": ["./packages/renderer/canvas/src/index.ts"],
+      "@jsbarcode/renderer-svg": ["./packages/renderer/svg/src/index.ts"],
+      "@jsbarcode/code128": ["./packages/barcodes/code128/src/index.ts"],
+      "@jsbarcode/code39": ["./packages/barcodes/code39/src/index.ts"],
+      "@jsbarcode/codabar": ["./packages/barcodes/codabar/src/index.ts"],
+      "@jsbarcode/ean-upc": ["./packages/barcodes/ean-upc/src/index.ts"],
+      "@jsbarcode/itf": ["./packages/barcodes/itf/src/index.ts"],
+      "@jsbarcode/msi": ["./packages/barcodes/msi/src/index.ts"],
+      "@jsbarcode/pharmacode": ["./packages/barcodes/pharmacode/src/index.ts"],
+      "@jsbarcode/generic-barcode": ["./packages/barcodes/generic-barcode/src/index.ts"],
+      "test/help": ["./test/help/index.ts"],
+      "test/*": ["./test/*"]
+    }
+  }
+}

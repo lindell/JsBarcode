@@ -1,13 +1,13 @@
 const assert = require('assert');
-const jsbarcode = require('../../lib/').default;
+const jsbarcode = require('packages/jsbarcode/src/index').default;
 
-const code128 = require('../../lib/barcodes/CODE128/CODE128_AUTO').default();
-const code39 = require('../../lib/barcodes/CODE39').default();
-const ean8 = require('../../lib/barcodes/EAN_UPC/EAN8').default;
-const ean13 = require('../../lib/barcodes/EAN_UPC/EAN13').default;
-const GENERIC = require('../../lib/barcodes/GenericBarcode').default;
+const code128 = require('packages/barcodes/code128/src/CODE128_AUTO').default();
+const code39 = require('packages/barcodes/code39/src/index').default();
+const ean8 = require('packages/barcodes/ean-upc/src/EAN8').default;
+const ean13 = require('packages/barcodes/ean-upc/src/EAN13').default;
+const GENERIC = require('packages/barcodes/generic-barcode/src/index').default;
 
-const canvasRenderer = require('../../lib/renderers/canvas').default;
+const canvasRenderer = require('packages/renderer/canvas/src/index').default;
 
 const { createCanvas } = require('canvas');
 

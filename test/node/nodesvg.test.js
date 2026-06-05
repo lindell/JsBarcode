@@ -1,8 +1,8 @@
 const assert = require('assert');
-const JsBarcode = require('../../lib').default;
-const code128 = require('../../lib/barcodes/CODE128/CODE128_AUTO').default();
-const svgRenderer = require('../../lib/renderers/svg').default;
-const xmldom  = require('xmldom');
+const JsBarcode = require('packages/jsbarcode/src/index').default;
+const code128 = require('packages/barcodes/code128/src/CODE128_AUTO').default();
+const svgRenderer = require('packages/renderer/svg/src/index').default;
+const xmldom  = require('@xmldom/xmldom');
 const DOMImplementation = xmldom.DOMImplementation;
 const XMLSerializer = xmldom.XMLSerializer;
 const xmlSerializer = new XMLSerializer();

@@ -1,0 +1,11 @@
+{
+  "name": "@jsbarcode/code128",
+  "version": "4.0.0-alpha.5",
+  "description": "CODE128 barcode encoder for JsBarcode",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  }
+}

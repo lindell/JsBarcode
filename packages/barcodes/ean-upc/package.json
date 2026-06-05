@@ -1,0 +1,11 @@
+{
+  "name": "@jsbarcode/ean-upc",
+  "version": "4.0.0-alpha.5",
+  "description": "EAN and UPC barcode encoders for JsBarcode",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  }
+}

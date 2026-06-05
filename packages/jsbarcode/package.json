@@ -1,0 +1,23 @@
+{
+  "name": "jsbarcode",
+  "version": "4.0.0-alpha.5",
+  "description": "Customizable barcode generator with support for multiple barcode formats",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "dependencies": {
+    "@jsbarcode/core": "*",
+    "@jsbarcode/renderer-canvas": "*",
+    "@jsbarcode/renderer-svg": "*",
+    "@jsbarcode/code128": "*",
+    "@jsbarcode/code39": "*",
+    "@jsbarcode/codabar": "*",
+    "@jsbarcode/ean-upc": "*",
+    "@jsbarcode/itf": "*",
+    "@jsbarcode/msi": "*",
+    "@jsbarcode/pharmacode": "*"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

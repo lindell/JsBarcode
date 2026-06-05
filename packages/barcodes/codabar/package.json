@@ -1,0 +1,11 @@
+{
+  "name": "@jsbarcode/codabar",
+  "version": "4.0.0-alpha.5",
+  "description": "Codabar barcode encoder for JsBarcode",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  }
+}
