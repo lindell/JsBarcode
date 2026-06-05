@@ -66,5 +66,5 @@
     "webpack-cli": "^6.0.1",
     "@xmldom/xmldom": "^0.9.7"
   },
-  "typings": "./jsbarcode.d.ts"
+  "typings": "./packages/jsbarcode/jsbarcode.d.ts"
 }

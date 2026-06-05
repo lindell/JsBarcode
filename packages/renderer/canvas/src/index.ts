@@ -1,7 +1,7 @@
 import { calculateEncodingAttributes, getTotalWidthOfEncodings, getMaximumHeightOfEncodings } from './shared';
 import { Options, Encoding } from '@jsbarcode/core';
 
-function renderer(canvas: any, encodings: Encoding[], options: Options): void {
+function renderer(canvas: HTMLCanvasElement, encodings: Encoding[], options: Options): void {
 	// Abort if the browser does not support HTML5 canvas
 	if (!canvas.getContext) {
 		throw new Error('The browser does not support canvas');

@@ -3,7 +3,7 @@ export interface Encoder {
 	encode: (text: string, options?: Options) => Encoding | Encoding[];
 }
 
-export type Renderer = (element: any, encodings: Encoding[], options: Options) => void;
+export type Renderer = (element: HTMLElement | SVGElement | object, encodings: Encoding[], options: Options) => void;
 
 export interface Encoding {
 	data: string;
@@ -41,6 +41,7 @@ export interface Options {
 	flat?: boolean;
 	ean128?: boolean;
 	guardHeight?: number;
+	lastChar?: string;
 
-	[key: string]: any;
+	[key: string]: unknown;
 }

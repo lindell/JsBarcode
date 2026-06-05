@@ -63,8 +63,8 @@ declare namespace JsBarcode {
   }
 }
 
-declare function JsBarcode(element: any): JsBarcode.api;
-declare function JsBarcode(element: any, data: string, options?: JsBarcode.Options): void;
+declare function JsBarcode(element: string | HTMLElement | SVGElement | object | ArrayLike<HTMLElement | SVGElement>): JsBarcode.api;
+declare function JsBarcode(element: string | HTMLElement | SVGElement | object | ArrayLike<HTMLElement | SVGElement>, data: string, options?: JsBarcode.Options): void;
 
 export = JsBarcode;
 export as namespace JsBarcode;

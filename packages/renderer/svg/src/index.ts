@@ -3,8 +3,8 @@ import { Options, Encoding } from '@jsbarcode/core';
 
 var svgns = 'http://www.w3.org/2000/svg';
 
-function renderer(svg: any, encodings: Encoding[], options: Options): void {
-	const doc: any = options.xmlDocument || (typeof document !== 'undefined' ? document : undefined);
+function renderer(svg: SVGElement, encodings: Encoding[], options: Options): void {
+	const doc: Document = (options.xmlDocument as Document) || (typeof document !== 'undefined' ? document : undefined) as Document;
 
 	var currentX = options.marginLeft!;
 
@@ -41,7 +41,7 @@ function renderer(svg: any, encodings: Encoding[], options: Options): void {
 		}
 	}
 
-	function drawSvgBarcode(parent: any, options: Options, encoding: Encoding) {
+	function drawSvgBarcode(parent: SVGElement, options: Options, encoding: Encoding) {
 		var binary = encoding.data;
 
 		// Creates the barcode out of the encoded binary
@@ -71,7 +71,7 @@ function renderer(svg: any, encodings: Encoding[], options: Options): void {
 		}
 	}
 
-	function drawSVGText(parent: any, options: Options, encoding: Encoding) {
+	function drawSVGText(parent: SVGElement, options: Options, encoding: Encoding) {
 		var textElem = doc.createElementNS(svgns, 'text');
 
 		// Draw the text if displayValue is set
@@ -122,8 +122,8 @@ function renderer(svg: any, encodings: Encoding[], options: Options): void {
 		svg.setAttribute('style', 'transform: translate(0,0)');
 	}
 
-	function createGroup(x: number, y: number, parent: any) {
-		var group = doc.createElementNS(svgns, 'g');
+	function createGroup(x: number, y: number, parent: SVGElement): SVGElement {
+		var group = doc.createElementNS(svgns, 'g') as SVGElement;
 		group.setAttribute('transform', 'translate(' + x + ', ' + y + ')');
 
 		parent.appendChild(group);
@@ -131,12 +131,12 @@ function renderer(svg: any, encodings: Encoding[], options: Options): void {
 		return group;
 	}
 
-	function setGroupOptions(group: any, options: Options) {
+	function setGroupOptions(group: SVGElement, options: Options) {
 		group.setAttribute('style', 'fill:' + options.lineColor + ';');
 	}
 
-	function drawRect(x: number, y: number, width: number, height: number, parent: any) {
-		var rect = doc.createElementNS(svgns, 'rect');
+	function drawRect(x: number, y: number, width: number, height: number, parent: SVGElement): SVGElement {
+		var rect = doc.createElementNS(svgns, 'rect') as SVGElement;
 
 		rect.setAttribute('x', x.toString());
 		rect.setAttribute('y', y.toString());

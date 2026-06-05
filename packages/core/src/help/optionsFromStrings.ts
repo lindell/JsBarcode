@@ -1,5 +1,5 @@
 // Convert string to integers/booleans where it should be
-function optionsFromStrings(options: any) {
+function optionsFromStrings(options: Record<string, unknown>) {
 	var intOptions = [
 		'width',
 		'height',
@@ -14,7 +14,7 @@ function optionsFromStrings(options: any) {
 
 	for (const intOption of intOptions) {
 		if (typeof options[intOption] === 'string') {
-			options[intOption] = parseInt(options[intOption], 10);
+			options[intOption] = parseInt(options[intOption] as string, 10);
 		}
 	}
 

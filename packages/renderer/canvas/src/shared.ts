@@ -22,7 +22,7 @@ function getBarcodePadding(textWidth: number, barcodeWidth: number, options: Opt
 	return 0;
 }
 
-function calculateEncodingAttributes(encodings: Encoding[], barcodeOptions: Options, context?: any): void {
+function calculateEncodingAttributes(encodings: Encoding[], barcodeOptions: Options, context?: CanvasRenderingContext2D): void {
 	for (let i = 0; i < encodings.length; i++) {
 		var encoding = encodings[i];
 		var options = { ...barcodeOptions, ...encoding.options };
@@ -62,14 +62,16 @@ function getMaximumHeightOfEncodings(encodings: Encoding[]): number {
 	return maxHeight;
 }
 
-function messureText(string: string, options: Options, context?: any): number {
-	var ctx: any;
+function messureText(string: string, options: Options, context?: CanvasRenderingContext2D): number {
+	var ctx: CanvasRenderingContext2D | null = null;
 
 	if (context) {
 		ctx = context;
 	} else if (typeof document !== 'undefined') {
 		ctx = document.createElement('canvas').getContext('2d');
-	} else {
+	}
+
+	if (!ctx) {
 		// If the text cannot be messured we will return 0.
 		// This will make some barcode with big text render incorrectly
 		return 0;

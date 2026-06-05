@@ -1,6 +1,15 @@
-declare var jQuery: any;
+interface JQuery {
+	each(callback: (this: HTMLElement, index: number, element: HTMLElement) => void): this;
+}
+interface JQueryStatic {
+	(selector: string | JQuery | HTMLElement | HTMLElement[]): JQuery;
+	fn: {
+		JsBarcode?: (this: JQuery, content: string | undefined, options?: Partial<Options>) => JQuery;
+	};
+}
+declare var jQuery: JQueryStatic | undefined;
 
-import coreJsBarcode, { API, defaults, InvalidElementException, NoElementException, Options } from '@jsbarcode/core';
+import coreJsBarcode, { API, defaults, Encoder, InvalidElementException, NoElementException, Options, Renderer } from '@jsbarcode/core';
 import { CODE128, CODE128A, CODE128B, CODE128C } from '@jsbarcode/code128';
 import CODE39 from '@jsbarcode/code39';
 import codabar from '@jsbarcode/codabar';
@@ -11,7 +20,7 @@ import pharmacode from '@jsbarcode/pharmacode';
 import canvasRenderer from '@jsbarcode/renderer-canvas';
 import svgRenderer from '@jsbarcode/renderer-svg';
 
-const encoders: Record<string, () => any> = {
+const encoders: Record<string, () => Encoder> = {
 	code128: CODE128,
 	code128a: CODE128A,
 	code128b: CODE128B,
@@ -35,7 +44,7 @@ const encoders: Record<string, () => any> = {
 };
 
 // Add chainable barcode methods to API prototype dynamically
-const methods: Record<string, () => any> = {
+const methods: Record<string, () => Encoder> = {
 	CODE128,
 	CODE128A,
 	CODE128B,
@@ -68,18 +77,18 @@ for (const name in methods) {
 			return this.barcode(text, { encoder: encoder(), ...options });
 		};
 
-		(API.prototype as any)[name] = barcodeMethod;
+		((API.prototype as unknown) as Record<string, unknown>)[name] = barcodeMethod;
 		if (name !== lowerName) {
-			(API.prototype as any)[lowerName] = barcodeMethod;
+			((API.prototype as unknown) as Record<string, unknown>)[lowerName] = barcodeMethod;
 		}
 		if (name !== upperName) {
-			(API.prototype as any)[upperName] = barcodeMethod;
+			((API.prototype as unknown) as Record<string, unknown>)[upperName] = barcodeMethod;
 		}
 	}
 }
 
 class WrapperAPI {
-	constructor(private readonly targets: { element: any, renderer: any, afterRender?: () => void, api: API }[]) {}
+	constructor(private readonly targets: { element: HTMLElement | SVGElement | object, renderer: Renderer, afterRender?: () => void, api: API }[]) {}
 
 	options(options: Partial<Options>): this {
 		this.targets.forEach(t => t.api.options(options));
@@ -119,7 +128,7 @@ class WrapperAPI {
 	init(): void {
 		this.targets.forEach(t => {
 			const options = getOptionsFromElement(t.element);
-			const text = options.value;
+			const text = options.value as string | undefined;
 			if (!text) return;
 
 			const opts = { ...t.api.existingOptions, ...options };
@@ -139,39 +148,40 @@ for (const name in methods) {
 			return this;
 		};
 
-		(WrapperAPI.prototype as any)[name] = wrapperMethod;
+		((WrapperAPI.prototype as unknown) as Record<string, unknown>)[name] = wrapperMethod;
 		if (name !== lowerName) {
-			(WrapperAPI.prototype as any)[lowerName] = wrapperMethod;
+			((WrapperAPI.prototype as unknown) as Record<string, unknown>)[lowerName] = wrapperMethod;
 		}
 		if (name !== upperName) {
-			(WrapperAPI.prototype as any)[upperName] = wrapperMethod;
+			((WrapperAPI.prototype as unknown) as Record<string, unknown>)[upperName] = wrapperMethod;
 		}
 	}
 }
 
-function getOptionsFromElement(element: any): any {
-	const options: any = {};
-	if (!element || !element.hasAttribute) return options;
+function getOptionsFromElement(element: HTMLElement | SVGElement | object): Record<string, unknown> {
+	const options: Record<string, unknown> = {};
+	if (!element || !('hasAttribute' in element)) return options;
 
+	const el = element as unknown as HTMLElement;
 	for (const property in defaults) {
 		if (defaults.hasOwnProperty(property)) {
 			// jsbarcode-*
-			if (element.hasAttribute('jsbarcode-' + property.toLowerCase())) {
-				options[property] = element.getAttribute('jsbarcode-' + property.toLowerCase());
+			if (el.hasAttribute('jsbarcode-' + property.toLowerCase())) {
+				options[property] = el.getAttribute('jsbarcode-' + property.toLowerCase());
 			}
 			// data-*
-			if (element.hasAttribute('data-' + property.toLowerCase())) {
-				options[property] = element.getAttribute('data-' + property.toLowerCase());
+			if (el.hasAttribute('data-' + property.toLowerCase())) {
+				options[property] = el.getAttribute('data-' + property.toLowerCase());
 			}
 		}
 	}
 
-	options.value = element.getAttribute('jsbarcode-value') || element.getAttribute('data-value');
+	options.value = el.getAttribute('jsbarcode-value') || el.getAttribute('data-value');
 
 	return optionsFromStrings(options);
 }
 
-function optionsFromStrings(options: any): any {
+function optionsFromStrings(options: Record<string, unknown>): Record<string, unknown> {
 	const intOptions = [
 		'width',
 		'height',
@@ -186,7 +196,7 @@ function optionsFromStrings(options: any): any {
 
 	for (const intOption of intOptions) {
 		if (typeof options[intOption] === 'string') {
-			options[intOption] = parseInt(options[intOption], 10);
+			options[intOption] = parseInt(options[intOption] as string, 10);
 		}
 	}
 
@@ -197,7 +207,7 @@ function optionsFromStrings(options: any): any {
 	return options;
 }
 
-function getTargets(element: any): { element: any, renderer: any, afterRender?: () => void }[] {
+function getTargets(element: unknown): { element: HTMLElement | SVGElement | object, renderer: Renderer, afterRender?: () => void }[] {
 	if (typeof element === 'string') {
 		if (typeof document === 'undefined') {
 			throw new NoElementException();
@@ -206,25 +216,26 @@ function getTargets(element: any): { element: any, renderer: any, afterRender?: 
 		if (selector.length === 0) {
 			throw new NoElementException();
 		}
-		const targets: any[] = [];
+		const targets: { element: HTMLElement | SVGElement | object, renderer: Renderer, afterRender?: () => void }[] = [];
 		for (let i = 0; i < selector.length; i++) {
 			targets.push(...getTargets(selector[i]));
 		}
 		return targets;
 	} else if (Array.isArray(element)) {
-		const targets: any[] = [];
+		const targets: { element: HTMLElement | SVGElement | object, renderer: Renderer, afterRender?: () => void }[] = [];
 		for (let i = 0; i < element.length; i++) {
 			targets.push(...getTargets(element[i]));
 		}
 		return targets;
-	} else if (typeof jQuery !== 'undefined' && element instanceof jQuery) {
-		const targets: any[] = [];
-		element.each(function(this: any) {
+	} else if (typeof jQuery !== 'undefined' && element instanceof (jQuery as unknown as Function)) {
+		const targets: { element: HTMLElement | SVGElement | object, renderer: Renderer, afterRender?: () => void }[] = [];
+		(element as unknown as JQuery).each(function(this: HTMLElement) {
 			targets.push(...getTargets(this));
 		});
 		return targets;
-	} else if (element) {
-		const tagName = element.tagName ? element.tagName.toLowerCase() : '';
+	} else if (element && typeof element === 'object') {
+		const el = element as Record<string, unknown>;
+		const tagName = typeof el.tagName === 'string' ? el.tagName.toLowerCase() : '';
 		if (tagName === 'img') {
 			if (typeof document === 'undefined') {
 				throw new Error('Image rendering is only supported in browser environments');
@@ -234,27 +245,27 @@ function getTargets(element: any): { element: any, renderer: any, afterRender?: 
 				element: canvas,
 				renderer: canvasRenderer,
 				afterRender: () => {
-					element.setAttribute('src', canvas.toDataURL());
+					(el as unknown as HTMLImageElement).setAttribute('src', canvas.toDataURL());
 				}
 			}];
 		} else if (tagName === 'svg') {
 			return [{
-				element,
+				element: el as unknown as SVGElement,
 				renderer: svgRenderer
 			}];
 		} else if (tagName === 'canvas') {
 			return [{
-				element,
+				element: el as unknown as HTMLCanvasElement,
 				renderer: canvasRenderer
 			}];
-		} else if (element.getContext) {
+		} else if (typeof el.getContext === 'function') {
 			return [{
-				element,
+				element: el,
 				renderer: canvasRenderer
 			}];
-		} else if (typeof element === 'object') {
+		} else {
 			return [{
-				element,
+				element: el,
 				renderer: canvasRenderer
 			}];
 		}
@@ -262,7 +273,7 @@ function getTargets(element: any): { element: any, renderer: any, afterRender?: 
 	throw new InvalidElementException();
 }
 
-function JsBarcode(element: any, text?: string, options?: Partial<Options>): WrapperAPI {
+function JsBarcode(element: unknown, text?: string, options?: Partial<Options>): WrapperAPI {
 	if (typeof element === 'undefined') {
 		throw new NoElementException();
 	}
@@ -314,17 +325,17 @@ function JsBarcode(element: any, text?: string, options?: Partial<Options>): Wra
 }
 
 if (typeof window !== 'undefined') {
-	(window as any).JsBarcode = JsBarcode;
+	((window as unknown) as Record<string, unknown>).JsBarcode = JsBarcode;
 }
 
 /*global jQuery */
-if (typeof jQuery !== 'undefined') {
-	(jQuery as any).fn.JsBarcode = function(this: any, content: any, options?: Partial<Options>) {
-		const elements: any[] = [];
-		this.each(function(this: any) {
+if (typeof jQuery !== 'undefined' && jQuery.fn) {
+	jQuery.fn.JsBarcode = function(this: JQuery, content: string | undefined, options?: Partial<Options>) {
+		const elements: HTMLElement[] = [];
+		this.each(function(this: HTMLElement) {
 			elements.push(this);
 		});
-		return JsBarcode(elements, content, options);
+		return JsBarcode(elements, content, options) as unknown as JQuery;
 	};
 }
 

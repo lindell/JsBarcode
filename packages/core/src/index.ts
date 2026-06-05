@@ -6,23 +6,30 @@ import fixOptions from './help/fixOptions';
 import { InvalidInputException, InvalidElementException, NoElementException } from './exceptions/exceptions';
 
 // Options
-import { Options, Encoding } from './options/options';
+import { Options, Encoding, Renderer, Encoder } from './options/options';
 import defaults from './options/defaults';
 
 // The first call of the library API
 // Will return an object with all barcodes calls and the data that is used
 // by the renderers
-function JsBarcode(element: any, text?: string, options?: Partial<Options>): API {
+function JsBarcode(element: HTMLElement | SVGElement | object | string | null | undefined, text?: string, options?: Partial<Options>): API {
+	let el: HTMLElement | SVGElement | object | null | undefined;
 	if (typeof element === 'string') {
-		element = document.querySelector(element);
+		if (typeof document !== 'undefined') {
+			el = document.querySelector(element) as HTMLElement | SVGElement | null;
+		} else {
+			el = null;
+		}
+	} else {
+		el = element;
 	}
 
-	if (typeof element === 'undefined') {
+	if (!el) {
 		throw new NoElementException();
 	}
 
 	const newOptions = { ...defaults, ...(options || {}) };
-	const api = new API(element, [], newOptions);
+	const api = new API(el, [], newOptions);
 
 	// If text is set, use the simple syntax (render the barcode directly)
 	if (typeof text !== 'undefined') {
@@ -58,7 +65,7 @@ function encode(text: string, options: Options): Encoding | Encoding[] {
 
 class API {
 	constructor(
-		public readonly element: any,
+		public readonly element: HTMLElement | SVGElement | object,
 		public readonly encodings: (Encoding | Encoding[])[],
 		public readonly existingOptions: Options,
 	) {}
@@ -66,7 +73,7 @@ class API {
 	// Sets global encoder options
 	// Added to the api by the JsBarcode function
 	options(options: Partial<Options>): this {
-		(this as any).existingOptions = { ...this.existingOptions, ...options };
+		((this as unknown) as { existingOptions: Options }).existingOptions = { ...this.existingOptions, ...options };
 		return this;
 	}
 
@@ -97,7 +104,7 @@ class API {
 }
 
 // Prepares the encodings and calls the renderer
-function render(element: any, encodings: (Encoding | Encoding[])[], options: Options) {
+function render(element: HTMLElement | SVGElement | object, encodings: (Encoding | Encoding[])[], options: Options) {
 	let linearized = linearizeEncodings(encodings);
 
 	for (let i = 0; i < linearized.length; i++) {
@@ -113,5 +120,5 @@ function render(element: any, encodings: (Encoding | Encoding[])[], options: Opt
 	options.renderer(element, linearized, options);
 }
 
-export { API, Options, Encoding, defaults, JsBarcode, InvalidInputException, InvalidElementException, NoElementException };
+export { API, Options, Encoding, Renderer, Encoder, defaults, JsBarcode, InvalidInputException, InvalidElementException, NoElementException };
 export default JsBarcode;
