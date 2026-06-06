@@ -9,7 +9,7 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "removeComments": true,
-    "composite": true,
+    "composite": false,
     "declarationMap": true,
     "baseUrl": ".",
     "paths": {

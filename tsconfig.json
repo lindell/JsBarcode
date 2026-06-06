@@ -1,17 +1,5 @@
 {
+  "extends": "./tsconfig.base.json",
   "files": [],
-  "references": [
-    { "path": "./packages/core" },
-    { "path": "./packages/renderer/canvas" },
-    { "path": "./packages/renderer/svg" },
-    { "path": "./packages/barcodes/code128" },
-    { "path": "./packages/barcodes/code39" },
-    { "path": "./packages/barcodes/codabar" },
-    { "path": "./packages/barcodes/ean-upc" },
-    { "path": "./packages/barcodes/itf" },
-    { "path": "./packages/barcodes/msi" },
-    { "path": "./packages/barcodes/pharmacode" },
-    { "path": "./packages/barcodes/generic-barcode" },
-    { "path": "./packages/jsbarcode" }
-  ]
+  "include": []
 }

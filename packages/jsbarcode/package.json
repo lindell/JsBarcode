@@ -2,9 +2,21 @@
   "name": "jsbarcode",
   "version": "4.0.0-alpha.5",
   "description": "Customizable barcode generator with support for multiple barcode formats",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/esm/index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "types": "./jsbarcode.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./jsbarcode.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./jsbarcode.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
   "dependencies": {
     "@jsbarcode/core": "*",
     "@jsbarcode/renderer-canvas": "*",

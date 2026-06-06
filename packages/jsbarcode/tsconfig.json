@@ -1,20 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "outDir": "./dist/cjs",
-    "rootDir": "./src"
+    "outDir": "./dist"
   },
-  "include": ["src/**/*"],
-  "references": [
-    { "path": "../core" },
-    { "path": "../renderer/canvas" },
-    { "path": "../renderer/svg" },
-    { "path": "../barcodes/code128" },
-    { "path": "../barcodes/code39" },
-    { "path": "../barcodes/codabar" },
-    { "path": "../barcodes/ean-upc" },
-    { "path": "../barcodes/itf" },
-    { "path": "../barcodes/msi" },
-    { "path": "../barcodes/pharmacode" }
-  ]
+  "include": ["src/**/*"]
 }
