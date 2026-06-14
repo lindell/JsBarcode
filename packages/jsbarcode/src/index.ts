@@ -1,14 +1,3 @@
-interface JQuery {
-	each(callback: (this: HTMLElement, index: number, element: HTMLElement) => void): this;
-}
-interface JQueryStatic {
-	(selector: string | JQuery | HTMLElement | HTMLElement[]): JQuery;
-	fn: {
-		JsBarcode?: (this: JQuery, content: string | undefined, options?: Partial<Options>) => JQuery;
-	};
-}
-declare var jQuery: JQueryStatic | undefined;
-
 import coreJsBarcode, { API, defaults, Encoder, InvalidElementException, NoElementException, Options, Renderer } from '@jsbarcode/core';
 import { CODE128, CODE128A, CODE128B, CODE128C } from '@jsbarcode/code128';
 import CODE39 from '@jsbarcode/code39';
@@ -17,10 +6,12 @@ import { EAN13, EAN8, EAN5, EAN2, UPC, UPCE } from '@jsbarcode/ean-upc';
 import { ITF, ITF14 } from '@jsbarcode/itf';
 import { MSI, MSI10, MSI11, MSI1010, MSI1110 } from '@jsbarcode/msi';
 import pharmacode from '@jsbarcode/pharmacode';
+import genericBarcode from '@jsbarcode/generic-barcode';
 import canvasRenderer from '@jsbarcode/renderer-canvas';
 import svgRenderer from '@jsbarcode/renderer-svg';
 
 const encoders: Record<string, () => Encoder> = {
+	auto: CODE128,
 	code128: CODE128,
 	code128a: CODE128A,
 	code128b: CODE128B,
@@ -41,6 +32,7 @@ const encoders: Record<string, () => Encoder> = {
 	msi1010: MSI1010,
 	msi1110: MSI1110,
 	pharmacode: pharmacode,
+	genericbarcode: genericBarcode,
 };
 
 // Add chainable barcode methods to API prototype dynamically
@@ -65,6 +57,7 @@ const methods: Record<string, () => Encoder> = {
 	MSI1010,
 	MSI1110,
 	pharmacode,
+	GenericBarcode: genericBarcode,
 };
 
 for (const name in methods) {
@@ -227,12 +220,6 @@ function getTargets(element: unknown): { element: HTMLElement | SVGElement | obj
 			targets.push(...getTargets(element[i]));
 		}
 		return targets;
-	} else if (typeof jQuery !== 'undefined' && element instanceof (jQuery as unknown as Function)) {
-		const targets: { element: HTMLElement | SVGElement | object, renderer: Renderer, afterRender?: () => void }[] = [];
-		(element as unknown as JQuery).each(function(this: HTMLElement) {
-			targets.push(...getTargets(this));
-		});
-		return targets;
 	} else if (element && typeof element === 'object') {
 		const el = element as Record<string, unknown>;
 		const tagName = typeof el.tagName === 'string' ? el.tagName.toLowerCase() : '';
@@ -326,17 +313,6 @@ function JsBarcode(element: unknown, text?: string, options?: Partial<Options>):
 
 if (typeof window !== 'undefined') {
 	((window as unknown) as Record<string, unknown>).JsBarcode = JsBarcode;
-}
-
-/*global jQuery */
-if (typeof jQuery !== 'undefined' && jQuery.fn) {
-	jQuery.fn.JsBarcode = function(this: JQuery, content: string | undefined, options?: Partial<Options>) {
-		const elements: HTMLElement[] = [];
-		this.each(function(this: HTMLElement) {
-			elements.push(this);
-		});
-		return JsBarcode(elements, content, options) as unknown as JQuery;
-	};
 }
 
 export default JsBarcode;

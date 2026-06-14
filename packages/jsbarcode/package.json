@@ -27,7 +27,8 @@
     "@jsbarcode/ean-upc": "*",
     "@jsbarcode/itf": "*",
     "@jsbarcode/msi": "*",
-    "@jsbarcode/pharmacode": "*"
+    "@jsbarcode/pharmacode": "*",
+    "@jsbarcode/generic-barcode": "*"
   },
   "publishConfig": {
     "access": "public"

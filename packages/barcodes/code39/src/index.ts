@@ -29,7 +29,7 @@ function encode(d: string, options: Options): Encoding {
 }
 
 function valid(data: string): boolean {
-	return data.search(/^[0-9A-Z\-. $/+%]+$/) !== -1;
+	return data.search(/^[0-9A-Z\-. $/+%]+$/i) !== -1;
 }
 
 // All characters. The position in the array is the (checksum) value
