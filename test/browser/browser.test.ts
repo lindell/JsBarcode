@@ -16,8 +16,9 @@ describe('Browser visual regression tests', () => {
 
 	const jsbarcodePath = path.resolve(__dirname, '../../packages/jsbarcode/dist/index.js');
 	const testCss = `
+		@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 		body {
-			font-family: monospace;
+			font-family: 'Roboto Mono', monospace;
 			background: white;
 			margin: 0;
 			padding: 10px;
@@ -72,6 +73,7 @@ describe('Browser visual regression tests', () => {
 	it('renders Canvas barcodes correctly', async () => {
 		await page.setContent('<html><body></body></html>');
 		await page.addStyleTag({ content: testCss });
+		await page.evaluate(() => document.fonts.load('12px "Roboto Mono"'));
 		await loadJsBarcode(page);
 
 		await page.evaluate((cases) => {
@@ -86,7 +88,7 @@ describe('Browser visual regression tests', () => {
 					<img class="barcode"/>
 				`;
 				try {
-					(window as any).JsBarcode(testbox.querySelector('.barcode'), c.text, c.options);
+					(window as any).JsBarcode(testbox.querySelector('.barcode'), c.text, { font: 'Roboto Mono', ...c.options });
 				} catch (e: any) {
 					testbox.className = "errorbox";
 					testbox.innerText = `Error: ${e.message}`;
@@ -109,6 +111,7 @@ describe('Browser visual regression tests', () => {
 	it('renders SVG barcodes correctly', async () => {
 		await page.setContent('<html><body></body></html>');
 		await page.addStyleTag({ content: testCss });
+		await page.evaluate(() => document.fonts.load('12px "Roboto Mono"'));
 		await loadJsBarcode(page);
 
 		await page.evaluate((cases) => {
@@ -123,7 +126,7 @@ describe('Browser visual regression tests', () => {
 					<svg class="barcode"></svg>
 				`;
 				try {
-					(window as any).JsBarcode(testbox.querySelector('.barcode'), c.text, c.options);
+					(window as any).JsBarcode(testbox.querySelector('.barcode'), c.text, { font: 'Roboto Mono', ...c.options });
 				} catch (e: any) {
 					testbox.className = "errorbox";
 					testbox.innerText = `Error: ${e.message}`;
@@ -147,8 +150,9 @@ describe('Browser visual regression tests', () => {
 			<html>
 			<head>
 				<style>
+					@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 					body {
-						font-family: monospace;
+						font-family: 'Roboto Mono', monospace;
 						background: white;
 						margin: 0;
 						padding: 10px;
@@ -192,9 +196,13 @@ describe('Browser visual regression tests', () => {
 		`;
 
 		await page.setContent(initHtml);
+		await page.evaluate(() => document.fonts.load('12px "Roboto Mono"'));
 		await loadJsBarcode(page);
 
 		await page.evaluate(() => {
+			document.querySelectorAll('.barcode, [id^="barcode"]').forEach(el => {
+				el.setAttribute('jsbarcode-font', 'Roboto Mono');
+			});
 			(window as any).JsBarcode(".barcode").init();
 			(window as any).JsBarcode("#barcode1").init();
 			(window as any).JsBarcode("#barcode2").init();
