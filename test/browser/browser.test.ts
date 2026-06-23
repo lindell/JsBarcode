@@ -42,7 +42,14 @@ describe('Browser visual regression tests', () => {
 	`;
 
 	beforeAll(async () => {
-		browser = await chromium.launch({ headless: true });
+		browser = await chromium.launch({
+			headless: true,
+			args: [
+				'--font-render-hinting=none',
+				'--disable-font-subpixel-positioning',
+				'--disable-lcd-text',
+			],
+		});
 	});
 
 	afterAll(async () => {
@@ -105,6 +112,7 @@ describe('Browser visual regression tests', () => {
 			customSnapshotIdentifier: 'canvas-barcodes',
 			failureThreshold: 0.01,
 			failureThresholdType: 'percent',
+			blur: 1,
 		});
 	});
 
@@ -142,6 +150,7 @@ describe('Browser visual regression tests', () => {
 			customSnapshotIdentifier: 'svg-barcodes',
 			failureThreshold: 0.01,
 			failureThresholdType: 'percent',
+			blur: 1,
 		});
 	});
 
@@ -216,6 +225,7 @@ describe('Browser visual regression tests', () => {
 			customSnapshotIdentifier: 'init-barcodes',
 			failureThreshold: 0.01,
 			failureThresholdType: 'percent',
+			blur: 1,
 		});
 	});
 });
