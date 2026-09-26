@@ -25,5 +25,6 @@ function mod11(number) {
 		var n = parseInt(number[number.length - 1 - i]);
 		sum += weights[i % weights.length] * n;
 	}
-	return (11 - sum % 11) % 11;
+	var check = (11 - sum % 11) % 11;
+	return check === 10 ? 0 : check;
 }

@@ -33,6 +33,9 @@ describe('MSI', function() {
   });
 
   it('should encode MSI11', function () {
+    var enc = new MSI11("6", {});
+    assert.equal("60", enc.encode().text);
+
     var enc = new MSI11("123456", {});
     assert.equal("1234560", enc.encode().text);
 
