@@ -36,7 +36,7 @@ class pharmacode extends Barcode{
 	}
 
 	valid(){
-		return this.number >= 3 && this.number <= 131070;
+		return !/\D/.test(this.data) && this.number >= 3 && this.number <= 131070;
 	}
 }
 

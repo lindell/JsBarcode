@@ -30,6 +30,22 @@ describe('Pharmacode', function() {
     assert.equal(false, enc.valid());
   });
 
+  it('should reject non-integer text instead of encoding a numeric prefix', function () {
+    ["3.5", "3junk", "3e4", " 3", "3 ", "3\n", "3\r", "3\t"].forEach(function(value) {
+      var enc = new Pharmacode(value, {});
+      assert.equal(false, enc.valid(), JSON.stringify(value));
+    });
+  });
+
+  it('should retain integer range boundaries and leading zeroes', function () {
+    ["3", "003", "131070"].forEach(function(value) {
+      assert.equal(true, new Pharmacode(value, {}).valid(), value);
+    });
+    ["2", "131071"].forEach(function(value) {
+      assert.equal(false, new Pharmacode(value, {}).valid(), value);
+    });
+  });
+
   it('should work with text option', function () {
     var enc = new Pharmacode("12345678", {text: "THISISTEXT"});
     assert.equal("THISISTEXT", enc.encode().text);
